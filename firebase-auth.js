@@ -30,7 +30,7 @@ export async function loginUser() {
   try {
     await signInWithEmailAndPassword(auth, email, pass);
     alert("✅ Logged in!");
-    window.location.href = "/"; // Redirect to root
+    window.location.href = "/"; // 🔁 Redirect to homepage
   } catch (error) {
     alert("❌ Login failed: " + error.message);
   }
@@ -54,15 +54,18 @@ export async function logoutUser() {
   window.location.reload();
 }
 
-// 👁️ Auth Status UI + Routing
+// 👁️ Auth Status UI + Routing Protection
 onAuthStateChanged(auth, (user) => {
+  // 🧾 Update login status in DOM
   const statusEl = document.getElementById("user-status");
   if (statusEl) {
     statusEl.innerText = user ? `👤 Logged in as ${user.email}` : "🔒 Not logged in";
   }
 
+  // 🔘 Toggle login/logout buttons
   const signInBtn = document.getElementById("signin-btn");
   const signOutBtn = document.getElementById("signout-btn");
+
   if (signInBtn && signOutBtn) {
     if (user) {
       signInBtn.style.display = "none";
@@ -74,10 +77,10 @@ onAuthStateChanged(auth, (user) => {
     }
   }
 
-  // 🔐 Page Access Control (GitHub Pages + MkDocs structure)
+  // 🔐 Public Route Whitelist (based on static site structure)
   const allowedPublicPaths = [
-    "/",              // root
-    "/auth/",         // login page (served via index.md)
+    "/",         // Homepage
+    "/auth/",    // Login page (from auth/index.md → index.html)
   ];
 
   const currentPath = window.location.pathname;
@@ -85,6 +88,7 @@ onAuthStateChanged(auth, (user) => {
     currentPath === path || currentPath.startsWith(path)
   );
 
+  // 🔁 Redirect logic
   if (!user && !isPublic) {
     window.location.href = "/auth/";
   }
