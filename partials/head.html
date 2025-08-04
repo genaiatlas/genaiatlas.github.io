@@ -27,23 +27,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/genaiatlas/images/logo_192x192.png" />
 <link rel="icon" type="image/png" sizes="512x512" href="/genaiatlas/images/logo_512x512.png" />
 
-<!-- ✅ Firebase SDK (Compat Version for Static Sites) -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-
-<!-- ✅ Firebase Config -->
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAnGfiZ5uIaXEPBMfjqvMY87I_T_0YJp64",
-    authDomain: "genaiatlas.firebaseapp.com",
-    projectId: "genaiatlas",
-    appId: "1:75647218274:web:efb2981e702a5faf76d73b"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-</script>
-
-<!-- ✅ Firebase Modal Sign-in (Floating Button + Auth UI) -->
+<!-- ✅ Firebase UI - Floating Buttons -->
 <style>
   .signin-button {
     position: fixed;
@@ -123,50 +107,17 @@
   </div>
 </div>
 
-<!-- ✅ Auth Logic -->
+<!-- 🔄 Minimal UI script (delegates actual login to firebase-auth.js via init-auth.js) -->
 <script>
   const loginModal = document.getElementById("login-modal");
   const signInBtn = document.getElementById("signin-btn");
   const signOutBtn = document.getElementById("signout-btn");
 
   signInBtn.onclick = () => loginModal.style.display = "flex";
+
   function closeModal() {
     loginModal.style.display = "none";
   }
 
-  firebase.auth().onAuthStateChanged((user) => {
-    signInBtn.style.display = user ? "none" : "block";
-    signOutBtn.style.display = user ? "block" : "none";
-  });
-
-  signOutBtn.onclick = () => {
-    firebase.auth().signOut().then(() => {
-      alert("🚪 Signed out!");
-      location.reload();
-    });
-  };
-
-  window.loginUser = async () => {
-    const email = document.getElementById("email").value;
-    const pass = document.getElementById("password").value;
-    try {
-      await firebase.auth().signInWithEmailAndPassword(email, pass);
-      alert("✅ Logged in!");
-      closeModal();
-    } catch (error) {
-      alert("❌ Login failed: " + error.message);
-    }
-  };
-
-  window.registerUser = async () => {
-    const email = document.getElementById("email").value;
-    const pass = document.getElementById("password").value;
-    try {
-      await firebase.auth().createUserWithEmailAndPassword(email, pass);
-      alert("✅ Registered!");
-      closeModal();
-    } catch (error) {
-      alert("❌ Registration failed: " + error.message);
-    }
-  };
+  window.closeModal = closeModal; // Expose to HTML
 </script>
