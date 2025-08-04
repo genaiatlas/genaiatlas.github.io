@@ -23,7 +23,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-<!-- ✅ Fallback icon for older Android versions -->
+<!-- ✅ Fallback icons -->
 <link rel="icon" type="image/png" sizes="192x192" href="/genaiatlas/images/logo_192x192.png" />
 <link rel="icon" type="image/png" sizes="512x512" href="/genaiatlas/images/logo_512x512.png" />
 
@@ -38,16 +38,12 @@
     authDomain: "genaiatlas.firebaseapp.com",
     projectId: "genaiatlas",
     appId: "1:75647218274:web:efb2981e702a5faf76d73b"
-    // Optional: storageBucket, measurementId, messagingSenderId
   };
 
   firebase.initializeApp(firebaseConfig);
 </script>
 
-<!-- ✅ Firebase Auth Logic -->
-<script src="/genaiatlas/firebase-auth.js"></script>
-
-<!-- ✅ Floating Sign-in/Sign-out Buttons (no duplication) -->
+<!-- ✅ Firebase Modal Sign-in (Floating Button + Auth UI) -->
 <style>
   .signin-button {
     position: fixed;
@@ -62,7 +58,115 @@
     font-size: 0.9rem;
     z-index: 1000;
   }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(30, 30, 30, 0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .modal-box {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+  }
+
+  .modal-box input {
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 0.6rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .modal-box button {
+    padding: 0.5rem 1rem;
+    background: #673ab7;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+
+  .modal-box a {
+    color: #673ab7;
+    text-decoration: underline;
+  }
 </style>
 
-<a href="/genaiatlas/auth/" class="signin-button" id="signin-btn">🔐 Sign In</a>
+<!-- 🔘 Floating Buttons -->
+<a href="#" class="signin-button" id="signin-btn">🔐 Sign In</a>
 <a href="#" class="signin-button" id="signout-btn" style="display: none;">🚪 Sign Out</a>
+
+<!-- 🔐 Login Modal -->
+<div id="login-modal" class="modal-overlay">
+  <div class="modal-box">
+    <h3>🔐 Sign In to Gen AI Atlas</h3>
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button onclick="loginUser()">Sign In</button>
+    <p>New here? <a href="#" onclick="registerUser()">Register</a></p>
+    <button onclick="closeModal()">❌ Close</button>
+  </div>
+</div>
+
+<!-- ✅ Auth Logic -->
+<script>
+  const loginModal = document.getElementById("login-modal");
+  const signInBtn = document.getElementById("signin-btn");
+  const signOutBtn = document.getElementById("signout-btn");
+
+  signInBtn.onclick = () => loginModal.style.display = "flex";
+  function closeModal() {
+    loginModal.style.display = "none";
+  }
+
+  firebase.auth().onAuthStateChanged((user) => {
+    signInBtn.style.display = user ? "none" : "block";
+    signOutBtn.style.display = user ? "block" : "none";
+  });
+
+  signOutBtn.onclick = () => {
+    firebase.auth().signOut().then(() => {
+      alert("🚪 Signed out!");
+      location.reload();
+    });
+  };
+
+  window.loginUser = async () => {
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
+    try {
+      await firebase.auth().signInWithEmailAndPassword(email, pass);
+      alert("✅ Logged in!");
+      closeModal();
+    } catch (error) {
+      alert("❌ Login failed: " + error.message);
+    }
+  };
+
+  window.registerUser = async () => {
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
+    try {
+      await firebase.auth().createUserWithEmailAndPassword(email, pass);
+      alert("✅ Registered!");
+      closeModal();
+    } catch (error) {
+      alert("❌ Registration failed: " + error.message);
+    }
+  };
+</script>
