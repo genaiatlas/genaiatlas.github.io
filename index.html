@@ -4435,13 +4435,28 @@
 
 <h1 id="welcome-to-generative-ai-study-hub">Welcome to Generative AI Study Hub</h1>
 <p><small>Last updated: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 28, 2025 20:20:56 UTC">July 28, 2025</span></small></p>
-<p>This is your central hub for learning and referencing Generative AI concepts. 
+<p>This is your central hub for learning and referencing Generative AI concepts.<br />
 Choose from the <strong>Study Path</strong> to go through structured topics or explore the <strong>Reference Hub</strong> for focused research and tooling insights.</p>
-<!-- Force MkDocs to include PWA assets in site/ output -->
+<hr />
+<h1 id="sign-in-to-gen-ai-atlas">🔐 Sign In to Gen AI Atlas</h1>
+<p>Please sign in or register below to continue.</p>
+<form onsubmit="event.preventDefault(); loginUser();">
+  <input type="email" id="email" placeholder="Email" required />
+  <input type="password" id="password" placeholder="Password" required />
+  <button type="submit" id="signin-btn">Sign In</button>
+</form>
+
+<p><button onclick="registerUser()">Register</button>
+<button id="signout-btn" style="display:none">Sign Out</button></p>
+<p id="user-status">🔒 Not logged in</p>
+
+<hr />
+<!-- Force MkDocs to include PWA & Firebase Auth Assets -->
+<!-- 🚀 Register Service Worker -->
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
-      navigator.serviceWorker.register('/service-worker.js')
+      navigator.serviceWorker.register('/genaiatlas/service-worker.js')
         .then(function (registration) {
           console.log('✅ Service Worker registered with scope:', registration.scope);
         })
@@ -4452,10 +4467,17 @@ Choose from the <strong>Study Path</strong> to go through structured topics or e
   }
 </script>
 
+<!-- 🔐 Firebase Auth Init -->
 <script type="module">
-  import { loginUser, registerUser } from '/firebase-auth.js';
+  import {
+    loginUser,
+    registerUser,
+    logoutUser
+  } from '/genaiatlas/firebase-auth.js';
+
   window.loginUser = loginUser;
   window.registerUser = registerUser;
+  window.logoutUser = logoutUser;
 </script>
 
 
@@ -4562,9 +4584,11 @@ Choose from the <strong>Study Path</strong> to go through structured topics or e
       
         <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js"></script>
       
-        <script src="/service-worker.js"></script>
+        <script src="firebase-auth.js"></script>
       
-        <script src="init-auth.html"></script>
+        <script src="init-auth.js"></script>
+      
+        <script src="service-worker.js"></script>
       
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       

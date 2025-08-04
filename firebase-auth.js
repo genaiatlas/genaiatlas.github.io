@@ -25,44 +25,64 @@ const auth = getAuth(app);
 
 // ✅ Exported Auth Functions
 export async function loginUser() {
-  const email = document.getElementById("email").value;
-  const pass = document.getElementById("password").value;
+  const emailEl = document.getElementById("email");
+  const passEl = document.getElementById("password");
+
+  if (!emailEl || !passEl) {
+    alert("⚠️ Email or password input not found on the page.");
+    return;
+  }
+
+  const email = emailEl.value;
+  const pass = passEl.value;
+
   try {
     await signInWithEmailAndPassword(auth, email, pass);
     alert("✅ Logged in!");
-    window.location.href = "/"; // 🔁 Redirect to homepage
+    window.location.href = "/genaiatlas/"; // redirect to GitHub Pages root
   } catch (error) {
     alert("❌ Login failed: " + error.message);
   }
 }
 
 export async function registerUser() {
-  const email = document.getElementById("email").value;
-  const pass = document.getElementById("password").value;
+  const emailEl = document.getElementById("email");
+  const passEl = document.getElementById("password");
+
+  if (!emailEl || !passEl) {
+    alert("⚠️ Email or password input not found on the page.");
+    return;
+  }
+
+  const email = emailEl.value;
+  const pass = passEl.value;
+
   try {
     await createUserWithEmailAndPassword(auth, email, pass);
     alert("✅ Registered!");
-    window.location.href = "/";
+    window.location.href = "/genaiatlas/";
   } catch (error) {
     alert("❌ Registration failed: " + error.message);
   }
 }
 
 export async function logoutUser() {
-  await signOut(auth);
-  alert("🚪 Logged out!");
-  window.location.reload();
+  try {
+    await signOut(auth);
+    alert("🚪 Logged out!");
+    window.location.reload();
+  } catch (error) {
+    alert("❌ Logout failed: " + error.message);
+  }
 }
 
-// 👁️ Auth Status UI + Routing Protection
+// 👁️ Auth Status UI + Route Protection
 onAuthStateChanged(auth, (user) => {
-  // 🧾 Update login status in DOM
   const statusEl = document.getElementById("user-status");
   if (statusEl) {
     statusEl.innerText = user ? `👤 Logged in as ${user.email}` : "🔒 Not logged in";
   }
 
-  // 🔘 Toggle login/logout buttons
   const signInBtn = document.getElementById("signin-btn");
   const signOutBtn = document.getElementById("signout-btn");
 
@@ -77,10 +97,10 @@ onAuthStateChanged(auth, (user) => {
     }
   }
 
-  // 🔐 Public Route Whitelist (based on static site structure)
+  // 🔐 Route whitelist for public access (GitHub Pages base path)
   const allowedPublicPaths = [
-    "/",         // Homepage
-    "/auth/",    // Login page (from auth/index.md → index.html)
+    "/genaiatlas/",
+    "/genaiatlas/auth/"
   ];
 
   const currentPath = window.location.pathname;
@@ -88,12 +108,12 @@ onAuthStateChanged(auth, (user) => {
     currentPath === path || currentPath.startsWith(path)
   );
 
-  // 🔁 Redirect logic
+  // 🔁 Redirect if unauthorized access
   if (!user && !isPublic) {
-    window.location.href = "/auth/";
+    window.location.href = "/genaiatlas/auth/";
   }
 
-  if (user && currentPath.startsWith("/auth")) {
-    window.location.href = "/";
+  if (user && currentPath.startsWith("/genaiatlas/auth")) {
+    window.location.href = "/genaiatlas/";
   }
 });
