@@ -54,7 +54,7 @@ export async function logoutUser() {
   window.location.reload();
 }
 
-// 👁️ Auth Status UI
+// 👁️ Auth Status UI + Routing
 onAuthStateChanged(auth, (user) => {
   const statusEl = document.getElementById("user-status");
   if (statusEl) {
@@ -74,16 +74,16 @@ onAuthStateChanged(auth, (user) => {
     }
   }
 
-  // 🔐 Page Access Control (GitHub Pages structure)
+  // 🔐 Page Access Control (GitHub Pages + MkDocs structure)
   const allowedPublicPaths = [
-    "/",
-    "/index.html",
-    "/auth/",
-    "/auth/index.html",  // Supports MkDocs converted HTML
+    "/",              // root
+    "/auth/",         // login page (served via index.md)
   ];
 
   const currentPath = window.location.pathname;
-  const isPublic = allowedPublicPaths.some(path => currentPath === path || currentPath.startsWith(path));
+  const isPublic = allowedPublicPaths.some(path =>
+    currentPath === path || currentPath.startsWith(path)
+  );
 
   if (!user && !isPublic) {
     window.location.href = "/auth/";
