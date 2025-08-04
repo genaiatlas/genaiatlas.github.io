@@ -30,7 +30,7 @@ export async function loginUser() {
   try {
     await signInWithEmailAndPassword(auth, email, pass);
     alert("✅ Logged in!");
-    window.location.href = "/genaiatlas/";
+    window.location.href = "/"; // Redirect to root
   } catch (error) {
     alert("❌ Login failed: " + error.message);
   }
@@ -42,7 +42,7 @@ export async function registerUser() {
   try {
     await createUserWithEmailAndPassword(auth, email, pass);
     alert("✅ Registered!");
-    window.location.href = "/genaiatlas/";
+    window.location.href = "/";
   } catch (error) {
     alert("❌ Registration failed: " + error.message);
   }
@@ -74,21 +74,22 @@ onAuthStateChanged(auth, (user) => {
     }
   }
 
-  // 🔐 Page access control
+  // 🔐 Page Access Control (GitHub Pages structure)
   const allowedPublicPaths = [
-    "/genaiatlas/",
-    "/genaiatlas/index.html",
-    "/genaiatlas/auth/",
-    "/genaiatlas/signin/",
+    "/",
+    "/index.html",
+    "/auth/",
+    "/auth/index.html",  // Supports MkDocs converted HTML
   ];
+
   const currentPath = window.location.pathname;
-  const isPublic = allowedPublicPaths.some(path => currentPath.startsWith(path));
+  const isPublic = allowedPublicPaths.some(path => currentPath === path || currentPath.startsWith(path));
 
   if (!user && !isPublic) {
-    window.location.href = "/genaiatlas/signin/";
+    window.location.href = "/auth/";
   }
 
-  if (user && currentPath.startsWith("/genaiatlas/signin")) {
-    window.location.href = "/genaiatlas/";
+  if (user && currentPath.startsWith("/auth")) {
+    window.location.href = "/";
   }
 });
