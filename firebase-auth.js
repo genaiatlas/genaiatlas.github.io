@@ -1,8 +1,14 @@
-// Import Firebase SDK modules (CDN version used for static sites)
+// 🔥 Firebase SDK - Modular CDN
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
-// Your Firebase config
+// ✅ Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyAnGfiZ5uTaXEPBMfjqvMY87L_T_0YJp64",
   authDomain: "gen-ai-atlas.firebaseapp.com",
@@ -13,65 +19,92 @@ const firebaseConfig = {
   measurementId: "G-ZW5X7WHHQM"
 };
 
-// Init Firebase
+// ✅ Initialize Firebase App & Auth
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Login
+//
+// 🔐 Public Functions (Used in HTML Pages)
+//
 window.loginUser = async () => {
   const email = document.getElementById("email").value;
   const pass = document.getElementById("password").value;
   try {
     await signInWithEmailAndPassword(auth, email, pass);
     alert("✅ Logged in!");
+    window.location.href = "/genaiatlas/"; // Redirect after login
   } catch (error) {
     alert("❌ Login failed: " + error.message);
   }
 };
 
-// Register
 window.registerUser = async () => {
   const email = document.getElementById("email").value;
   const pass = document.getElementById("password").value;
   try {
     await createUserWithEmailAndPassword(auth, email, pass);
     alert("✅ Registered!");
+    window.location.href = "/genaiatlas/";
   } catch (error) {
     alert("❌ Registration failed: " + error.message);
   }
 };
 
-// Logout
 window.logoutUser = async () => {
   await signOut(auth);
   alert("🚪 Logged out!");
+  window.location.reload();
 };
 
-// Show auth state
+//
+// 👁️ Update UI Auth Status (if present)
+//
 onAuthStateChanged(auth, (user) => {
-  document.getElementById("user-status").innerText = user ? `👤 Logged in as ${user.email}` : "🔒 Not logged in";
+  const statusEl = document.getElementById("user-status");
+  if (statusEl) {
+    statusEl.innerText = user ? `👤 Logged in as ${user.email}` : "🔒 Not logged in";
+  }
 });
 
-auth.onAuthStateChanged((user) => {
-    if (user && window.location.pathname === "/genaiatlas/auth/") {
-      window.location.href = "/genaiatlas/";
-    }
-  });
+//
+// 🔄 Toggle UI Buttons (if present)
+//
+onAuthStateChanged(auth, (user) => {
+  const signInBtn = document.getElementById("signin-btn");
+  const signOutBtn = document.getElementById("signout-btn");
 
-  auth.onAuthStateChanged((user) => {
-    const signInBtn = document.getElementById("signin-btn");
-    const signOutBtn = document.getElementById("signout-btn");
-  
+  if (signInBtn && signOutBtn) {
     if (user) {
       signInBtn.style.display = "none";
       signOutBtn.style.display = "block";
-      signOutBtn.onclick = () => {
-        auth.signOut().then(() => {
-          window.location.reload();
-        });
-      };
+      signOutBtn.onclick = () => window.logoutUser();
     } else {
       signInBtn.style.display = "block";
       signOutBtn.style.display = "none";
     }
-  });
+  }
+});
+
+//
+// 🚫 Block access to all pages except public ones
+//
+onAuthStateChanged(auth, (user) => {
+  const allowedPublicPaths = [
+    "/genaiatlas/",
+    "/genaiatlas/index.html",
+    "/genaiatlas/auth/",
+    "/genaiatlas/signin/",
+  ];
+
+  const currentPath = window.location.pathname;
+  const isPublic = allowedPublicPaths.some(path => currentPath.startsWith(path));
+
+  if (!user && !isPublic) {
+    window.location.href = "/genaiatlas/signin/";
+  }
+
+  // Optional: if signed in but on signin page, redirect home
+  if (user && currentPath.startsWith("/genaiatlas/signin")) {
+    window.location.href = "/genaiatlas/";
+  }
+});
