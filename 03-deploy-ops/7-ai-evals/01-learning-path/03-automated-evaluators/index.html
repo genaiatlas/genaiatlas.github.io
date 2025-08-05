@@ -75,6 +75,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#2-3-refine-llm-judge" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -3610,6 +3615,8 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -4445,6 +4452,8 @@
   
   
   
+    
+  
   
 </nav>
                   </div>
@@ -4460,9 +4469,66 @@
 
 
 
-  <h1>Automated Evaluators</h1>
-
-
+<p>The following code is for lesson 5: Architectur3 - Specific Evaluation stragetis </p>
+<h1 id="2-3-refine-llm-judge">2 &amp; 3: Refine LLM Judge</h1>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Split Labeled Traces</strong></td>
+<td>- Label ~100–200 traces for a specific failure mode  <br> - 10–20% train, 20–40% dev, rest for test <br> - 🚫 Never look at test set</td>
+</tr>
+<tr>
+<td><strong>Evaluate LLM judge on Dev Set</strong></td>
+<td>- Use few-shot examples from <strong>train set only</strong> for LLM judge prompt <br> - Judge predicts 1 for success and 0 for failure <br> - Compute TPR (True Positive Rate) and TNR (True Negative Rate) <br> - ✅ High TPR: good at identifying success <br> - ✅ High TNR: good at identifying failures</td>
+</tr>
+<tr>
+<td><strong>Improve LLM judge prompt</strong></td>
+<td>- If <strong>&lt; 85% TPR or TNR</strong>, keep refining the judge prompt <br> - Look at dev set failures to improve prompt <br> - Add or change few-shot examples <br> - Improve definitions of failure in prompt</td>
+</tr>
+<tr>
+<td><strong>Verify high TPR/TNR on dev set</strong></td>
+<td>- If you cannot get &gt; 85% TPR and TNR, <strong>split up</strong> your failure mode into multiple failure modes</td>
+</tr>
+</tbody>
+</table>
+<h1 id="our-llm-judge-is-good-but-not-perfect-so-what">📘 Our LLM Judge is Good, But Not Perfect... So What?</h1>
+<hr />
+<ul>
+<li>
+<p>We've refined our <strong>LLM-as-Judge</strong> on the <strong>Dev Set</strong>.<br />
+  It has good <strong>TPR &amp; TNR</strong> <em>(might not be perfect, but that’s okay)</em>.</p>
+</li>
+<li>
+<p>Now we want to use this judge to measure how often our<br />
+<em>main</em> <strong>NurtureBoss pipeline</strong> succeeds (or fails) on<br />
+<strong>new, unseen production data</strong>.</p>
+</li>
+</ul>
+<hr />
+<h1 id="our-llm-judge-is-good-but-not-perfect-so-what_1">📘 Our LLM Judge is Good, But Not Perfect... So What?</h1>
+<hr />
+<ul>
+<li>The <strong>True Success Rate (θ)</strong> for "helpfulness" is unknown.</li>
+<li>
+<p>But, a human can’t evaluate all traces! Can we use the LLM judge?</p>
+</li>
+<li>
+<p><strong>The Problem</strong>: Our LLM-as-Judge isn't perfect <em>(its TPR/TNR aren't 100%)</em>.</p>
+</li>
+<li>If we run our judge on <strong>1000 new NurtureBoss responses</strong>, and it says <strong>950 "Pass"</strong>, is our true success rate 95%?<ul>
+<li>❌ <strong>No!</strong> The raw % from our judge is a <strong>biased number</strong> due to its own errors.</li>
+</ul>
+</li>
+<li>If LLM Judge has lots of false positives, the <strong>true success rate is &lt; 95%</strong>.</li>
+</ul>
+<hr />
+<p><img alt="Estimating True Success Rate" src="../../../../images/estimate-true-success-rate.png" /></p>
 
 
 
@@ -4483,7 +4549,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 5, 2025 16:30:54 UTC">August 5, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 5, 2025 20:36:12 UTC">August 5, 2025</span>
   </span>
 
     
