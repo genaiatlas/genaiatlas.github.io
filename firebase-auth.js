@@ -1,119 +1,101 @@
-// 🔥 Firebase SDK - Modular CDN
+// firebase-auth.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
 import {
   getAuth,
   onAuthStateChanged,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
 // ✅ Firebase Config
 const firebaseConfig = {
-  apiKey: "AIzaSyAnGfiZ5uTaXEPBMfjqvMY87L_T_0YJp64",
+  apiKey: "AIzaSyAnGfiZ5uIaXEPBMfjqvMY87I_T_0YJp64",
   authDomain: "gen-ai-atlas.firebaseapp.com",
   projectId: "gen-ai-atlas",
   storageBucket: "gen-ai-atlas.appspot.com",
   messagingSenderId: "75647218274",
-  appId: "1:75647218274:web:efb2981e702a5faf76d73b",
-  measurementId: "G-ZW5X7WHHQM"
+  appId: "1:75647218274:web:efb2981e702a5faf76d73b"
 };
 
-// ✅ Initialize Firebase App & Auth
+// ✅ Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// ✅ Exported Auth Functions
-export async function loginUser() {
-  const emailEl = document.getElementById("email");
-  const passEl = document.getElementById("password");
-
-  if (!emailEl || !passEl) {
-    alert("⚠️ Email or password input not found on the page.");
-    return;
-  }
-
-  const email = emailEl.value;
-  const pass = passEl.value;
-
-  try {
-    await signInWithEmailAndPassword(auth, email, pass);
-    alert("✅ Logged in!");
-    window.location.href = "/genaiatlas/"; // redirect to GitHub Pages root
-  } catch (error) {
-    alert("❌ Login failed: " + error.message);
-  }
+// ✅ Sign in with Google
+export function signInWithGoogle() {
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(auth, provider)
+    .then(result => {
+      console.log("✅ Signed in:", result.user.displayName);
+      location.reload();
+    })
+    .catch(err => console.error("❌ Sign-in failed:", err));
 }
 
-export async function registerUser() {
-  const emailEl = document.getElementById("email");
-  const passEl = document.getElementById("password");
+// ✅ Sign out
+export function logoutUser() {
+  sessionStorage.setItem("justLoggedOut", "true");
 
-  if (!emailEl || !passEl) {
-    alert("⚠️ Email or password input not found on the page.");
-    return;
-  }
+  signOut(auth)
+    .then(() => {
+      console.log("👋 Logged out");
 
-  const email = emailEl.value;
-  const pass = passEl.value;
+      // ✅ Determine if running on localhost
+      const isLocalhost = location.hostname === "127.0.0.1" || location.hostname === "localhost";
 
-  try {
-    await createUserWithEmailAndPassword(auth, email, pass);
-    alert("✅ Registered!");
-    window.location.href = "/genaiatlas/";
-  } catch (error) {
-    alert("❌ Registration failed: " + error.message);
-  }
+      // ✅ Redirect path
+      const homePath = isLocalhost ? "/" : "/genaiatlas/index.html";
+
+      window.location.replace(homePath);  // ✅ Redirect safely
+    })
+    .catch(err => console.error("❌ Logout failed:", err));
 }
 
-export async function logoutUser() {
-  try {
-    await signOut(auth);
-    alert("🚪 Logged out!");
-    window.location.reload();
-  } catch (error) {
-    alert("❌ Logout failed: " + error.message);
-  }
-}
+ 
+// ✅ Enforce authentication on restricted pages
+export function enforceAuth(user) {
+  const PUBLIC_PATHS = ["/", "/index.html", "/genaiatlas/", "/genaiatlas/index.html"];
+  const path = window.location.pathname;
+  const normalizedPath = path.replace(/\/$/, "") || "/";
+  const isPublic = PUBLIC_PATHS.some(p => normalizedPath === p.replace(/\/$/, ""));
+  const justLoggedOut = sessionStorage.getItem("justLoggedOut") === "true";
 
-// 👁️ Auth Status UI + Route Protection
-onAuthStateChanged(auth, (user) => {
-  const statusEl = document.getElementById("user-status");
-  if (statusEl) {
-    statusEl.innerText = user ? `👤 Logged in as ${user.email}` : "🔒 Not logged in";
-  }
+  if (!user && !isPublic && !justLoggedOut) {
+    console.warn("🚫 Not signed in and this page is restricted:", normalizedPath);
 
-  const signInBtn = document.getElementById("signin-btn");
-  const signOutBtn = document.getElementById("signout-btn");
-
-  if (signInBtn && signOutBtn) {
-    if (user) {
-      signInBtn.style.display = "none";
-      signOutBtn.style.display = "block";
-      signOutBtn.onclick = () => logoutUser();
-    } else {
-      signInBtn.style.display = "block";
-      signOutBtn.style.display = "none";
+    // ✨ Block main content immediately
+    const main = document.querySelector("main.md-main__inner");
+    if (main) {
+      main.innerHTML = `
+        <div style="text-align: center; padding: 4rem;">
+          <h2 style="color: #c00;">🔒 You must sign in with Google to access this content.</h2>
+          <button onclick="signInWithGoogle()" style="margin-top: 2rem; padding: 0.5rem 1rem; font-size: 1rem;">
+            Sign in with Google
+          </button>
+        </div>`;
     }
+
+    // 🔒 Also block future in-page SPA navigation
+    const navLinks = document.querySelectorAll("a.md-nav__link");
+    navLinks.forEach(link => {
+      link.addEventListener("click", (e) => {
+        if (!auth.currentUser) {
+          e.preventDefault();
+          alert("⚠️ Please sign in with Google to access this section.");
+        }
+      });
+    });
+
+    // ✅ Optional redirect to homepage to reset state
+    history.replaceState({}, "", "/genaiatlas/");
   }
 
-  // 🔐 Route whitelist for public access (GitHub Pages base path)
-  const allowedPublicPaths = [
-    "/genaiatlas/",
-    "/genaiatlas/auth/"
-  ];
-
-  const currentPath = window.location.pathname;
-  const isPublic = allowedPublicPaths.some(path =>
-    currentPath === path || currentPath.startsWith(path)
-  );
-
-  // 🔁 Redirect if unauthorized access
-  if (!user && !isPublic) {
-    window.location.href = "/genaiatlas/auth/";
+  // ✅ Cleanup logout flag
+  if (justLoggedOut) {
+    sessionStorage.removeItem("justLoggedOut");
   }
+}
 
-  if (user && currentPath.startsWith("/genaiatlas/auth")) {
-    window.location.href = "/genaiatlas/";
-  }
-});
+// ✅ Export auth for other modules
+export { auth };
