@@ -26,18 +26,28 @@ function toggleAuthButtons(user) {
 document.addEventListener("DOMContentLoaded", () => {
   onAuthStateChanged(auth, (user) => {
     toggleAuthButtons(user);
-    enforceAuth(user);  // Pass user explicitly
+    enforceAuth(user);  // First load
   });
 
   // ✅ Patch navigation events (SPA behavior)
   if (!window.mutationObserver) {
-    const observer = new MutationObserver(() => {
-      onAuthStateChanged(auth, (user) => {
-        toggleAuthButtons(user);
-        enforceAuth(user);  // Recheck on navigation
-      });
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === 'childList') {
+          onAuthStateChanged(auth, (user) => {
+            toggleAuthButtons(user);
+            enforceAuth(user); // Every SPA page load
+          });
+          break;
+        }
+      }
     });
-    observer.observe(document.querySelector("main"), { childList: true, subtree: true });
-    window.mutationObserver = observer;
+
+    // ✅ Observe <main> changes after page navs
+    const target = document.querySelector("main.md-main");
+    if (target) {
+      observer.observe(target, { childList: true, subtree: true });
+      window.mutationObserver = observer;
+    }
   }
 });

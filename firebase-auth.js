@@ -53,9 +53,8 @@ export function logoutUser() {
 }
 
  
-// ✅ Enforce authentication on restricted pages
 export function enforceAuth(user) {
-  const PUBLIC_PATHS = ["/", "/index.html", "/genaiatlas/", "/genaiatlas/index.html"];
+  const PUBLIC_PATHS = ["/", "/index.html"];
   const path = window.location.pathname;
   const normalizedPath = path.replace(/\/$/, "") || "/";
   const isPublic = PUBLIC_PATHS.some(p => normalizedPath === p.replace(/\/$/, ""));
@@ -64,7 +63,7 @@ export function enforceAuth(user) {
   if (!user && !isPublic && !justLoggedOut) {
     console.warn("🚫 Not signed in and this page is restricted:", normalizedPath);
 
-    // ✨ Block main content immediately
+    // 🚫 Immediately block visible content
     const main = document.querySelector("main.md-main__inner");
     if (main) {
       main.innerHTML = `
@@ -76,26 +75,28 @@ export function enforceAuth(user) {
         </div>`;
     }
 
-    // 🔒 Also block future in-page SPA navigation
-    const navLinks = document.querySelectorAll("a.md-nav__link");
-    navLinks.forEach(link => {
-      link.addEventListener("click", (e) => {
-        if (!auth.currentUser) {
-          e.preventDefault();
-          alert("⚠️ Please sign in with Google to access this section.");
-        }
+    // 🚫 Block all SPA navigation
+    const interceptLinks = () => {
+      document.querySelectorAll("a.md-nav__link, a.md-nav__link--active, a.md-search-result__link").forEach(link => {
+        link.addEventListener("click", (e) => {
+          if (!auth.currentUser) {
+            e.preventDefault();
+            alert("⚠️ Please sign in to view this section.");
+          }
+        });
       });
-    });
+    };
 
-    // ✅ Optional redirect to homepage to reset state
-    history.replaceState({}, "", "/genaiatlas/");
+    interceptLinks();            // Initial
+    setTimeout(interceptLinks, 1000); // Delay fallback for dynamic SPA sidebar
+
+    // 🏠 Replace URL with homepage root (no subfolder!)
+    history.replaceState({}, "", "/");
   }
 
-  // ✅ Cleanup logout flag
   if (justLoggedOut) {
     sessionStorage.removeItem("justLoggedOut");
   }
 }
-
 // ✅ Export auth for other modules
 export { auth };
