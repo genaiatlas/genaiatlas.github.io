@@ -4688,6 +4688,20 @@
     function initializeGoogleOAuth() {
       try {
         console.log('🔧 Initializing Google OAuth...');
+        console.log('🔧 Client ID:', '51499726574-938u73klifk6kvc44f62ibolqkg27rgq.apps.googleusercontent.com');
+
+        // Check if google object exists
+        if (typeof google === 'undefined') {
+          console.error('🔧 Google object not found');
+          showManualLogin();
+          return;
+        }
+
+        if (!google.accounts || !google.accounts.id) {
+          console.error('🔧 Google accounts not found');
+          showManualLogin();
+          return;
+        }
 
         google.accounts.id.initialize({
           client_id: '51499726574-938u73klifk6kvc44f62ibolqkg27rgq.apps.googleusercontent.com',
@@ -4788,6 +4802,13 @@
     // Pre-load Google OAuth script
     function preloadGoogleOAuth() {
       console.log('🔧 Pre-loading Google OAuth script...');
+
+      // Test if script is already loaded
+      if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+        console.log('🔧 Google OAuth already loaded');
+        return;
+      }
+
       const script = document.createElement('script');
       script.src = 'https://accounts.google.com/gsi/client';
       script.async = true;
@@ -4795,6 +4816,15 @@
 
       script.onload = function() {
         console.log('🔧 Google OAuth script pre-loaded successfully');
+
+        // Test if it's working
+        setTimeout(() => {
+          if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+            console.log('🔧 Google OAuth is working!');
+          } else {
+            console.error('🔧 Google OAuth script loaded but not working');
+          }
+        }, 1000);
       };
 
       script.onerror = function() {
