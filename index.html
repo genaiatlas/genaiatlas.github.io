@@ -4618,7 +4618,7 @@
   function handleManualLogin() {
     console.log('🔧 Manual login triggered');
 
-    // Try Google OAuth first with better error handling
+    // Try Google OAuth first
     if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
       console.log('🔧 Google OAuth available, trying...');
       try {
@@ -4628,8 +4628,6 @@
           auto_select: false,
           cancel_on_tap_outside: true,
           prompt_parent_id: 'google-login-btn',
-          // Add FedCM compatibility
-          use_fedcm_for_prompt: true,
         });
 
         setTimeout(() => {
@@ -4638,12 +4636,19 @@
               console.log('🔧 Google prompt notification:', notification);
               if (notification.isNotDisplayed()) {
                 console.log('🔧 Google prompt not displayed, reason:', notification.getNotDisplayedReason());
-                showManualLogin();
+                // Don't fallback immediately, try again
+                setTimeout(() => {
+                  google.accounts.id.prompt();
+                }, 2000);
               } else if (notification.isSkippedMoment()) {
                 console.log('🔧 Google prompt skipped, reason:', notification.getSkippedMomentReason());
-                showManualLogin();
+                // Don't fallback immediately, try again
+                setTimeout(() => {
+                  google.accounts.id.prompt();
+                }, 2000);
               } else if (notification.isDismissed()) {
                 console.log('🔧 Google prompt dismissed, reason:', notification.getDismissedReason());
+                // Only fallback if user explicitly dismissed
                 showManualLogin();
               }
             });
@@ -4652,7 +4657,7 @@
             console.log('🔧 Google OAuth failed, using fallback:', error);
             showManualLogin();
           }
-        }, 1000); // Increased timeout for FedCM
+        }, 500);
       } catch (error) {
         console.log('🔧 Google OAuth failed, using fallback:', error);
         showManualLogin();
@@ -4728,90 +4733,23 @@
       if (userName) userName.textContent = userInfo.name;
       if (userInfoDiv) userInfoDiv.style.display = 'block';
 
-      // Show navigation by directly manipulating the DOM
-      // Target specific navigation elements that should be visible
-
-      // Remove all CSS that hides navigation
-      const existingStyles = document.querySelectorAll('style');
-      existingStyles.forEach(style => {
-        if (style.textContent.includes('display: none') || style.textContent.includes('visibility: hidden')) {
-          style.remove();
-        }
-      });
-
-      // Force show all navigation tabs with !important
+      // Show navigation by simply removing hidden classes
       const allNavLinks = document.querySelectorAll('.md-tabs a, .md-nav a, .md-tabs__link, .md-nav__link');
       allNavLinks.forEach(link => {
-        // Remove any hidden classes and reset styles
         link.classList.remove('hidden');
-        link.style.setProperty('display', 'inline-block', 'important');
-        link.style.setProperty('visibility', 'visible', 'important');
-        link.style.setProperty('opacity', '1', 'important');
-        link.style.setProperty('pointer-events', 'auto', 'important');
-        link.style.setProperty('position', 'static', 'important');
       });
 
       // Show tabs container
       const tabsContainer = document.querySelector('.md-tabs');
       if (tabsContainer) {
         tabsContainer.classList.remove('hidden');
-        tabsContainer.style.setProperty('display', 'flex', 'important');
-        tabsContainer.style.setProperty('visibility', 'visible', 'important');
-        tabsContainer.style.setProperty('opacity', '1', 'important');
-        tabsContainer.style.setProperty('position', 'static', 'important');
       }
 
-      // Show all navigation items specifically
+      // Show all navigation items
       const navItems = document.querySelectorAll('.md-tabs__item, .md-nav__item');
       navItems.forEach(item => {
         item.classList.remove('hidden');
-        item.style.setProperty('display', 'inline-block', 'important');
-        item.style.setProperty('visibility', 'visible', 'important');
-        item.style.setProperty('opacity', '1', 'important');
-        item.style.setProperty('position', 'static', 'important');
       });
-
-      // Add comprehensive CSS to force show navigation
-      const style = document.createElement('style');
-      style.textContent = `
-        .md-tabs a, .md-nav a, .md-tabs__link, .md-nav__link { 
-          display: inline-block !important; 
-          visibility: visible !important; 
-          opacity: 1 !important; 
-          pointer-events: auto !important; 
-          position: static !important;
-        }
-        .md-tabs, .md-tabs__list { 
-          display: flex !important; 
-          visibility: visible !important; 
-          opacity: 1 !important; 
-          position: static !important;
-        }
-        .md-tabs__item, .md-nav__item {
-          display: inline-block !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-          position: static !important;
-        }
-        /* Override any hiding CSS */
-        .md-tabs a[href*="/01-foundation"],
-        .md-tabs a[href*="/02-gen-ai-core"],
-        .md-tabs a[href*="/03-deploy-ops"],
-        .md-tabs a[href*="/04-applied-research"],
-        .md-tabs a[href*="/05-community-qna"],
-        .md-nav a[href*="/01-foundation"],
-        .md-nav a[href*="/02-gen-ai-core"],
-        .md-nav a[href*="/03-deploy-ops"],
-        .md-nav a[href*="/04-applied-research"],
-        .md-nav a[href*="/05-community-qna"] {
-          display: inline-block !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-          pointer-events: auto !important;
-          position: static !important;
-        }
-      `;
-      document.head.appendChild(style);
 
       console.log('🔧 Navigation elements should now be visible');
 
@@ -4998,7 +4936,7 @@
       if (loginRequired) loginRequired.style.display = 'block';
       if (userInfoDiv) userInfoDiv.style.display = 'none';
 
-      // Hide navigation tabs for unauthenticated users
+      // Hide navigation tabs for unauthenticated users - simple approach
       const hideSelectors = [
         '.md-tabs a[href*="/01-foundation"]',
         '.md-tabs a[href*="/02-gen-ai-core"]',
@@ -5016,32 +4954,11 @@
         const navTabs = document.querySelectorAll(selector);
         navTabs.forEach(tab => {
           tab.classList.add('hidden');
-          tab.style.display = 'none';
-          tab.style.visibility = 'hidden';
-          tab.style.opacity = '0';
         });
       });
     }
 
-    // Prevent navigation events from triggering logout
-    document.addEventListener('click', function(e) {
-      // If user is authenticated and clicking on navigation links, don't trigger logout
-      const savedUser = localStorage.getItem('genaiatlas_user');
-      if (savedUser && e.target.closest('a[href]')) {
-        const href = e.target.closest('a[href]').getAttribute('href');
-        // Allow navigation to home page without logout
-        if (href === '/' || href === '/index' || href.includes('index')) {
-          e.preventDefault();
-          // Just show the authenticated content without logout
-          try {
-            const userInfo = JSON.parse(savedUser);
-            showAuthenticatedUser(userInfo);
-          } catch (error) {
-            console.error('🔧 Error handling home navigation:', error);
-          }
-        }
-      }
-    });
+
   </script>
   <div id="user-info" style="display: none; margin-top: 1.5rem; padding: 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 8px; backdrop-filter: blur(10px);">
     <p style="margin: 0.5rem 0; font-size: 1.1rem;">Welcome, <span id="user-name"></span>!</p>
@@ -5084,48 +5001,9 @@
 
 @media (max-width: 768px) {
   #google-login-btn {
-    padding: 10px 20px !important;
-    font-size: 14px !important;
+    padding: 10px 20px;
+    font-size: 14px;
   }
-}
-
-/* Hide navigation tabs for unauthenticated users */
-.md-tabs__link:not([href="/"]):not([href*="index"]) {
-  display: none !important;
-}
-
-/* Ensure proper hiding */
-.md-tabs a:not([href="/"]):not([href*="index"]) {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-}
-
-/* Collapse sidebar navigation by default */
-.md-nav__item--nested > .md-nav__list {
-  display: none !important;
-}
-
-.md-nav__item--nested > .md-nav__link::after {
-  content: "▶" !important;
-  transition: transform 0.3s ease;
-}
-
-.md-nav__item--nested.md-nav__item--active > .md-nav__link::after {
-  content: "▼" !important;
-}
-
-.md-nav__item--nested.md-nav__item--active > .md-nav__list {
-  display: block !important;
-}
-
-/* Only show top-level navigation items */
-.md-nav__item--nested .md-nav__item--nested {
-  display: none !important;
-}
-
-.md-nav__item--nested.md-nav__item--active .md-nav__item--nested {
-  display: block !important;
 }
 </style>
 
