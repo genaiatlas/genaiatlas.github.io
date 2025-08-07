@@ -1,5 +1,5 @@
 // Google OAuth Configuration
-const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'; // You'll need to replace this
+const GOOGLE_CLIENT_ID = '51499726574-938u73klifk6kvc44f62ibolqkg27rgq.apps.googleusercontent.com';
 
 // Check if Google OAuth is properly configured
 function isGoogleOAuthConfigured() {
