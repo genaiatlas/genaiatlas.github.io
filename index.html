@@ -4658,111 +4658,37 @@
     window.handleManualLogin = function() {
       console.log('🔧 Manual login triggered');
 
-      // Check if Google OAuth is already loaded
+      // Try Google OAuth first
       if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-        console.log('🔧 Google OAuth available, initializing...');
-        initializeGoogleOAuth();
+        console.log('🔧 Google OAuth available, trying...');
+        try {
+          google.accounts.id.initialize({
+            client_id: '51499726574-938u73klifk6kvc44f62ibolqkg27rgq.apps.googleusercontent.com',
+            callback: handleCredentialResponse,
+            auto_select: false,
+            cancel_on_tap_outside: true,
+          });
+
+          setTimeout(() => {
+            try {
+              google.accounts.id.prompt();
+              console.log('🔧 Google prompt triggered');
+            } catch (error) {
+              console.log('🔧 Google OAuth failed, using fallback');
+              showManualLogin();
+            }
+          }, 100);
+        } catch (error) {
+          console.log('🔧 Google OAuth failed, using fallback');
+          showManualLogin();
+        }
       } else {
-        console.log('🔧 Google OAuth not available, showing manual login');
-        console.log('🔧 Google object:', typeof google);
-        console.log('🔧 Google accounts:', typeof google !== 'undefined' ? google.accounts : 'undefined');
+        console.log('🔧 Google OAuth not available, using fallback');
         showManualLogin();
       }
     }
 
-    // Load Google OAuth script
-    function loadGoogleOAuthScript() {
-      console.log('🔧 Loading Google OAuth script...');
 
-      // Check if script is already being loaded
-      if (document.querySelector('script[src*="accounts.google.com/gsi/client"]')) {
-        console.log('🔧 Google OAuth script already loading, waiting...');
-        setTimeout(() => {
-          if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-            console.log('🔧 Google OAuth now available, initializing...');
-            initializeGoogleOAuth();
-          } else {
-            console.error('🔧 Google OAuth script failed to load');
-            showManualLogin();
-          }
-        }, 2000);
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.async = true;
-      script.defer = true;
-
-      script.onload = function() {
-        console.log('🔧 Google OAuth script loaded successfully');
-        setTimeout(() => {
-          if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-            console.log('🔧 Google OAuth available, initializing...');
-            initializeGoogleOAuth();
-          } else {
-            console.error('🔧 Google OAuth not available after script load');
-            showManualLogin();
-          }
-        }, 1000);
-      };
-
-      script.onerror = function() {
-        console.error('🔧 Failed to load Google OAuth script');
-        showManualLogin();
-      };
-
-      document.head.appendChild(script);
-    }
-
-    // Initialize Google OAuth
-    function initializeGoogleOAuth() {
-      try {
-        console.log('🔧 Initializing Google OAuth...');
-        console.log('🔧 Client ID:', '51499726574-938u73klifk6kvc44f62ibolqkg27rgq.apps.googleusercontent.com');
-
-        // Check if google object exists
-        if (typeof google === 'undefined') {
-          console.error('🔧 Google object not found');
-          showManualLogin();
-          return;
-        }
-
-        if (!google.accounts || !google.accounts.id) {
-          console.error('🔧 Google accounts not found');
-          showManualLogin();
-          return;
-        }
-
-        // Add more configuration options
-        google.accounts.id.initialize({
-          client_id: '51499726574-938u73klifk6kvc44f62ibolqkg27rgq.apps.googleusercontent.com',
-          callback: handleCredentialResponse,
-          auto_select: false,
-          cancel_on_tap_outside: true,
-          prompt_parent_id: 'google-login-btn',
-          use_fedcm_for_prompt: true,
-          context: 'signin'
-        });
-
-        console.log('🔧 Google OAuth initialized, triggering prompt');
-
-        // Add a small delay to ensure initialization is complete
-        setTimeout(() => {
-          try {
-            google.accounts.id.prompt();
-            console.log('🔧 Google prompt triggered successfully');
-          } catch (promptError) {
-            console.error('🔧 Error triggering prompt:', promptError);
-            showManualLogin();
-          }
-        }, 100);
-
-      } catch (error) {
-        console.error('🔧 Error initializing Google OAuth:', error);
-        showManualLogin();
-      }
-    }
 
     // Handle Google OAuth response
     function handleCredentialResponse(response) {
@@ -4890,20 +4816,105 @@
     // Fallback manual login
     function showManualLogin() {
       console.log('🔧 Showing manual login fallback');
-      const email = prompt('Please enter your email address:');
-      if (email) {
-        const userInfo = {
-          name: email.split('@')[0],
-          email: email,
-          picture: '',
-          loginTime: new Date().toISOString(),
-          token: 'manual-login'
-        };
 
-        localStorage.setItem('genaiatlas_user', JSON.stringify(userInfo));
-        showAuthenticatedUser(userInfo);
-        console.log('🔧 User logged in manually:', email);
-      }
+      // Create a simple modal dialog
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+      `;
+
+      const dialog = document.createElement('div');
+      dialog.style.cssText = `
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+      `;
+
+      dialog.innerHTML = `
+        <h3 style="margin-bottom: 1rem; color: #333;">🔐 Quick Login</h3>
+        <p style="margin-bottom: 1.5rem; color: #666;">Enter your email to access Gen AI Atlas</p>
+        <input type="email" id="email-input" placeholder="your.email@example.com" style="
+          width: 100%;
+          padding: 12px;
+          border: 2px solid #ddd;
+          border-radius: 6px;
+          font-size: 16px;
+          margin-bottom: 1rem;
+        ">
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button id="login-submit" style="
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+          ">Sign In</button>
+          <button id="login-cancel" style="
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+          ">Cancel</button>
+        </div>
+      `;
+
+      modal.appendChild(dialog);
+      document.body.appendChild(modal);
+
+      // Focus on email input
+      const emailInput = dialog.querySelector('#email-input');
+      emailInput.focus();
+
+      // Handle submit
+      dialog.querySelector('#login-submit').onclick = function() {
+        const email = emailInput.value.trim();
+        if (email && email.includes('@')) {
+          const userInfo = {
+            name: email.split('@')[0],
+            email: email,
+            picture: '',
+            loginTime: new Date().toISOString(),
+            token: 'manual-login'
+          };
+
+          localStorage.setItem('genaiatlas_user', JSON.stringify(userInfo));
+          showAuthenticatedUser(userInfo);
+          console.log('🔧 User logged in manually:', email);
+          document.body.removeChild(modal);
+        } else {
+          alert('Please enter a valid email address');
+        }
+      };
+
+      // Handle cancel
+      dialog.querySelector('#login-cancel').onclick = function() {
+        document.body.removeChild(modal);
+      };
+
+      // Handle Enter key
+      emailInput.onkeypress = function(e) {
+        if (e.key === 'Enter') {
+          dialog.querySelector('#login-submit').click();
+        }
+      };
     }
 
     // Add click handler
