@@ -4607,6 +4607,9 @@
 
 
 
+<!-- Load Google OAuth script directly -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 <h1 id="gen-ai-atlas-navigation-overview">Gen AI Atlas — Navigation Overview</h1>
 <div id="login-section" style="text-align: center; margin: 2rem 0; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
   <h2 style="margin-bottom: 1rem; font-size: 2rem; font-weight: 600;">🔐 Welcome to Gen AI Atlas</h2>
@@ -4626,16 +4629,13 @@
 
       // Check if Google OAuth is already loaded
       if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-        console.log('🔧 Google OAuth already available, triggering prompt');
-        try {
-          google.accounts.id.prompt();
-        } catch (error) {
-          console.error('🔧 Error triggering Google prompt:', error);
-          showManualLogin();
-        }
+        console.log('🔧 Google OAuth available, initializing...');
+        initializeGoogleOAuth();
       } else {
-        console.log('🔧 Google OAuth not loaded, loading script...');
-        loadGoogleOAuthScript();
+        console.log('🔧 Google OAuth not available, showing manual login');
+        console.log('🔧 Google object:', typeof google);
+        console.log('🔧 Google accounts:', typeof google !== 'undefined' ? google.accounts : 'undefined');
+        showManualLogin();
       }
     }
 
