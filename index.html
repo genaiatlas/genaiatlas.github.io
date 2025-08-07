@@ -4620,6 +4620,51 @@
     console.log('🔧 Inline script loaded');
     console.log('🔧 Button element:', document.getElementById('google-login-btn'));
 
+    // Define handleManualLogin function immediately
+    function handleManualLogin() {
+      console.log('🔧 Manual login triggered');
+
+      // Check if Google OAuth is available
+      if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+        console.log('🔧 Google OAuth available, triggering prompt');
+        google.accounts.id.prompt();
+      } else {
+        console.log('🔧 Google OAuth not available, showing manual login');
+        // Fallback: Show a simple login dialog
+        const email = prompt('Please enter your email address:');
+        if (email) {
+          const userInfo = {
+            name: email.split('@')[0],
+            email: email,
+            picture: '',
+            loginTime: new Date().toISOString(),
+            token: 'manual-login'
+          };
+
+          localStorage.setItem('genaiatlas_user', JSON.stringify(userInfo));
+
+          // Update UI
+          const loginSection = document.getElementById('login-section');
+          const contentSection = document.getElementById('content-section');
+          const loginRequired = document.getElementById('login-required');
+
+          if (loginSection) loginSection.style.display = 'none';
+          if (contentSection) contentSection.style.display = 'block';
+          if (loginRequired) loginRequired.style.display = 'none';
+
+          // Show navigation tabs
+          const navTabs = document.querySelectorAll('.md-tabs a');
+          navTabs.forEach(tab => {
+            tab.style.display = 'block';
+            tab.style.visibility = 'visible';
+            tab.style.opacity = '1';
+          });
+
+          console.log('🔧 User logged in manually:', email);
+        }
+      }
+    }
+
     // Simple test function
     function testButton() {
       console.log('🔧 Button clicked!');
