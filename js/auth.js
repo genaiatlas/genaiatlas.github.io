@@ -23,25 +23,30 @@ function initializeGoogleAuth() {
     document.head.appendChild(script);
 
     script.onload = function() {
-        google.accounts.id.initialize({
-            client_id: GOOGLE_CLIENT_ID,
-            callback: handleCredentialResponse,
-            auto_select: false,
-            cancel_on_tap_outside: true,
-        });
+        try {
+            google.accounts.id.initialize({
+                client_id: GOOGLE_CLIENT_ID,
+                callback: handleCredentialResponse,
+                auto_select: false,
+                cancel_on_tap_outside: true,
+            });
 
-        // Render the Google Sign-In button
-        google.accounts.id.renderButton(
-            document.getElementById('google-login-btn'),
-            { 
-                theme: 'outline', 
-                size: 'large',
-                type: 'standard',
-                text: 'signin_with',
-                shape: 'rectangular',
-                logo_alignment: 'left',
-            }
-        );
+            // Render the Google Sign-In button
+            google.accounts.id.renderButton(
+                document.getElementById('google-login-btn'),
+                { 
+                    theme: 'outline', 
+                    size: 'large',
+                    type: 'standard',
+                    text: 'signin_with',
+                    shape: 'rectangular',
+                    logo_alignment: 'left',
+                }
+            );
+        } catch (error) {
+            console.error('Error initializing Google OAuth:', error);
+            showConfigurationWarning();
+        }
     };
 
     script.onerror = function() {
@@ -109,20 +114,73 @@ function showAuthenticatedUser(userInfo) {
 
 // Hide navigation tabs for unauthenticated users
 function hideNavigationTabs() {
-    const navTabs = document.querySelectorAll('.md-tabs__link');
-    navTabs.forEach(tab => {
-        if (!tab.textContent.includes('Home')) {
-            tab.style.display = 'none';
-        }
+    // Try multiple selectors for different themes
+    const selectors = [
+        '.md-tabs__link',
+        '.md-tabs__item',
+        '.md-tabs a',
+        '.md-header__tabs a',
+        'nav a[href*="/"]',
+        '.md-nav__link'
+    ];
+    
+    selectors.forEach(selector => {
+        const navTabs = document.querySelectorAll(selector);
+        navTabs.forEach(tab => {
+            const text = tab.textContent || tab.innerText || '';
+            if (!text.toLowerCase().includes('home')) {
+                tab.style.display = 'none';
+                tab.style.visibility = 'hidden';
+                tab.style.opacity = '0';
+            }
+        });
     });
+    
+    // Also hide the entire tabs container if possible
+    const tabsContainer = document.querySelector('.md-tabs');
+    if (tabsContainer) {
+        const homeTab = tabsContainer.querySelector('a[href="/"]') || tabsContainer.querySelector('a[href*="index"]');
+        if (homeTab) {
+            // Hide all tabs except home
+            const allTabs = tabsContainer.querySelectorAll('a');
+            allTabs.forEach(tab => {
+                if (tab !== homeTab) {
+                    tab.style.display = 'none';
+                }
+            });
+        }
+    }
 }
 
 // Show navigation tabs for authenticated users
 function showNavigationTabs() {
-    const navTabs = document.querySelectorAll('.md-tabs__link');
-    navTabs.forEach(tab => {
-        tab.style.display = 'block';
+    // Show all navigation tabs
+    const selectors = [
+        '.md-tabs__link',
+        '.md-tabs__item',
+        '.md-tabs a',
+        '.md-header__tabs a',
+        'nav a[href*="/"]',
+        '.md-nav__link'
+    ];
+    
+    selectors.forEach(selector => {
+        const navTabs = document.querySelectorAll(selector);
+        navTabs.forEach(tab => {
+            tab.style.display = 'block';
+            tab.style.visibility = 'visible';
+            tab.style.opacity = '1';
+        });
     });
+    
+    // Show the entire tabs container
+    const tabsContainer = document.querySelector('.md-tabs');
+    if (tabsContainer) {
+        const allTabs = tabsContainer.querySelectorAll('a');
+        allTabs.forEach(tab => {
+            tab.style.display = 'block';
+        });
+    }
 }
 
 // Logout function
@@ -205,6 +263,8 @@ function checkAuthentication() {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Auth script loaded');
+    
     // Check authentication status
     checkAuthentication();
     
@@ -225,6 +285,14 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Google login button clicked');
         });
     }
+    
+    // Force hide navigation tabs on page load for unauthenticated users
+    setTimeout(() => {
+        const userInfo = localStorage.getItem('genaiatlas_user');
+        if (!userInfo) {
+            hideNavigationTabs();
+        }
+    }, 100);
 });
 
 // Export functions for use in other scripts
