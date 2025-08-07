@@ -4756,6 +4756,31 @@
           opacity: 1 !important; 
           pointer-events: auto !important; 
         }
+
+        /* Force show all navigation elements */
+        .md-tabs__link, .md-tabs__item, .md-tabs a, .md-header__tabs a, nav a, .md-nav__link {
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
+        }
+
+        /* Ensure tabs container is visible */
+        .md-tabs {
+          display: flex !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+        }
+
+        /* Mobile navigation */
+        @media (max-width: 768px) {
+          .md-nav__button {
+            display: block !important;
+          }
+          .md-nav__list {
+            display: block !important;
+          }
+        }
       `;
       document.head.appendChild(style);
 
@@ -4787,33 +4812,50 @@
         existingLogout.remove();
       }
 
-      // Find header elements
-      const header = document.querySelector('.md-header') || document.querySelector('header');
-      const searchBar = document.querySelector('.md-search') || document.querySelector('.search');
+      // Create a floating logout button in top-right corner
+      const logoutBtn = document.createElement('button');
+      logoutBtn.className = 'header-logout-btn';
+      logoutBtn.innerHTML = '🔓';
+      logoutBtn.title = 'Sign Out';
+      logoutBtn.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 8px 12px;
+        border-radius: 50%;
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 1000;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      `;
 
-      if (header) {
-        const logoutBtn = document.createElement('button');
-        logoutBtn.className = 'header-logout-btn';
-        logoutBtn.innerHTML = '🚪 Logout';
-        logoutBtn.style.cssText = `
-          background: #dc3545;
-          color: white;
-          border: none;
-          padding: 8px 16px;
-          border-radius: 6px;
-          font-size: 14px;
-          cursor: pointer;
-          margin-left: 10px;
-          transition: all 0.3s ease;
-        `;
-        logoutBtn.onclick = logout;
+      // Hover effects
+      logoutBtn.onmouseenter = function() {
+        this.style.background = 'rgba(220, 53, 69, 0.8)';
+        this.style.transform = 'scale(1.1)';
+      };
 
-        // Insert before search bar or at the end of header
-        if (searchBar && searchBar.parentNode) {
-          searchBar.parentNode.insertBefore(logoutBtn, searchBar);
-        } else {
-          header.appendChild(logoutBtn);
-        }
+      logoutBtn.onmouseleave = function() {
+        this.style.background = 'rgba(255, 255, 255, 0.1)';
+        this.style.transform = 'scale(1)';
+      };
+
+      logoutBtn.onclick = logout;
+
+      // Add to body for floating position
+      document.body.appendChild(logoutBtn);
+
+      // Mobile responsive
+      if (window.innerWidth <= 768) {
+        logoutBtn.style.top = '10px';
+        logoutBtn.style.right = '10px';
+        logoutBtn.style.padding = '6px 10px';
+        logoutBtn.style.fontSize = '14px';
       }
     }
 
@@ -4862,12 +4904,26 @@
     document.addEventListener('DOMContentLoaded', function() {
       console.log('🔧 DOM loaded, checking for existing session');
 
+      // Force show login screen first, then check session
+      showLoginScreen();
+
       const savedUser = localStorage.getItem('genaiatlas_user');
       if (savedUser) {
         try {
           const userInfo = JSON.parse(savedUser);
           console.log('🔧 Found existing session for:', userInfo.name);
-          showAuthenticatedUser(userInfo);
+          // Validate session is not too old (24 hours)
+          const loginTime = new Date(userInfo.loginTime);
+          const now = new Date();
+          const hoursDiff = (now - loginTime) / (1000 * 60 * 60);
+
+          if (hoursDiff < 24) {
+            showAuthenticatedUser(userInfo);
+          } else {
+            console.log('🔧 Session expired, clearing');
+            localStorage.removeItem('genaiatlas_user');
+            showLoginScreen();
+          }
         } catch (error) {
           console.error('🔧 Error parsing saved user:', error);
           localStorage.removeItem('genaiatlas_user');
@@ -4939,8 +4995,6 @@
 
   These resources provide the groundwork for all modern AI and data workflows.
 
-  ---
-
   ## 🤖 Generative AI Core
 
   Deep dive into the world of generative models and natural language processing:
@@ -4955,8 +5009,6 @@
 
   Master the technologies at the heart of today's AI revolution.
 
-  ---
-
   ## 🚀 Deployment & Operations
 
   Go from research to production with real-world tools:
@@ -4968,8 +5020,6 @@
   **AI Evaluation (Evals)**: Master techniques for evaluating and monitoring AI system performance.
 
   Learn best practices for building, deploying, and managing robust AI systems.
-
-  ---
 
   ## 🔬 Research & Advanced Topics
 
@@ -4983,8 +5033,6 @@
 
   Advance your skills and contribute to the future of AI.
 
-  ---
-
   ## 🌐 Community & Q&A
 
   Connect, share, and learn with the Gen AI Atlas community:
@@ -4996,8 +5044,6 @@
   **Q&A Forums**: Get answers to your questions and help others.
 
   Find support, share insights, and grow your network.
-
-  ---
 
   <div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 10px;">
     <p style="color: #495057; margin-bottom: 0.5rem; font-weight: 600;">🎯 Ready to start learning?</p>
