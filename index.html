@@ -4624,44 +4624,123 @@
     window.handleManualLogin = function() {
       console.log('🔧 Manual login triggered');
 
-      // Check if Google OAuth is available
-      if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-        console.log('🔧 Google OAuth available, triggering prompt');
-        google.accounts.id.prompt();
+      // Load Google OAuth script if not already loaded
+      if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
+        console.log('🔧 Loading Google OAuth script...');
+        const script = document.createElement('script');
+        script.src = 'https://accounts.google.com/gsi/client';
+        script.async = true;
+        script.defer = true;
+
+        script.onload = function() {
+          console.log('🔧 Google OAuth script loaded, initializing...');
+          initializeGoogleOAuth();
+        };
+
+        script.onerror = function() {
+          console.error('🔧 Failed to load Google OAuth script');
+          showManualLogin();
+        };
+
+        document.head.appendChild(script);
       } else {
-        console.log('🔧 Google OAuth not available, showing manual login');
-        // Fallback: Show a simple login dialog
-        const email = prompt('Please enter your email address:');
-        if (email) {
-          const userInfo = {
-            name: email.split('@')[0],
-            email: email,
-            picture: '',
-            loginTime: new Date().toISOString(),
-            token: 'manual-login'
-          };
+        console.log('🔧 Google OAuth already available, triggering prompt');
+        google.accounts.id.prompt();
+      }
+    }
 
-          localStorage.setItem('genaiatlas_user', JSON.stringify(userInfo));
+    // Initialize Google OAuth
+    function initializeGoogleOAuth() {
+      try {
+        console.log('🔧 Initializing Google OAuth...');
 
-          // Update UI
-          const loginSection = document.getElementById('login-section');
-          const contentSection = document.getElementById('content-section');
-          const loginRequired = document.getElementById('login-required');
+        google.accounts.id.initialize({
+          client_id: '51499726574-938u73klifk6kvc44f62ibolqkg27rgq.apps.googleusercontent.com',
+          callback: handleCredentialResponse,
+          auto_select: false,
+          cancel_on_tap_outside: true,
+        });
 
-          if (loginSection) loginSection.style.display = 'none';
-          if (contentSection) contentSection.style.display = 'block';
-          if (loginRequired) loginRequired.style.display = 'none';
+        console.log('🔧 Google OAuth initialized, triggering prompt');
+        google.accounts.id.prompt();
 
-          // Show navigation tabs
-          const navTabs = document.querySelectorAll('.md-tabs a');
-          navTabs.forEach(tab => {
-            tab.style.display = 'block';
-            tab.style.visibility = 'visible';
-            tab.style.opacity = '1';
-          });
+      } catch (error) {
+        console.error('🔧 Error initializing Google OAuth:', error);
+        showManualLogin();
+      }
+    }
 
-          console.log('🔧 User logged in manually:', email);
-        }
+    // Handle Google OAuth response
+    function handleCredentialResponse(response) {
+      console.log('🔧 Google OAuth response received');
+
+      try {
+        // Decode the JWT token
+        const payload = JSON.parse(atob(response.credential.split('.')[1]));
+
+        // Store user info in localStorage
+        const userInfo = {
+          name: payload.name,
+          email: payload.email,
+          picture: payload.picture,
+          loginTime: new Date().toISOString(),
+          token: response.credential
+        };
+
+        localStorage.setItem('genaiatlas_user', JSON.stringify(userInfo));
+
+        // Update UI
+        showAuthenticatedUser(userInfo);
+
+        console.log('🔧 User logged in via Google:', userInfo.email);
+      } catch (error) {
+        console.error('🔧 Error handling OAuth response:', error);
+        showManualLogin();
+      }
+    }
+
+    // Show authenticated user
+    function showAuthenticatedUser(userInfo) {
+      const loginSection = document.getElementById('login-section');
+      const contentSection = document.getElementById('content-section');
+      const loginRequired = document.getElementById('login-required');
+
+      if (loginSection) loginSection.style.display = 'none';
+      if (contentSection) contentSection.style.display = 'block';
+      if (loginRequired) loginRequired.style.display = 'none';
+
+      // Update user info display
+      const userName = document.getElementById('user-name');
+      const userInfoDiv = document.getElementById('user-info');
+
+      if (userName) userName.textContent = userInfo.name;
+      if (userInfoDiv) userInfoDiv.style.display = 'block';
+
+      // Show navigation tabs
+      const navTabs = document.querySelectorAll('.md-tabs a');
+      navTabs.forEach(tab => {
+        tab.style.display = 'block';
+        tab.style.visibility = 'visible';
+        tab.style.opacity = '1';
+      });
+    }
+
+    // Fallback manual login
+    function showManualLogin() {
+      console.log('🔧 Showing manual login fallback');
+      const email = prompt('Please enter your email address:');
+      if (email) {
+        const userInfo = {
+          name: email.split('@')[0],
+          email: email,
+          picture: '',
+          loginTime: new Date().toISOString(),
+          token: 'manual-login'
+        };
+
+        localStorage.setItem('genaiatlas_user', JSON.stringify(userInfo));
+        showAuthenticatedUser(userInfo);
+        console.log('🔧 User logged in manually:', email);
       }
     }
 
