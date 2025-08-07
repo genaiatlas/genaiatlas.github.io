@@ -4716,118 +4716,47 @@
       if (userName) userName.textContent = userInfo.name;
       if (userInfoDiv) userInfoDiv.style.display = 'block';
 
-      // Show navigation tabs - more aggressive approach
-      const showSelectors = [
-        '.md-tabs__link',
-        '.md-tabs__item',
-        '.md-tabs a',
-        '.md-header__tabs a',
-        'nav a[href*="/"]',
-        '.md-nav__link',
-        '.md-tabs a[href*="/01-foundation"]',
-        '.md-tabs a[href*="/02-gen-ai-core"]',
-        '.md-tabs a[href*="/03-deploy-ops"]',
-        '.md-tabs a[href*="/04-applied-research"]',
-        '.md-tabs a[href*="/05-community-qna"]',
-        '.md-nav a[href*="/01-foundation"]',
-        '.md-nav a[href*="/02-gen-ai-core"]',
-        '.md-nav a[href*="/03-deploy-ops"]',
-        '.md-nav a[href*="/04-applied-research"]',
-        '.md-nav a[href*="/05-community-qna"]'
-      ];
+      // Simple approach: just show navigation by removing hidden classes
+      // No CSS overrides - let MkDocs handle the styling naturally
 
-      showSelectors.forEach(selector => {
-        const navTabs = document.querySelectorAll(selector);
-        navTabs.forEach(tab => {
-          tab.style.display = 'inline-block';
-          tab.style.visibility = 'visible';
-          tab.style.opacity = '1';
-          tab.style.pointerEvents = 'auto';
-        });
+      // Show all navigation tabs by removing any hidden classes
+      const allNavLinks = document.querySelectorAll('.md-tabs a, .md-nav a');
+      allNavLinks.forEach(link => {
+        link.classList.remove('hidden');
+        link.style.display = '';
+        link.style.visibility = '';
+        link.style.opacity = '';
       });
 
-      // Also show the entire tabs container
+      // Ensure tabs container is visible
       const tabsContainer = document.querySelector('.md-tabs');
       if (tabsContainer) {
-        tabsContainer.style.display = 'flex';
-        tabsContainer.style.visibility = 'visible';
-        tabsContainer.style.opacity = '1';
-        const allTabs = tabsContainer.querySelectorAll('a');
-        allTabs.forEach(tab => {
-          tab.style.display = 'inline-block';
-          tab.style.visibility = 'visible';
-          tab.style.opacity = '1';
-        });
+        tabsContainer.classList.remove('hidden');
+        tabsContainer.style.display = '';
+        tabsContainer.style.visibility = '';
+        tabsContainer.style.opacity = '';
       }
 
-      // Force show all navigation elements
-      const allNavElements = document.querySelectorAll('nav a, .md-tabs a, .md-nav a');
-      allNavElements.forEach(element => {
-        element.style.display = 'inline-block';
-        element.style.visibility = 'visible';
-        element.style.opacity = '1';
-        element.style.pointerEvents = 'auto';
+      // Simple approach: just remove the 'hidden' class and show navigation naturally
+      // No CSS overrides - let MkDocs handle the styling
+
+      // Show all navigation tabs by removing any hidden classes
+      const allNavLinks = document.querySelectorAll('.md-tabs a, .md-nav a');
+      allNavLinks.forEach(link => {
+        link.classList.remove('hidden');
+        link.style.display = '';
+        link.style.visibility = '';
+        link.style.opacity = '';
       });
 
-      // Remove any CSS that might be hiding navigation
-      const style = document.createElement('style');
-      style.textContent = `
-        /* Force show ALL navigation elements */
-        .md-tabs, .md-tabs__list, .md-tabs__item, .md-tabs__link {
-          display: flex !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-          pointer-events: auto !important;
-        }
-
-        /* Force show all navigation tabs */
-        .md-tabs a, .md-nav a, nav a { 
-          display: inline-block !important; 
-          visibility: visible !important; 
-          opacity: 1 !important; 
-          pointer-events: auto !important; 
-        }
-
-        /* Override any hiding CSS for specific navigation items */
-        .md-tabs a[href*="/"], .md-nav a[href*="/"], nav a[href*="/"] {
-          display: inline-block !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-          pointer-events: auto !important;
-        }
-
-        /* Ensure tabs container is visible and properly laid out */
-        .md-tabs {
-          display: flex !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-          flex-direction: row !important;
-        }
-
-        .md-tabs__list {
-          display: flex !important;
-          flex-direction: row !important;
-          list-style: none !important;
-          margin: 0 !important;
-          padding: 0 !important;
-        }
-
-        .md-tabs__item {
-          display: inline-block !important;
-          margin: 0 10px 0 0 !important;
-        }
-
-        /* Mobile navigation */
-        @media (max-width: 768px) {
-          .md-nav__button {
-            display: block !important;
-          }
-          .md-nav__list {
-            display: block !important;
-          }
-        }
-      `;
-      document.head.appendChild(style);
+      // Ensure tabs container is visible
+      const tabsContainer = document.querySelector('.md-tabs');
+      if (tabsContainer) {
+        tabsContainer.classList.remove('hidden');
+        tabsContainer.style.display = '';
+        tabsContainer.style.visibility = '';
+        tabsContainer.style.opacity = '';
+      }
 
       // Add logout button to header
       addLogoutButton();
@@ -4999,26 +4928,25 @@
       if (loginRequired) loginRequired.style.display = 'block';
       if (userInfoDiv) userInfoDiv.style.display = 'none';
 
-      // Hide navigation tabs for unauthenticated users - more specific targeting
+      // Hide navigation tabs for unauthenticated users - simple approach
+      // Just add 'hidden' class to navigation elements
       const hideSelectors = [
-        '.md-tabs__link[href*="/01-foundation"]',
-        '.md-tabs__link[href*="/02-gen-ai-core"]',
-        '.md-tabs__link[href*="/03-deploy-ops"]',
-        '.md-tabs__link[href*="/04-applied-research"]',
-        '.md-tabs__link[href*="/05-community-qna"]',
-        '.md-nav__link[href*="/01-foundation"]',
-        '.md-nav__link[href*="/02-gen-ai-core"]',
-        '.md-nav__link[href*="/03-deploy-ops"]',
-        '.md-nav__link[href*="/04-applied-research"]',
-        '.md-nav__link[href*="/05-community-qna"]'
+        '.md-tabs a[href*="/01-foundation"]',
+        '.md-tabs a[href*="/02-gen-ai-core"]',
+        '.md-tabs a[href*="/03-deploy-ops"]',
+        '.md-tabs a[href*="/04-applied-research"]',
+        '.md-tabs a[href*="/05-community-qna"]',
+        '.md-nav a[href*="/01-foundation"]',
+        '.md-nav a[href*="/02-gen-ai-core"]',
+        '.md-nav a[href*="/03-deploy-ops"]',
+        '.md-nav a[href*="/04-applied-research"]',
+        '.md-nav a[href*="/05-community-qna"]'
       ];
 
       hideSelectors.forEach(selector => {
         const navTabs = document.querySelectorAll(selector);
         navTabs.forEach(tab => {
-          tab.style.display = 'none';
-          tab.style.visibility = 'hidden';
-          tab.style.opacity = '0';
+          tab.classList.add('hidden');
         });
       });
     }
