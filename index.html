@@ -4628,15 +4628,9 @@
     // Define handleManualLogin function immediately and make it global
     window.handleManualLogin = function() {
       console.log('🔧 Manual login triggered');
-
-      // Show fallback immediately since Google OAuth has been failing
-      console.log('🔧 Using fallback login due to Google OAuth issues');
+      console.log('🔧 Using fallback login - no Google OAuth');
       showManualLogin();
     }
-
-
-
-
 
     // Show authenticated user
     function showAuthenticatedUser(userInfo) {
@@ -4708,150 +4702,108 @@
 
       // Hide navigation tabs
       const selectors = [
-        '.md-tabs__link',
-        '.md-tabs__item',
-        '.md-tabs a',
-        '.md-header__tabs a',
-        'nav a[href*="/"]',
-        '.md-nav__link'
+        '.md-tabs__link:not([href="/"]):not([href*="index"])',
+        '.md-tabs__item:not([href="/"]):not([href*="index"])',
+        '.md-tabs a:not([href="/"]):not([href*="index"])',
+        '.md-header__tabs a:not([href="/"]):not([href*="index"])',
+        'nav a[href*="/"]:not([href="/"]):not([href*="index"])',
+        '.md-nav__link:not([href="/"]):not([href*="index"])'
       ];
 
       selectors.forEach(selector => {
         const navTabs = document.querySelectorAll(selector);
         navTabs.forEach(tab => {
-          const text = tab.textContent || tab.innerText || '';
-          if (!text.toLowerCase().includes('home')) {
-            tab.style.display = 'none';
-            tab.style.visibility = 'hidden';
-            tab.style.opacity = '0';
-          }
+          tab.style.display = 'none';
+          tab.style.visibility = 'hidden';
+          tab.style.opacity = '0';
         });
       });
 
-      // Redirect to home page
+      // Redirect to homepage
       window.location.href = '/';
     }
 
-    // Fallback manual login
+    // Fallback manual login (custom modal)
     function showManualLogin() {
       console.log('🔧 Showing manual login fallback');
-
-      // Create a simple modal dialog
       const modal = document.createElement('div');
       modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);
+        display: flex; justify-content: center; align-items: center; z-index: 10000;
       `;
-
       const dialog = document.createElement('div');
       dialog.style.cssText = `
-        background: white;
-        padding: 2rem;
-        border-radius: 10px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        max-width: 400px;
-        width: 90%;
-        text-align: center;
+        background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        max-width: 400px; width: 90%; text-align: center;
       `;
-
       dialog.innerHTML = `
         <h3 style="margin-bottom: 1rem; color: #333;">🔐 Quick Login</h3>
         <p style="margin-bottom: 1.5rem; color: #666;">Enter your email to access Gen AI Atlas</p>
         <input type="email" id="email-input" placeholder="your.email@example.com" style="
-          width: 100%;
-          padding: 12px;
-          border: 2px solid #ddd;
-          border-radius: 6px;
-          font-size: 16px;
-          margin-bottom: 1rem;
+          width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 16px; margin-bottom: 1rem;
         ">
         <div style="display: flex; gap: 10px; justify-content: center;">
-          <button id="login-submit" style="
-            background: #4285f4;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-          ">Sign In</button>
-          <button id="login-cancel" style="
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-          ">Cancel</button>
+          <button id="login-submit" style="background: #4285f4; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px;">Sign In</button>
+          <button id="login-cancel" style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px;">Cancel</button>
         </div>
       `;
-
       modal.appendChild(dialog);
       document.body.appendChild(modal);
-
-      // Focus on email input
-      const emailInput = dialog.querySelector('#email-input');
-      emailInput.focus();
-
-      // Handle submit
+      dialog.querySelector('#email-input').focus();
       dialog.querySelector('#login-submit').onclick = function() {
-        const email = emailInput.value.trim();
+        const email = dialog.querySelector('#email-input').value.trim();
         if (email && email.includes('@')) {
-          const userInfo = {
-            name: email.split('@')[0],
-            email: email,
-            picture: '',
-            loginTime: new Date().toISOString(),
-            token: 'manual-login'
-          };
-
+          const userInfo = { name: email.split('@')[0], email: email, picture: '', loginTime: new Date().toISOString(), token: 'manual-login' };
           localStorage.setItem('genaiatlas_user', JSON.stringify(userInfo));
           showAuthenticatedUser(userInfo);
           console.log('🔧 User logged in manually:', email);
           document.body.removeChild(modal);
-        } else {
-          alert('Please enter a valid email address');
-        }
+        } else { alert('Please enter a valid email address'); }
       };
-
-      // Handle cancel
-      dialog.querySelector('#login-cancel').onclick = function() {
-        document.body.removeChild(modal);
-      };
-
-      // Handle Enter key
-      emailInput.onkeypress = function(e) {
-        if (e.key === 'Enter') {
-          dialog.querySelector('#login-submit').click();
-        }
-      };
+      dialog.querySelector('#login-cancel').onclick = function() { document.body.removeChild(modal); };
+      dialog.querySelector('#email-input').onkeypress = function(e) { if (e.key === 'Enter') { dialog.querySelector('#login-submit').click(); } };
     }
 
-    // Add click handler
+    // Check for existing session on page load
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('🔧 DOM loaded, checking for existing session');
+
+      const savedUser = localStorage.getItem('genaiatlas_user');
+      if (savedUser) {
+        try {
+          const userInfo = JSON.parse(savedUser);
+          console.log('🔧 Found existing session for:', userInfo.name);
+          showAuthenticatedUser(userInfo);
+        } catch (error) {
+          console.error('🔧 Error parsing saved user:', error);
+          localStorage.removeItem('genaiatlas_user');
+        }
+      } else {
+        console.log('🔧 No existing session found');
+        // Hide navigation tabs for unauthenticated users
+        const selectors = [
+          '.md-tabs__link:not([href="/"]):not([href*="index"])',
+          '.md-tabs__item:not([href="/"]):not([href*="index"])',
+          '.md-tabs a:not([href="/"]):not([href*="index"])',
+          '.md-header__tabs a:not([href="/"]):not([href*="index"])',
+          'nav a[href*="/"]:not([href="/"]):not([href*="index"])',
+          '.md-nav__link:not([href="/"]):not([href*="index"])'
+        ];
+
+        selectors.forEach(selector => {
+          const navTabs = document.querySelectorAll(selector);
+          navTabs.forEach(tab => {
+            tab.style.display = 'none';
+            tab.style.visibility = 'hidden';
+            tab.style.opacity = '0';
+          });
+        });
+      }
+
       const btn = document.getElementById('google-login-btn');
       if (btn) {
         console.log('🔧 Login button found and ready');
       }
-
-      // Test Google OAuth availability
-      setTimeout(() => {
-        console.log('🔧 Testing Google OAuth availability...');
-        console.log('🔧 typeof google:', typeof google);
-        if (typeof google !== 'undefined') {
-          console.log('🔧 google.accounts:', typeof google.accounts);
-          console.log('🔧 google.accounts.id:', typeof google.accounts?.id);
-        }
-      }, 2000);
     });
   </script>
   <div id="user-info" style="display: none; margin-top: 1.5rem; padding: 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 8px; backdrop-filter: blur(10px);">
