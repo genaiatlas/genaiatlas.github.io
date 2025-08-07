@@ -4722,8 +4722,16 @@
       // Show navigation by directly manipulating the DOM
       // Target specific navigation elements that should be visible
 
+      // Remove all CSS that hides navigation
+      const existingStyles = document.querySelectorAll('style');
+      existingStyles.forEach(style => {
+        if (style.textContent.includes('display: none') || style.textContent.includes('visibility: hidden')) {
+          style.remove();
+        }
+      });
+
       // Force show all navigation tabs with !important
-      const allNavLinks = document.querySelectorAll('.md-tabs a, .md-nav a');
+      const allNavLinks = document.querySelectorAll('.md-tabs a, .md-nav a, .md-tabs__link, .md-nav__link');
       allNavLinks.forEach(link => {
         // Remove any hidden classes and reset styles
         link.classList.remove('hidden');
@@ -4731,6 +4739,7 @@
         link.style.setProperty('visibility', 'visible', 'important');
         link.style.setProperty('opacity', '1', 'important');
         link.style.setProperty('pointer-events', 'auto', 'important');
+        link.style.setProperty('position', 'static', 'important');
       });
 
       // Show tabs container
@@ -4740,6 +4749,7 @@
         tabsContainer.style.setProperty('display', 'flex', 'important');
         tabsContainer.style.setProperty('visibility', 'visible', 'important');
         tabsContainer.style.setProperty('opacity', '1', 'important');
+        tabsContainer.style.setProperty('position', 'static', 'important');
       }
 
       // Show all navigation items specifically
@@ -4749,21 +4759,47 @@
         item.style.setProperty('display', 'inline-block', 'important');
         item.style.setProperty('visibility', 'visible', 'important');
         item.style.setProperty('opacity', '1', 'important');
+        item.style.setProperty('position', 'static', 'important');
       });
 
-      // Add CSS to force show navigation
+      // Add comprehensive CSS to force show navigation
       const style = document.createElement('style');
       style.textContent = `
-        .md-tabs a, .md-nav a { 
+        .md-tabs a, .md-nav a, .md-tabs__link, .md-nav__link { 
           display: inline-block !important; 
           visibility: visible !important; 
           opacity: 1 !important; 
           pointer-events: auto !important; 
+          position: static !important;
         }
-        .md-tabs { 
+        .md-tabs, .md-tabs__list { 
           display: flex !important; 
           visibility: visible !important; 
           opacity: 1 !important; 
+          position: static !important;
+        }
+        .md-tabs__item, .md-nav__item {
+          display: inline-block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          position: static !important;
+        }
+        /* Override any hiding CSS */
+        .md-tabs a[href*="/01-foundation"],
+        .md-tabs a[href*="/02-gen-ai-core"],
+        .md-tabs a[href*="/03-deploy-ops"],
+        .md-tabs a[href*="/04-applied-research"],
+        .md-tabs a[href*="/05-community-qna"],
+        .md-nav a[href*="/01-foundation"],
+        .md-nav a[href*="/02-gen-ai-core"],
+        .md-nav a[href*="/03-deploy-ops"],
+        .md-nav a[href*="/04-applied-research"],
+        .md-nav a[href*="/05-community-qna"] {
+          display: inline-block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          pointer-events: auto !important;
+          position: static !important;
         }
       `;
       document.head.appendChild(style);
@@ -4782,6 +4818,12 @@
 
       // Clear user data
       localStorage.removeItem('genaiatlas_user');
+
+      // Remove logout button
+      const existingLogout = document.querySelector('.header-logout-btn');
+      if (existingLogout) {
+        existingLogout.remove();
+      }
 
       // Show login screen
       showLoginScreen();
@@ -4890,37 +4932,41 @@
     document.addEventListener('DOMContentLoaded', function() {
       console.log('🔧 DOM loaded, checking for existing session');
 
-      const savedUser = localStorage.getItem('genaiatlas_user');
-      if (savedUser) {
-        try {
-          const userInfo = JSON.parse(savedUser);
-          console.log('🔧 Found existing session for:', userInfo.name);
-          // Validate session is not too old (24 hours)
-          const loginTime = new Date(userInfo.loginTime);
-          const now = new Date();
-          const hoursDiff = (now - loginTime) / (1000 * 60 * 60);
+      // Wait a moment for DOM to be fully ready
+      setTimeout(() => {
+        const savedUser = localStorage.getItem('genaiatlas_user');
+        if (savedUser) {
+          try {
+            const userInfo = JSON.parse(savedUser);
+            console.log('🔧 Found existing session for:', userInfo.name);
+            // Validate session is not too old (24 hours)
+            const loginTime = new Date(userInfo.loginTime);
+            const now = new Date();
+            const hoursDiff = (now - loginTime) / (1000 * 60 * 60);
 
-          if (hoursDiff < 24) {
-            showAuthenticatedUser(userInfo);
-          } else {
-            console.log('🔧 Session expired, clearing');
+            if (hoursDiff < 24) {
+              console.log('🔧 Session valid, showing authenticated user');
+              showAuthenticatedUser(userInfo);
+            } else {
+              console.log('🔧 Session expired, clearing');
+              localStorage.removeItem('genaiatlas_user');
+              showLoginScreen();
+            }
+          } catch (error) {
+            console.error('🔧 Error parsing saved user:', error);
             localStorage.removeItem('genaiatlas_user');
             showLoginScreen();
           }
-        } catch (error) {
-          console.error('🔧 Error parsing saved user:', error);
-          localStorage.removeItem('genaiatlas_user');
+        } else {
+          console.log('🔧 No existing session found');
           showLoginScreen();
         }
-      } else {
-        console.log('🔧 No existing session found');
-        showLoginScreen();
-      }
 
-      const btn = document.getElementById('google-login-btn');
-      if (btn) {
-        console.log('🔧 Login button found and ready');
-      }
+        const btn = document.getElementById('google-login-btn');
+        if (btn) {
+          console.log('🔧 Login button found and ready');
+        }
+      }, 100);
     });
 
     // Show login screen (hide content, show login)
