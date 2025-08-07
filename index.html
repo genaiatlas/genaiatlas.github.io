@@ -4612,64 +4612,64 @@
 
 <!-- Login system - with Google OAuth -->
 <script>
-  console.log('🔧 Login system initialized - with Google OAuth');
+  console.log('🔧 Login system initialized - with Google OAuth - v2.0');
+
+  // Define handleManualLogin function immediately
+  function handleManualLogin() {
+    console.log('🔧 Manual login triggered');
+
+    // Try Google OAuth first
+    if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+      console.log('🔧 Google OAuth available, trying...');
+      try {
+        google.accounts.id.initialize({
+          client_id: '51499726574-938u73klifk6kvc44f62ibolqkg27rgq.apps.googleusercontent.com',
+          callback: handleCredentialResponse,
+          auto_select: false,
+          cancel_on_tap_outside: true,
+          prompt_parent_id: 'google-login-btn',
+        });
+
+        setTimeout(() => {
+          try {
+            google.accounts.id.prompt((notification) => {
+              if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                console.log('🔧 Google OAuth prompt failed, using fallback');
+                showManualLogin();
+              }
+            });
+            console.log('🔧 Google prompt triggered');
+          } catch (error) {
+            console.log('🔧 Google OAuth failed, using fallback');
+            showManualLogin();
+          }
+        }, 500);
+      } catch (error) {
+        console.log('🔧 Google OAuth failed, using fallback');
+        showManualLogin();
+      }
+    } else {
+      console.log('🔧 Google OAuth not available, using fallback');
+      showManualLogin();
+    }
+  }
+
+  // Make it globally available
+  window.handleManualLogin = handleManualLogin;
 </script>
 
 <h1 id="gen-ai-atlas-navigation-overview">Gen AI Atlas — Navigation Overview</h1>
 <div id="login-section" style="text-align: center; margin: 2rem 0; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
   <h2 style="margin-bottom: 1rem; font-size: 2rem; font-weight: 600;">🔐 Welcome to Gen AI Atlas</h2>
   <p style="margin-bottom: 1.5rem; font-size: 1.1rem; opacity: 0.9;">Please sign in with your Google account to access our comprehensive AI learning resources.</p>
-  <button id="google-login-btn" style="background: #4285f4; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; margin: 10px; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px;" onclick="handleManualLogin()">
+  <button id="google-login-btn" style="background: #4285f4; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 500; cursor: pointer; margin: 10px; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px;" onclick="if(typeof handleManualLogin === 'function') { handleManualLogin(); } else { console.error('handleManualLogin not found'); showManualLogin(); }">
     <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" style="width: 20px; height: 20px; vertical-align: middle;">
     Sign in with Google
   </button>
 
   <script>
-    console.log('🔧 Inline script loaded');
+    console.log('🔧 Inline script loaded - v2.0');
     console.log('🔧 Button element:', document.getElementById('google-login-btn'));
-
-    // Define handleManualLogin function immediately and make it global
-    function handleManualLogin() {
-      console.log('🔧 Manual login triggered');
-
-      // Try Google OAuth first
-      if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-        console.log('🔧 Google OAuth available, trying...');
-        try {
-          google.accounts.id.initialize({
-            client_id: '51499726574-938u73klifk6kvc44f62ibolqkg27rgq.apps.googleusercontent.com',
-            callback: handleCredentialResponse,
-            auto_select: false,
-            cancel_on_tap_outside: true,
-            prompt_parent_id: 'google-login-btn',
-          });
-
-          setTimeout(() => {
-            try {
-              google.accounts.id.prompt((notification) => {
-                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                  console.log('🔧 Google OAuth prompt failed, using fallback');
-                  showManualLogin();
-                }
-              });
-              console.log('🔧 Google prompt triggered');
-            } catch (error) {
-              console.log('🔧 Google OAuth failed, using fallback');
-              showManualLogin();
-            }
-          }, 500); // Increased timeout
-        } catch (error) {
-          console.log('🔧 Google OAuth failed, using fallback');
-          showManualLogin();
-        }
-      } else {
-        console.log('🔧 Google OAuth not available, using fallback');
-        showManualLogin();
-      }
-    }
-
-    // Make it globally available
-    window.handleManualLogin = handleManualLogin;
 
     // Handle Google OAuth response
     function handleCredentialResponse(response) {
