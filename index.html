@@ -4608,7 +4608,22 @@
 
 
 <!-- Load Google OAuth script directly -->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://accounts.google.com/gsi/client" async defer onload="console.log('🔧 Google OAuth script loaded via HTML')" onerror="console.error('🔧 Failed to load Google OAuth script via HTML')"></script>
+
+<!-- Alternative Google OAuth script -->
+<script>
+  // Fallback: Try to load Google OAuth if the first one fails
+  setTimeout(() => {
+    if (typeof google === 'undefined' || !google.accounts) {
+      console.log('🔧 First Google OAuth script failed, trying alternative...');
+      const script = document.createElement('script');
+      script.src = 'https://apis.google.com/js/platform.js';
+      script.onload = () => console.log('🔧 Alternative Google script loaded');
+      script.onerror = () => console.error('🔧 Alternative Google script failed');
+      document.head.appendChild(script);
+    }
+  }, 3000);
+</script>
 
 <h1 id="gen-ai-atlas-navigation-overview">Gen AI Atlas — Navigation Overview</h1>
 <div id="login-section" style="text-align: center; margin: 2rem 0; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
@@ -4842,8 +4857,15 @@
         console.log('🔧 Test click handler added');
       }
 
-      // Pre-load Google OAuth script
-      preloadGoogleOAuth();
+      // Test Google OAuth availability
+      setTimeout(() => {
+        console.log('🔧 Testing Google OAuth availability...');
+        console.log('🔧 typeof google:', typeof google);
+        if (typeof google !== 'undefined') {
+          console.log('🔧 google.accounts:', typeof google.accounts);
+          console.log('🔧 google.accounts.id:', typeof google.accounts?.id);
+        }
+      }, 2000);
     });
   </script>
   <div id="user-info" style="display: none; margin-top: 1.5rem; padding: 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 8px; backdrop-filter: blur(10px);">
