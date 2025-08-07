@@ -4607,9 +4607,12 @@
 
 
 
-<!-- Login system - using fallback only -->
+<!-- Load Google OAuth script -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<!-- Login system - with Google OAuth -->
 <script>
-  console.log('🔧 Login system initialized - using fallback only');
+  console.log('🔧 Login system initialized - with Google OAuth');
 </script>
 
 <h1 id="gen-ai-atlas-navigation-overview">Gen AI Atlas — Navigation Overview</h1>
@@ -4628,8 +4631,64 @@
     // Define handleManualLogin function immediately and make it global
     window.handleManualLogin = function() {
       console.log('🔧 Manual login triggered');
-      console.log('🔧 Using fallback login - no Google OAuth');
-      showManualLogin();
+
+      // Try Google OAuth first
+      if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+        console.log('🔧 Google OAuth available, trying...');
+        try {
+          google.accounts.id.initialize({
+            client_id: '51499726574-938u73klifk6kvc44f62ibolqkg27rgq.apps.googleusercontent.com',
+            callback: handleCredentialResponse,
+            auto_select: false,
+            cancel_on_tap_outside: true,
+          });
+
+          setTimeout(() => {
+            try {
+              google.accounts.id.prompt();
+              console.log('🔧 Google prompt triggered');
+            } catch (error) {
+              console.log('🔧 Google OAuth failed, using fallback');
+              showManualLogin();
+            }
+          }, 100);
+        } catch (error) {
+          console.log('🔧 Google OAuth failed, using fallback');
+          showManualLogin();
+        }
+      } else {
+        console.log('🔧 Google OAuth not available, using fallback');
+        showManualLogin();
+      }
+    }
+
+    // Handle Google OAuth response
+    function handleCredentialResponse(response) {
+      console.log('🔧 Google OAuth response received');
+
+      try {
+        // Decode the JWT token
+        const payload = JSON.parse(atob(response.credential.split('.')[1]));
+
+        // Store user info in localStorage
+        const userInfo = {
+          name: payload.name,
+          email: payload.email,
+          picture: payload.picture,
+          loginTime: new Date().toISOString(),
+          token: response.credential
+        };
+
+        localStorage.setItem('genaiatlas_user', JSON.stringify(userInfo));
+
+        // Update UI
+        showAuthenticatedUser(userInfo);
+
+        console.log('🔧 User logged in via Google:', userInfo.email);
+      } catch (error) {
+        console.error('🔧 Error handling OAuth response:', error);
+        showManualLogin();
+      }
     }
 
     // Show authenticated user
@@ -4678,6 +4737,27 @@
           tab.style.display = 'block';
         });
       }
+
+      // Force show all navigation elements
+      const allNavElements = document.querySelectorAll('nav a, .md-tabs a, .md-nav a');
+      allNavElements.forEach(element => {
+        element.style.display = 'block';
+        element.style.visibility = 'visible';
+        element.style.opacity = '1';
+        element.style.pointerEvents = 'auto';
+      });
+
+      // Remove any CSS that might be hiding navigation
+      const style = document.createElement('style');
+      style.textContent = `
+        .md-tabs a, .md-nav a, nav a { 
+          display: block !important; 
+          visibility: visible !important; 
+          opacity: 1 !important; 
+          pointer-events: auto !important; 
+        }
+      `;
+      document.head.appendChild(style);
 
       console.log('🔧 Navigation tabs should now be visible');
     }
@@ -4822,6 +4902,7 @@
   </div>
 
   ## 📚 Foundation
+
   Build your essential knowledge with modules in Statistics, Python Programming, and Data Science.  
   These resources provide the groundwork for all modern AI and data workflows.
 
