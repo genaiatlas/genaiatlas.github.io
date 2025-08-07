@@ -1,6 +1,10 @@
 // Google OAuth Configuration
 const GOOGLE_CLIENT_ID = '51499726574-938u73klifk6kvc44f62ibolqkg27rgq.apps.googleusercontent.com';
 
+// Immediate debugging
+console.log('🔧 Auth script loaded at:', new Date().toISOString());
+console.log('🔧 Client ID configured:', GOOGLE_CLIENT_ID);
+
 // Check if Google OAuth is properly configured
 function isGoogleOAuthConfigured() {
     return GOOGLE_CLIENT_ID && GOOGLE_CLIENT_ID !== 'YOUR_GOOGLE_CLIENT_ID';
@@ -8,7 +12,7 @@ function isGoogleOAuthConfigured() {
 
 // Initialize Google OAuth
 function initializeGoogleAuth() {
-    console.log('Initializing Google Auth...');
+    console.log('🔧 Initializing Google Auth...');
     
     // Check if OAuth is configured
     if (!isGoogleOAuthConfigured()) {
@@ -19,7 +23,7 @@ function initializeGoogleAuth() {
 
     // Check if Google script is already loaded
     if (typeof google !== 'undefined' && google.accounts) {
-        console.log('Google OAuth already loaded');
+        console.log('🔧 Google OAuth already loaded');
         setupGoogleButton();
         return;
     }
@@ -32,12 +36,12 @@ function initializeGoogleAuth() {
     document.head.appendChild(script);
 
     script.onload = function() {
-        console.log('Google OAuth script loaded');
+        console.log('🔧 Google OAuth script loaded');
         setupGoogleButton();
     };
 
     script.onerror = function() {
-        console.error('Failed to load Google OAuth script');
+        console.error('🔧 Failed to load Google OAuth script');
         showConfigurationWarning();
     };
 }
@@ -45,7 +49,7 @@ function initializeGoogleAuth() {
 // Setup Google button
 function setupGoogleButton() {
     try {
-        console.log('Setting up Google button...');
+        console.log('🔧 Setting up Google button...');
         
         google.accounts.id.initialize({
             client_id: GOOGLE_CLIENT_ID,
@@ -67,9 +71,9 @@ function setupGoogleButton() {
             }
         );
         
-        console.log('Google button setup complete');
+        console.log('🔧 Google button setup complete');
     } catch (error) {
-        console.error('Error setting up Google button:', error);
+        console.error('🔧 Error setting up Google button:', error);
         showConfigurationWarning();
     }
 }
@@ -89,7 +93,7 @@ function showConfigurationWarning() {
 
 // Handle Google OAuth response
 function handleCredentialResponse(response) {
-    console.log('Google OAuth response received');
+    console.log('🔧 Google OAuth response received');
     
     try {
         // Decode the JWT token
@@ -112,7 +116,7 @@ function handleCredentialResponse(response) {
         // Track login (you can send this to your analytics)
         trackUserLogin(userInfo);
     } catch (error) {
-        console.error('Error handling OAuth response:', error);
+        console.error('🔧 Error handling OAuth response:', error);
         alert('Login failed. Please try again.');
     }
 }
@@ -140,6 +144,7 @@ function showAuthenticatedUser(userInfo) {
 
 // Hide navigation tabs for unauthenticated users
 function hideNavigationTabs() {
+    console.log('🔧 Hiding navigation tabs...');
     // Try multiple selectors for different themes
     const selectors = [
         '.md-tabs__link',
@@ -180,6 +185,7 @@ function hideNavigationTabs() {
 
 // Show navigation tabs for authenticated users
 function showNavigationTabs() {
+    console.log('🔧 Showing navigation tabs...');
     // Show all navigation tabs
     const selectors = [
         '.md-tabs__link',
@@ -237,7 +243,7 @@ function logout() {
 
 // Track user login (you can implement analytics here)
 function trackUserLogin(userInfo) {
-    console.log('User logged in:', userInfo.email);
+    console.log('🔧 User logged in:', userInfo.email);
     
     // You can send this data to Google Analytics, your own analytics, etc.
     // Example: gtag('event', 'login', { user_email: userInfo.email });
@@ -257,7 +263,7 @@ function trackUserLogin(userInfo) {
 
 // Track user logout
 function trackUserLogout() {
-    console.log('User logged out');
+    console.log('🔧 User logged out');
     
     const logoutData = {
         timestamp: new Date().toISOString(),
@@ -271,6 +277,7 @@ function trackUserLogout() {
 
 // Check if user is authenticated
 function checkAuthentication() {
+    console.log('🔧 Checking authentication...');
     const userInfo = localStorage.getItem('genaiatlas_user');
     
     if (userInfo) {
@@ -287,50 +294,16 @@ function checkAuthentication() {
     }
 }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Auth script loaded');
-    
-    // Check authentication status
-    checkAuthentication();
-    
-    // Initialize Google Auth
-    initializeGoogleAuth();
-    
-    // Add logout button event listener
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', logout);
-    }
-    
-    // Add manual login button event listener (fallback)
-    const loginBtn = document.getElementById('google-login-btn');
-    if (loginBtn) {
-        loginBtn.addEventListener('click', function() {
-            console.log('Manual login button clicked');
-            // This will be handled by Google's OAuth flow
-        });
-    }
-    
-    // Force hide navigation tabs on page load for unauthenticated users
-    setTimeout(() => {
-        const userInfo = localStorage.getItem('genaiatlas_user');
-        if (!userInfo) {
-            hideNavigationTabs();
-        }
-    }, 100);
-});
-
 // Manual login fallback function
 function handleManualLogin() {
-    console.log('Manual login triggered');
+    console.log('🔧 Manual login triggered');
     
     // Check if Google OAuth is available
     if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-        console.log('Google OAuth available, triggering prompt');
+        console.log('🔧 Google OAuth available, triggering prompt');
         google.accounts.id.prompt();
     } else {
-        console.log('Google OAuth not available, showing manual login');
+        console.log('🔧 Google OAuth not available, showing manual login');
         // Fallback: Show a simple login dialog
         const email = prompt('Please enter your email address:');
         if (email) {
@@ -349,6 +322,40 @@ function handleManualLogin() {
     }
 }
 
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔧 DOM loaded, initializing auth...');
+    
+    // Check authentication status
+    checkAuthentication();
+    
+    // Initialize Google Auth
+    initializeGoogleAuth();
+    
+    // Add logout button event listener
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', logout);
+    }
+    
+    // Add manual login button event listener (fallback)
+    const loginBtn = document.getElementById('google-login-btn');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function() {
+            console.log('🔧 Manual login button clicked');
+            // This will be handled by Google's OAuth flow
+        });
+    }
+    
+    // Force hide navigation tabs on page load for unauthenticated users
+    setTimeout(() => {
+        const userInfo = localStorage.getItem('genaiatlas_user');
+        if (!userInfo) {
+            hideNavigationTabs();
+        }
+    }, 100);
+});
+
 // Export functions for use in other scripts
 window.GenAIAtlasAuth = {
     logout,
@@ -360,3 +367,5 @@ window.GenAIAtlasAuth = {
 
 // Make handleManualLogin globally available
 window.handleManualLogin = handleManualLogin;
+
+console.log('🔧 Auth script initialization complete');
