@@ -4759,6 +4759,9 @@
       `;
       document.head.appendChild(style);
 
+      // Add logout button to header
+      addLogoutButton();
+
       console.log('🔧 Navigation tabs should now be visible');
     }
 
@@ -4769,38 +4772,49 @@
       // Clear user data
       localStorage.removeItem('genaiatlas_user');
 
-      // Update UI
-      const loginSection = document.getElementById('login-section');
-      const contentSection = document.getElementById('content-section');
-      const loginRequired = document.getElementById('login-required');
-      const userInfoDiv = document.getElementById('user-info');
-
-      if (loginSection) loginSection.style.display = 'block';
-      if (contentSection) contentSection.style.display = 'none';
-      if (loginRequired) loginRequired.style.display = 'block';
-      if (userInfoDiv) userInfoDiv.style.display = 'none';
-
-      // Hide navigation tabs
-      const selectors = [
-        '.md-tabs__link:not([href="/"]):not([href*="index"])',
-        '.md-tabs__item:not([href="/"]):not([href*="index"])',
-        '.md-tabs a:not([href="/"]):not([href*="index"])',
-        '.md-header__tabs a:not([href="/"]):not([href*="index"])',
-        'nav a[href*="/"]:not([href="/"]):not([href*="index"])',
-        '.md-nav__link:not([href="/"]):not([href*="index"])'
-      ];
-
-      selectors.forEach(selector => {
-        const navTabs = document.querySelectorAll(selector);
-        navTabs.forEach(tab => {
-          tab.style.display = 'none';
-          tab.style.visibility = 'hidden';
-          tab.style.opacity = '0';
-        });
-      });
+      // Show login screen
+      showLoginScreen();
 
       // Redirect to homepage
       window.location.href = '/';
+    }
+
+    // Add logout button to header
+    function addLogoutButton() {
+      // Remove existing logout button if any
+      const existingLogout = document.querySelector('.header-logout-btn');
+      if (existingLogout) {
+        existingLogout.remove();
+      }
+
+      // Find header elements
+      const header = document.querySelector('.md-header') || document.querySelector('header');
+      const searchBar = document.querySelector('.md-search') || document.querySelector('.search');
+
+      if (header) {
+        const logoutBtn = document.createElement('button');
+        logoutBtn.className = 'header-logout-btn';
+        logoutBtn.innerHTML = '🚪 Logout';
+        logoutBtn.style.cssText = `
+          background: #dc3545;
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 6px;
+          font-size: 14px;
+          cursor: pointer;
+          margin-left: 10px;
+          transition: all 0.3s ease;
+        `;
+        logoutBtn.onclick = logout;
+
+        // Insert before search bar or at the end of header
+        if (searchBar && searchBar.parentNode) {
+          searchBar.parentNode.insertBefore(logoutBtn, searchBar);
+        } else {
+          header.appendChild(logoutBtn);
+        }
+      }
     }
 
     // Fallback manual login (custom modal)
@@ -4857,27 +4871,11 @@
         } catch (error) {
           console.error('🔧 Error parsing saved user:', error);
           localStorage.removeItem('genaiatlas_user');
+          showLoginScreen();
         }
       } else {
         console.log('🔧 No existing session found');
-        // Hide navigation tabs for unauthenticated users
-        const selectors = [
-          '.md-tabs__link:not([href="/"]):not([href*="index"])',
-          '.md-tabs__item:not([href="/"]):not([href*="index"])',
-          '.md-tabs a:not([href="/"]):not([href*="index"])',
-          '.md-header__tabs a:not([href="/"]):not([href*="index"])',
-          'nav a[href*="/"]:not([href="/"]):not([href*="index"])',
-          '.md-nav__link:not([href="/"]):not([href*="index"])'
-        ];
-
-        selectors.forEach(selector => {
-          const navTabs = document.querySelectorAll(selector);
-          navTabs.forEach(tab => {
-            tab.style.display = 'none';
-            tab.style.visibility = 'hidden';
-            tab.style.opacity = '0';
-          });
-        });
+        showLoginScreen();
       }
 
       const btn = document.getElementById('google-login-btn');
@@ -4885,6 +4883,40 @@
         console.log('🔧 Login button found and ready');
       }
     });
+
+    // Show login screen (hide content, show login)
+    function showLoginScreen() {
+      console.log('🔧 Showing login screen');
+
+      const loginSection = document.getElementById('login-section');
+      const contentSection = document.getElementById('content-section');
+      const loginRequired = document.getElementById('login-required');
+      const userInfoDiv = document.getElementById('user-info');
+
+      if (loginSection) loginSection.style.display = 'block';
+      if (contentSection) contentSection.style.display = 'none';
+      if (loginRequired) loginRequired.style.display = 'block';
+      if (userInfoDiv) userInfoDiv.style.display = 'none';
+
+      // Hide navigation tabs for unauthenticated users
+      const selectors = [
+        '.md-tabs__link:not([href="/"]):not([href*="index"])',
+        '.md-tabs__item:not([href="/"]):not([href*="index"])',
+        '.md-tabs a:not([href="/"]):not([href*="index"])',
+        '.md-header__tabs a:not([href="/"]):not([href*="index"])',
+        'nav a[href*="/"]:not([href="/"]):not([href*="index"])',
+        '.md-nav__link:not([href="/"]):not([href*="index"])'
+      ];
+
+      selectors.forEach(selector => {
+        const navTabs = document.querySelectorAll(selector);
+        navTabs.forEach(tab => {
+          tab.style.display = 'none';
+          tab.style.visibility = 'hidden';
+          tab.style.opacity = '0';
+        });
+      });
+    }
   </script>
   <div id="user-info" style="display: none; margin-top: 1.5rem; padding: 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 8px; backdrop-filter: blur(10px);">
     <p style="margin: 0.5rem 0; font-size: 1.1rem;">Welcome, <span id="user-name"></span>!</p>
@@ -4903,38 +4935,66 @@
 
   ## 📚 Foundation
 
-  Build your essential knowledge with modules in Statistics, Python Programming, and Data Science.  
+  Build your essential knowledge with modules in Statistics, Python Programming, and Data Science.
+
   These resources provide the groundwork for all modern AI and data workflows.
 
   ---
 
   ## 🤖 Generative AI Core
 
-  Deep dive into the world of generative models and natural language processing:  
-  Transformers & Large Language Models (LLMs), RAG and LangChain, Prompt Engineering, and NLP Techniques.  
+  Deep dive into the world of generative models and natural language processing:
+
+  **Transformers & Large Language Models (LLMs)**: Master the architecture that powers modern AI.
+
+  **RAG and LangChain**: Learn retrieval-augmented generation and chain-based workflows.
+
+  **Prompt Engineering**: Develop skills in crafting effective prompts for AI systems.
+
+  **NLP Techniques**: Explore natural language processing fundamentals and advanced methods.
+
   Master the technologies at the heart of today's AI revolution.
 
   ---
 
   ## 🚀 Deployment & Operations
 
-  Go from research to production with real-world tools:  
-  LangChain, LLMOps, and AI Evaluation (Evals).  
+  Go from research to production with real-world tools:
+
+  **LangChain**: Build and deploy AI applications with the LangChain framework.
+
+  **LLMOps**: Learn operational best practices for large language model deployment.
+
+  **AI Evaluation (Evals)**: Master techniques for evaluating and monitoring AI system performance.
+
   Learn best practices for building, deploying, and managing robust AI systems.
 
   ---
 
   ## 🔬 Research & Advanced Topics
 
-  Stay ahead with explorations into cutting-edge research, agentic AI, retrieval-augmented generation (RAG), and applied use cases.  
+  Stay ahead with explorations into cutting-edge research:
+
+  **Agentic AI**: Explore autonomous AI systems and their capabilities.
+
+  **Retrieval-Augmented Generation (RAG)**: Master advanced information retrieval techniques.
+
+  **Applied Use Cases**: Study real-world implementations and success stories.
+
   Advance your skills and contribute to the future of AI.
 
   ---
 
   ## 🌐 Community & Q&A
 
-  Connect, share, and learn with the Gen AI Atlas community:  
-  Discussion boards, blog posts, and Q&A forums.  
+  Connect, share, and learn with the Gen AI Atlas community:
+
+  **Discussion Boards**: Engage with peers and experts in AI discussions.
+
+  **Blog Posts**: Access curated content and insights from the community.
+
+  **Q&A Forums**: Get answers to your questions and help others.
+
   Find support, share insights, and grow your network.
 
   ---
