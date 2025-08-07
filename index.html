@@ -4657,7 +4657,7 @@
               console.log('🔧 Google OAuth failed, using fallback');
               showManualLogin();
             }
-          }, 100);
+          }, 500); // Increased timeout
         } catch (error) {
           console.log('🔧 Google OAuth failed, using fallback');
           showManualLogin();
@@ -4716,19 +4716,21 @@
       if (userName) userName.textContent = userInfo.name;
       if (userInfoDiv) userInfoDiv.style.display = 'block';
 
-      // Simple approach: just show navigation by removing hidden classes
-      // No CSS overrides - let MkDocs handle the styling naturally
+      // Show navigation by directly manipulating the DOM
+      // Target specific navigation elements that should be visible
 
-      // Show all navigation tabs by removing any hidden classes
+      // Show all navigation tabs
       const allNavLinks = document.querySelectorAll('.md-tabs a, .md-nav a');
       allNavLinks.forEach(link => {
+        // Remove any hidden classes and reset styles
         link.classList.remove('hidden');
         link.style.display = '';
         link.style.visibility = '';
         link.style.opacity = '';
+        link.style.pointerEvents = '';
       });
 
-      // Ensure tabs container is visible
+      // Show tabs container
       const tabsContainer = document.querySelector('.md-tabs');
       if (tabsContainer) {
         tabsContainer.classList.remove('hidden');
@@ -4736,6 +4738,17 @@
         tabsContainer.style.visibility = '';
         tabsContainer.style.opacity = '';
       }
+
+      // Show all navigation items specifically
+      const navItems = document.querySelectorAll('.md-tabs__item, .md-nav__item');
+      navItems.forEach(item => {
+        item.classList.remove('hidden');
+        item.style.display = '';
+        item.style.visibility = '';
+        item.style.opacity = '';
+      });
+
+      console.log('🔧 Navigation elements should now be visible');
 
       // Simple approach: just remove the 'hidden' class and show navigation naturally
       // No CSS overrides - let MkDocs handle the styling
@@ -4774,8 +4787,8 @@
       // Show login screen
       showLoginScreen();
 
-      // Don't redirect - just refresh the page to show login screen
-      window.location.reload();
+      // Don't redirect or reload - just show login screen
+      // window.location.reload(); // Removed this line
     }
 
     // Add logout button to header
@@ -4865,9 +4878,9 @@
         if (email && email.includes('@')) {
           const userInfo = { name: email.split('@')[0], email: email, picture: '', loginTime: new Date().toISOString(), token: 'manual-login' };
           localStorage.setItem('genaiatlas_user', JSON.stringify(userInfo));
+          document.body.removeChild(modal);
           showAuthenticatedUser(userInfo);
           console.log('🔧 User logged in manually:', email);
-          document.body.removeChild(modal);
         } else { alert('Please enter a valid email address'); }
       };
       dialog.querySelector('#login-cancel').onclick = function() { document.body.removeChild(modal); };
@@ -4928,8 +4941,7 @@
       if (loginRequired) loginRequired.style.display = 'block';
       if (userInfoDiv) userInfoDiv.style.display = 'none';
 
-      // Hide navigation tabs for unauthenticated users - simple approach
-      // Just add 'hidden' class to navigation elements
+      // Hide navigation tabs for unauthenticated users
       const hideSelectors = [
         '.md-tabs a[href*="/01-foundation"]',
         '.md-tabs a[href*="/02-gen-ai-core"]',
@@ -4947,6 +4959,9 @@
         const navTabs = document.querySelectorAll(selector);
         navTabs.forEach(tab => {
           tab.classList.add('hidden');
+          tab.style.display = 'none';
+          tab.style.visibility = 'hidden';
+          tab.style.opacity = '0';
         });
       });
     }
