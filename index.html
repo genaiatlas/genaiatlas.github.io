@@ -4618,7 +4618,7 @@
   function handleManualLogin() {
     console.log('🔧 Manual login triggered');
 
-    // Try Google OAuth first
+    // Try Google OAuth first with better error handling
     if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
       console.log('🔧 Google OAuth available, trying...');
       try {
@@ -4628,24 +4628,33 @@
           auto_select: false,
           cancel_on_tap_outside: true,
           prompt_parent_id: 'google-login-btn',
+          // Add FedCM compatibility
+          use_fedcm_for_prompt: true,
         });
 
         setTimeout(() => {
           try {
             google.accounts.id.prompt((notification) => {
-              if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                console.log('🔧 Google OAuth prompt failed, using fallback');
+              console.log('🔧 Google prompt notification:', notification);
+              if (notification.isNotDisplayed()) {
+                console.log('🔧 Google prompt not displayed, reason:', notification.getNotDisplayedReason());
+                showManualLogin();
+              } else if (notification.isSkippedMoment()) {
+                console.log('🔧 Google prompt skipped, reason:', notification.getSkippedMomentReason());
+                showManualLogin();
+              } else if (notification.isDismissed()) {
+                console.log('🔧 Google prompt dismissed, reason:', notification.getDismissedReason());
                 showManualLogin();
               }
             });
             console.log('🔧 Google prompt triggered');
           } catch (error) {
-            console.log('🔧 Google OAuth failed, using fallback');
+            console.log('🔧 Google OAuth failed, using fallback:', error);
             showManualLogin();
           }
-        }, 500);
+        }, 1000); // Increased timeout for FedCM
       } catch (error) {
-        console.log('🔧 Google OAuth failed, using fallback');
+        console.log('🔧 Google OAuth failed, using fallback:', error);
         showManualLogin();
       }
     } else {
@@ -4919,10 +4928,16 @@
         if (email && email.includes('@')) {
           const userInfo = { name: email.split('@')[0], email: email, picture: '', loginTime: new Date().toISOString(), token: 'manual-login' };
           localStorage.setItem('genaiatlas_user', JSON.stringify(userInfo));
+          // Remove modal first, then show authenticated user
           document.body.removeChild(modal);
-          showAuthenticatedUser(userInfo);
-          console.log('🔧 User logged in manually:', email);
-        } else { alert('Please enter a valid email address'); }
+          // Small delay to ensure modal is removed
+          setTimeout(() => {
+            showAuthenticatedUser(userInfo);
+            console.log('🔧 User logged in manually:', email);
+          }, 50);
+        } else { 
+          alert('Please enter a valid email address'); 
+        }
       };
       dialog.querySelector('#login-cancel').onclick = function() { document.body.removeChild(modal); };
       dialog.querySelector('#email-input').onkeypress = function(e) { if (e.key === 'Enter') { dialog.querySelector('#login-submit').click(); } };
@@ -5007,6 +5022,26 @@
         });
       });
     }
+
+    // Prevent navigation events from triggering logout
+    document.addEventListener('click', function(e) {
+      // If user is authenticated and clicking on navigation links, don't trigger logout
+      const savedUser = localStorage.getItem('genaiatlas_user');
+      if (savedUser && e.target.closest('a[href]')) {
+        const href = e.target.closest('a[href]').getAttribute('href');
+        // Allow navigation to home page without logout
+        if (href === '/' || href === '/index' || href.includes('index')) {
+          e.preventDefault();
+          // Just show the authenticated content without logout
+          try {
+            const userInfo = JSON.parse(savedUser);
+            showAuthenticatedUser(userInfo);
+          } catch (error) {
+            console.error('🔧 Error handling home navigation:', error);
+          }
+        }
+      }
+    });
   </script>
   <div id="user-info" style="display: none; margin-top: 1.5rem; padding: 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 8px; backdrop-filter: blur(10px);">
     <p style="margin: 0.5rem 0; font-size: 1.1rem;">Welcome, <span id="user-name"></span>!</p>
@@ -5022,12 +5057,6 @@
     <p style="margin-bottom: 1.5rem; font-size: 1.1rem; opacity: 0.9;">You now have access to all our comprehensive AI learning resources.</p>
     <p style="font-size: 1rem; opacity: 0.8;">Use the navigation tabs above to explore different sections.</p>
   </div>
-
-  ## 🎯 Welcome to Gen AI Atlas!
-
-  You now have access to all our comprehensive AI learning resources.
-
-  **Use the navigation tabs above to explore all sections and start your AI learning journey!**
 
   <div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 10px;">
     <p style="color: #495057; margin-bottom: 0.5rem; font-weight: 600;">🎯 Ready to start learning?</p>
@@ -5070,6 +5099,33 @@
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
+}
+
+/* Collapse sidebar navigation by default */
+.md-nav__item--nested > .md-nav__list {
+  display: none !important;
+}
+
+.md-nav__item--nested > .md-nav__link::after {
+  content: "▶" !important;
+  transition: transform 0.3s ease;
+}
+
+.md-nav__item--nested.md-nav__item--active > .md-nav__link::after {
+  content: "▼" !important;
+}
+
+.md-nav__item--nested.md-nav__item--active > .md-nav__list {
+  display: block !important;
+}
+
+/* Only show top-level navigation items */
+.md-nav__item--nested .md-nav__item--nested {
+  display: none !important;
+}
+
+.md-nav__item--nested.md-nav__item--active .md-nav__item--nested {
+  display: block !important;
 }
 </style>
 
