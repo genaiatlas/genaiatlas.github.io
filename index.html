@@ -4722,34 +4722,51 @@
       // Show navigation by directly manipulating the DOM
       // Target specific navigation elements that should be visible
 
-      // Show all navigation tabs
+      // Force show all navigation tabs with !important
       const allNavLinks = document.querySelectorAll('.md-tabs a, .md-nav a');
       allNavLinks.forEach(link => {
         // Remove any hidden classes and reset styles
         link.classList.remove('hidden');
-        link.style.display = '';
-        link.style.visibility = '';
-        link.style.opacity = '';
-        link.style.pointerEvents = '';
+        link.style.setProperty('display', 'inline-block', 'important');
+        link.style.setProperty('visibility', 'visible', 'important');
+        link.style.setProperty('opacity', '1', 'important');
+        link.style.setProperty('pointer-events', 'auto', 'important');
       });
 
       // Show tabs container
       const tabsContainer = document.querySelector('.md-tabs');
       if (tabsContainer) {
         tabsContainer.classList.remove('hidden');
-        tabsContainer.style.display = '';
-        tabsContainer.style.visibility = '';
-        tabsContainer.style.opacity = '';
+        tabsContainer.style.setProperty('display', 'flex', 'important');
+        tabsContainer.style.setProperty('visibility', 'visible', 'important');
+        tabsContainer.style.setProperty('opacity', '1', 'important');
       }
 
       // Show all navigation items specifically
       const navItems = document.querySelectorAll('.md-tabs__item, .md-nav__item');
       navItems.forEach(item => {
         item.classList.remove('hidden');
-        item.style.display = '';
-        item.style.visibility = '';
-        item.style.opacity = '';
+        item.style.setProperty('display', 'inline-block', 'important');
+        item.style.setProperty('visibility', 'visible', 'important');
+        item.style.setProperty('opacity', '1', 'important');
       });
+
+      // Add CSS to force show navigation
+      const style = document.createElement('style');
+      style.textContent = `
+        .md-tabs a, .md-nav a { 
+          display: inline-block !important; 
+          visibility: visible !important; 
+          opacity: 1 !important; 
+          pointer-events: auto !important; 
+        }
+        .md-tabs { 
+          display: flex !important; 
+          visibility: visible !important; 
+          opacity: 1 !important; 
+        }
+      `;
+      document.head.appendChild(style);
 
       console.log('🔧 Navigation elements should now be visible');
 
@@ -4873,9 +4890,6 @@
     document.addEventListener('DOMContentLoaded', function() {
       console.log('🔧 DOM loaded, checking for existing session');
 
-      // Force show login screen first, then check session
-      showLoginScreen();
-
       const savedUser = localStorage.getItem('genaiatlas_user');
       if (savedUser) {
         try {
@@ -4966,21 +4980,6 @@
   ## 🎯 Welcome to Gen AI Atlas!
 
   You now have access to all our comprehensive AI learning resources.
-
-  ### 📚 **Foundation**
-  Build your essential knowledge with modules in Statistics, Python Programming, and Data Science.
-
-  ### 🤖 **Generative AI Core**
-  Deep dive into Transformers & LLMs, RAG and LangChain, Prompt Engineering, and NLP Techniques.
-
-  ### 🚀 **Deployment & Operations**
-  Learn LangChain, LLMOps, and AI Evaluation (Evals) for production-ready systems.
-
-  ### 🔬 **Research & Advanced Topics**
-  Explore cutting-edge research in Agentic AI, RAG, and Applied Use Cases.
-
-  ### 🌐 **Community & Q&A**
-  Connect with peers through Discussion Boards, Blog Posts, and Q&A Forums.
 
   **Use the navigation tabs above to explore all sections and start your AI learning journey!**
 
