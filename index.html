@@ -4734,15 +4734,29 @@
           return;
         }
 
+        // Add more configuration options
         google.accounts.id.initialize({
           client_id: '51499726574-938u73klifk6kvc44f62ibolqkg27rgq.apps.googleusercontent.com',
           callback: handleCredentialResponse,
           auto_select: false,
           cancel_on_tap_outside: true,
+          prompt_parent_id: 'google-login-btn',
+          use_fedcm_for_prompt: true,
+          context: 'signin'
         });
 
         console.log('🔧 Google OAuth initialized, triggering prompt');
-        google.accounts.id.prompt();
+
+        // Add a small delay to ensure initialization is complete
+        setTimeout(() => {
+          try {
+            google.accounts.id.prompt();
+            console.log('🔧 Google prompt triggered successfully');
+          } catch (promptError) {
+            console.error('🔧 Error triggering prompt:', promptError);
+            showManualLogin();
+          }
+        }, 100);
 
       } catch (error) {
         console.error('🔧 Error initializing Google OAuth:', error);
