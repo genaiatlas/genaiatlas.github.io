@@ -4610,17 +4610,33 @@
 <!-- Load Google OAuth script directly -->
 <script src="https://accounts.google.com/gsi/client" async defer onload="console.log('🔧 Google OAuth script loaded via HTML')" onerror="console.error('🔧 Failed to load Google OAuth script via HTML')"></script>
 
-<!-- Alternative Google OAuth script -->
+<!-- Alternative CDN version -->
+<script src="https://cdn.jsdelivr.net/npm/@google-cloud/identity-platform@latest/dist/index.min.js" async defer onload="console.log('🔧 CDN Google script loaded')" onerror="console.error('🔧 CDN Google script failed')"></script>
+
+<!-- Test script loading -->
 <script>
-  // Fallback: Try to load Google OAuth if the first one fails
+  // Test if script is loading
+  console.log('🔧 Testing script loading...');
+
+  // Check after 1 second
   setTimeout(() => {
-    if (typeof google === 'undefined' || !google.accounts) {
-      console.log('🔧 First Google OAuth script failed, trying alternative...');
-      const script = document.createElement('script');
-      script.src = 'https://apis.google.com/js/platform.js';
-      script.onload = () => console.log('🔧 Alternative Google script loaded');
-      script.onerror = () => console.error('🔧 Alternative Google script failed');
-      document.head.appendChild(script);
+    console.log('🔧 After 1s - typeof google:', typeof google);
+    if (typeof google !== 'undefined') {
+      console.log('🔧 Google object found!');
+      console.log('🔧 google.accounts:', typeof google.accounts);
+    } else {
+      console.log('🔧 Google object not found after 1s');
+    }
+  }, 1000);
+
+  // Check after 3 seconds
+  setTimeout(() => {
+    console.log('🔧 After 3s - typeof google:', typeof google);
+    if (typeof google !== 'undefined') {
+      console.log('🔧 Google object found after 3s!');
+      console.log('🔧 google.accounts:', typeof google.accounts);
+    } else {
+      console.log('🔧 Google object still not found after 3s');
     }
   }, 3000);
 </script>
