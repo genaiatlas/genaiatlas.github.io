@@ -4607,38 +4607,9 @@
 
 
 
-<!-- Load Google OAuth script directly -->
-<script src="https://accounts.google.com/gsi/client" async defer onload="console.log('🔧 Google OAuth script loaded via HTML')" onerror="console.error('🔧 Failed to load Google OAuth script via HTML')"></script>
-
-<!-- Alternative CDN version -->
-<script src="https://cdn.jsdelivr.net/npm/@google-cloud/identity-platform@latest/dist/index.min.js" async defer onload="console.log('🔧 CDN Google script loaded')" onerror="console.error('🔧 CDN Google script failed')"></script>
-
-<!-- Test script loading -->
+<!-- Login system - using fallback only -->
 <script>
-  // Test if script is loading
-  console.log('🔧 Testing script loading...');
-
-  // Check after 1 second
-  setTimeout(() => {
-    console.log('🔧 After 1s - typeof google:', typeof google);
-    if (typeof google !== 'undefined') {
-      console.log('🔧 Google object found!');
-      console.log('🔧 google.accounts:', typeof google.accounts);
-    } else {
-      console.log('🔧 Google object not found after 1s');
-    }
-  }, 1000);
-
-  // Check after 3 seconds
-  setTimeout(() => {
-    console.log('🔧 After 3s - typeof google:', typeof google);
-    if (typeof google !== 'undefined') {
-      console.log('🔧 Google object found after 3s!');
-      console.log('🔧 google.accounts:', typeof google.accounts);
-    } else {
-      console.log('🔧 Google object still not found after 3s');
-    }
-  }, 3000);
+  console.log('🔧 Login system initialized - using fallback only');
 </script>
 
 <h1 id="gen-ai-atlas-navigation-overview">Gen AI Atlas — Navigation Overview</h1>
@@ -4665,34 +4636,7 @@
 
 
 
-    // Handle Google OAuth response
-    function handleCredentialResponse(response) {
-      console.log('🔧 Google OAuth response received');
 
-      try {
-        // Decode the JWT token
-        const payload = JSON.parse(atob(response.credential.split('.')[1]));
-
-        // Store user info in localStorage
-        const userInfo = {
-          name: payload.name,
-          email: payload.email,
-          picture: payload.picture,
-          loginTime: new Date().toISOString(),
-          token: response.credential
-        };
-
-        localStorage.setItem('genaiatlas_user', JSON.stringify(userInfo));
-
-        // Update UI
-        showAuthenticatedUser(userInfo);
-
-        console.log('🔧 User logged in via Google:', userInfo.email);
-      } catch (error) {
-        console.error('🔧 Error handling OAuth response:', error);
-        showManualLogin();
-      }
-    }
 
     // Show authenticated user
     function showAuthenticatedUser(userInfo) {
