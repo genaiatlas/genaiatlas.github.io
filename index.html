@@ -4781,6 +4781,8 @@
 
     // Show authenticated user
     function showAuthenticatedUser(userInfo) {
+      console.log('🔧 Showing authenticated user:', userInfo.name);
+
       const loginSection = document.getElementById('login-section');
       const contentSection = document.getElementById('content-section');
       const loginRequired = document.getElementById('login-required');
@@ -4796,13 +4798,79 @@
       if (userName) userName.textContent = userInfo.name;
       if (userInfoDiv) userInfoDiv.style.display = 'block';
 
-      // Show navigation tabs
-      const navTabs = document.querySelectorAll('.md-tabs a');
-      navTabs.forEach(tab => {
-        tab.style.display = 'block';
-        tab.style.visibility = 'visible';
-        tab.style.opacity = '1';
+      // Show navigation tabs - use multiple selectors for better compatibility
+      const selectors = [
+        '.md-tabs__link',
+        '.md-tabs__item',
+        '.md-tabs a',
+        '.md-header__tabs a',
+        'nav a[href*="/"]',
+        '.md-nav__link'
+      ];
+
+      selectors.forEach(selector => {
+        const navTabs = document.querySelectorAll(selector);
+        navTabs.forEach(tab => {
+          tab.style.display = 'block';
+          tab.style.visibility = 'visible';
+          tab.style.opacity = '1';
+        });
       });
+
+      // Also show the entire tabs container
+      const tabsContainer = document.querySelector('.md-tabs');
+      if (tabsContainer) {
+        const allTabs = tabsContainer.querySelectorAll('a');
+        allTabs.forEach(tab => {
+          tab.style.display = 'block';
+        });
+      }
+
+      console.log('🔧 Navigation tabs should now be visible');
+    }
+
+    // Logout function
+    function logout() {
+      console.log('🔧 User logging out');
+
+      // Clear user data
+      localStorage.removeItem('genaiatlas_user');
+
+      // Update UI
+      const loginSection = document.getElementById('login-section');
+      const contentSection = document.getElementById('content-section');
+      const loginRequired = document.getElementById('login-required');
+      const userInfoDiv = document.getElementById('user-info');
+
+      if (loginSection) loginSection.style.display = 'block';
+      if (contentSection) contentSection.style.display = 'none';
+      if (loginRequired) loginRequired.style.display = 'block';
+      if (userInfoDiv) userInfoDiv.style.display = 'none';
+
+      // Hide navigation tabs
+      const selectors = [
+        '.md-tabs__link',
+        '.md-tabs__item',
+        '.md-tabs a',
+        '.md-header__tabs a',
+        'nav a[href*="/"]',
+        '.md-nav__link'
+      ];
+
+      selectors.forEach(selector => {
+        const navTabs = document.querySelectorAll(selector);
+        navTabs.forEach(tab => {
+          const text = tab.textContent || tab.innerText || '';
+          if (!text.toLowerCase().includes('home')) {
+            tab.style.display = 'none';
+            tab.style.visibility = 'hidden';
+            tab.style.opacity = '0';
+          }
+        });
+      });
+
+      // Redirect to home page
+      window.location.href = '/';
     }
 
     // Fallback manual login
@@ -4824,53 +4892,11 @@
       }
     }
 
-    // Simple test function
-    function testButton() {
-      console.log('🔧 Button clicked!');
-      alert('Button is working!');
-    }
-
-    // Pre-load Google OAuth script
-    function preloadGoogleOAuth() {
-      console.log('🔧 Pre-loading Google OAuth script...');
-
-      // Test if script is already loaded
-      if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-        console.log('🔧 Google OAuth already loaded');
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.async = true;
-      script.defer = true;
-
-      script.onload = function() {
-        console.log('🔧 Google OAuth script pre-loaded successfully');
-
-        // Test if it's working
-        setTimeout(() => {
-          if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
-            console.log('🔧 Google OAuth is working!');
-          } else {
-            console.error('🔧 Google OAuth script loaded but not working');
-          }
-        }, 1000);
-      };
-
-      script.onerror = function() {
-        console.error('🔧 Failed to pre-load Google OAuth script');
-      };
-
-      document.head.appendChild(script);
-    }
-
     // Add click handler
     document.addEventListener('DOMContentLoaded', function() {
       const btn = document.getElementById('google-login-btn');
       if (btn) {
-        btn.addEventListener('click', testButton);
-        console.log('🔧 Test click handler added');
+        console.log('🔧 Login button found and ready');
       }
 
       // Test Google OAuth availability
@@ -4886,14 +4912,20 @@
   </script>
   <div id="user-info" style="display: none; margin-top: 1.5rem; padding: 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 8px; backdrop-filter: blur(10px);">
     <p style="margin: 0.5rem 0; font-size: 1.1rem;">Welcome, <span id="user-name"></span>!</p>
-    <button id="logout-btn" style="background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; transition: all 0.3s ease;">
+    <button id="logout-btn" style="background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; transition: all 0.3s ease;" onclick="logout()">
       Sign Out
     </button>
   </div>
 </div>
 
 <div id="content-section" style="display: none; animation: fadeIn 0.5s ease-in;">
-  ## Foundation
+  <div style="text-align: center; margin: 2rem 0; padding: 2rem; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border-radius: 10px; color: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+    <h2 style="margin-bottom: 1rem; font-size: 2rem; font-weight: 600;">🎉 Welcome to Gen AI Atlas!</h2>
+    <p style="margin-bottom: 1.5rem; font-size: 1.1rem; opacity: 0.9;">You now have access to all our comprehensive AI learning resources.</p>
+    <p style="font-size: 1rem; opacity: 0.8;">Use the navigation tabs above to explore different sections.</p>
+  </div>
+
+  ## 📚 Foundation
   Build your essential knowledge with modules in Statistics, Python Programming, and Data Science.  
   These resources provide the groundwork for all modern AI and data workflows.
 
@@ -4930,8 +4962,10 @@
 
   ---
 
-  > **Note:** You're now signed in and have access to all our learning resources!  
-  > Stay tuned for more topics and resources coming soon!
+  <div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 10px;">
+    <p style="color: #495057; margin-bottom: 0.5rem; font-weight: 600;">🎯 Ready to start learning?</p>
+    <p style="color: #6c757d; margin-bottom: 0;">Use the navigation tabs above to explore our comprehensive AI learning resources!</p>
+  </div>
 </div>
 
 <div id="login-required" style="text-align: center; margin: 2rem 0; padding: 2rem; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 10px;">
