@@ -8,10 +8,19 @@ function isGoogleOAuthConfigured() {
 
 // Initialize Google OAuth
 function initializeGoogleAuth() {
+    console.log('Initializing Google Auth...');
+    
     // Check if OAuth is configured
     if (!isGoogleOAuthConfigured()) {
         console.warn('Google OAuth not configured. Please update GOOGLE_CLIENT_ID in auth.js');
         showConfigurationWarning();
+        return;
+    }
+
+    // Check if Google script is already loaded
+    if (typeof google !== 'undefined' && google.accounts) {
+        console.log('Google OAuth already loaded');
+        setupGoogleButton();
         return;
     }
 
@@ -23,36 +32,46 @@ function initializeGoogleAuth() {
     document.head.appendChild(script);
 
     script.onload = function() {
-        try {
-            google.accounts.id.initialize({
-                client_id: GOOGLE_CLIENT_ID,
-                callback: handleCredentialResponse,
-                auto_select: false,
-                cancel_on_tap_outside: true,
-            });
-
-            // Render the Google Sign-In button
-            google.accounts.id.renderButton(
-                document.getElementById('google-login-btn'),
-                { 
-                    theme: 'outline', 
-                    size: 'large',
-                    type: 'standard',
-                    text: 'signin_with',
-                    shape: 'rectangular',
-                    logo_alignment: 'left',
-                }
-            );
-        } catch (error) {
-            console.error('Error initializing Google OAuth:', error);
-            showConfigurationWarning();
-        }
+        console.log('Google OAuth script loaded');
+        setupGoogleButton();
     };
 
     script.onerror = function() {
         console.error('Failed to load Google OAuth script');
         showConfigurationWarning();
     };
+}
+
+// Setup Google button
+function setupGoogleButton() {
+    try {
+        console.log('Setting up Google button...');
+        
+        google.accounts.id.initialize({
+            client_id: GOOGLE_CLIENT_ID,
+            callback: handleCredentialResponse,
+            auto_select: false,
+            cancel_on_tap_outside: true,
+        });
+
+        // Render the Google Sign-In button
+        google.accounts.id.renderButton(
+            document.getElementById('google-login-btn'),
+            { 
+                theme: 'outline', 
+                size: 'large',
+                type: 'standard',
+                text: 'signin_with',
+                shape: 'rectangular',
+                logo_alignment: 'left',
+            }
+        );
+        
+        console.log('Google button setup complete');
+    } catch (error) {
+        console.error('Error setting up Google button:', error);
+        showConfigurationWarning();
+    }
 }
 
 // Show configuration warning
@@ -70,25 +89,32 @@ function showConfigurationWarning() {
 
 // Handle Google OAuth response
 function handleCredentialResponse(response) {
-    // Decode the JWT token
-    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    console.log('Google OAuth response received');
     
-    // Store user info in localStorage
-    const userInfo = {
-        name: payload.name,
-        email: payload.email,
-        picture: payload.picture,
-        loginTime: new Date().toISOString(),
-        token: response.credential
-    };
-    
-    localStorage.setItem('genaiatlas_user', JSON.stringify(userInfo));
-    
-    // Update UI
-    showAuthenticatedUser(userInfo);
-    
-    // Track login (you can send this to your analytics)
-    trackUserLogin(userInfo);
+    try {
+        // Decode the JWT token
+        const payload = JSON.parse(atob(response.credential.split('.')[1]));
+        
+        // Store user info in localStorage
+        const userInfo = {
+            name: payload.name,
+            email: payload.email,
+            picture: payload.picture,
+            loginTime: new Date().toISOString(),
+            token: response.credential
+        };
+        
+        localStorage.setItem('genaiatlas_user', JSON.stringify(userInfo));
+        
+        // Update UI
+        showAuthenticatedUser(userInfo);
+        
+        // Track login (you can send this to your analytics)
+        trackUserLogin(userInfo);
+    } catch (error) {
+        console.error('Error handling OAuth response:', error);
+        alert('Login failed. Please try again.');
+    }
 }
 
 // Show authenticated user
@@ -281,8 +307,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginBtn = document.getElementById('google-login-btn');
     if (loginBtn) {
         loginBtn.addEventListener('click', function() {
+            console.log('Manual login button clicked');
             // This will be handled by Google's OAuth flow
-            console.log('Google login button clicked');
         });
     }
     
@@ -295,10 +321,42 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 100);
 });
 
+// Manual login fallback function
+function handleManualLogin() {
+    console.log('Manual login triggered');
+    
+    // Check if Google OAuth is available
+    if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+        console.log('Google OAuth available, triggering prompt');
+        google.accounts.id.prompt();
+    } else {
+        console.log('Google OAuth not available, showing manual login');
+        // Fallback: Show a simple login dialog
+        const email = prompt('Please enter your email address:');
+        if (email) {
+            const userInfo = {
+                name: email.split('@')[0],
+                email: email,
+                picture: '',
+                loginTime: new Date().toISOString(),
+                token: 'manual-login'
+            };
+            
+            localStorage.setItem('genaiatlas_user', JSON.stringify(userInfo));
+            showAuthenticatedUser(userInfo);
+            trackUserLogin(userInfo);
+        }
+    }
+}
+
 // Export functions for use in other scripts
 window.GenAIAtlasAuth = {
     logout,
     checkAuthentication,
     trackUserLogin,
-    trackUserLogout
+    trackUserLogout,
+    handleManualLogin
 };
+
+// Make handleManualLogin globally available
+window.handleManualLogin = handleManualLogin;
