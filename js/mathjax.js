@@ -1,14 +1,18 @@
+// docs/js/mathjax.js
 window.MathJax = {
-    tex: {
-      inlineMath: [['\\(', '\\)']],         // Inline equations
-      displayMath: [['\\[', '\\]'], ['$$','$$']], // Display equations
-      processEscapes: true,
-      tags: 'ams'                           // Numbered equations if needed
-    },
-    options: {
-      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-      renderActions: {
-        addMenu: [0, '', '']                // Remove context menu if not needed
-      }
-    }
-  };
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]'], ['$$', '$$']],
+    processEscapes: true,
+    tags: 'ams'
+  },
+  options: {
+    // Process entire page except these tags
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+
+// IMPORTANT: MkDocs Material SPA hook
+document$.subscribe(() => {
+  if (window.MathJax?.typesetPromise) MathJax.typesetPromise();
+});
