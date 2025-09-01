@@ -181,82 +181,78 @@ if (document.readyState === 'loading') {
 
 /* ========= Admin-only gating with MkDocs Material support ========= */
 const ADMIN_EMAILS = ['baskarmanickam@gmail.com'];
-const BASE_PATH = '/'; // org GitHub Pages root (https://genaiatlas.github.io/)
+const BASE_PATH = '/'; // org root (https://genaiatlas.github.io/)
 
 /** Resolve current logical path from pathname or Material hash router. */
 function currentPath() {
   let p = location.pathname || '/';
-  if (location.hash && location.hash.startsWith('#/')) {
-    p = location.hash.slice(1); // '#/admin/...' => '/admin/...'
-  }
-  if (BASE_PATH !== '/' && p.startsWith(BASE_PATH)) {
-    p = p.slice(BASE_PATH.length - 1);
-  }
+  if (location.hash && location.hash.startsWith('#/')) p = location.hash.slice(1); // '#/admin/...'
+  if (BASE_PATH !== '/' && p.startsWith(BASE_PATH)) p = p.slice(BASE_PATH.length - 1);
   return p;
 }
+
+/** Treat '/admin/...', 'admin/...', and '#/admin/...' as admin routes */
 function isAdminPath() {
-  return currentPath().startsWith('/admin/');
+  const p = currentPath().replace(/^\//, '');   // strip leading slash
+  return p.startsWith('admin/');
 }
 
-/** Hide all admin links by marking them; CSS keeps them hidden by default. */
+/** Mark all admin links (absolute, relative, and hash-router) */
 function markAdminNavLinks() {
-  // Standard links: <a href="/admin/...">
-  document.querySelectorAll('a[href^="/admin/"]').forEach(a => {
-    a.setAttribute('data-admin-link', 'true');
-  });
+  const candidates = [
+    'a[href="/admin/"]', 'a[href^="/admin/"]',
+    'a[href="admin/"]',  'a[href^="admin/"]',
+    'a[href="#/admin/"]','a[href^="#/admin/"]'
+  ];
 
-  // Hash-router links: <a href="#/admin/...">
-  document.querySelectorAll('a[href^="#/admin/"]').forEach(a => {
-    a.setAttribute('data-admin-link', 'true');
-  });
-
-  // Defensive: sometimes Material rewrites hrefs; catch both forms.
-  document.querySelectorAll('a[href]').forEach(a => {
-    const href = a.getAttribute('href') || '';
-    if (href.includes('/admin/')) {
+  candidates.forEach(sel => {
+    document.querySelectorAll(sel).forEach(a => {
       a.setAttribute('data-admin-link', 'true');
+      const li = a.closest('li');
+      if (li) li.setAttribute('data-admin-item', 'true');  // hide container too
+    });
+  });
+
+  // Defensive pass — any href that *contains* 'admin/' (with or without leading slash)
+  document.querySelectorAll('a[href]').forEach(a => {
+    const h = a.getAttribute('href') || '';
+    if (/(^|#\/|\/)?admin\//.test(h)) {
+      a.setAttribute('data-admin-link', 'true');
+      const li = a.closest('li');
+      if (li) li.setAttribute('data-admin-item', 'true');
     }
   });
 }
 
-/** Show admin links only for the owner. */
+/** Reveal admin links for the owner */
 function revealAdminLinksForOwner(isAdmin) {
   if (!isAdmin) return;
-  document.querySelectorAll('a[data-admin-link="true"]').forEach(a => {
-    a.style.display = ''; // unhide for owner
+  document.querySelectorAll('[data-admin-link],[data-admin-item]').forEach(el => {
+    el.style.display = '';  // unhide for owner
   });
 }
 
-/** Hard gate: if a non-owner hits /admin/, force navigation away. */
+/** Hard gate: non-owner landing on /admin/... is redirected away */
 async function gateAdminSection() {
-    try {
-      const { data: { session } } = await supabaseClient.auth.getSession(); // ✅ use the client
-      const email = session?.user?.email || null;
-      const isOwner = !!email && ADMIN_EMAILS.includes(email);
-  
-      markAdminNavLinks();
-      revealAdminLinksForOwner(isOwner);
-  
-      if (isAdminPath() && !isOwner) {
-        window.location.href = BASE_PATH + '404.html';
-      }
-    } catch (e) {
-      console.error('Admin guard error:', e);
-    }
-  }
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const email = session?.user?.email || null;
+    const isOwner = !!email && ADMIN_EMAILS.includes(email);
 
-function runGuards() {
-  gateAdminSection().catch(console.error);
+    markAdminNavLinks();
+    revealAdminLinksForOwner(isOwner);
+
+    if (isAdminPath() && !isOwner) {
+      window.location.href = BASE_PATH + '404.html';
+    }
+  } catch (e) {
+    console.error('Admin guard error:', e);
+  }
 }
 
-// Initial & full-load checks
+function runGuards() { gateAdminSection().catch(console.error); }
+
 document.addEventListener('DOMContentLoaded', runGuards);
 window.addEventListener('load', runGuards);
-
-// Re-run on hash changes (instant nav)
 window.addEventListener('hashchange', runGuards);
-
-// Re-run after every Material client-side page swap
-if (window.document$) {
-  window.document$.subscribe(runGuards);
-}
+if (window.document$) window.document$.subscribe(runGuards);
