@@ -179,7 +179,8 @@ if (document.readyState === 'loading') {
     auth = new AuthManager();
 }
 
-/* docs/js/auth.js – single implementation (no duplicates) */
+/* docs/js/auth.js – single, conflict-free authentication */
+
 (function () {
     const ADMIN_EMAIL = "baskarmanickam@gmail.com";
   
@@ -208,7 +209,7 @@ if (document.readyState === 'loading') {
       }
     }
   
-    // ---------- header UI ----------
+    // ---------- header user UI ----------
     function renderHeader(user) {
       const host = document.getElementById("auth-button");
       if (!host) return;
@@ -236,9 +237,7 @@ if (document.readyState === 'loading') {
         const out = document.getElementById("ga-signout");
         if (out) out.addEventListener("click", signOut);
       } else {
-        host.innerHTML = `
-          <button class="sign-in-btn" id="ga-login">Sign in with Google</button>
-        `;
+        host.innerHTML = `<button class="sign-in-btn" id="ga-login">Sign in with Google</button>`;
         const loginBtn = document.getElementById("ga-login");
         if (loginBtn) loginBtn.addEventListener("click", signInWithGoogle);
       }
@@ -290,6 +289,7 @@ if (document.readyState === 'loading') {
       console.error("[auth] Supabase SDK not loaded. Check extra_javascript order.");
       return;
     }
+  
     const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   
     async function signInWithGoogle() {
@@ -333,13 +333,14 @@ if (document.readyState === 'loading') {
       syncSession();
     });
   
+    // MkDocs Material SPA navigation hook to re-apply protection after internal nav
     document.addEventListener("navigation", () => {
       protectAdminRoutes(document.documentElement.classList.contains("is-admin"));
     });
   
-    // boot
+    // bootstrap
     syncSession();
   
-    // expose for header buttons
+    // expose for header buttons if needed elsewhere
     window.auth = { signInWithGoogle, signOut };
   })();
