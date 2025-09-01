@@ -179,80 +179,64 @@ if (document.readyState === 'loading') {
     auth = new AuthManager();
 }
 
-/* ========= Admin-only gating with MkDocs Material support ========= */
-const ADMIN_EMAILS = ['baskarmanickam@gmail.com'];
-const BASE_PATH = '/'; // org root (https://genaiatlas.github.io/)
+// --- Config ---
+const ADMIN_EMAILS = ["baskarmanickam@gmail.com"];  // add more if needed
 
-/** Resolve current logical path from pathname or Material hash router. */
-function currentPath() {
-  let p = location.pathname || '/';
-  if (location.hash && location.hash.startsWith('#/')) p = location.hash.slice(1); // '#/admin/...'
-  if (BASE_PATH !== '/' && p.startsWith(BASE_PATH)) p = p.slice(BASE_PATH.length - 1);
-  return p;
+// If you deploy at org root (https://genaiatlas.github.io/), base is "/"
+const BASE = "/";               // if you ever move to /project/, set to "/project/"
+
+/**
+ * Returns true if email is in admin list
+ */
+function isAdminEmail(email) {
+  return !!email && ADMIN_EMAILS.some(a => a.toLowerCase() === email.toLowerCase());
 }
 
-/** Treat '/admin/...', 'admin/...', and '#/admin/...' as admin routes */
-function isAdminPath() {
-  const p = currentPath().replace(/^\//, '');   // strip leading slash
-  return p.startsWith('admin/');
+/**
+ * Applies or removes the .is-admin class on <html>
+ */
+function setAdminClass(isAdmin) {
+  const html = document.documentElement;
+  if (isAdmin) html.classList.add("is-admin");
+  else html.classList.remove("is-admin");
 }
 
-/** Mark all admin links (absolute, relative, and hash-router) */
-function markAdminNavLinks() {
-  const candidates = [
-    'a[href="/admin/"]', 'a[href^="/admin/"]',
-    'a[href="admin/"]',  'a[href^="admin/"]',
-    'a[href="#/admin/"]','a[href^="#/admin/"]'
-  ];
-
-  candidates.forEach(sel => {
-    document.querySelectorAll(sel).forEach(a => {
-      a.setAttribute('data-admin-link', 'true');
-      const li = a.closest('li');
-      if (li) li.setAttribute('data-admin-item', 'true');  // hide container too
-    });
-  });
-
-  // Defensive pass — any href that *contains* 'admin/' (with or without leading slash)
-  document.querySelectorAll('a[href]').forEach(a => {
-    const h = a.getAttribute('href') || '';
-    if (/(^|#\/|\/)?admin\//.test(h)) {
-      a.setAttribute('data-admin-link', 'true');
-      const li = a.closest('li');
-      if (li) li.setAttribute('data-admin-item', 'true');
-    }
-  });
-}
-
-/** Reveal admin links for the owner */
-function revealAdminLinksForOwner(isAdmin) {
-  if (!isAdmin) return;
-  document.querySelectorAll('[data-admin-link],[data-admin-item]').forEach(el => {
-    el.style.display = '';  // unhide for owner
-  });
-}
-
-/** Hard gate: non-owner landing on /admin/... is redirected away */
-async function gateAdminSection() {
-  try {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    const email = session?.user?.email || null;
-    const isOwner = !!email && ADMIN_EMAILS.includes(email);
-
-    markAdminNavLinks();
-    revealAdminLinksForOwner(isOwner);
-
-    if (isAdminPath() && !isOwner) {
-      window.location.href = BASE_PATH + '404.html';
-    }
-  } catch (e) {
-    console.error('Admin guard error:', e);
+/**
+ * Hard-block direct navigation to /admin/* for non-admin users.
+ */
+function enforceAdminGuard(isAdmin) {
+  const path = window.location.pathname;
+  const onAdminPage = path.includes("/admin/");
+  if (!isAdmin && onAdminPage) {
+    // send them away (404 or home) – 404 is clearer for “forbidden”
+    window.location.replace(`${BASE}404.html`);
   }
 }
 
-function runGuards() { gateAdminSection().catch(console.error); }
+/**
+ * Evaluate current session, set admin UI, and enforce guard.
+ */
+async function applyAuthState() {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    const email = session?.user?.email || null;
+    const isAdmin = isAdminEmail(email);
 
-document.addEventListener('DOMContentLoaded', runGuards);
-window.addEventListener('load', runGuards);
-window.addEventListener('hashchange', runGuards);
-if (window.document$) window.document$.subscribe(runGuards);
+    setAdminClass(isAdmin);
+    enforceAdminGuard(isAdmin);
+  } catch (e) {
+    console.warn("Auth state check failed:", e);
+    setAdminClass(false);
+    enforceAdminGuard(false);
+  }
+}
+
+// Run as soon as DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  applyAuthState();
+});
+
+// If you later enable Material's instant navigation, this re-runs on page swaps
+if (window.document$ && typeof window.document$.subscribe === "function") {
+  window.document$.subscribe(applyAuthState);
+}
