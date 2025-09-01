@@ -179,64 +179,81 @@ if (document.readyState === 'loading') {
     auth = new AuthManager();
 }
 
-// --- Config ---
-const ADMIN_EMAILS = ["baskarmanickam@gmail.com"];  // add more if needed
-
-// If you deploy at org root (https://genaiatlas.github.io/), base is "/"
-const BASE = "/";               // if you ever move to /project/, set to "/project/"
-
-/**
- * Returns true if email is in admin list
- */
-function isAdminEmail(email) {
-  return !!email && ADMIN_EMAILS.some(a => a.toLowerCase() === email.toLowerCase());
-}
-
-/**
- * Applies or removes the .is-admin class on <html>
- */
-function setAdminClass(isAdmin) {
-  const html = document.documentElement;
-  if (isAdmin) html.classList.add("is-admin");
-  else html.classList.remove("is-admin");
-}
-
-/**
- * Hard-block direct navigation to /admin/* for non-admin users.
- */
-function enforceAdminGuard(isAdmin) {
-  const path = window.location.pathname;
-  const onAdminPage = path.includes("/admin/");
-  if (!isAdmin && onAdminPage) {
-    // send them away (404 or home) – 404 is clearer for “forbidden”
-    window.location.replace(`${BASE}404.html`);
-  }
-}
-
-/**
- * Evaluate current session, set admin UI, and enforce guard.
- */
-async function applyAuthState() {
-  try {
-    const { data: { session } } = await supabase.auth.getSession();
-    const email = session?.user?.email || null;
-    const isAdmin = isAdminEmail(email);
-
-    setAdminClass(isAdmin);
-    enforceAdminGuard(isAdmin);
-  } catch (e) {
-    console.warn("Auth state check failed:", e);
-    setAdminClass(false);
-    enforceAdminGuard(false);
-  }
-}
-
-// Run as soon as DOM is ready
-document.addEventListener("DOMContentLoaded", () => {
-  applyAuthState();
-});
-
-// If you later enable Material's instant navigation, this re-runs on page swaps
-if (window.document$ && typeof window.document$.subscribe === "function") {
-  window.document$.subscribe(applyAuthState);
-}
+/* global supabase */
+(function () {
+    const ADMIN_EMAIL = "baskarmanickam@gmail.com";
+  
+    // Helper: set/unset admin class on <html>
+    function setAdmin(isAdmin) {
+      const html = document.documentElement;
+      if (isAdmin) {
+        html.classList.add("is-admin");
+      } else {
+        html.classList.remove("is-admin");
+      }
+    }
+  
+    // Helper: true if email matches admin
+    function isAdminEmail(email) {
+      return (email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    }
+  
+    // Prevent non-admins from reaching /admin/... via clicks
+    function guardAdminClicks() {
+      document.addEventListener("click", (e) => {
+        const a = e.target.closest('a[href]');
+        if (!a) return;
+  
+        const href = a.getAttribute("href") || "";
+        const pointsToAdmin = /(^|\/)admin(\/|$)/i.test(href);
+  
+        if (pointsToAdmin && !document.documentElement.classList.contains("is-admin")) {
+          e.preventDefault();
+          // You can route them home or to a custom page
+          window.location.assign("/");
+        }
+      }, true);
+    }
+  
+    // As a belt-and-suspenders, remove admin links that might get injected later
+    function stripAdminLinksForNonAdmins() {
+      const removeIfNeeded = () => {
+        if (document.documentElement.classList.contains("is-admin")) return;
+        document.querySelectorAll('a[href*="/admin/"], a[href*="admin/"]').forEach(a => {
+          // Hide instead of remove to avoid layout jank
+          a.style.display = "none";
+        });
+      };
+      removeIfNeeded();
+      new MutationObserver(removeIfNeeded).observe(document.body, { childList: true, subtree: true });
+    }
+  
+    async function refreshUserState() {
+      try {
+        const { data } = await supabase.auth.getUser();
+        const email = data?.user?.email || null;
+        setAdmin(isAdminEmail(email));
+      } catch (err) {
+        console.warn("auth: getUser failed", err);
+        setAdmin(false);
+      }
+    }
+  
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Default: NOT admin (keeps Admin hidden until proven otherwise)
+      setAdmin(false);
+  
+      // Evaluate current session
+      await refreshUserState();
+  
+      // React to subsequent auth changes (sign-in/out)
+      supabase.auth.onAuthStateChange((_event, session) => {
+        const email = session?.user?.email || null;
+        setAdmin(isAdminEmail(email));
+      });
+  
+      // Guard clicks and dynamic content
+      guardAdminClicks();
+      stripAdminLinksForNonAdmins();
+    });
+  })();
