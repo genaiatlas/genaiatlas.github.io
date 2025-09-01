@@ -178,3 +178,85 @@ if (document.readyState === 'loading') {
 } else {
     auth = new AuthManager();
 }
+
+/* ========= Admin-only gating with MkDocs Material support ========= */
+const ADMIN_EMAILS = ['baskarmanickam@gmail.com'];
+const BASE_PATH = '/'; // org GitHub Pages root (https://genaiatlas.github.io/)
+
+/** Resolve current logical path from pathname or Material hash router. */
+function currentPath() {
+  let p = location.pathname || '/';
+  if (location.hash && location.hash.startsWith('#/')) {
+    p = location.hash.slice(1); // '#/admin/...' => '/admin/...'
+  }
+  if (BASE_PATH !== '/' && p.startsWith(BASE_PATH)) {
+    p = p.slice(BASE_PATH.length - 1);
+  }
+  return p;
+}
+function isAdminPath() {
+  return currentPath().startsWith('/admin/');
+}
+
+/** Hide all admin links by marking them; CSS keeps them hidden by default. */
+function markAdminNavLinks() {
+  // Standard links: <a href="/admin/...">
+  document.querySelectorAll('a[href^="/admin/"]').forEach(a => {
+    a.setAttribute('data-admin-link', 'true');
+  });
+
+  // Hash-router links: <a href="#/admin/...">
+  document.querySelectorAll('a[href^="#/admin/"]').forEach(a => {
+    a.setAttribute('data-admin-link', 'true');
+  });
+
+  // Defensive: sometimes Material rewrites hrefs; catch both forms.
+  document.querySelectorAll('a[href]').forEach(a => {
+    const href = a.getAttribute('href') || '';
+    if (href.includes('/admin/')) {
+      a.setAttribute('data-admin-link', 'true');
+    }
+  });
+}
+
+/** Show admin links only for the owner. */
+function revealAdminLinksForOwner(isAdmin) {
+  if (!isAdmin) return;
+  document.querySelectorAll('a[data-admin-link="true"]').forEach(a => {
+    a.style.display = ''; // unhide for owner
+  });
+}
+
+/** Hard gate: if a non-owner hits /admin/, force navigation away. */
+async function gateAdminSection() {
+    try {
+      const { data: { session } } = await supabaseClient.auth.getSession(); // ✅ use the client
+      const email = session?.user?.email || null;
+      const isOwner = !!email && ADMIN_EMAILS.includes(email);
+  
+      markAdminNavLinks();
+      revealAdminLinksForOwner(isOwner);
+  
+      if (isAdminPath() && !isOwner) {
+        window.location.href = BASE_PATH + '404.html';
+      }
+    } catch (e) {
+      console.error('Admin guard error:', e);
+    }
+  }
+
+function runGuards() {
+  gateAdminSection().catch(console.error);
+}
+
+// Initial & full-load checks
+document.addEventListener('DOMContentLoaded', runGuards);
+window.addEventListener('load', runGuards);
+
+// Re-run on hash changes (instant nav)
+window.addEventListener('hashchange', runGuards);
+
+// Re-run after every Material client-side page swap
+if (window.document$) {
+  window.document$.subscribe(runGuards);
+}
