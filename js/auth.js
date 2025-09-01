@@ -179,8 +179,7 @@ if (document.readyState === 'loading') {
     auth = new AuthManager();
 }
 
-/* docs/js/auth.js – single implementation */
-
+/* docs/js/auth.js – single implementation (no duplicates) */
 (function () {
     const ADMIN_EMAIL = "baskarmanickam@gmail.com";
   
