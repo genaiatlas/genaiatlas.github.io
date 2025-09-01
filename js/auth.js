@@ -179,58 +179,93 @@ if (document.readyState === 'loading') {
     auth = new AuthManager();
 }
 
-/* global supabase */
+//* global supabase */
 (function () {
     const ADMIN_EMAIL = "baskarmanickam@gmail.com";
   
-    // Helper: set/unset admin class on <html>
+    // -------------- helpers -----------------
     function setAdmin(isAdmin) {
       const html = document.documentElement;
-      if (isAdmin) {
-        html.classList.add("is-admin");
-      } else {
-        html.classList.remove("is-admin");
-      }
+      if (isAdmin) html.classList.add("is-admin");
+      else html.classList.remove("is-admin");
     }
   
-    // Helper: true if email matches admin
     function isAdminEmail(email) {
       return (email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
     }
   
-    // Prevent non-admins from reaching /admin/... via clicks
     function guardAdminClicks() {
-      document.addEventListener("click", (e) => {
-        const a = e.target.closest('a[href]');
-        if (!a) return;
+      document.addEventListener(
+        "click",
+        (e) => {
+          const a = e.target.closest("a[href]");
+          if (!a) return;
   
-        const href = a.getAttribute("href") || "";
-        const pointsToAdmin = /(^|\/)admin(\/|$)/i.test(href);
+          const href = a.getAttribute("href") || "";
+          const pointsToAdmin = /(^|\/)admin(\/|$)/i.test(href);
   
-        if (pointsToAdmin && !document.documentElement.classList.contains("is-admin")) {
-          e.preventDefault();
-          // You can route them home or to a custom page
-          window.location.assign("/");
+          if (
+            pointsToAdmin &&
+            !document.documentElement.classList.contains("is-admin")
+          ) {
+            e.preventDefault();
+            // redirect home (or show a toast)
+            window.location.assign("/");
+          }
+        },
+        true
+      );
+    }
+  
+    // Try to pick up an existing Supabase client or create one.
+    function getSupabaseClient() {
+      // 1) Existing client created elsewhere?
+      if (window.__sb && window.__sb.auth) return window.__sb;
+      if (window.supabaseClient && window.supabaseClient.auth)
+        return window.supabaseClient;
+  
+      // 2) Try to initialize from meta tags or globals
+      const metaUrl =
+        document.querySelector('meta[name="supabase-url"]')?.content || null;
+      const metaKey =
+        document.querySelector('meta[name="supabase-key"]')?.content || null;
+  
+      const globalUrl = window.__SUPABASE_URL || window.SUPABASE_URL || null;
+      const globalKey =
+        window.__SUPABASE_ANON_KEY || window.SUPABASE_ANON_KEY || null;
+  
+      const lsUrl = localStorage.getItem("SUPABASE_URL");
+      const lsKey = localStorage.getItem("SUPABASE_ANON_KEY");
+  
+      const url = metaUrl || globalUrl || lsUrl;
+      const key = metaKey || globalKey || lsKey;
+  
+      if (window.supabase && typeof window.supabase.createClient === "function") {
+        if (url && key) {
+          try {
+            const client = window.supabase.createClient(url, key);
+            window.__sb = client; // cache for reuse
+            return client;
+          } catch (e) {
+            console.warn("auth: createClient failed", e);
+          }
+        } else {
+          console.warn(
+            "auth: Supabase URL/KEY not found. Provide meta tags or globals."
+          );
         }
-      }, true);
+      } else {
+        console.warn(
+          "auth: supabase library not loaded. Ensure CDN script is before js/auth.js"
+        );
+      }
+      return null;
     }
   
-    // As a belt-and-suspenders, remove admin links that might get injected later
-    function stripAdminLinksForNonAdmins() {
-      const removeIfNeeded = () => {
-        if (document.documentElement.classList.contains("is-admin")) return;
-        document.querySelectorAll('a[href*="/admin/"], a[href*="admin/"]').forEach(a => {
-          // Hide instead of remove to avoid layout jank
-          a.style.display = "none";
-        });
-      };
-      removeIfNeeded();
-      new MutationObserver(removeIfNeeded).observe(document.body, { childList: true, subtree: true });
-    }
-  
-    async function refreshUserState() {
+    async function refreshUserState(client) {
       try {
-        const { data } = await supabase.auth.getUser();
+        const { data, error } = await client.auth.getUser();
+        if (error) throw error;
         const email = data?.user?.email || null;
         setAdmin(isAdminEmail(email));
       } catch (err) {
@@ -239,21 +274,27 @@ if (document.readyState === 'loading') {
       }
     }
   
+    // -------------- main -----------------
     document.addEventListener("DOMContentLoaded", async () => {
-      // Default: NOT admin (keeps Admin hidden until proven otherwise)
+      // Hide Admin by default until we confirm user
       setAdmin(false);
   
-      // Evaluate current session
-      await refreshUserState();
+      const client = getSupabaseClient();
+      if (!client) {
+        // Without a client, we cannot ever show Admin
+        guardAdminClicks();
+        return;
+      }
   
-      // React to subsequent auth changes (sign-in/out)
-      supabase.auth.onAuthStateChange((_event, session) => {
+      // Initial evaluation
+      await refreshUserState(client);
+  
+      // React to sign-in/out
+      client.auth.onAuthStateChange((_event, session) => {
         const email = session?.user?.email || null;
         setAdmin(isAdminEmail(email));
       });
   
-      // Guard clicks and dynamic content
       guardAdminClicks();
-      stripAdminLinksForNonAdmins();
     });
   })();
