@@ -51,7 +51,10 @@ class AuthManager {
             console.log('Current URL:', window.location.href);
             
             const { error } = await supabaseClient.auth.signInWithOAuth({
-                provider: 'google'
+                provider: 'google',
+                options: {
+                    redirectTo: window.location.origin + window.location.pathname
+                }
             });
             
             if (error) {
