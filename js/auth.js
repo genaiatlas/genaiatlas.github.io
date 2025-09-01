@@ -1,12 +1,12 @@
 /* docs/js/auth.js
    Gen AI Atlas – Supabase auth + UI + Admin visibility + analytics
-   - Preserves header user block (avatar, name, email, Sign Out)
-   - Shows Admin tab ONLY for baskarmanickam@gmail.com
-   - SPA-safe, idempotent, no duplicate variable errors
+   - Header user block (avatar, name, email, Sign Out)
+   - Admin tab ONLY for baskarmanickam@gmail.com
+   - SPA-safe, idempotent, resilient to header/nav rewrites
 */
 
 (function () {
-    // Prevent double-loading (fixes “Identifier has already been declared”)
+    // Prevent double-loading
     if (window.__gaAuthLoaded) {
       console.warn("[auth] auth.js already loaded — skipping second init.");
       return;
@@ -33,6 +33,7 @@
         root.classList.remove("is-admin");
         localStorage.removeItem("ga_is_admin");
       }
+      console.log("[auth] setAdminClass:", isAdmin);
     }
     function protectAdminRoutes(isAdmin) {
       const path = (window.location.pathname || "").toLowerCase();
@@ -42,34 +43,28 @@
       }
     }
   
-    // Optimistic class to avoid flicker if user was admin in last session
-    if (localStorage.getItem("ga_is_admin") === "1") {
-      document.documentElement.classList.add("is-admin");
-    } else {
-      document.documentElement.classList.remove("is-admin");
-    }
-  
-    // Guarantee we have a header slot to render into
+    // Create/locate the header slot for the auth UI
     function ensureAuthSlot() {
       let slot = document.getElementById("auth-button");
       if (slot) return slot;
   
-      // Try common Material header container
-      const container =
+      const headerOptions =
         document.querySelector(".md-header__options") ||
         document.querySelector(".md-header__inner") ||
-        document.querySelector("header") ||
-        document.body;
+        document.querySelector("header");
   
       slot = document.createElement("div");
       slot.id = "auth-button";
+      // This class gives proper spacing in Material header
       slot.className = "md-header__option";
-      slot.style.marginLeft = "auto";
-      container.appendChild(slot);
+      // Fallback to body if header not yet in DOM
+      (headerOptions || document.body).appendChild(slot);
+  
+      console.log("[auth] ensureAuthSlot: created", slot);
       return slot;
     }
   
-    // Overlay helpers (your modal is in head.html)
+    // Overlay helpers (your modal markup/styles are in head.html)
     function showLoginOverlay() {
       const overlay = document.getElementById("login-modal");
       if (overlay) overlay.style.display = "flex";
@@ -122,12 +117,15 @@
         `;
         const btn = slot.querySelector(".sign-out-btn");
         if (btn) btn.addEventListener("click", signOut);
+  
+        console.log("[auth] Header UI rendered (signed-in):", { name, email });
       } else {
         slot.innerHTML = `
           <button class="sign-in-btn" id="ga-signin-btn" type="button">Sign in with Google</button>
         `;
         const btn = document.getElementById("ga-signin-btn");
         if (btn) btn.addEventListener("click", signIn);
+        console.log("[auth] Header UI rendered (signed-out)");
       }
     }
   
@@ -169,11 +167,14 @@
       } else {
         showLoginOverlay();
       }
+  
+      console.log("[auth] applyState:", { email, admin, hasUser: !!session?.user });
     }
   
     // ----------------- Auth Actions -----------------------
     async function signIn() {
       try {
+        console.log("[auth] signIn start");
         await sb.auth.signInWithOAuth({
           provider: "google",
           options: {
@@ -188,9 +189,10 @@
   
     async function signOut() {
       try {
+        console.log("[auth] signOut start");
         await sb.auth.signOut();
         applyState(null);
-        window.location.reload(); // ensure CSS/nav fully refresh
+        window.location.reload(); // ensure nav/CSS refresh cleanly
       } catch (e) {
         console.error("[auth] signOut failed:", e);
       }
@@ -198,21 +200,24 @@
   
     // ----------------- Bootstrap Flow ---------------------
     async function bootstrap() {
-      // Initial session
+      // Initial session from Supabase
       const { data: { session } } = await sb.auth.getSession();
+      console.log("[auth] bootstrap(getSession):", session ? "has session" : "no session");
       applyState(session);
   
-      // Listen for login/logout and apply
+      // React to login/logout
       sb.auth.onAuthStateChange((_event, newSession) => {
+        console.log("[auth] onAuthStateChange:", _event, !!newSession?.user);
         applyState(newSession);
       });
   
       // Re-apply after MkDocs Material SPA navigations
       document.addEventListener("navigation", () => {
+        console.log("[auth] navigation event — reapplying UI/state");
         applyState(currentSession);
       });
   
-      // If DOM swaps header/nav, reassert admin class & re-render quickly
+      // Header DOM can be re-created by Material; re-render on mutations
       const mo = new MutationObserver(() => {
         if (currentSession?.user) {
           setAdminClass(isAdminEmail(currentSession.user.email));
@@ -222,7 +227,7 @@
       mo.observe(document.body, { childList: true, subtree: true });
     }
   
-    // Expose small API if you want to use elsewhere
+    // Expose small API if you need it elsewhere
     window.gaAuth = {
       signIn,
       signOut,
