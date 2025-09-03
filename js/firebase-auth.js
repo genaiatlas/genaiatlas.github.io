@@ -28,8 +28,61 @@ googleProvider.setCustomParameters({
 googleProvider.addScope('profile');
 googleProvider.addScope('email');
 
-// Admin user email
-const ADMIN_EMAIL = 'baskarmanickam@gmail.com';
+// Admin configuration - loaded from JSON file
+let adminConfig = null;
+let adminEmails = [];
+
+// Load admin configuration from JSON file
+async function loadAdminConfig() {
+  try {
+    console.log('[Firebase Auth] Loading admin configuration...');
+    const response = await fetch('/admin-users.json');
+    console.log('[Firebase Auth] Admin config fetch response status:', response.status);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    adminConfig = await response.json();
+    adminEmails = adminConfig.admins.map(admin => admin.email.toLowerCase());
+    console.log('[Firebase Auth] Admin configuration loaded successfully:', adminEmails.length, 'admins');
+    console.log('[Firebase Auth] Admin emails:', adminEmails);
+    return adminConfig;
+  } catch (error) {
+    console.error('[Firebase Auth] Failed to load admin configuration:', error);
+    console.log('[Firebase Auth] Using fallback admin configuration');
+    // Fallback to hardcoded admin for safety
+    adminEmails = ['baskarmanickam@gmail.com'];
+    adminConfig = {
+      admins: [
+        {
+          email: 'baskarmanickam@gmail.com',
+          name: 'Baskar Manickam',
+          role: 'Super Admin',
+          permissions: ['analytics', 'user_management', 'content_management'],
+          added_date: '2025-09-02'
+        }
+      ],
+      config: {
+        max_admins: 10,
+        require_approval: true,
+        auto_expire_days: 365
+      }
+    };
+    return adminConfig;
+  }
+}
+
+// Helper function to check if user is admin
+function isAdmin(email) {
+  return adminEmails.includes(email?.toLowerCase());
+}
+
+// Helper function to get admin info
+function getAdminInfo(email) {
+  if (!adminConfig) return null;
+  return adminConfig.admins.find(admin => admin.email.toLowerCase() === email?.toLowerCase());
+}
 
 // DOM elements
 let userProfileArea;
@@ -40,7 +93,7 @@ let isAuthenticating = false;
 let isAuthenticated = false;
 
 // Initialize authentication when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   console.log('[Firebase Auth] Initializing authentication system');
   
   // Check if Firebase is loaded
@@ -59,6 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
   console.log('[Firebase Auth] Firebase SDK loaded successfully');
   console.log('[Firebase Auth] Firebase config:', firebaseConfig);
+  
+  // Load admin configuration first
+  await loadAdminConfig();
   
   // Get DOM elements
   userProfileArea = document.getElementById('user-profile-area');
@@ -107,11 +163,17 @@ function handleSignedInUser(user) {
   showUserProfile(user);
   
   // Show admin tab if user is admin
-  if (user.email === ADMIN_EMAIL) {
+  console.log('[Firebase Auth] Checking if user is admin:', user.email);
+  console.log('[Firebase Auth] Current admin emails:', adminEmails);
+  console.log('[Firebase Auth] Is admin result:', isAdmin(user.email));
+  
+  if (isAdmin(user.email)) {
+    const adminInfo = getAdminInfo(user.email);
     showAdminTab();
-    console.log('[Firebase Auth] Admin user detected - showing admin features');
+    console.log('[Firebase Auth] Admin user detected:', adminInfo?.role || 'Admin', '- showing admin features');
   } else {
     hideAdminTab();
+    console.log('[Firebase Auth] User is not an admin - hiding admin features');
   }
   
   // Store user info for potential analytics
@@ -120,8 +182,67 @@ function handleSignedInUser(user) {
     email: user.email,
     displayName: user.displayName,
     photoURL: user.photoURL,
-    isAdmin: user.email === ADMIN_EMAIL
+    isAdmin: isAdmin(user.email),
+    adminInfo: getAdminInfo(user.email)
   };
+  
+  // Track user login event with Firebase Analytics
+  analytics.logEvent('login', {
+    method: 'google',
+    user_id: user.uid,
+    user_email: user.email,
+    is_admin: isAdmin(user.email),
+    login_time: new Date().toISOString()
+  });
+  
+  // Track page view
+  analytics.logEvent('page_view', {
+    page_title: document.title,
+    page_location: window.location.href,
+    user_id: user.uid,
+    user_email: user.email,
+    timestamp: new Date().toISOString()
+  });
+  
+  // Store user session data in localStorage for tracking
+  const sessionData = {
+    user_id: user.uid,
+    email: user.email,
+    displayName: user.displayName,
+    loginTime: new Date().toISOString(),
+    sessionId: Date.now().toString()
+  };
+  
+  // Update user sessions in localStorage
+  const existingSessions = JSON.parse(localStorage.getItem('genai_user_sessions') || '[]');
+  const userIndex = existingSessions.findIndex(s => s.email === user.email);
+  
+  if (userIndex >= 0) {
+    existingSessions[userIndex].accessCount = (existingSessions[userIndex].accessCount || 1) + 1;
+    existingSessions[userIndex].lastAccess = new Date().toISOString();
+    existingSessions[userIndex].sessions = existingSessions[userIndex].sessions || [];
+    existingSessions[userIndex].sessions.push(sessionData);
+  } else {
+    existingSessions.push({
+      user_id: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      firstAccess: new Date().toISOString(),
+      lastAccess: new Date().toISOString(),
+      accessCount: 1,
+      sessions: [sessionData]
+    });
+  }
+  
+  localStorage.setItem('genai_user_sessions', JSON.stringify(existingSessions));
+  
+  // Also track in Firebase Analytics
+  analytics.logEvent('user_session_start', {
+    user_id: user.uid,
+    user_email: user.email,
+    session_id: sessionData.sessionId,
+    is_return_user: userIndex >= 0
+  });
   
   console.log('[Firebase Auth] User authentication complete');
 }
@@ -815,12 +936,41 @@ function hideAdminTab() {
 window.genaiAuth = {
   signOut: handleSignOut,
   getCurrentUser: () => auth.currentUser,
-  isAdmin: () => auth.currentUser?.email === ADMIN_EMAIL
+  isAdmin: () => isAdmin(auth.currentUser?.email),
+  getAdminInfo: () => getAdminInfo(auth.currentUser?.email),
+  getAdminConfig: () => adminConfig
 };
 
 // Handle MkDocs Material page navigation to maintain admin tab visibility
 document$.subscribe(() => {
   console.log('[Firebase Auth] Page navigation detected');
+  
+  // Track page view analytics with detailed data
+  if (window.genaiUser && auth.currentUser) {
+    const pageData = {
+      page_title: document.title,
+      page_location: window.location.href,
+      user_id: auth.currentUser.uid,
+      user_email: auth.currentUser.email,
+      is_admin: window.genaiUser.isAdmin,
+      timestamp: new Date().toISOString(),
+      page_section: getPageSection(window.location.pathname),
+      referrer: document.referrer
+    };
+    
+    analytics.logEvent('page_view', pageData);
+    
+    // Update session page views in localStorage
+    const sessions = JSON.parse(localStorage.getItem('genai_user_sessions') || '[]');
+    const userIndex = sessions.findIndex(s => s.email === auth.currentUser.email);
+    
+    if (userIndex >= 0) {
+      sessions[userIndex].pageViews = sessions[userIndex].pageViews || [];
+      sessions[userIndex].pageViews.push(pageData);
+      sessions[userIndex].totalPageViews = (sessions[userIndex].totalPageViews || 0) + 1;
+      localStorage.setItem('genai_user_sessions', JSON.stringify(sessions));
+    }
+  }
   
   // Wait for DOM to be updated, then reapply admin tab visibility
   setTimeout(() => {
@@ -831,5 +981,16 @@ document$.subscribe(() => {
     }
   }, 100);
 });
+
+// Helper function to determine page section
+function getPageSection(pathname) {
+  if (pathname.includes('/01-foundation/')) return 'Foundation';
+  if (pathname.includes('/02-gen-ai-core/')) return 'Gen AI Core';
+  if (pathname.includes('/03-deploy-ops/')) return 'Deployment & Ops';
+  if (pathname.includes('/04-applied-research/')) return 'Applied Research';
+  if (pathname.includes('/05-community/')) return 'Community';
+  if (pathname.includes('/admin/')) return 'Admin';
+  return 'Home';
+}
 
 console.log('[Firebase Auth] Authentication system loaded');
