@@ -525,11 +525,15 @@ function showUserProfile(user) {
   if (userProfileArea) {
     // Create mobile-responsive name display
     const displayName = user.displayName || user.email;
-    const isMobile = window.innerWidth <= 768;
+    
+    // Function to determine if mobile based on screen size and user agent
+    const isMobile = () => {
+      return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    };
     
     // Mobile: Show initials only (e.g., "BM")
     // Desktop: Show full name or shortened name
-    const shortName = isMobile ? 
+    const shortName = isMobile() ? 
       displayName.split(' ').map(part => part.charAt(0)).join('').toUpperCase() :
       (displayName.length > 20 ? 
         displayName.split(' ').map(part => part.charAt(0)).join('').toUpperCase() + 
