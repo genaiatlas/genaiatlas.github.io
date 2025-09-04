@@ -64,6 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
   userProfileArea = document.getElementById('user-profile-area');
   adminTab = document.querySelector('.admin-tab');
   
+  // Initialize admin management data
+  initializeAdminData();
+  
   // Set up authentication state listener (this handles everything)
   setupAuthStateListener();
 });
@@ -106,8 +109,11 @@ function handleSignedInUser(user) {
   // Show user profile in header
   showUserProfile(user);
   
+  // Check admin status from local admin management system
+  const isAdmin = checkAdminStatus(user.email);
+  
   // Show admin tab if user is admin
-  if (user.email === ADMIN_EMAIL) {
+  if (isAdmin) {
     showAdminTab();
     console.log('[Firebase Auth] Admin user detected - showing admin features');
   } else {
@@ -120,8 +126,15 @@ function handleSignedInUser(user) {
     email: user.email,
     displayName: user.displayName,
     photoURL: user.photoURL,
-    isAdmin: user.email === ADMIN_EMAIL
+    isAdmin: isAdmin,
+    loginTime: new Date().toISOString()
   };
+  
+  // Update admin data if user is new admin
+  updateAdminUserData(user);
+  
+  // Track login event with Firebase Analytics
+  trackUserLogin(user);
   
   console.log('[Firebase Auth] User authentication complete');
 }
@@ -719,6 +732,11 @@ function hideUserProfile() {
 // Handle sign out
 async function handleSignOut() {
   try {
+    // Track logout before signing out
+    if (auth.currentUser) {
+      trackUserLogout(auth.currentUser);
+    }
+    
     await auth.signOut();
     console.log('[Firebase Auth] User signed out successfully');
   } catch (error) {
@@ -811,11 +829,293 @@ function hideAdminTab() {
   console.log('[Firebase Auth] Admin tab hidden');
 }
 
+// ============================================
+// ANALYTICS TRACKING FUNCTIONS
+// ============================================
+
+// Track user login event
+function trackUserLogin(user) {
+  try {
+    const loginData = {
+      timestamp: new Date().toISOString(),
+      user_id: user.uid,
+      email: user.email,
+      display_name: user.displayName,
+      photo_url: user.photoURL,
+      is_admin: user.email === ADMIN_EMAIL,
+      login_method: 'google',
+      user_agent: navigator.userAgent,
+      referrer: document.referrer || 'direct'
+    };
+    
+    // Log to Firebase Analytics
+    analytics.logEvent('login', {
+      method: 'google',
+      user_type: user.email === ADMIN_EMAIL ? 'admin' : 'user'
+    });
+    
+    // Store in localStorage for admin dashboard
+    const analyticsData = getStoredAnalytics();
+    analyticsData.logins.push(loginData);
+    
+    // Keep only last 100 logins to prevent localStorage overflow
+    if (analyticsData.logins.length > 100) {
+      analyticsData.logins = analyticsData.logins.slice(-100);
+    }
+    
+    storeAnalytics(analyticsData);
+    console.log('[Analytics] Login tracked:', loginData);
+    
+  } catch (error) {
+    console.error('[Analytics] Error tracking login:', error);
+  }
+}
+
+// Track user logout event
+function trackUserLogout(user) {
+  try {
+    const logoutData = {
+      timestamp: new Date().toISOString(),
+      user_id: user.uid,
+      email: user.email,
+      session_duration: calculateSessionDuration(),
+      is_admin: user.email === ADMIN_EMAIL
+    };
+    
+    // Log to Firebase Analytics
+    analytics.logEvent('logout', {
+      user_type: user.email === ADMIN_EMAIL ? 'admin' : 'user'
+    });
+    
+    // Store in localStorage for admin dashboard
+    const analyticsData = getStoredAnalytics();
+    analyticsData.logouts.push(logoutData);
+    
+    // Keep only last 100 logouts
+    if (analyticsData.logouts.length > 100) {
+      analyticsData.logouts = analyticsData.logouts.slice(-100);
+    }
+    
+    storeAnalytics(analyticsData);
+    console.log('[Analytics] Logout tracked:', logoutData);
+    
+  } catch (error) {
+    console.error('[Analytics] Error tracking logout:', error);
+  }
+}
+
+// Calculate session duration
+function calculateSessionDuration() {
+  if (window.genaiUser && window.genaiUser.loginTime) {
+    const loginTime = new Date(window.genaiUser.loginTime);
+    const currentTime = new Date();
+    return Math.round((currentTime - loginTime) / 1000); // Duration in seconds
+  }
+  return 0;
+}
+
+// Get stored analytics data
+function getStoredAnalytics() {
+  try {
+    const stored = localStorage.getItem('genai_analytics');
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (error) {
+    console.error('[Analytics] Error reading stored analytics:', error);
+  }
+  
+  // Default structure
+  return {
+    logins: [],
+    logouts: [],
+    pageViews: [],
+    lastUpdated: new Date().toISOString()
+  };
+}
+
+// Store analytics data
+function storeAnalytics(data) {
+  try {
+    data.lastUpdated = new Date().toISOString();
+    localStorage.setItem('genai_analytics', JSON.stringify(data));
+  } catch (error) {
+    console.error('[Analytics] Error storing analytics:', error);
+  }
+}
+
+// Track page views
+function trackPageView(pagePath) {
+  try {
+    if (!window.genaiUser) return;
+    
+    const pageViewData = {
+      timestamp: new Date().toISOString(),
+      user_id: window.genaiUser.uid,
+      email: window.genaiUser.email,
+      page_path: pagePath || window.location.pathname,
+      page_title: document.title,
+      is_admin: window.genaiUser.isAdmin,
+      referrer: document.referrer
+    };
+    
+    // Log to Firebase Analytics
+    analytics.logEvent('page_view', {
+      page_title: document.title,
+      page_location: window.location.href
+    });
+    
+    // Store in localStorage for admin dashboard
+    const analyticsData = getStoredAnalytics();
+    analyticsData.pageViews.push(pageViewData);
+    
+    // Keep only last 200 page views
+    if (analyticsData.pageViews.length > 200) {
+      analyticsData.pageViews = analyticsData.pageViews.slice(-200);
+    }
+    
+    storeAnalytics(analyticsData);
+    console.log('[Analytics] Page view tracked:', pageViewData);
+    
+  } catch (error) {
+    console.error('[Analytics] Error tracking page view:', error);
+  }
+}
+
+// Get analytics summary for admin dashboard
+function getAnalyticsSummary() {
+  const analyticsData = getStoredAnalytics();
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+  
+  // Filter data by time periods
+  const todayLogins = analyticsData.logins.filter(login => 
+    new Date(login.timestamp) >= today
+  );
+  const weekLogins = analyticsData.logins.filter(login => 
+    new Date(login.timestamp) >= lastWeek
+  );
+  
+  const todayPageViews = analyticsData.pageViews.filter(view => 
+    new Date(view.timestamp) >= today
+  );
+  const weekPageViews = analyticsData.pageViews.filter(view => 
+    new Date(view.timestamp) >= lastWeek
+  );
+  
+  // Get unique users
+  const uniqueUsersToday = new Set(todayLogins.map(login => login.email)).size;
+  const uniqueUsersWeek = new Set(weekLogins.map(login => login.email)).size;
+  const totalUniqueUsers = new Set(analyticsData.logins.map(login => login.email)).size;
+  
+  // Get latest users (last 10)
+  const latestLogins = analyticsData.logins
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+    .slice(0, 10);
+  
+  return {
+    summary: {
+      totalLogins: analyticsData.logins.length,
+      totalPageViews: analyticsData.pageViews.length,
+      totalUniqueUsers: totalUniqueUsers,
+      todayLogins: todayLogins.length,
+      todayPageViews: todayPageViews.length,
+      todayUniqueUsers: uniqueUsersToday,
+      weekLogins: weekLogins.length,
+      weekPageViews: weekPageViews.length,
+      weekUniqueUsers: uniqueUsersWeek
+    },
+    latestUsers: latestLogins,
+    lastUpdated: analyticsData.lastUpdated
+  };
+}
+
+// ============================================
+// ADMIN MANAGEMENT INTEGRATION FUNCTIONS
+// ============================================
+
+// Check if user is admin from local admin management system
+function checkAdminStatus(email) {
+  try {
+    // Always allow the original super admin
+    if (email === ADMIN_EMAIL) {
+      return true;
+    }
+    
+    // Check local admin management system
+    const adminData = JSON.parse(localStorage.getItem('genai_admins') || '{"admins": []}');
+    return adminData.admins.some(admin => admin.email === email);
+    
+  } catch (error) {
+    console.error('[Firebase Auth] Error checking admin status:', error);
+    return email === ADMIN_EMAIL; // Fallback to original admin
+  }
+}
+
+// Update admin user data when they log in
+function updateAdminUserData(user) {
+  try {
+    const adminData = JSON.parse(localStorage.getItem('genai_admins') || '{"admins": []}');
+    
+    // Initialize admin data if it doesn't exist (for the super admin)
+    if (adminData.admins.length === 0 && user.email === ADMIN_EMAIL) {
+      adminData.admins.push({
+        email: ADMIN_EMAIL,
+        name: user.displayName || 'Baskar Manickam',
+        role: 'Super Admin',
+        permissions: ['analytics', 'user_management', 'content_management', 'admin_management'],
+        added_date: new Date().toISOString().split('T')[0],
+        added_by: 'System'
+      });
+      localStorage.setItem('genai_admins', JSON.stringify(adminData));
+    }
+    
+    // Update existing admin data with latest user info
+    const adminIndex = adminData.admins.findIndex(admin => admin.email === user.email);
+    if (adminIndex !== -1) {
+      adminData.admins[adminIndex].name = user.displayName || adminData.admins[adminIndex].name;
+      adminData.admins[adminIndex].last_login = new Date().toISOString();
+      localStorage.setItem('genai_admins', JSON.stringify(adminData));
+    }
+    
+  } catch (error) {
+    console.error('[Firebase Auth] Error updating admin data:', error);
+  }
+}
+
+// Initialize admin data on first load
+function initializeAdminData() {
+  try {
+    const adminData = JSON.parse(localStorage.getItem('genai_admins') || '{"admins": []}');
+    
+    // If no admin data exists, create initial structure
+    if (adminData.admins.length === 0) {
+      const initialAdminData = {
+        admins: [],
+        config: {
+          max_admins: 10,
+          require_approval: false,
+          auto_expire_days: 365
+        },
+        lastUpdated: new Date().toISOString()
+      };
+      localStorage.setItem('genai_admins', JSON.stringify(initialAdminData));
+    }
+    
+  } catch (error) {
+    console.error('[Firebase Auth] Error initializing admin data:', error);
+  }
+}
+
 // Global functions for external access
 window.genaiAuth = {
   signOut: handleSignOut,
   getCurrentUser: () => auth.currentUser,
-  isAdmin: () => auth.currentUser?.email === ADMIN_EMAIL
+  isAdmin: () => auth.currentUser ? checkAdminStatus(auth.currentUser.email) : false,
+  getAnalyticsSummary: getAnalyticsSummary,
+  trackPageView: trackPageView,
+  checkAdminStatus: checkAdminStatus
 };
 
 // Handle MkDocs Material page navigation to maintain admin tab visibility
@@ -828,6 +1128,11 @@ document$.subscribe(() => {
       showAdminTab();
     } else {
       hideAdminTab();
+    }
+    
+    // Track page view for authenticated users
+    if (window.genaiUser) {
+      trackPageView();
     }
   }, 100);
 });
