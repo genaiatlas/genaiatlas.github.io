@@ -523,12 +523,18 @@ function showUserProfile(user) {
   }
   
   if (userProfileArea) {
-    // Create better name display
+    // Create mobile-responsive name display
     const displayName = user.displayName || user.email;
-    const shortName = displayName.length > 20 ? 
-      displayName.split(' ').map(part => part.charAt(0)).join('').toUpperCase() + 
-      (displayName.split(' ').length > 1 ? '' : displayName.substring(0, 8) + '...') :
-      displayName;
+    const isMobile = window.innerWidth <= 768;
+    
+    // Mobile: Show initials only (e.g., "BM")
+    // Desktop: Show full name or shortened name
+    const shortName = isMobile ? 
+      displayName.split(' ').map(part => part.charAt(0)).join('').toUpperCase() :
+      (displayName.length > 20 ? 
+        displayName.split(' ').map(part => part.charAt(0)).join('').toUpperCase() + 
+        (displayName.split(' ').length > 1 ? '' : displayName.substring(0, 8) + '...') :
+        displayName);
     
     userProfileArea.innerHTML = `
       <div class="user-profile">
