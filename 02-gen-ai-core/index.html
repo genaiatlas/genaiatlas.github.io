@@ -93,13 +93,6 @@
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     
-    <!-- Mobile Hamburger Menu (Far Left) -->
-    <button class="hamburger-btn" onclick="toggleMobileNav()">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-    
     <!-- Logo -->
     <a href=".." 
        title="Gen AI Atlas" 
@@ -210,11 +203,6 @@
 
     <!-- Repo link -->
     
-    
-    <!-- User Profile / Logout -->
-    <div id="user-profile-area">
-      <button class="logout-btn" onclick="handleLogout()">Logout</button>
-    </div>
   </nav>
 
   <!-- Navigation tabs (if enabled) -->
@@ -383,249 +371,55 @@
   
 </header>
 
-<!-- Mobile Navigation Overlay -->
-<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileNav()"></div>
-
-<!-- Mobile Navigation Menu -->
-<div class="mobile-nav-menu" id="mobileNavMenu">
-  <div class="mobile-nav-header">
-    <h3>Navigation</h3>
-    <button class="close-btn" onclick="closeMobileNav()">×</button>
-  </div>
-  <div class="mobile-nav-content">
-    <a href="/01-foundation/" class="nav-item">📚 Foundation</a>
-    <a href="/02-gen-ai-core/" class="nav-item">🤖 Generative AI Core</a>
-    <a href="/03-deploy-ops/" class="nav-item">🚀 Deployment & Operations</a>
-    <a href="/04-applied-research/" class="nav-item">🔬 Research & Advanced Topics</a>
-    <a href="/05-community/" class="nav-item">👥 Community & Q&A</a>
-    <a href="/admin/" class="nav-item admin-only">⚙️ Admin</a>
-  </div>
-</div>
-
-<script>
-// Mobile navigation functions
-function toggleMobileNav() {
-  const menu = document.getElementById('mobileNavMenu');
-  const overlay = document.getElementById('mobileNavOverlay');
-  
-  if (menu && overlay) {
-    menu.classList.toggle('active');
-    overlay.classList.toggle('active');
-    document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
-  }
-}
-
-function closeMobileNav() {
-  const menu = document.getElementById('mobileNavMenu');
-  const overlay = document.getElementById('mobileNavOverlay');
-  
-  if (menu && overlay) {
-    menu.classList.remove('active');
-    overlay.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-}
-
-// Logout function
-function handleLogout() {
-  if (confirm('Are you sure you want to logout?')) {
-    if (window.googleAuth && window.googleAuth.signOut) {
-      window.googleAuth.signOut();
-    } else {
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.href = '/';
-    }
-  }
-}
-
-// Close mobile nav when clicking on nav items
-document.addEventListener('DOMContentLoaded', function() {
-  const navItems = document.querySelectorAll('.nav-item');
-  navItems.forEach(item => {
-    item.addEventListener('click', function() {
-      closeMobileNav();
-    });
-  });
-});
-</script>
-
 <style>
-/* Proper CSS without conflicts */
+/* Clean header layout without hamburger menu */
 .flex-spacer {
   flex: 1 1 auto;
 }
 
-/* Mobile Hamburger Button */
-.hamburger-btn {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-  height: 40px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  margin-right: 8px;
+/* Fix search icon spacing and positioning */
+.md-search {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
-.hamburger-btn span {
-  display: block;
-  width: 20px;
-  height: 2px;
-  background: var(--md-primary-fg-color);
-  margin: 2px 0;
-  transition: 0.3s;
+.md-header__button.md-icon {
+  padding: 0.5rem;
 }
 
-.hamburger-btn.active span:nth-child(1) {
-  transform: rotate(-45deg) translate(-4px, 4px);
-}
-
-.hamburger-btn.active span:nth-child(2) {
-  opacity: 0;
-}
-
-.hamburger-btn.active span:nth-child(3) {
-  transform: rotate(45deg) translate(-4px, -4px);
-}
-
-/* Logout Button */
-.logout-btn {
-  background: var(--md-primary-fg-color);
-  color: var(--md-primary-bg-color);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.logout-btn:hover {
-  opacity: 0.9;
-}
-
-/* Mobile Navigation Overlay */
-.mobile-nav-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-}
-
-.mobile-nav-overlay.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Mobile Navigation Menu */
-.mobile-nav-menu {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  width: 280px;
-  height: 100%;
-  background: var(--md-default-bg-color);
-  z-index: 1000;
-  transition: left 0.3s ease;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.mobile-nav-menu.active {
-  left: 0;
-}
-
-.mobile-nav-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid var(--md-default-fg-color--lightest);
-}
-
-.mobile-nav-header h3 {
-  margin: 0;
-  color: var(--md-primary-fg-color);
-  font-size: 18px;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: var(--md-default-fg-color);
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.mobile-nav-content {
-  padding: 20px;
-}
-
-.nav-item {
-  display: block;
-  padding: 12px 16px;
-  margin-bottom: 8px;
-  color: var(--md-default-fg-color);
-  text-decoration: none;
-  border-radius: 6px;
-  font-size: 16px;
-  transition: background 0.2s ease;
-}
-
-.nav-item:hover {
-  background: var(--md-default-fg-color--lightest);
-  text-decoration: none;
-}
-
-.nav-item.admin-only {
-  display: none;
-}
-
-/* Show hamburger and adjust layout on mobile */
+/* Responsive header adjustments */
 @media screen and (max-width: 768px) {
-  .hamburger-btn {
-    display: flex;
-  }
-  
-  /* Hide some elements on small screens */
+  /* Hide secondary title on mobile */
   .md-header__topic[data-md-component="header-topic"] {
     display: none;
   }
   
-  /* Adjust user profile */
-  #user-profile-area .user-profile {
+  /* Adjust search positioning */
+  .md-search {
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+  }
+  
+  /* Hide repo link on small screens */
+  .md-header__source {
     display: none;
   }
 }
 
 /* Very small screens */
 @media screen and (max-width: 480px) {
-  .md-header__source {
-    display: none;
+  /* Compact spacing */
+  .md-header__inner {
+    padding: 0.5rem 0.25rem;
   }
   
-  .hamburger-btn {
-    width: 36px;
-    height: 36px;
+  .md-search {
+    margin-left: 0.125rem;
+    margin-right: 0.125rem;
   }
   
-  .logout-btn {
-    padding: 6px 12px;
-    font-size: 13px;
+  .md-header__button.md-icon {
+    padding: 0.375rem;
   }
 }
 </style>
