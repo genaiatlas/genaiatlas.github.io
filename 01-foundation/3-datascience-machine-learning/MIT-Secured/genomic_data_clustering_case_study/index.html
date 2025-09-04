@@ -213,7 +213,12 @@
     
     
     <!-- User Profile Area -->
-    <div id="user-profile-area"></div>
+    <div id="user-profile-area">
+      <!-- Mobile Logout Button (hidden on desktop) -->
+      <button class="mobile-logout-btn" onclick="handleLogout()" style="display: none;">
+        Logout
+      </button>
+    </div>
   </nav>
 
   <!-- Navigation tabs (if enabled) -->
@@ -402,8 +407,41 @@ function toggleMobileMenu() {
   }
 }
 
+// Handle logout function
+function handleLogout() {
+  // Add your logout logic here
+  if (window.googleAuth && window.googleAuth.signOut) {
+    window.googleAuth.signOut();
+  } else {
+    // Fallback logout
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.reload();
+  }
+}
+
 // Close mobile menu when clicking on a link
 document.addEventListener('DOMContentLoaded', function() {
+  // Show mobile logout button on mobile screens
+  function updateMobileElements() {
+    const logoutBtn = document.querySelector('.mobile-logout-btn');
+    const userProfile = document.querySelector('#user-profile-area .user-profile');
+    
+    if (window.innerWidth <= 768) {
+      // Mobile: show logout button, hide profile
+      if (logoutBtn) logoutBtn.style.display = 'flex';
+      if (userProfile) userProfile.style.display = 'none';
+    } else {
+      // Desktop: hide logout button, show profile
+      if (logoutBtn) logoutBtn.style.display = 'none';
+      if (userProfile) userProfile.style.display = 'flex';
+    }
+  }
+  
+  // Update on load and resize
+  updateMobileElements();
+  window.addEventListener('resize', updateMobileElements);
+  
   const navLinks = document.querySelectorAll('.md-nav__link');
   navLinks.forEach(link => {
     link.addEventListener('click', function() {
