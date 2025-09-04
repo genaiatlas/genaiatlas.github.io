@@ -91,44 +91,50 @@
 
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile Hamburger Menu (Only visible on mobile) -->
+    <button class="mobile-hamburger" onclick="toggleMobileNav()" aria-label="Toggle navigation" style="display: none;">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
     
     <!-- Logo -->
     <a href="../../.." 
        title="Gen AI Atlas" 
        class="md-header__button md-logo" 
        aria-label="Gen AI Atlas" 
-       data-md-component="logo">
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
       
   <img src="../../../images/adhana.png" alt="logo">
 
     </a>
 
     <!-- Title -->
-    <div class="md-header__title" data-md-component="header-title">
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
       <div class="md-header__topic">
-        <span class="md-ellipsis">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
           Gen AI Atlas
         </span>
       </div>
       <div class="md-header__topic" data-md-component="header-topic">
         <span class="md-ellipsis">
-          
-            Claude Vs Amp Comparison
-          
+          Claude Vs Amp Comparison
         </span>
       </div>
     </div>
 
     <!-- Spacer -->
-    <div class="flex-spacer"></div>
+    <div style="flex: 1 1 auto;"></div>
 
     <!-- Search -->
     
       
       
-        <div class="md-search" data-md-component="search" role="search">
-          <label class="md-header__button md-icon" for="__search">
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
             
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
           </label>
@@ -172,8 +178,8 @@
 
     <!-- Theme toggle -->
     
-      
-        <div class="md-header__option">
+      <div style="margin-left: 1.2rem;">
+        
           <form class="md-header__option" data-md-component="palette">
   
     
@@ -197,15 +203,17 @@
     
   
 </form>
-        </div>
-      
+        
+      </div>
     
 
     <!-- Repo link -->
     
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
   </nav>
 
-  <!-- Navigation tabs (if enabled) -->
   
     
 <nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
@@ -371,55 +379,223 @@
   
 </header>
 
+<!-- Mobile Navigation Overlay (Only for mobile) -->
+<div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileNav()"></div>
+
+<!-- Mobile Navigation Menu (Only for mobile) -->
+<div class="mobile-nav-menu" id="mobileNavMenu">
+  <div class="mobile-nav-header">
+    <h3>Navigation</h3>
+    <button class="close-btn" onclick="closeMobileNav()">×</button>
+  </div>
+  <div class="mobile-nav-content">
+    <a href="/01-foundation/" class="nav-item">📚 Foundation</a>
+    <a href="/02-gen-ai-core/" class="nav-item">🤖 Generative AI Core</a>
+    <a href="/03-deploy-ops/" class="nav-item">🚀 Deployment & Operations</a>
+    <a href="/04-applied-research/" class="nav-item">🔬 Research & Advanced Topics</a>
+    <a href="/05-community/" class="nav-item">👥 Community & Q&A</a>
+    <a href="/admin/" class="nav-item admin-only">⚙️ Admin</a>
+  </div>
+</div>
+
+<script>
+// Mobile navigation functions (only affects mobile)
+function toggleMobileNav() {
+  const menu = document.getElementById('mobileNavMenu');
+  const overlay = document.getElementById('mobileNavOverlay');
+  const hamburger = document.querySelector('.mobile-hamburger');
+  
+  if (menu && overlay) {
+    menu.classList.toggle('active');
+    overlay.classList.toggle('active');
+    if (hamburger) hamburger.classList.toggle('active');
+    document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+  }
+}
+
+function closeMobileNav() {
+  const menu = document.getElementById('mobileNavMenu');
+  const overlay = document.getElementById('mobileNavOverlay');
+  const hamburger = document.querySelector('.mobile-hamburger');
+  
+  if (menu && overlay) {
+    menu.classList.remove('active');
+    overlay.classList.remove('active');
+    if (hamburger) hamburger.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+// Close mobile nav when clicking on nav items
+document.addEventListener('DOMContentLoaded', function() {
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
+    item.addEventListener('click', function() {
+      closeMobileNav();
+    });
+  });
+});
+</script>
+
 <style>
-/* Clean header layout without hamburger menu */
-.flex-spacer {
-  flex: 1 1 auto;
+/* MOBILE-ONLY HAMBURGER MENU STYLES */
+/* Desktop is completely untouched */
+
+/* Mobile Hamburger Button - Hidden by default, only shows on mobile */
+.mobile-hamburger {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  margin-right: 12px;
+  border-radius: 4px;
 }
 
-/* Fix search icon spacing and positioning */
-.md-search {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
+.mobile-hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--md-default-fg-color);
+  margin: 2px 0;
+  transition: 0.3s;
+  border-radius: 1px;
 }
 
-.md-header__button.md-icon {
-  padding: 0.5rem;
+/* Hamburger Animation */
+.mobile-hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
 }
 
-/* Responsive header adjustments */
+.mobile-hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Mobile Navigation Elements - Hidden by default */
+.mobile-nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  display: none;
+}
+
+.mobile-nav-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-nav-menu {
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 300px;
+  height: 100vh;
+  background: var(--md-default-bg-color);
+  z-index: 1000;
+  transition: left 0.3s ease;
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15);
+  overflow-y: auto;
+  display: none;
+}
+
+.mobile-nav-menu.active {
+  left: 0;
+}
+
+.mobile-nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  background: var(--md-primary-fg-color--lightest);
+}
+
+.mobile-nav-header h3 {
+  margin: 0;
+  color: var(--md-primary-fg-color);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--md-default-fg-color);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.mobile-nav-content {
+  padding: 20px;
+}
+
+.nav-item {
+  display: block;
+  padding: 16px 20px;
+  margin-bottom: 8px;
+  color: var(--md-default-fg-color);
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+.nav-item:hover {
+  background: var(--md-primary-fg-color--lightest);
+  border-left-color: var(--md-primary-fg-color);
+  text-decoration: none;
+}
+
+.nav-item.admin-only {
+  display: none;
+}
+
+/* MOBILE-ONLY MEDIA QUERIES */
+/* Only affects screens 768px and below */
 @media screen and (max-width: 768px) {
-  /* Hide secondary title on mobile */
-  .md-header__topic[data-md-component="header-topic"] {
-    display: none;
+  /* Show hamburger menu ONLY on mobile */
+  .mobile-hamburger {
+    display: flex !important;
   }
   
-  /* Adjust search positioning */
-  .md-search {
-    margin-left: 0.25rem;
-    margin-right: 0.25rem;
-  }
-  
-  /* Hide repo link on small screens */
-  .md-header__source {
-    display: none;
+  /* Show mobile navigation elements ONLY on mobile */
+  .mobile-nav-overlay,
+  .mobile-nav-menu {
+    display: block !important;
   }
 }
 
-/* Very small screens */
-@media screen and (max-width: 480px) {
-  /* Compact spacing */
-  .md-header__inner {
-    padding: 0.5rem 0.25rem;
-  }
-  
-  .md-search {
-    margin-left: 0.125rem;
-    margin-right: 0.125rem;
-  }
-  
-  .md-header__button.md-icon {
-    padding: 0.375rem;
+/* Desktop remains completely untouched - no styles applied above 768px */
+@media screen and (min-width: 769px) {
+  /* Ensure mobile elements are completely hidden on desktop */
+  .mobile-hamburger,
+  .mobile-nav-overlay,
+  .mobile-nav-menu {
+    display: none !important;
   }
 }
 </style>
