@@ -526,31 +526,26 @@ function showUserProfile(user) {
     // Create mobile-responsive name display
     const displayName = user.displayName || user.email;
     
-    // Function to determine if mobile based on screen size and user agent
-    const isMobile = () => {
-      return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    // Function to determine if mobile portrait based on screen size and orientation
+    const isMobilePortrait = () => {
+      return window.innerWidth <= 768 && window.matchMedia("(orientation: portrait)").matches;
     };
     
-    // Mobile: Show initials only (e.g., "BM")
-    // Desktop: Show full name or shortened name
-    const shortName = isMobile() ? 
-      displayName.split(' ').map(part => part.charAt(0)).join('').toUpperCase() :
-      (displayName.length > 20 ? 
-        displayName.split(' ').map(part => part.charAt(0)).join('').toUpperCase() + 
-        (displayName.split(' ').length > 1 ? '' : displayName.substring(0, 8) + '...') :
-        displayName);
+    // Mobile Portrait: Hide name completely, show only logout button
+    // Other modes: Show initials or short name
+    const shortName = isMobilePortrait() ? 
+      '' :
+      displayName.split(' ').map(part => part.charAt(0)).join('').toUpperCase();
     
     userProfileArea.innerHTML = `
-      <div class="user-profile">
+      <div class="user-profile ${isMobilePortrait() ? 'mobile-portrait' : ''}">
+        ${!isMobilePortrait() ? `
         <div class="user-info">
-          <img src="${user.photoURL || '/images/default-avatar.png'}" 
-               alt="Profile" 
-               class="user-avatar">
           <div class="user-details">
             <span class="user-name" title="${displayName}">${shortName}</span>
-            <span class="user-email">${user.email.split('@')[0]}</span>
           </div>
         </div>
+        ` : ''}
         <button id="sign-out-btn" class="sign-out-btn">
           <svg class="sign-out-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
