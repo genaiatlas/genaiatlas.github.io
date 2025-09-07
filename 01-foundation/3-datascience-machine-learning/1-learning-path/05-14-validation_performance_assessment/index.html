@@ -1,0 +1,4330 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/1-learning-path/05-14-validation_performance_assessment/">
+      
+      
+        <link rel="prev" href="../05-13-regularization_techniques/">
+      
+      
+        <link rel="next" href="../05-15-cross_validation_techniques/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Performance Assessment through Validation - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Performance Assessment through Validation
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-descriptive-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../00-math-foundation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Foundational Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-Sup-vs-unsup-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Supervised Vs. Un-supervised Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-Clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-dimen-reduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Dimensionality Reduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-embedding/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Embedding
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_6" id="__nav_2_4_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Regression
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            Regression
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Pre Read
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-01-Intro-to-sup-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Supervised Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-02-linear-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-03-intrepretation-justificaton/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Intrepretation and Justification
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-04-r-squared-performance/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    R Square Performance
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-05-coefficient-reliability/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Co-Efficient Reliability
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-06-confidence_intervals_hypothesis_testing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Confidence Interval & Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-08-prediction_errors_docs/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Making New Prediction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-09-heteroskedasticity-and-multicollinearity/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Heteroskedasticity and Multicollinearity
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-10-latent_variables/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Latent Variables
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-11-linear-regression-with-non-linear-features/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression with Non-Linear Features
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-12-overfitting_bias_variance/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Overfitting and the Bias-Variance Trade-off
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-13-regularization_techniques/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regularization Techniques
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_6_14" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_6_14" id="__nav_2_4_2_6_14_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Validation Performance Assessment
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_2_6_14_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_6_14">
+            <span class="md-nav__icon md-icon"></span>
+            Validation Performance Assessment
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Performance Assessment through Validation
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Performance Assessment through Validation
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Introduction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-challenges-in-model-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Challenges in Model Selection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-dual-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Dual Objective
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Foundation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-validation-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 The Validation Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 The Validation Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conceptual-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conceptual Overview
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#traditional-approach-vs-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Traditional Approach vs Validation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-validation-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Validation Principle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Benefits
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-splitting-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Data Splitting Strategies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Data Splitting Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#random-splitting-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      Random Splitting Protocol
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#split-ratio-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Split Ratio Guidelines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-splitting-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Splitting Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#training-vs-validation-error-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      📈 Training vs Validation Error Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📈 Training vs Validation Error Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-characteristic-learning-curves" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Characteristic Learning Curves
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-behavior-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Behavior Patterns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identifying-optimal-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identifying Optimal Complexity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Interpretation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avoiding-validation-set-overfitting" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Avoiding Validation Set Overfitting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚠️ Avoiding Validation Set Overfitting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-subtle-overfitting-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Subtle Overfitting Problem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statistical-perspective" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statistical Perspective
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-test-set-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Test Set Solution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-testing-corrections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Testing Corrections
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#three-way-data-split-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏗️ Three-Way Data Split Protocol
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Three-Way Data Split Protocol">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-three-way-division" class="md-nav__link">
+    <span class="md-ellipsis">
+      Standard Three-Way Division
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-set-roles-and-sizes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Set Roles and Sizes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workflow Protocol
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#critical-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical Guidelines
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-and-drawbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚖️ Limitations and Drawbacks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚖️ Limitations and Drawbacks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-efficiency-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Efficiency Concerns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#primary-drawbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Primary Drawbacks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quantifying-the-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quantifying the Impact
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-validation-becomes-problematic" class="md-nav__link">
+    <span class="md-ellipsis">
+      When Validation Becomes Problematic
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mitigation-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mitigation Strategies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Implementation Guidelines
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Implementation Guidelines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scikit-learn-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scikit-learn Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-validation-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cross-Validation Alternative
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Monitoring
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foundational-literature" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Foundational Literature
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comprehensive-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎓 Comprehensive Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Implementation Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-topics-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      🤖 Advanced Topics &amp; Research
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specialized-validation-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Specialized Validation Techniques
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recent-developments" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Recent Developments
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-15-cross_validation_techniques/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Cross Validation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-16-serialization-pickle-joblib/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Serialization - Pickle & Joblib
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-17-hyperparameter_tuning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hyper Parameter Tuning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="performance-assessment-through-validation">Performance Assessment through Validation <a id="top"></a></h1>
+<h2 id="quick-navigation">📋 Quick Navigation</h2>
+<ul>
+<li><a href="#introduction">🎯 Introduction</a></li>
+<li><a href="#the-validation-framework">📊 The Validation Framework</a></li>
+<li><a href="#data-splitting-strategies">🔄 Data Splitting Strategies</a></li>
+<li><a href="#training-vs-validation-error-analysis">📈 Training vs Validation Error Analysis</a></li>
+<li><a href="#avoiding-validation-set-overfitting">⚠️ Avoiding Validation Set Overfitting</a></li>
+<li><a href="#three-way-data-split-protocol">🏗️ Three-Way Data Split Protocol</a></li>
+<li><a href="#limitations-and-drawbacks">⚖️ Limitations and Drawbacks</a></li>
+<li><a href="#implementation-guidelines">🛠️ Implementation Guidelines</a></li>
+<li><a href="#references--further-reading">📚 References &amp; Further Reading</a></li>
+</ul>
+<hr />
+<h2 id="introduction">🎯 Introduction</h2>
+<p>Performance assessment through validation is a critical methodology in machine learning for evaluating model quality and preventing overfitting. As models become more complex with additional features and regularization techniques, systematic approaches are essential for selecting optimal configurations and hyperparameters.</p>
+<h3 id="core-challenges-in-model-selection">Core Challenges in Model Selection</h3>
+<p>Modern machine learning faces several key decisions:</p>
+<ul>
+<li><strong>Feature selection</strong>: Which variables to include or exclude</li>
+<li><strong>Hyperparameter tuning</strong>: Setting regularization parameters (α in Ridge/Lasso)</li>
+<li><strong>Model complexity</strong>: Choosing between simple and complex architectures</li>
+<li><strong>Algorithm selection</strong>: Comparing different learning approaches</li>
+<li><strong>Generalization assessment</strong>: Ensuring performance on unseen data</li>
+</ul>
+<h3 id="the-dual-objective">The Dual Objective</h3>
+<p>Effective model development requires balancing two competing goals:</p>
+<div class="highlight"><pre><span></span><code>Fitting Performance ← → Generalization Ability
+(Low training error)     (Low test error)
+</code></pre></div>
+<p><strong>Fitting performance</strong> measures how well the model explains existing data (high R², low training error), while <strong>generalization ability</strong> determines performance on new, unseen data.</p>
+<h3 id="mathematical-foundation">Mathematical Foundation</h3>
+<p>The validation framework addresses the fundamental bias-variance tradeoff by providing unbiased estimates of generalization error:</p>
+<div class="highlight"><pre><span></span><code>Generalization Error ≈ Validation Error (when properly implemented)
+</code></pre></div>
+<p><strong><a href="#top">↩ Back to Top</a></strong></p>
+<hr />
+<h2 id="the-validation-framework">📊 The Validation Framework</h2>
+<h3 id="conceptual-overview">Conceptual Overview</h3>
+<p>Validation replaces the naive approach of using all data for training with a systematic data partitioning strategy that reserves data for unbiased performance evaluation.</p>
+<p><img alt="Validation Framework Overview" src="../../../../svg/validation_framework_overview.svg" /></p>
+<h3 id="traditional-approach-vs-validation">Traditional Approach vs Validation</h3>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Data Usage</th>
+<th>Performance Metric</th>
+<th>Bias</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Traditional</strong></td>
+<td>All data for training</td>
+<td>Training error/R²</td>
+<td>High (overly optimistic)</td>
+</tr>
+<tr>
+<td><strong>Validation</strong></td>
+<td>Split: Train + Validate</td>
+<td>Validation error</td>
+<td>Low (realistic estimate)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="core-validation-principle">Core Validation Principle</h3>
+<p>The validation principle simulates real-world deployment by testing models on data they haven't seen during training:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Conceptual validation workflow</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">validation_workflow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model_configs</span><span class="p">):</span>
+    <span class="n">train_data</span><span class="p">,</span> <span class="n">val_data</span> <span class="o">=</span> <span class="n">split_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="n">best_model</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">best_score</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">model_configs</span><span class="p">:</span>
+        <span class="c1"># Train on training set only</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">train_model</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+
+        <span class="c1"># Evaluate on validation set</span>
+        <span class="n">val_score</span> <span class="o">=</span> <span class="n">evaluate_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">val_data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">val_score</span> <span class="o">&lt;</span> <span class="n">best_score</span><span class="p">:</span>
+            <span class="n">best_model</span> <span class="o">=</span> <span class="n">model</span>
+            <span class="n">best_score</span> <span class="o">=</span> <span class="n">val_score</span>
+
+    <span class="k">return</span> <span class="n">best_model</span><span class="p">,</span> <span class="n">best_score</span>
+</code></pre></div>
+<h3 id="key-benefits">Key Benefits</h3>
+<ul>
+<li><strong>Unbiased evaluation</strong>: Models tested on unseen data</li>
+<li><strong>Systematic comparison</strong>: Consistent evaluation across models</li>
+<li><strong>Overfitting detection</strong>: Identifies when complexity hurts generalization</li>
+<li><strong>Hyperparameter optimization</strong>: Data-driven parameter selection</li>
+</ul>
+<p><strong><a href="#top">↩ Back to Top</a></strong></p>
+<hr />
+<h2 id="data-splitting-strategies">🔄 Data Splitting Strategies</h2>
+<h3 id="random-splitting-protocol">Random Splitting Protocol</h3>
+<p>The standard approach divides data randomly into training and validation sets:</p>
+<p><img alt="Data Splitting Strategies" src="../../../../svg/data_splitting_strategies.svg" /></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="c1"># Basic train-validation split</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> 
+    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>        <span class="c1"># 20% for validation</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>      <span class="c1"># Reproducible split</span>
+    <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>           <span class="c1"># Maintain class proportions</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training set: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation set: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="split-ratio-guidelines">Split Ratio Guidelines</h3>
+<table>
+<thead>
+<tr>
+<th>Dataset Size</th>
+<th>Training %</th>
+<th>Validation %</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Small (&lt;1K)</strong></td>
+<td>70-80%</td>
+<td>20-30%</td>
+<td>Need maximum training data</td>
+</tr>
+<tr>
+<td><strong>Medium (1K-10K)</strong></td>
+<td>80%</td>
+<td>20%</td>
+<td>Standard split</td>
+</tr>
+<tr>
+<td><strong>Large (&gt;10K)</strong></td>
+<td>85-90%</td>
+<td>10-15%</td>
+<td>Validation set still large enough</td>
+</tr>
+</tbody>
+</table>
+<h3 id="advanced-splitting-considerations">Advanced Splitting Considerations</h3>
+<h4 id="temporal-data">Temporal Data</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># For time series: use temporal splits</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">temporal_split</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">split_date</span><span class="p">):</span>
+    <span class="n">train</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">date</span> <span class="o">&lt;</span> <span class="n">split_date</span><span class="p">]</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">date</span> <span class="o">&gt;=</span> <span class="n">split_date</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">train</span><span class="p">,</span> <span class="n">val</span>
+</code></pre></div>
+<h4 id="stratified-splitting">Stratified Splitting</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Maintain class distribution in classification</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span>
+<span class="p">)</span>
+</code></pre></div>
+<h4 id="group-based-splitting">Group-Based Splitting</h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># Prevent data leakage for grouped data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">GroupShuffleSplit</span>
+
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">GroupShuffleSplit</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">train_idx</span><span class="p">,</span> <span class="n">val_idx</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">patient_ids</span><span class="p">))</span>
+</code></pre></div>
+<p><strong><a href="#top">↩ Back to Top</a></strong></p>
+<hr />
+<h2 id="training-vs-validation-error-analysis">📈 Training vs Validation Error Analysis</h2>
+<h3 id="the-characteristic-learning-curves">The Characteristic Learning Curves</h3>
+<p>Understanding the relationship between model complexity and error on different data sets is crucial for optimal model selection:</p>
+<p><img alt="Training vs Validation Error Curves" src="../../../../svg/training_validation_error_curves.svg" /></p>
+<h3 id="error-behavior-patterns">Error Behavior Patterns</h3>
+<h4 id="training-error-always-decreasing">Training Error (Always Decreasing)</h4>
+<ul>
+<li><strong>Monotonic decrease</strong>: More features always reduce training error</li>
+<li><strong>Perfect fit possible</strong>: With enough parameters, training error → 0</li>
+<li><strong>Overly optimistic</strong>: Does not reflect generalization ability</li>
+</ul>
+<h4 id="validation-error-u-shaped">Validation Error (U-Shaped)</h4>
+<ul>
+<li><strong>Initial decrease</strong>: Additional relevant features improve generalization</li>
+<li><strong>Optimal point</strong>: Best balance of bias and variance</li>
+<li><strong>Subsequent increase</strong>: Overfitting dominates as complexity grows</li>
+</ul>
+<h3 id="mathematical-analysis">Mathematical Analysis</h3>
+<p>The expected validation error can be decomposed as:</p>
+<div class="highlight"><pre><span></span><code>E[Validation Error] = Bias² + Variance + Irreducible Error
+</code></pre></div>
+<p>Where:
+- <strong>Bias²</strong>: Error from model assumptions (decreases with complexity)
+- <strong>Variance</strong>: Error from sensitivity to training data (increases with complexity)
+- <strong>Irreducible Error</strong>: Inherent noise in the data (constant)</p>
+<h3 id="identifying-optimal-complexity">Identifying Optimal Complexity</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">find_optimal_complexity</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">complexity_range</span><span class="p">):</span>
+    <span class="n">train_errors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">val_errors</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">complexity</span> <span class="ow">in</span> <span class="n">complexity_range</span><span class="p">:</span>
+        <span class="c1"># Train model with given complexity</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">complexity</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+        <span class="c1"># Calculate errors</span>
+        <span class="n">train_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+        <span class="n">val_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+
+        <span class="n">train_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">train_pred</span><span class="p">))</span>
+        <span class="n">val_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_val</span><span class="p">,</span> <span class="n">val_pred</span><span class="p">))</span>
+
+    <span class="c1"># Find optimal complexity</span>
+    <span class="n">optimal_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">val_errors</span><span class="p">)</span>
+    <span class="n">optimal_complexity</span> <span class="o">=</span> <span class="n">complexity_range</span><span class="p">[</span><span class="n">optimal_idx</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">optimal_complexity</span><span class="p">,</span> <span class="n">train_errors</span><span class="p">,</span> <span class="n">val_errors</span>
+</code></pre></div>
+<h3 id="practical-interpretation">Practical Interpretation</h3>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>Training Error</th>
+<th>Validation Error</th>
+<th>Interpretation</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Underfitting</strong></td>
+<td>High</td>
+<td>High</td>
+<td>Model too simple</td>
+<td>Add complexity</td>
+</tr>
+<tr>
+<td><strong>Optimal</strong></td>
+<td>Medium</td>
+<td>Minimum</td>
+<td>Perfect balance</td>
+<td>Select this model</td>
+</tr>
+<tr>
+<td><strong>Overfitting</strong></td>
+<td>Low</td>
+<td>High</td>
+<td>Model too complex</td>
+<td>Reduce complexity</td>
+</tr>
+</tbody>
+</table>
+<p><strong><a href="#top">↩ Back to Top</a></strong></p>
+<hr />
+<h2 id="avoiding-validation-set-overfitting">⚠️ Avoiding Validation Set Overfitting</h2>
+<h3 id="the-subtle-overfitting-problem">The Subtle Overfitting Problem</h3>
+<p>When comparing many models (e.g., 1000 different algorithms), there's a risk that one might accidentally perform well on the validation set due to random chance rather than true superiority.</p>
+<p><img alt="Validation Set Overfitting Risk" src="../../../../svg/validation_set_overfitting_risk.svg" /></p>
+<h3 id="statistical-perspective">Statistical Perspective</h3>
+<p>With multiple comparisons, the probability of finding a "lucky" model increases:</p>
+<div class="highlight"><pre><span></span><code>P(at least one lucky model) = 1 - (1 - α)^n
+</code></pre></div>
+<p>Where:
+- <strong>α</strong>: Significance level (e.g., 0.05)
+- <strong>n</strong>: Number of models tested</p>
+<p>For n = 1000 models: P(lucky model) ≈ 1.0 (almost certain!)</p>
+<h3 id="the-test-set-solution">The Test Set Solution</h3>
+<p>To combat validation set overfitting, reserve a final test set for ultimate evaluation:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">robust_model_selection</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">model_candidates</span><span class="p">):</span>
+    <span class="c1"># Three-way split</span>
+    <span class="n">X_temp</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_temp</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_temp</span><span class="p">,</span> <span class="n">y_temp</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+
+    <span class="n">best_model</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">best_val_score</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Model selection on validation set</span>
+    <span class="k">for</span> <span class="n">model_config</span> <span class="ow">in</span> <span class="n">model_candidates</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">train_model</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">model_config</span><span class="p">)</span>
+        <span class="n">val_score</span> <span class="o">=</span> <span class="n">evaluate_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">val_score</span> <span class="o">&lt;</span> <span class="n">best_val_score</span><span class="p">:</span>
+            <span class="n">best_model</span> <span class="o">=</span> <span class="n">model</span>
+            <span class="n">best_val_score</span> <span class="o">=</span> <span class="n">val_score</span>
+
+    <span class="c1"># Final evaluation on test set</span>
+    <span class="n">test_score</span> <span class="o">=</span> <span class="n">evaluate_model</span><span class="p">(</span><span class="n">best_model</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">best_model</span><span class="p">,</span> <span class="n">best_val_score</span><span class="p">,</span> <span class="n">test_score</span>
+</code></pre></div>
+<h3 id="multiple-testing-corrections">Multiple Testing Corrections</h3>
+<p>When appropriate, apply statistical corrections:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.multitest</span><span class="w"> </span><span class="kn">import</span> <span class="n">multipletests</span>
+
+<span class="c1"># Bonferroni correction for multiple comparisons</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">corrected_model_selection</span><span class="p">(</span><span class="n">p_values</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+    <span class="n">rejected</span><span class="p">,</span> <span class="n">p_corrected</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">multipletests</span><span class="p">(</span>
+        <span class="n">p_values</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bonferroni&#39;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">rejected</span><span class="p">,</span> <span class="n">p_corrected</span>
+</code></pre></div>
+<p><strong><a href="#top">↩ Back to Top</a></strong></p>
+<hr />
+<h2 id="three-way-data-split-protocol">🏗️ Three-Way Data Split Protocol</h2>
+<h3 id="standard-three-way-division">Standard Three-Way Division</h3>
+<p>The robust machine learning workflow uses three distinct data sets:</p>
+<p><img alt="Three Way Data Split Protocol" src="../../../../svg/three_way_data_split_protocol.svg" /></p>
+<h3 id="data-set-roles-and-sizes">Data Set Roles and Sizes</h3>
+<table>
+<thead>
+<tr>
+<th>Data Set</th>
+<th>Typical Size</th>
+<th>Purpose</th>
+<th>Usage Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Training</strong></td>
+<td>60-70%</td>
+<td>Model fitting</td>
+<td>Every model iteration</td>
+</tr>
+<tr>
+<td><strong>Validation</strong></td>
+<td>15-20%</td>
+<td>Model selection</td>
+<td>Every model comparison</td>
+</tr>
+<tr>
+<td><strong>Test</strong></td>
+<td>15-20%</td>
+<td>Final evaluation</td>
+<td>Once only</td>
+</tr>
+</tbody>
+</table>
+<h3 id="implementation-example">Implementation Example</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">three_way_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">val_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Split data into train/validation/test sets</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    - test_size: Proportion for test set</span>
+<span class="sd">    - val_size: Proportion of remaining data for validation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># First split: separate test set</span>
+    <span class="n">X_temp</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_temp</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="n">test_size</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Second split: train and validation from remaining data</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">X_temp</span><span class="p">,</span> <span class="n">y_temp</span><span class="p">,</span> 
+        <span class="n">test_size</span><span class="o">=</span><span class="n">val_size</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">test_size</span><span class="p">),</span>  <span class="c1"># Adjust for remaining data</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span>
+    <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span><span class="p">,</span> <span class="n">y_test</span>
+</code></pre></div>
+<h3 id="workflow-protocol">Workflow Protocol</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">complete_ml_workflow</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">model_configs</span><span class="p">):</span>
+    <span class="c1"># Step 1: Three-way split</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">three_way_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="c1"># Step 2: Model development and selection</span>
+    <span class="n">best_model</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">best_config</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">best_val_error</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">model_configs</span><span class="p">:</span>
+        <span class="c1"># Train model</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+        <span class="c1"># Validate model</span>
+        <span class="n">val_predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+        <span class="n">val_error</span> <span class="o">=</span> <span class="n">calculate_error</span><span class="p">(</span><span class="n">y_val</span><span class="p">,</span> <span class="n">val_predictions</span><span class="p">)</span>
+
+        <span class="c1"># Track best model</span>
+        <span class="k">if</span> <span class="n">val_error</span> <span class="o">&lt;</span> <span class="n">best_val_error</span><span class="p">:</span>
+            <span class="n">best_model</span> <span class="o">=</span> <span class="n">model</span>
+            <span class="n">best_config</span> <span class="o">=</span> <span class="n">config</span>
+            <span class="n">best_val_error</span> <span class="o">=</span> <span class="n">val_error</span>
+
+    <span class="c1"># Step 3: Final test evaluation</span>
+    <span class="n">test_predictions</span> <span class="o">=</span> <span class="n">best_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="n">final_test_error</span> <span class="o">=</span> <span class="n">calculate_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">test_predictions</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Selected model: </span><span class="si">{</span><span class="n">best_config</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation error: </span><span class="si">{</span><span class="n">best_val_error</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final test error: </span><span class="si">{</span><span class="n">final_test_error</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">best_model</span><span class="p">,</span> <span class="n">final_test_error</span>
+</code></pre></div>
+<h3 id="critical-guidelines">Critical Guidelines</h3>
+<ul>
+<li><strong>Test set sanctity</strong>: Never use test data for any model decisions</li>
+<li><strong>Single evaluation</strong>: Evaluate on test set only once, at the very end</li>
+<li><strong>Honest reporting</strong>: Report test error as the final performance estimate</li>
+<li><strong>Documentation</strong>: Keep clear records of all model choices and their validation scores</li>
+</ul>
+<p><strong><a href="#top">↩ Back to Top</a></strong></p>
+<hr />
+<h2 id="limitations-and-drawbacks">⚖️ Limitations and Drawbacks</h2>
+<h3 id="data-efficiency-concerns">Data Efficiency Concerns</h3>
+<p>Validation approaches have inherent limitations that become problematic with small datasets:</p>
+<h3 id="primary-drawbacks">Primary Drawbacks</h3>
+<h4 id="1-data-waste">1. Data Waste</h4>
+<ul>
+<li><strong>Reduced training data</strong>: 20-40% of data reserved for evaluation</li>
+<li><strong>Impact on small datasets</strong>: Particularly problematic when n &lt; 1000</li>
+<li><strong>Performance degradation</strong>: Less training data can hurt model quality</li>
+</ul>
+<h4 id="2-random-variation">2. Random Variation</h4>
+<ul>
+<li><strong>Split sensitivity</strong>: Different random splits can favor different models</li>
+<li><strong>Inconsistent results</strong>: Same algorithm may win/lose based on random chance</li>
+<li><strong>Reproducibility issues</strong>: Results depend on random seed selection</li>
+</ul>
+<h3 id="quantifying-the-impact">Quantifying the Impact</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">analyze_split_sensitivity</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">model_A</span><span class="p">,</span> <span class="n">model_B</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Analyze how sensitive model selection is to random splits</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">model_A_wins</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">model_B_wins</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_trials</span><span class="p">):</span>
+        <span class="c1"># Random split for this trial</span>
+        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">trial</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Train both models</span>
+        <span class="n">model_A</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+        <span class="n">model_B</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+        <span class="c1"># Evaluate on validation set</span>
+        <span class="n">score_A</span> <span class="o">=</span> <span class="n">model_A</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">)</span>
+        <span class="n">score_B</span> <span class="o">=</span> <span class="n">model_B</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">score_A</span> <span class="o">&gt;</span> <span class="n">score_B</span><span class="p">:</span>
+            <span class="n">model_A_wins</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">model_B_wins</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model A wins: </span><span class="si">{</span><span class="n">model_A_wins</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_trials</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">model_A_wins</span><span class="o">/</span><span class="n">n_trials</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model B wins: </span><span class="si">{</span><span class="n">model_B_wins</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_trials</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">model_B_wins</span><span class="o">/</span><span class="n">n_trials</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model_A_wins</span> <span class="o">/</span> <span class="n">n_trials</span>
+</code></pre></div>
+<h3 id="when-validation-becomes-problematic">When Validation Becomes Problematic</h3>
+<table>
+<thead>
+<tr>
+<th>Dataset Size</th>
+<th>Primary Concern</th>
+<th>Recommended Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>n &lt; 100</strong></td>
+<td>Severe data waste</td>
+<td>Leave-one-out CV or Bootstrap</td>
+</tr>
+<tr>
+<td><strong>100 ≤ n &lt; 1000</strong></td>
+<td>Moderate data waste</td>
+<td>k-fold cross-validation</td>
+</tr>
+<tr>
+<td><strong>n ≥ 1000</strong></td>
+<td>Split variance</td>
+<td>Standard validation OK</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mitigation-strategies">Mitigation Strategies</h3>
+<h4 id="cross-validation">Cross-Validation</h4>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">cross_val_score</span>
+
+<span class="c1"># k-fold cross-validation reduces data waste</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;neg_mean_squared_error&#39;</span><span class="p">)</span>
+<span class="n">mean_score</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">std_score</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CV Score: </span><span class="si">{</span><span class="n">mean_score</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (±</span><span class="si">{</span><span class="n">std_score</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="repeated-validation">Repeated Validation</h4>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">repeated_validation</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">n_repeats</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Average results across multiple random splits</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_repeats</span><span class="p">):</span>
+        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">i</span>
+        <span class="p">)</span>
+
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">)</span>
+        <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+</code></pre></div>
+<p><strong><a href="#top">↩ Back to Top</a></strong></p>
+<hr />
+<h2 id="implementation-guidelines">🛠️ Implementation Guidelines</h2>
+<h3 id="scikit-learn-implementation">Scikit-learn Implementation</h3>
+<h4 id="basic-validation-pipeline">Basic Validation Pipeline</h4>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ridge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">r2_score</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validation_pipeline</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Complete validation pipeline for model selection</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Three-way split</span>
+    <span class="n">X_temp</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_temp</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+    <span class="p">)</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">X_temp</span><span class="p">,</span> <span class="n">y_temp</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Hyperparameter tuning with validation set</span>
+    <span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">best_alpha</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">best_val_score</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="n">alphas</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+        <span class="n">val_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+        <span class="n">val_mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_val</span><span class="p">,</span> <span class="n">val_pred</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">val_mse</span> <span class="o">&lt;</span> <span class="n">best_val_score</span><span class="p">:</span>
+            <span class="n">best_alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+            <span class="n">best_val_score</span> <span class="o">=</span> <span class="n">val_mse</span>
+
+    <span class="c1"># Train final model with best hyperparameter</span>
+    <span class="n">final_model</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="n">best_alpha</span><span class="p">)</span>
+    <span class="n">final_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+    <span class="c1"># Final evaluation on test set</span>
+    <span class="n">test_pred</span> <span class="o">=</span> <span class="n">final_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="n">test_mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">test_pred</span><span class="p">)</span>
+    <span class="n">test_r2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">test_pred</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best alpha: </span><span class="si">{</span><span class="n">best_alpha</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation MSE: </span><span class="si">{</span><span class="n">best_val_score</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test MSE: </span><span class="si">{</span><span class="n">test_mse</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test R²: </span><span class="si">{</span><span class="n">test_r2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">final_model</span><span class="p">,</span> <span class="n">test_mse</span>
+</code></pre></div>
+<h4 id="advanced-model-comparison">Advanced Model Comparison</h4>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVR</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lasso</span><span class="p">,</span> <span class="n">Ridge</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">compare_multiple_models</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compare multiple model types using validation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">three_way_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="c1"># Define models to compare</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;Ridge&#39;</span><span class="p">:</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+        <span class="s1">&#39;Lasso&#39;</span><span class="p">:</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span>
+        <span class="s1">&#39;Random Forest&#39;</span><span class="p">:</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+        <span class="s1">&#39;SVR&#39;</span><span class="p">:</span> <span class="n">SVR</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Train model</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+        <span class="c1"># Validate</span>
+        <span class="n">val_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+        <span class="n">val_mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_val</span><span class="p">,</span> <span class="n">val_pred</span><span class="p">)</span>
+        <span class="n">val_r2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y_val</span><span class="p">,</span> <span class="n">val_pred</span><span class="p">)</span>
+
+        <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;validation_mse&#39;</span><span class="p">:</span> <span class="n">val_mse</span><span class="p">,</span>
+            <span class="s1">&#39;validation_r2&#39;</span><span class="p">:</span> <span class="n">val_r2</span><span class="p">,</span>
+            <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">model</span>
+        <span class="p">}</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> | Val MSE: </span><span class="si">{</span><span class="n">val_mse</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | Val R²: </span><span class="si">{</span><span class="n">val_r2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Select best model based on validation performance</span>
+    <span class="n">best_model_name</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;validation_mse&#39;</span><span class="p">])</span>
+    <span class="n">best_model</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">best_model_name</span><span class="p">][</span><span class="s1">&#39;model&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Final test evaluation</span>
+    <span class="n">test_pred</span> <span class="o">=</span> <span class="n">best_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="n">test_mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">test_pred</span><span class="p">)</span>
+    <span class="n">test_r2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">test_pred</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Selected Model: </span><span class="si">{</span><span class="n">best_model_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final Test MSE: </span><span class="si">{</span><span class="n">test_mse</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final Test R²: </span><span class="si">{</span><span class="n">test_r2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">best_model</span><span class="p">,</span> <span class="n">results</span>
+</code></pre></div>
+<h3 id="cross-validation-alternative">Cross-Validation Alternative</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">cross_validate</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cross_validation_comparison</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">models</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Use cross-validation instead of simple train-val split</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">cv_results</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># 5-fold cross-validation</span>
+        <span class="n">cv_scores</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span>
+            <span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> 
+            <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
+            <span class="n">scoring</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;neg_mean_squared_error&#39;</span><span class="p">,</span> <span class="s1">&#39;r2&#39;</span><span class="p">],</span>
+            <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="n">cv_results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;test_mse_mean&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">cv_scores</span><span class="p">[</span><span class="s1">&#39;test_neg_mean_squared_error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+            <span class="s1">&#39;test_mse_std&#39;</span><span class="p">:</span> <span class="n">cv_scores</span><span class="p">[</span><span class="s1">&#39;test_neg_mean_squared_error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span>
+            <span class="s1">&#39;test_r2_mean&#39;</span><span class="p">:</span> <span class="n">cv_scores</span><span class="p">[</span><span class="s1">&#39;test_r2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+            <span class="s1">&#39;test_r2_std&#39;</span><span class="p">:</span> <span class="n">cv_scores</span><span class="p">[</span><span class="s1">&#39;test_r2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span>
+        <span class="p">}</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  CV MSE: </span><span class="si">{</span><span class="n">cv_results</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;test_mse_mean&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">cv_results</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;test_mse_std&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  CV R²:  </span><span class="si">{</span><span class="n">cv_results</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;test_r2_mean&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> ± </span><span class="si">{</span><span class="n">cv_results</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;test_r2_std&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cv_results</span>
+</code></pre></div>
+<h3 id="performance-monitoring">Performance Monitoring</h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Training Set</th>
+<th>Validation Set</th>
+<th>Test Set</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MSE</strong></td>
+<td>Always decreasing</td>
+<td>U-shaped curve</td>
+<td>Single final value</td>
+<td>Lower is better</td>
+</tr>
+<tr>
+<td><strong>R²</strong></td>
+<td>Always increasing</td>
+<td>Inverted U-shape</td>
+<td>Single final value</td>
+<td>Higher is better</td>
+</tr>
+<tr>
+<td><strong>MAE</strong></td>
+<td>Always decreasing</td>
+<td>U-shaped curve</td>
+<td>Single final value</td>
+<td>Lower is better</td>
+</tr>
+</tbody>
+</table>
+<p><strong><a href="#top">↩ Back to Top</a></strong></p>
+<hr />
+<h2 id="references-further-reading">📚 References &amp; Further Reading</h2>
+<h3 id="foundational-literature">📖 Foundational Literature</h3>
+<ul>
+<li><a href="https://arxiv.org/abs/0909.0747">Cross-Validation: A Review (Arlot &amp; Celisse, 2010)</a> - Comprehensive survey of validation techniques</li>
+<li><a href="https://web.stanford.edu/~hastie/ElemStatLearn/">The Elements of Statistical Learning (Hastie et al.)</a> - Chapter 7: Model Assessment and Selection</li>
+<li><a href="https://www.cambridge.org/core/books/model-selection-and-model-averaging/E6F1EC77279D1223983B12B71D9A45C8">Model Selection and Model Averaging (Claeskens &amp; Hjort, 2008)</a> - Advanced theoretical treatment</li>
+</ul>
+<h3 id="comprehensive-resources">🎓 Comprehensive Resources</h3>
+<ul>
+<li><strong>Pattern Recognition and Machine Learning</strong> (Bishop) - Chapter 1.3: Model Selection</li>
+<li><strong>Introduction to Statistical Learning</strong> (James et al.) - Chapter 5: Resampling Methods</li>
+<li><strong>Machine Learning: A Probabilistic Perspective</strong> (Murphy) - Chapter 6: Frequentist Statistics</li>
+</ul>
+<h3 id="implementation-resources">🔧 Implementation Resources</h3>
+<ul>
+<li><a href="https://scikit-learn.org/stable/model_selection.html">Scikit-learn Model Selection Guide</a> - Comprehensive validation toolkit</li>
+<li><a href="http://rasbt.github.io/mlxtend/user_guide/evaluate/">MLxtend Model Selection</a> - Advanced evaluation techniques</li>
+<li><a href="https://www.scikit-yb.org/en/latest/api/model_selection/">Yellowbrick Model Selection Visualizers</a> - Validation curve visualization</li>
+</ul>
+<h3 id="advanced-topics-research">🤖 Advanced Topics &amp; Research</h3>
+<ul>
+<li><strong>Nested Cross-Validation</strong>: Unbiased model selection with hyperparameter tuning</li>
+<li><strong>Time Series Validation</strong>: Forward chaining and walk-forward analysis</li>
+<li><strong>Stratified Sampling</strong>: Maintaining distribution in classification problems</li>
+<li><strong>Group Cross-Validation</strong>: Handling correlated samples and data leakage</li>
+</ul>
+<h3 id="specialized-validation-techniques">📊 Specialized Validation Techniques</h3>
+<ul>
+<li><a href="https://www.routledge.com/An-Introduction-to-the-Bootstrap/Efron-Tibshirani/p/book/9780412042317">Bootstrap Methods (Efron &amp; Tibshirani, 1994)</a> - Alternative to cross-validation</li>
+<li><a href="https://jmlr.org/papers/v11/ojala10a.html">Permutation Tests for Model Validation</a> - Statistical significance testing</li>
+<li><a href="https://scikit-learn.org/stable/modules/learning_curve.html">Learning Curves Analysis</a> - Diagnosing learning problems</li>
+</ul>
+<h3 id="recent-developments">🔬 Recent Developments</h3>
+<ul>
+<li><strong>Conformal Prediction</strong>: Uncertainty quantification with validation sets</li>
+<li><strong>Distribution Shift Detection</strong>: Identifying when validation assumptions break</li>
+<li><strong>Meta-Learning for Model Selection</strong>: Learning to choose models across tasks</li>
+</ul>
+<hr />
+<p><strong>Created with ❤️ for the Machine Learning Community</strong><br />
+<em>Last Updated: September 2025</em></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2025 13:34:01 UTC">September 7, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../05-13-regularization_techniques/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Regularization Techniques: Ridge and Lasso Regression">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Regularization Techniques: Ridge and Lasso Regression
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../05-15-cross_validation_techniques/" class="md-footer__link md-footer__link--next" aria-label="Next: Cross-Validation Techniques">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Cross-Validation Techniques
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

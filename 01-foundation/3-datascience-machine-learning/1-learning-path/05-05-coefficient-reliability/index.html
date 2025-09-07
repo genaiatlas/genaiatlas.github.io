@@ -1,0 +1,3991 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/1-learning-path/05-05-coefficient-reliability/">
+      
+      
+        <link rel="prev" href="../05-04-r-squared-performance/">
+      
+      
+        <link rel="next" href="../05-06-confidence_intervals_hypothesis_testing/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Linear Regression: Reliability of Coefficient Estimates - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Linear Regression: Reliability of Coefficient Estimates
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-descriptive-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../00-math-foundation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Foundational Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-Sup-vs-unsup-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Supervised Vs. Un-supervised Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-Clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-dimen-reduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Dimensionality Reduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-embedding/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Embedding
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_6" id="__nav_2_4_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Regression
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            Regression
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Pre Read
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-01-Intro-to-sup-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Supervised Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-02-linear-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-03-intrepretation-justificaton/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Intrepretation and Justification
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-04-r-squared-performance/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    R Square Performance
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_6_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_6_6" id="__nav_2_4_2_6_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Co-Efficient Reliability
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_2_6_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_6_6">
+            <span class="md-nav__icon md-icon"></span>
+            Co-Efficient Reliability
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression: Reliability of Coefficient Estimates
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression: Reliability of Coefficient Estimates
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#course-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Course Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#statistical-foundation-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statistical Foundation Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Statistical Foundation Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#theoretical-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔵 Theoretical Assumptions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Implications
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sample-variability-and-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample Variability and Estimation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sample Variability and Estimation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-random-nature-of-coefficients" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟢 The Random Nature of Coefficients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regression-formula-as-random-variable" class="md-nav__link">
+    <span class="md-ellipsis">
+      Regression Formula as Random Variable
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sources-of-variability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sources of Variability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Implications
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bias-variance-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bias-Variance Decomposition
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bias-Variance Decomposition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mean-squared-error-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔴 Mean Squared Error Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Decomposition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#component-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Component Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linear-regression-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linear Regression Properties
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distribution-of-coefficient-estimates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Distribution of Coefficient Estimates
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Distribution of Coefficient Estimates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#normal-distribution-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟡 Normal Distribution Properties
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#central-limit-theorem-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Central Limit Theorem Foundation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multivariate-normal-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multivariate Normal Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statistical-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statistical Implications
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-error-and-confidence-intervals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Standard Error and Confidence Intervals
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Standard Error and Confidence Intervals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-error-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔵 Standard Error Definition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Definition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confidence-interval-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Confidence Interval Construction
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpretation-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interpretation Framework
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#normal-distribution-properties_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Normal Distribution Properties
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Normal Distribution Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#95-rule-and-practical-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟢 95% Rule and Practical Applications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-standard-deviation-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      Two Standard Deviation Rule
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Applications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computational-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computational Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-applications_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Applications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical Applications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation-and-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔵 Implementation and Assessment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#try-it-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      👉 Try It Yourself
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-it-yourself_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Try It Yourself
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Try It Yourself">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hands-on-statistical-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Hands-On Statistical Inference
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hugging-face-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hugging Face Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#essential-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Essential Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-06-confidence_intervals_hypothesis_testing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Confidence Interval & Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-08-prediction_errors_docs/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Making New Prediction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-09-heteroskedasticity-and-multicollinearity/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Heteroskedasticity and Multicollinearity
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-10-latent_variables/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Latent Variables
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-11-linear-regression-with-non-linear-features/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression with Non-Linear Features
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-12-overfitting_bias_variance/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Overfitting and the Bias-Variance Trade-off
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-13-regularization_techniques/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regularization Techniques
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-14-validation_performance_assessment/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Validation Performance Assessment
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-15-cross_validation_techniques/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Cross Validation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-16-serialization-pickle-joblib/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Serialization - Pickle & Joblib
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-17-hyperparameter_tuning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hyper Parameter Tuning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="linear-regression-reliability-of-coefficient-estimates">Linear Regression: Reliability of Coefficient Estimates</h1>
+<p><a id="top"></a></p>
+<h2 id="quick-navigation">Quick Navigation</h2>
+<ul>
+<li><a href="#course-overview">Course Overview</a></li>
+<li><a href="#statistical-foundation-framework">Statistical Foundation Framework</a></li>
+<li><a href="#sample-variability-and-estimation">Sample Variability and Estimation</a></li>
+<li><a href="#bias-variance-decomposition">Bias-Variance Decomposition</a></li>
+<li><a href="#distribution-of-coefficient-estimates">Distribution of Coefficient Estimates</a></li>
+<li><a href="#standard-error-and-confidence-intervals">Standard Error and Confidence Intervals</a></li>
+<li><a href="#normal-distribution-properties">Normal Distribution Properties</a></li>
+<li><a href="#practical-applications">Practical Applications</a></li>
+<li><a href="#try-it-yourself">Try It Yourself</a></li>
+<li><a href="#references--further-reading">References &amp; Further Reading</a></li>
+</ul>
+<h2 id="course-overview">Course Overview</h2>
+<p>The reliability of coefficient estimates represents a fundamental aspect of statistical inference in linear regression, addressing the critical question of how much confidence we can place in our parameter estimates. This comprehensive guide explores the theoretical foundations of estimation uncertainty, providing both mathematical rigor and practical implementation strategies for assessing coefficient reliability.</p>
+<p>Understanding coefficient reliability enables practitioners to quantify the uncertainty inherent in their estimates, construct confidence intervals, and perform hypothesis testing. This knowledge is essential for making informed decisions about model parameters and their statistical significance in real-world applications.</p>
+<p><img alt="Coefficient Reliability Overview" src="../../../../svg/coefficient_reliability_overview.svg" /></p>
+<p>The framework addresses the fundamental question: "How noisy or reliable are my estimates of the model weights?" This question only makes sense when we assume there exists a true underlying parameter that we are attempting to estimate through our finite sample analysis.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="statistical-foundation-framework">Statistical Foundation Framework</h2>
+<h3 id="theoretical-assumptions">🔵 Theoretical Assumptions</h3>
+<p>The reliability assessment of coefficient estimates requires establishing a theoretical framework that connects sample-based estimates to underlying population parameters. This framework assumes the existence of true population parameters that our estimation procedures attempt to recover.</p>
+<h4 id="population-based-interpretation">Population-Based Interpretation</h4>
+<p>The analysis assumes a large true population from which we draw finite samples to estimate the best linear predictor. Each different sample from this population would yield slightly different coefficient estimates, creating natural variability in our results.</p>
+<h4 id="structural-model-framework">Structural Model Framework</h4>
+<p>For more precise analytical treatment, we assume a structural linear model:</p>
+<p>Yi = (θ*)ᵀXi + Wi</p>
+<p>Where:
+- θ* represents the true population parameters
+- Wi denotes independent noise terms with zero mean and variance σ²
+- The linear structure represents the true underlying relationship</p>
+<p><img alt="Sample Variability Framework" src="../../../svg/sample_variability_framework.svg" /></p>
+<h3 id="key-implications">Key Implications</h3>
+<h4 id="sampling-variability">Sampling Variability</h4>
+<p>Different representative samples from the same population will produce different coefficient estimates, creating natural uncertainty in our parameter estimates.</p>
+<h4 id="estimation-uncertainty">Estimation Uncertainty</h4>
+<p>The randomness in sampling directly affects our results, making coefficient estimates random variables rather than fixed constants.</p>
+<h4 id="statistical-inference">Statistical Inference</h4>
+<p>Understanding this variability enables construction of confidence intervals and hypothesis tests for assessing parameter significance.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="sample-variability-and-estimation">Sample Variability and Estimation</h2>
+<h3 id="the-random-nature-of-coefficients">🟢 The Random Nature of Coefficients</h3>
+<p>Coefficient estimates θ̂ are functions of both the design matrix X and the response vector Y. Since Y contains noise terms, the estimates themselves become random variables with specific statistical properties.</p>
+<h3 id="regression-formula-as-random-variable">Regression Formula as Random Variable</h3>
+<p>The closed-form solution for linear regression:</p>
+<p>θ̂ = (XᵀX)⁻¹XᵀY</p>
+<p>demonstrates that estimates depend on the random component Y, making θ̂ a random variable that varies across different samples from the same population.</p>
+<h3 id="sources-of-variability">Sources of Variability</h3>
+<h4 id="data-sampling-randomness">Data Sampling Randomness</h4>
+<p>Each sample drawn from the population contains different individuals, leading to different X and Y values and consequently different coefficient estimates.</p>
+<h4 id="noise-term-influence">Noise Term Influence</h4>
+<p>The noise terms Wi in the structural model directly propagate through to the coefficient estimates, creating uncertainty in the final parameter values.</p>
+<h4 id="finite-sample-effects">Finite Sample Effects</h4>
+<p>Limited sample sizes amplify the influence of individual observations, increasing the variability of coefficient estimates compared to infinite population parameters.</p>
+<p><img alt="Sample to Sample Variability" src="../../../svg/sample_to_sample_variability.svg" /></p>
+<h3 id="practical-implications">Practical Implications</h3>
+<h4 id="trust-and-reliability">Trust and Reliability</h4>
+<p>High variability in coefficient estimates across potential samples indicates lower reliability and suggests caution in interpreting specific parameter values.</p>
+<h4 id="model-stability">Model Stability</h4>
+<p>Understanding estimate variability helps assess whether observed coefficients represent stable relationships or might be artifacts of particular sample characteristics.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="bias-variance-decomposition">Bias-Variance Decomposition</h2>
+<h3 id="mean-squared-error-framework">🔴 Mean Squared Error Framework</h3>
+<p>The accuracy of coefficient estimates can be systematically analyzed through the bias-variance decomposition, which partitions the mean squared error into interpretable components.</p>
+<h3 id="mathematical-decomposition">Mathematical Decomposition</h3>
+<p>For the j-th coefficient estimate, the mean squared error decomposes as:</p>
+<p>E[(θ̂j - θ<em>j)²] = (E[θ̂j] - θ</em>j)² + Var(θ̂j)</p>
+<p>This fundamental decomposition separates systematic errors (bias) from random variability (variance).</p>
+<p><img alt="Bias Variance Decomposition" src="../../../svg/bias_variance_decomposition.svg" /></p>
+<h3 id="component-analysis">Component Analysis</h3>
+<h4 id="bias-component-ej-j2">Bias Component: (E[θ̂j] - θ*j)²</h4>
+<p>The bias measures systematic deviation between the expected value of estimates and the true parameter. This component captures whether the estimation procedure systematically over- or under-estimates the true parameter.</p>
+<h4 id="variance-component-varj">Variance Component: Var(θ̂j)</h4>
+<p>The variance quantifies the spread of estimates around their expected value, measuring how much estimates would vary if the experiment were repeated with different samples.</p>
+<h3 id="linear-regression-properties">Linear Regression Properties</h3>
+<h4 id="unbiased-estimation">Unbiased Estimation</h4>
+<p>Fortunately, linear regression produces unbiased estimates under the standard assumptions:</p>
+<p>E[θ̂j] = θ*j</p>
+<p>This property means the bias component equals zero, and the mean squared error reduces to just the variance component.</p>
+<h4 id="focus-on-variance">Focus on Variance</h4>
+<p>Since linear regression is unbiased, reliability assessment focuses primarily on quantifying and minimizing the variance of coefficient estimates.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="distribution-of-coefficient-estimates">Distribution of Coefficient Estimates</h2>
+<h3 id="normal-distribution-properties">🟡 Normal Distribution Properties</h3>
+<p>Under the structural model assumptions, coefficient estimates follow a multivariate normal distribution, enabling precise statistical inference and uncertainty quantification.</p>
+<h3 id="central-limit-theorem-foundation">Central Limit Theorem Foundation</h3>
+<p>The normality of coefficient estimates arises through the Central Limit Theorem. The estimation formula involves summing many random noise terms Wi, and when these terms are independent and identically distributed, their sum approaches a normal distribution.</p>
+<h4 id="approximate-normality">Approximate Normality</h4>
+<p>For large datasets, coefficient estimates are approximately normally distributed:</p>
+<p>θ̂j ~ N(θ*j, σ²j)</p>
+<h4 id="exact-normality">Exact Normality</h4>
+<p>When noise terms Wi are exactly normal, coefficient estimates are exactly normally distributed regardless of sample size.</p>
+<p><img alt="Normal Distribution of Coefficients" src="../../../svg/normal_distribution_coefficients.svg" /></p>
+<h3 id="multivariate-normal-structure">Multivariate Normal Structure</h3>
+<p>The complete coefficient vector θ̂ follows a multivariate normal distribution, meaning that any linear combination of the coefficients is also normally distributed. This property enables sophisticated statistical inference procedures.</p>
+<h3 id="statistical-implications">Statistical Implications</h3>
+<h4 id="probability-statements">Probability Statements</h4>
+<p>Normal distribution properties allow precise probability statements about coefficient estimates, such as the probability that an estimate falls within specific ranges.</p>
+<h4 id="confidence-intervals">Confidence Intervals</h4>
+<p>The normal distribution enables construction of confidence intervals with known coverage probabilities.</p>
+<h4 id="hypothesis-testing">Hypothesis Testing</h4>
+<p>Normal distribution assumptions underpin standard hypothesis testing procedures for coefficient significance.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="standard-error-and-confidence-intervals">Standard Error and Confidence Intervals</h2>
+<h3 id="standard-error-definition">🔵 Standard Error Definition</h3>
+<p>The standard error represents the standard deviation of the coefficient estimate distribution, providing a direct measure of estimation uncertainty.</p>
+<h3 id="mathematical-definition">Mathematical Definition</h3>
+<p>For the j-th coefficient:</p>
+<p>σj = √(Var(θ̂j)) = se(θ̂j)</p>
+<p>The standard error quantifies how much coefficient estimates would vary across different samples from the same population.</p>
+<p><img alt="Standard Error Visualization" src="../../../svg/standard_error_visualization.svg" /></p>
+<h3 id="confidence-interval-construction">Confidence Interval Construction</h3>
+<h4 id="95-confidence-intervals">95% Confidence Intervals</h4>
+<p>Using the normal distribution property, we can construct confidence intervals:</p>
+<p>θ̂j ± 1.96 × se(θ̂j)</p>
+<p>This interval contains the true parameter θ*j with 95% probability under repeated sampling.</p>
+<h4 id="general-confidence-level">General Confidence Level</h4>
+<p>For confidence level (1-α), the confidence interval becomes:</p>
+<p>θ̂j ± z(α/2) × se(θ̂j)</p>
+<p>Where z(α/2) is the appropriate critical value from the standard normal distribution.</p>
+<h3 id="interpretation-framework">Interpretation Framework</h3>
+<h4 id="precision-indicator">Precision Indicator</h4>
+<p>Smaller standard errors indicate more precise estimates, suggesting greater confidence in the parameter values.</p>
+<h4 id="sample-size-effects">Sample Size Effects</h4>
+<p>Standard errors generally decrease with larger sample sizes, reflecting improved precision from additional data.</p>
+<h4 id="design-matrix-influence">Design Matrix Influence</h4>
+<p>The structure of the design matrix X affects standard error magnitudes, with well-conditioned designs producing smaller standard errors.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="normal-distribution-properties_1">Normal Distribution Properties</h2>
+<h3 id="95-rule-and-practical-applications">🟢 95% Rule and Practical Applications</h3>
+<p>The normal distribution of coefficient estimates provides powerful tools for statistical inference through well-established probability properties.</p>
+<h3 id="two-standard-deviation-rule">Two Standard Deviation Rule</h3>
+<p>For normally distributed estimates, approximately 95% of the probability mass falls within two standard deviations of the mean:</p>
+<p>P(θ<em>j - 2σj ≤ θ̂j ≤ θ</em>j + 2σj) ≈ 0.95</p>
+<p>This property enables intuitive interpretation of estimation uncertainty.</p>
+<p><img alt="Normal Distribution Properties" src="../../../svg/normal_distribution_properties.svg" /></p>
+<h3 id="practical-applications">Practical Applications</h3>
+<h4 id="hypothesis-testing_1">Hypothesis Testing</h4>
+<p>The normal distribution enables testing hypotheses about parameter values:
+- Null hypothesis: θ*j = 0 (no effect)
+- Test statistic: t = θ̂j / se(θ̂j)
+- Decision rule based on critical values</p>
+<h4 id="effect-size-assessment">Effect Size Assessment</h4>
+<p>Standard errors help distinguish between statistically significant and practically meaningful effects by providing context for coefficient magnitudes.</p>
+<h4 id="model-comparison">Model Comparison</h4>
+<p>Comparing standard errors across different model specifications helps assess the impact of design choices on estimation precision.</p>
+<h3 id="computational-considerations">Computational Considerations</h3>
+<h4 id="standard-error-calculation">Standard Error Calculation</h4>
+<p>Computing standard errors requires estimating the variance-covariance matrix of coefficient estimates, typically involving matrix operations on the design matrix.</p>
+<h4 id="robust-standard-errors">Robust Standard Errors</h4>
+<p>In practice, standard error calculations may need adjustment for violations of homoscedasticity or independence assumptions.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="practical-applications_1">Practical Applications</h2>
+<h3 id="implementation-and-assessment">🔵 Implementation and Assessment</h3>
+<p>Understanding coefficient reliability enables informed decision-making in model interpretation, feature selection, and scientific inference.</p>
+<h4 id="marketing-campaign-example-revisited">Marketing Campaign Example Revisited</h4>
+<p>Consider the marketing campaign analysis with coefficient estimates and their standard errors:</p>
+<ul>
+<li>TV coefficient: 0.046 ± 0.008 (se)</li>
+<li>Radio coefficient: 0.19 ± 0.012 (se)  </li>
+<li>Newspaper coefficient: -0.001 ± 0.003 (se)</li>
+</ul>
+<h4 id="interpretation-guidelines">Interpretation Guidelines</h4>
+<p><strong>TV Advertising</strong>: The coefficient 0.046 with standard error 0.008 suggests high precision. The 95% confidence interval [0.030, 0.062] indicates strong evidence of positive impact.</p>
+<p><strong>Radio Advertising</strong>: The coefficient 0.19 with standard error 0.012 shows even stronger evidence, with confidence interval [0.166, 0.214] well above zero.</p>
+<p><strong>Newspaper Advertising</strong>: The coefficient -0.001 with standard error 0.003 includes zero in its confidence interval [-0.007, 0.005], suggesting no significant effect.</p>
+<h3 id="try-it-yourself">👉 Try It Yourself</h3>
+<p><a href="https://colab.research.google.com/github/examples/coefficient-reliability-analysis"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_standard_errors</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate standard errors for linear regression coefficients</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="c1"># Predictions and residuals</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">residuals</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span>
+
+    <span class="c1"># Residual sum of squares</span>
+    <span class="n">rss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">residuals</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># Degrees of freedom</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">p</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># subtract 1 for intercept</span>
+
+    <span class="c1"># Mean squared error</span>
+    <span class="n">mse</span> <span class="o">=</span> <span class="n">rss</span> <span class="o">/</span> <span class="n">df</span>
+
+    <span class="c1"># Design matrix with intercept</span>
+    <span class="n">X_design</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">X</span><span class="p">])</span>
+
+    <span class="c1"># Variance-covariance matrix</span>
+    <span class="n">var_covar_matrix</span> <span class="o">=</span> <span class="n">mse</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">X_design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X_design</span><span class="p">)</span>
+
+    <span class="c1"># Standard errors</span>
+    <span class="n">standard_errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">var_covar_matrix</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">standard_errors</span><span class="p">,</span> <span class="n">mse</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">coefficient_reliability_analysis</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Comprehensive coefficient reliability analysis</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Fit model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="c1"># Calculate standard errors</span>
+    <span class="n">se</span><span class="p">,</span> <span class="n">mse</span> <span class="o">=</span> <span class="n">calculate_standard_errors</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+
+    <span class="c1"># Coefficients (including intercept)</span>
+    <span class="n">coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="n">model</span><span class="o">.</span><span class="n">intercept_</span><span class="p">],</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="p">])</span>
+
+    <span class="c1"># t-statistics</span>
+    <span class="n">t_stats</span> <span class="o">=</span> <span class="n">coefficients</span> <span class="o">/</span> <span class="n">se</span>
+
+    <span class="c1"># p-values (two-tailed test)</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">p</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">p_values</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t_stats</span><span class="p">),</span> <span class="n">df</span><span class="p">))</span>
+
+    <span class="c1"># 95% Confidence intervals</span>
+    <span class="n">t_critical</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.975</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+    <span class="n">ci_lower</span> <span class="o">=</span> <span class="n">coefficients</span> <span class="o">-</span> <span class="n">t_critical</span> <span class="o">*</span> <span class="n">se</span>
+    <span class="n">ci_upper</span> <span class="o">=</span> <span class="n">coefficients</span> <span class="o">+</span> <span class="n">t_critical</span> <span class="o">*</span> <span class="n">se</span>
+
+    <span class="c1"># Create results DataFrame</span>
+    <span class="k">if</span> <span class="n">feature_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;X</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span>
+
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Intercept&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">feature_names</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s1">&#39;Coefficient&#39;</span><span class="p">:</span> <span class="n">coefficients</span><span class="p">,</span>
+        <span class="s1">&#39;Std_Error&#39;</span><span class="p">:</span> <span class="n">se</span><span class="p">,</span>
+        <span class="s1">&#39;t_Statistic&#39;</span><span class="p">:</span> <span class="n">t_stats</span><span class="p">,</span>
+        <span class="s1">&#39;p_Value&#39;</span><span class="p">:</span> <span class="n">p_values</span><span class="p">,</span>
+        <span class="s1">&#39;CI_Lower&#39;</span><span class="p">:</span> <span class="n">ci_lower</span><span class="p">,</span>
+        <span class="s1">&#39;CI_Upper&#39;</span><span class="p">:</span> <span class="n">ci_upper</span>
+    <span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span><span class="p">,</span> <span class="n">model</span>
+
+<span class="c1"># Example with marketing data</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">n_samples</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="c1"># Generate correlated advertising data</span>
+<span class="n">tv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+<span class="n">radio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+<span class="n">newspaper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+
+<span class="c1"># True coefficients</span>
+<span class="n">true_intercept</span> <span class="o">=</span> <span class="mf">2.94</span>
+<span class="n">true_tv</span> <span class="o">=</span> <span class="mf">0.046</span>
+<span class="n">true_radio</span> <span class="o">=</span> <span class="mf">0.19</span>
+<span class="n">true_newspaper</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.001</span>
+
+<span class="c1"># Generate sales with noise</span>
+<span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="p">(</span><span class="n">true_intercept</span> <span class="o">+</span> <span class="n">true_tv</span> <span class="o">*</span> <span class="n">tv</span> <span class="o">+</span> <span class="n">true_radio</span> <span class="o">*</span> <span class="n">radio</span> <span class="o">+</span> 
+         <span class="n">true_newspaper</span> <span class="o">*</span> <span class="n">newspaper</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span>
+
+<span class="c1"># Prepare data</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">tv</span><span class="p">,</span> <span class="n">radio</span><span class="p">,</span> <span class="n">newspaper</span><span class="p">])</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;TV&#39;</span><span class="p">,</span> <span class="s1">&#39;Radio&#39;</span><span class="p">,</span> <span class="s1">&#39;Newspaper&#39;</span><span class="p">]</span>
+
+<span class="c1"># Run analysis</span>
+<span class="n">results</span><span class="p">,</span> <span class="n">model</span> <span class="o">=</span> <span class="n">coefficient_reliability_analysis</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">sales</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Coefficient Reliability Analysis&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="c1"># Visualization</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">coef</span><span class="p">,</span> <span class="n">se</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">feature_names</span><span class="p">,</span> 
+                                        <span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="p">,</span> 
+                                        <span class="n">results</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:][</span><span class="s1">&#39;Std_Error&#39;</span><span class="p">])):</span>
+    <span class="c1"># Normal distribution of coefficient</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">coef</span> <span class="o">-</span> <span class="mi">3</span><span class="o">*</span><span class="n">se</span><span class="p">,</span> <span class="n">coef</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">se</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">coef</span><span class="p">,</span> <span class="n">se</span><span class="p">)</span>
+
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> Coefficient&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">coef</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Estimate&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">coef</span> <span class="o">-</span> <span class="mf">1.96</span><span class="o">*</span><span class="n">se</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;95% CI&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">coef</span> <span class="o">+</span> <span class="mf">1.96</span><span class="o">*</span><span class="n">se</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">coef</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> ± </span><span class="si">{</span><span class="n">se</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Coefficient Value&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Density&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Interpretation</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Interpretation:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;p_Value&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+        <span class="n">significance</span> <span class="o">=</span> <span class="s2">&quot;statistically significant&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">significance</span> <span class="o">=</span> <span class="s2">&quot;not statistically significant&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Coefficient&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">significance</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  95% CI: [</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;CI_Lower&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;CI_Upper&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="try-it-yourself_1">Try It Yourself</h2>
+<h3 id="hands-on-statistical-inference">🔧 Hands-On Statistical Inference</h3>
+<h4 id="confidence-interval-simulation">Confidence Interval Simulation</h4>
+<p>👉 <strong>Monte Carlo Confidence Interval Analysis</strong></p>
+<p><a href="https://colab.research.google.com/github/examples/confidence-interval-simulation"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">simulate_confidence_intervals</span><span class="p">(</span><span class="n">n_simulations</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simulate confidence intervals to demonstrate coverage properties</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># True parameters</span>
+    <span class="n">true_slope</span> <span class="o">=</span> <span class="mf">2.0</span>
+    <span class="n">true_intercept</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">noise_std</span> <span class="o">=</span> <span class="mf">1.5</span>
+
+    <span class="c1"># Storage for results</span>
+    <span class="n">slopes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">slope_cis</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">coverage_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_simulations</span><span class="p">):</span>
+        <span class="c1"># Generate data</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">sample_size</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">true_intercept</span> <span class="o">+</span> <span class="n">true_slope</span> <span class="o">*</span> <span class="n">X</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">noise_std</span><span class="p">,</span> <span class="n">sample_size</span><span class="p">)</span>
+
+        <span class="c1"># Fit model</span>
+        <span class="n">X_design</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">sample_size</span><span class="p">),</span> <span class="n">X</span><span class="p">])</span>
+        <span class="n">coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">X_design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X_design</span><span class="p">,</span> <span class="n">X_design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="c1"># Calculate standard errors</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">X_design</span> <span class="o">@</span> <span class="n">coefficients</span>
+        <span class="n">residuals</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span>
+        <span class="n">mse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">residuals</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sample_size</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">var_covar</span> <span class="o">=</span> <span class="n">mse</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">X_design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X_design</span><span class="p">)</span>
+        <span class="n">se_slope</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var_covar</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># Confidence interval</span>
+        <span class="n">t_critical</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.975</span><span class="p">,</span> <span class="n">sample_size</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">ci_lower</span> <span class="o">=</span> <span class="n">coefficients</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">t_critical</span> <span class="o">*</span> <span class="n">se_slope</span>
+        <span class="n">ci_upper</span> <span class="o">=</span> <span class="n">coefficients</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">t_critical</span> <span class="o">*</span> <span class="n">se_slope</span>
+
+        <span class="c1"># Store results</span>
+        <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">coefficients</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">slope_cis</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ci_lower</span><span class="p">,</span> <span class="n">ci_upper</span><span class="p">))</span>
+
+        <span class="c1"># Check coverage</span>
+        <span class="k">if</span> <span class="n">ci_lower</span> <span class="o">&lt;=</span> <span class="n">true_slope</span> <span class="o">&lt;=</span> <span class="n">ci_upper</span><span class="p">:</span>
+            <span class="n">coverage_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">coverage_rate</span> <span class="o">=</span> <span class="n">coverage_count</span> <span class="o">/</span> <span class="n">n_simulations</span>
+
+    <span class="k">return</span> <span class="n">slopes</span><span class="p">,</span> <span class="n">slope_cis</span><span class="p">,</span> <span class="n">coverage_rate</span>
+
+<span class="c1"># Run simulation</span>
+<span class="n">slopes</span><span class="p">,</span> <span class="n">cis</span><span class="p">,</span> <span class="n">coverage</span> <span class="o">=</span> <span class="n">simulate_confidence_intervals</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Coverage Rate: </span><span class="si">{</span><span class="n">coverage</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> (Expected: 0.950)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean Slope Estimate: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">slopes</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> (True: 2.000)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Std Dev of Estimates: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">slopes</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Visualize first 50 confidence intervals</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
+    <span class="n">ci_lower</span><span class="p">,</span> <span class="n">ci_upper</span> <span class="o">=</span> <span class="n">cis</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;green&#39;</span> <span class="k">if</span> <span class="n">ci_lower</span> <span class="o">&lt;=</span> <span class="mf">2.0</span> <span class="o">&lt;=</span> <span class="n">ci_upper</span> <span class="k">else</span> <span class="s1">&#39;red&#39;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">ci_lower</span><span class="p">,</span> <span class="n">ci_upper</span><span class="p">],</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">slopes</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True Value&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Slope Coefficient&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Simulation Number&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Confidence Intervals for Slope Coefficient</span><span class="se">\n</span><span class="s1">(Green: Contains True Value, Red: Misses)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="bootstrap-standard-errors">Bootstrap Standard Errors</h4>
+<p>👉 <strong>Bootstrap vs Analytical Standard Errors</strong></p>
+<p><a href="https://colab.research.google.com/github/examples/bootstrap-standard-errors"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">bootstrap_standard_errors</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_bootstrap</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate bootstrap standard errors for coefficient estimates</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">bootstrap_coefficients</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_bootstrap</span><span class="p">):</span>
+        <span class="c1"># Bootstrap sample</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">X_boot</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+        <span class="n">y_boot</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+
+        <span class="c1"># Fit model</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_boot</span><span class="p">,</span> <span class="n">y_boot</span><span class="p">)</span>
+
+        <span class="c1"># Store coefficients</span>
+        <span class="n">coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([[</span><span class="n">model</span><span class="o">.</span><span class="n">intercept_</span><span class="p">],</span> <span class="n">model</span><span class="o">.</span><span class="n">coef_</span><span class="p">])</span>
+        <span class="n">bootstrap_coefficients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">coefficients</span><span class="p">)</span>
+
+    <span class="n">bootstrap_coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">bootstrap_coefficients</span><span class="p">)</span>
+    <span class="n">bootstrap_se</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">bootstrap_coefficients</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">bootstrap_se</span><span class="p">,</span> <span class="n">bootstrap_coefficients</span>
+
+<span class="c1"># Compare bootstrap vs analytical standard errors</span>
+<span class="n">bootstrap_se</span><span class="p">,</span> <span class="n">boot_coefs</span> <span class="o">=</span> <span class="n">bootstrap_standard_errors</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">sales</span><span class="p">)</span>
+<span class="n">analytical_se</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s1">&#39;Std_Error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">comparison</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;Analytical_SE&#39;</span><span class="p">:</span> <span class="n">analytical_se</span><span class="p">,</span>
+    <span class="s1">&#39;Bootstrap_SE&#39;</span><span class="p">:</span> <span class="n">bootstrap_se</span><span class="p">,</span>
+    <span class="s1">&#39;Difference&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">analytical_se</span> <span class="o">-</span> <span class="n">bootstrap_se</span><span class="p">)</span>
+<span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="n">results</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Standard Error Comparison:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">comparison</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="hugging-face-integration">Hugging Face Integration</h3>
+<p>Explore statistical analysis tools and datasets:
+- <a href="https://huggingface.co/models?task=tabular-regression">Statistical Analysis Models</a>
+- <a href="https://huggingface.co/datasets?task_categories=tabular-regression">Regression Analysis Datasets</a>
+- <a href="https://huggingface.co/docs/transformers/tasks/tabular_regression">Statistical Computing Libraries</a></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="references-further-reading">References &amp; Further Reading</h2>
+<h3 id="essential-resources">📚 Essential Resources</h3>
+<h4 id="statistical-theory-foundations">Statistical Theory Foundations</h4>
+<ul>
+<li><strong>Casella, G. &amp; Berger, R.L. (2002)</strong>: "Statistical Inference" - Comprehensive treatment of estimation theory and confidence intervals</li>
+<li><strong>Lehmann, E.L. &amp; Casella, G. (1998)</strong>: "Theory of Point Estimation" - Advanced treatment of bias-variance decomposition and estimator properties</li>
+<li><strong>Cox, D.R. &amp; Hinkley, D.V. (1974)</strong>: "Theoretical Statistics" - Classical foundation of maximum likelihood theory and asymptotic properties</li>
+</ul>
+<h4 id="linear-model-theory-and-applications">Linear Model Theory and Applications</h4>
+<ul>
+<li><strong>Seber, G.A.F. &amp; Lee, A.J. (2003)</strong>: "Linear Regression Analysis" - Detailed mathematical treatment of coefficient reliability</li>
+<li><strong>Montgomery, D.C., Peck, E.A., Vining, G.G. (2012)</strong>: "Introduction to Linear Regression Analysis" - Practical approach to standard errors and confidence intervals</li>
+<li><strong>Weisberg, S. (2014)</strong>: "Applied Linear Regression" - Modern computational approaches to regression diagnostics</li>
+</ul>
+<h4 id="bootstrap-and-resampling-methods">Bootstrap and Resampling Methods</h4>
+<ul>
+<li><strong>Efron, B. &amp; Tibshirani, R.J. (1993)</strong>: "An Introduction to the Bootstrap" - Foundational text on bootstrap methods for standard error estimation</li>
+<li><strong>Davison, A.C. &amp; Hinkley, D.V. (1997)</strong>: "Bootstrap Methods and Their Applications" - Advanced bootstrap techniques for regression analysis</li>
+</ul>
+<h4 id="computational-implementation">Computational Implementation</h4>
+<ul>
+<li><a href="https://scikit-learn.org/stable/modules/linear_model.html">Scikit-learn Statistical Analysis</a> - Implementation of regression with statistical inference</li>
+<li><a href="https://www.statsmodels.org/stable/regression.html">Statsmodels Documentation</a> - Comprehensive statistical modeling library</li>
+<li><a href="https://docs.scipy.org/doc/scipy/reference/stats.html">SciPy Statistical Functions</a> - Statistical distributions and hypothesis testing</li>
+</ul>
+<h4 id="research-applications-and-extensions">Research Applications and Extensions</h4>
+<ul>
+<li><a href="https://ai.google/research/pubs/?area=MachineLearning">Google AI Research: Statistical Machine Learning</a> - Modern approaches to uncertainty quantification</li>
+<li><a href="https://www.microsoft.com/en-us/research/research-area/machine-learning/">Microsoft Research: Bayesian Methods</a> - Uncertainty quantification in machine learning</li>
+<li><a href="https://research.facebook.com/publications/?cat=statistics">Meta AI Research: Statistical Inference</a> - Large-scale statistical inference applications</li>
+</ul>
+<h4 id="advanced-topics-and-extensions">Advanced Topics and Extensions</h4>
+<ul>
+<li><strong>Robust Standard Errors</strong>: Heteroscedasticity-consistent estimators for assumption violations</li>
+<li><strong>Bayesian Linear Regression</strong>: Posterior distributions for full uncertainty quantification  </li>
+<li><strong>Regularized Regression</strong>: Standard error adjustments for Ridge and Lasso regression</li>
+<li><strong>Mixed Effects Models</strong>: Random effects and hierarchical modeling extensions</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2025 13:34:01 UTC">September 7, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../05-04-r-squared-performance/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Linear Regression Performance Assessment: R-Squared">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Linear Regression Performance Assessment: R-Squared
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../05-06-confidence_intervals_hypothesis_testing/" class="md-footer__link md-footer__link--next" aria-label="Next: Confidence Intervals and Hypothesis Testing">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Confidence Intervals and Hypothesis Testing
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

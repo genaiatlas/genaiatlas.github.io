@@ -1,0 +1,4249 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/2-additional-reference/12-hands-on-regression-hospital_los-non-linear-model/">
+      
+      
+        <link rel="prev" href="../11-hands-on-regression-hospital_los_linear-model/">
+      
+      
+        <link rel="next" href="../51.case-study-human-generated-text/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Hospital Length of Stay (LOS) Prediction Hands-On Tutorial: Regression Analysis and Feature Selection - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Hospital Length of Stay (LOS) Prediction Hands-On Tutorial: Regression Analysis and Feature Selection
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-descriptive-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../1-learning-path/00-math-foundation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3" id="__nav_2_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_2" id="__nav_2_4_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Regression - Hands on
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Regression - Hands on
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../10-hands-on-regression-advertisement/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Sales Prediction - Advertisement
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../11-hands-on-regression-hospital_los_linear-model/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hospital Length of Stay Prediction - Linear Model
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_2_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_2_3" id="__nav_2_4_3_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Hospital Length of Stay Prediction - Non Linear Model
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_3_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Hospital Length of Stay Prediction - Non Linear Model
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Hospital Length of Stay (LOS) Prediction Hands-On Tutorial: Regression Analysis and Feature Selection
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hospital Length of Stay (LOS) Prediction Hands-On Tutorial: Regression Analysis and Feature Selection
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-context-and-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Project Context and Objectives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Project Context and Objectives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#business-problem-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Problem Definition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methodological-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methodological Approach
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-overview-and-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Overview and Structure
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Overview and Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dataset-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dataset Characteristics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-categories-and-clinical-relevance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature Categories and Clinical Relevance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-quality-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Quality Assessment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exploratory-data-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exploratory Data Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exploratory Data Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#distribution-patterns-and-clinical-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      Distribution Patterns and Clinical Insights
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#correlation-analysis-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Correlation Analysis Results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ward-level-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ward-Level Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#age-related-los-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Age-Related LOS Patterns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-preparation-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Preparation Strategy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Preparation Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#categorical-encoding-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Categorical Encoding Approach
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#train-test-split-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Train-Test Split Strategy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-preparation-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Preparation Limitations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linear-regression-modeling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linear Regression Modeling
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linear Regression Modeling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#baseline-model-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Baseline Model Performance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpretation-of-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interpretation of Results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-validation-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Validation Assessment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitations-and-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations and Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regularization-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      Regularization Techniques
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Regularization Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ridge-regression-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ridge Regression Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lasso-regression-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lasso Regression Results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elastic-net-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Elastic Net Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#critical-analysis-of-regularization-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical Analysis of Regularization Results
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#forward-feature-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Forward Feature Selection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Forward Feature Selection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sequential-feature-selection-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sequential Feature Selection Methodology
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-selection-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature Selection Results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-complexity-vs-performance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Complexity vs. Performance Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clinical-implementation-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clinical Implementation Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-performance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Performance Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Performance Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comprehensive-model-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprehensive Model Comparison
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#critical-performance-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical Performance Assessment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-impact-quantification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Impact Quantification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-deployment-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Deployment Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#next-steps-and-model-enhancement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next Steps and Model Enhancement
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-code-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Code Walkthrough
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-environment-setup-and-library-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Environment Setup and Library Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Environment Setup and Library Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-library-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Library Imports
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#machine-learning-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Machine Learning Libraries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-colab-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Google Colab Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-data-loading-and-initial-inspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Data Loading and Initial Inspection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Data Loading and Initial Inspection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dataset-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dataset Loading
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#initial-data-exploration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Initial Data Exploration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-quality-assessment_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Quality Assessment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-exploratory-data-analysis-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Exploratory Data Analysis Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Exploratory Data Analysis Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-visualization-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Visualization Functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#correlation-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Correlation Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#categorical-analysis-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Categorical Analysis Functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specialized-eda-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Specialized EDA Applications
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-data-preprocessing-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Data Preprocessing Pipeline
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Data Preprocessing Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#categorical-variable-encoding" class="md-nav__link">
+    <span class="md-ellipsis">
+      Categorical Variable Encoding
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-target-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature-Target Separation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#train-test-split-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Train-Test Split Implementation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-linear-regression-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Linear Regression Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Linear Regression Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#performance-metrics-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Metrics Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-linear-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Linear Regression
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-regularization-techniques-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Regularization Techniques Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Regularization Techniques Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ridge-regression-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ridge Regression Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lasso-regression-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lasso Regression Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elastic-net-implementation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Elastic Net Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regularization-results-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Regularization Results Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-forward-feature-selection-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Forward Feature Selection Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Forward Feature Selection Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sequential-feature-selector-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sequential Feature Selector Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-selection-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature Selection Visualization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimal-feature-subset-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimal Feature Subset Selection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reduced-model-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reduced Model Implementation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-model-evaluation-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Model Evaluation Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Model Evaluation Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comprehensive-performance-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprehensive Performance Assessment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statistical-significance-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statistical Significance Testing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-validation-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cross-Validation Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#residual-analysis-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Residual Analysis Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-deployment-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Production Deployment Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-persistence-and-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Persistence and Loading
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../51.case-study-human-generated-text/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../99-unsupervised_learning_resources/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    External Resources
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="hospital-length-of-stay-los-prediction-hands-on-tutorial-regression-analysis-and-feature-selection">Hospital Length of Stay (LOS) Prediction Hands-On Tutorial: Regression Analysis and Feature Selection <a id="top"></a></h1>
+<p><a href="https://drive.google.com/file/d/17jkJjLpNEtIPIhqGMsJN8afsbO5182Yr/view?usp=drive_link"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
+<a href="https://drive.google.com/file/d/1tTtn3_ZrBvSz0HZgvMBjMyXKtBPzHSoS/view?usp=sharing"><img alt="Dataset" src="https://img.shields.io/badge/Dataset-Healthcare%20Data-blue" /></a></p>
+<h2 id="quick-navigation">Quick Navigation</h2>
+<ul>
+<li><a href="#context">Project Context and Objectives</a></li>
+<li><a href="#data-overview">Data Overview and Structure</a></li>
+<li><a href="#eda">Exploratory Data Analysis</a></li>
+<li><a href="#data-prep">Data Preparation Strategy</a></li>
+<li><a href="#linear-modeling">Linear Regression Modeling</a></li>
+<li><a href="#regularization">Regularization Techniques</a></li>
+<li><a href="#feature-selection">Forward Feature Selection</a></li>
+<li><a href="#performance-analysis">Model Performance Analysis</a></li>
+<li><a href="#complete-code-walkthough">Complete Code Walkthrough</a></li>
+</ul>
+<hr />
+<h2 id="project-context-and-objectives">Project Context and Objectives <a id="context"></a></h2>
+<p>Healthcare resource allocation represents a critical challenge amplified during the COVID-19 pandemic. This tutorial addresses a fundamental problem: <strong>predicting patient length of stay (LOS) to optimize hospital resource management</strong>. The HealthPlus hospital scenario provides a realistic framework for understanding how predictive modeling can directly impact operational efficiency and patient outcomes.</p>
+<h3 id="business-problem-definition">Business Problem Definition</h3>
+<p>HealthPlus hospital faces significant revenue losses and suboptimal patient outcomes due to inefficient resource allocation. The core challenge involves predicting patient LOS during admission to enable:</p>
+<ul>
+<li><strong>Proactive resource planning</strong> for beds, equipment, and staff</li>
+<li><strong>Improved patient flow management</strong> throughout the hospital system</li>
+<li><strong>Cost optimization</strong> through better capacity utilization</li>
+<li><strong>Enhanced care quality</strong> via appropriate resource allocation</li>
+</ul>
+<h3 id="methodological-approach">Methodological Approach</h3>
+<p>This analysis employs a systematic regression modeling approach:</p>
+<ol>
+<li><strong>Comprehensive data exploration</strong> to understand patient demographics and admission patterns</li>
+<li><strong>Statistical correlation analysis</strong> to identify key predictive relationships</li>
+<li><strong>Multiple regression techniques</strong> including regularization methods</li>
+<li><strong>Feature selection optimization</strong> to balance model complexity and performance</li>
+<li><strong>Critical performance evaluation</strong> across multiple metrics</li>
+</ol>
+<p>The tutorial demonstrates how statistical modeling translates into actionable healthcare insights while maintaining analytical rigor.</p>
+<p><strong>[See Code Walkthrough Section 1]</strong></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="data-overview-and-structure">Data Overview and Structure <a id="data-overview"></a></h2>
+<h3 id="dataset-characteristics">Dataset Characteristics</h3>
+<p>The healthcare dataset contains <strong>500,000 patient records</strong> with 15 features capturing admission-time information. This substantial sample size enables robust statistical inference while presenting computational considerations for model training.</p>
+<p><strong>Key Dataset Properties:</strong>
+- <strong>Scale:</strong> 500,000 patients × 15 features
+- <strong>Completeness:</strong> No missing values detected
+- <strong>Scope:</strong> Admitted patients only (excludes outpatient visits)
+- <strong>Temporal Range:</strong> Cross-sectional admission data</p>
+<h3 id="feature-categories-and-clinical-relevance">Feature Categories and Clinical Relevance</h3>
+<p><strong>Patient Demographics:</strong>
+- Age groups and gender distribution
+- Previous health conditions profile</p>
+<p><strong>Admission Context:</strong>
+- Admission type (trauma, emergency, urgent)
+- Severity classification (extreme, moderate, minor)
+- Insurance status and deposit amounts</p>
+<p><strong>Hospital Infrastructure:</strong>
+- Available rooms and staff capacity
+- Department and ward assignments
+- Attending physician information</p>
+<h3 id="data-quality-assessment">Data Quality Assessment</h3>
+<p>The analysis reveals several important characteristics:</p>
+<p><strong>Strengths:</strong>
+- Complete data with no missing values
+- Large sample size supporting statistical power
+- Comprehensive feature set covering clinical and operational factors</p>
+<p><strong>Limitations:</strong>
+- Patient ID shows multiple admissions (up to 21 per patient), potentially introducing dependency
+- Cross-sectional design limits causal inference
+- No temporal tracking of patient progression during stay</p>
+<p><strong>Critical Insight:</strong> The maximum 21 admissions per patient suggests either chronic conditions requiring frequent hospitalization or data collection spanning multiple years. This repeat patient pattern requires careful consideration in model validation to avoid data leakage.</p>
+<p><strong>[See Code Walkthrough Section 2]</strong></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="exploratory-data-analysis">Exploratory Data Analysis <a id="eda"></a></h2>
+<h3 id="distribution-patterns-and-clinical-insights">Distribution Patterns and Clinical Insights</h3>
+<p>The EDA reveals significant patterns that inform both modeling strategy and clinical understanding:</p>
+<p><strong>Length of Stay Distribution:</strong>
+- <strong>Median LOS:</strong> 9 days with range 3-51 days
+- <strong>Distribution shape:</strong> Right-skewed with peak at 8-9 days
+- <strong>Clinical interpretation:</strong> Most patients have routine stays, with few extended hospitalizations</p>
+<p><strong>Patient Demographics:</strong>
+- <strong>Age concentration:</strong> 75% of patients aged 21-50 years
+- <strong>Gender distribution:</strong> 74% female patients
+- <strong>Department focus:</strong> 68% gynecology admissions</p>
+<h3 id="correlation-analysis-results">Correlation Analysis Results</h3>
+<p>A critical finding emerges from correlation analysis: <strong>continuous variables show minimal correlation with LOS</strong>, suggesting categorical variables drive prediction accuracy. This insight fundamentally shapes the modeling approach, emphasizing the importance of categorical feature engineering over numerical transformation.</p>
+<p><strong>Key Correlations:</strong>
+- Continuous variables: Near-zero correlation with LOS
+- Categorical relationships: Stronger associations observed
+- Feature independence: Minimal multicollinearity among predictors</p>
+<h3 id="ward-level-analysis">Ward-Level Analysis</h3>
+<p><strong>Ward Performance Insights:</strong>
+- <strong>Ward A:</strong> Highest LOS (extreme cases, surgery patients)
+- <strong>Ward C:</strong> Second highest LOS (complex cases)
+- <strong>Wards B, D, F:</strong> Dedicated gynecology units with shorter stays</p>
+<p>This ward-based segmentation suggests <strong>resource allocation varies significantly by patient severity</strong>, with specialized wards requiring different staffing and equipment strategies.</p>
+<h3 id="age-related-los-patterns">Age-Related LOS Patterns</h3>
+<p><strong>Notable finding:</strong> Patients aged 1-10 and 51-100 years exhibit longer stays, contrasting with the 21-50 demographic. This pattern indicates:
+- <strong>Pediatric complexity:</strong> Young patients require specialized care
+- <strong>Geriatric considerations:</strong> Older patients need extended recovery
+- <strong>Gynecological efficiency:</strong> Routine procedures dominate middle-age admissions</p>
+<p><strong>[See Code Walkthrough Section 3]</strong></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="data-preparation-strategy">Data Preparation Strategy <a id="data-prep"></a></h2>
+<h3 id="categorical-encoding-approach">Categorical Encoding Approach</h3>
+<p>The preprocessing pipeline employs <strong>one-hot encoding</strong> for categorical variables, creating 42 total features from the original 15. This expansion reflects the categorical nature of healthcare data while maintaining interpretability.</p>
+<p><strong>Encoding Decisions:</strong>
+- <strong>Drop-first strategy:</strong> Prevents multicollinearity in dummy variables
+- <strong>Feature expansion:</strong> 15 → 42 features post-encoding
+- <strong>Memory considerations:</strong> 500,000 × 42 matrix requires efficient processing</p>
+<h3 id="train-test-split-strategy">Train-Test Split Strategy</h3>
+<p><strong>Split Configuration:</strong>
+- <strong>Training set:</strong> 80% (400,000 patients)
+- <strong>Test set:</strong> 20% (100,000 patients)
+- <strong>Random state:</strong> Fixed for reproducibility
+- <strong>Stratification:</strong> Not applied (continuous target variable)</p>
+<p><strong>Rationale:</strong> The large dataset size supports this split ratio while maintaining substantial test set size for robust evaluation. The absence of temporal ordering allows random splitting without data leakage concerns.</p>
+<h3 id="data-preparation-limitations">Data Preparation Limitations</h3>
+<p><strong>Considerations:</strong>
+- <strong>Patient independence assumption:</strong> Multiple admissions per patient may violate independence
+- <strong>Feature scaling:</strong> Not applied (standardization may be needed for regularization)
+- <strong>Categorical balance:</strong> Some categories have low representation, potentially affecting model stability</p>
+<p><strong>[See Code Walkthrough Section 4]</strong></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="linear-regression-modeling">Linear Regression Modeling <a id="linear-modeling"></a></h2>
+<h3 id="baseline-model-performance">Baseline Model Performance</h3>
+<p>The initial linear regression establishes strong predictive performance:</p>
+<p><strong>Performance Metrics:</strong>
+- <strong>R-squared:</strong> 0.844 (84.4% variance explained)
+- <strong>RMSE:</strong> 2.67 days
+- <strong>MAE:</strong> 2.15 days<br />
+- <strong>MAPE:</strong> 19.3%</p>
+<h3 id="interpretation-of-results">Interpretation of Results</h3>
+<p><strong>Clinical Significance:</strong>
+- <strong>Prediction accuracy:</strong> Model predicts LOS within ±2.15 days on average
+- <strong>Variance explanation:</strong> 84.4% of LOS variation captured by admission-time features
+- <strong>Percentage error:</strong> ~19% typical deviation from actual LOS</p>
+<p><strong>Business Impact:</strong>
+- <strong>Resource planning:</strong> 2-day prediction window enables proactive resource allocation
+- <strong>Bed management:</strong> Accurate LOS forecasting improves bed turnover planning
+- <strong>Staffing optimization:</strong> Department-specific predictions support workforce planning</p>
+<h3 id="model-validation-assessment">Model Validation Assessment</h3>
+<p><strong>Overfitting Analysis:</strong>
+- <strong>Training vs. Test Performance:</strong> Minimal gap between training and test metrics
+- <strong>Cross-validation stability:</strong> Consistent performance across folds
+- <strong>Generalization capability:</strong> Strong test set performance indicates robust generalization</p>
+<p><strong>Model Assumptions:</strong>
+- <strong>Linearity:</strong> Categorical encoding enables linear relationship capture
+- <strong>Independence:</strong> Potential violation due to repeat patients
+- <strong>Homoscedasticity:</strong> Residual analysis needed for variance consistency</p>
+<h3 id="limitations-and-considerations">Limitations and Considerations</h3>
+<p><strong>Methodological Constraints:</strong>
+- <strong>Linear assumption:</strong> Real-world relationships may be non-linear
+- <strong>Feature interactions:</strong> Current model doesn't capture interaction effects
+- <strong>Temporal dynamics:</strong> No consideration of seasonal or temporal trends</p>
+<p><strong>Practical Limitations:</strong>
+- <strong>Admission-time data only:</strong> Post-admission information could improve predictions
+- <strong>Hospital-specific:</strong> Model trained on single hospital data
+- <strong>Static predictions:</strong> No dynamic updating as patient condition changes</p>
+<p><strong>[See Code Walkthrough Section 5]</strong></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="regularization-techniques">Regularization Techniques <a id="regularization"></a></h2>
+<h3 id="ridge-regression-analysis">Ridge Regression Analysis</h3>
+<p>Ridge regression application yields minimal performance improvement over ordinary least squares:</p>
+<p><strong>Optimized Parameters:</strong>
+- <strong>Best alpha:</strong> 0.1 (via 10-fold cross-validation)
+- <strong>Performance impact:</strong> Negligible change in key metrics
+- <strong>Interpretation:</strong> Low multicollinearity in feature set</p>
+<h3 id="lasso-regression-results">Lasso Regression Results</h3>
+<p>Lasso regularization shows similar patterns:</p>
+<p><strong>Key Findings:</strong>
+- <strong>Optimal alpha:</strong> 0.001 (very small penalty)
+- <strong>Feature selection:</strong> Minimal coefficient shrinkage to zero
+- <strong>Performance:</strong> Comparable to baseline linear regression</p>
+<h3 id="elastic-net-implementation">Elastic Net Implementation</h3>
+<p>Elastic Net combines L1 and L2 penalties:</p>
+<p><strong>Hyperparameters:</strong>
+- <strong>Alpha:</strong> 0.001
+- <strong>L1 ratio:</strong> 0.05 (primarily L2 regularization)
+- <strong>Result:</strong> Consistent with Ridge and Lasso findings</p>
+<h3 id="critical-analysis-of-regularization-results">Critical Analysis of Regularization Results</h3>
+<p><strong>Why Regularization Doesn't Improve Performance:</strong></p>
+<ol>
+<li><strong>Low multicollinearity:</strong> One-hot encoding creates orthogonal features</li>
+<li><strong>Large sample size:</strong> 500,000 samples reduce overfitting risk</li>
+<li><strong>Feature relevance:</strong> Most categorical features contribute meaningfully to prediction</li>
+<li><strong>Optimal model complexity:</strong> Baseline model achieves appropriate bias-variance trade-off</li>
+</ol>
+<p><strong>Practical Implications:</strong>
+- <strong>Model selection:</strong> Simple linear regression preferred for interpretability
+- <strong>Computational efficiency:</strong> Avoid unnecessary hyperparameter tuning
+- <strong>Clinical deployment:</strong> Simpler models facilitate clinical adoption</p>
+<p><strong>When Regularization Would Help:</strong>
+- Smaller dataset sizes (high variance risk)
+- Continuous feature dominance (potential multicollinearity)
+- Many irrelevant features (need for feature selection)</p>
+<p><strong>[See Code Walkthrough Section 6]</strong></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="forward-feature-selection">Forward Feature Selection <a id="feature-selection"></a></h2>
+<h3 id="sequential-feature-selection-methodology">Sequential Feature Selection Methodology</h3>
+<p>Forward feature selection employs a greedy algorithm to identify the most predictive feature subset:</p>
+<p><strong>Algorithm Approach:</strong>
+- <strong>Starting point:</strong> Empty feature set
+- <strong>Selection criteria:</strong> R-squared maximization via 5-fold cross-validation
+- <strong>Stopping rule:</strong> All 42 features evaluated
+- <strong>Computational method:</strong> Parallel processing for efficiency</p>
+<h3 id="feature-selection-results">Feature Selection Results</h3>
+<p><strong>Key Findings:</strong>
+- <strong>Optimal feature count:</strong> 8 features achieve 84.0% R-squared
+- <strong>Full model comparison:</strong> 42 features achieve 84.4% R-squared
+- <strong>Performance trade-off:</strong> 0.4% R-squared loss for 81% feature reduction</p>
+<p><strong>Selected Features (Top 8):</strong>
+The analysis identifies the most predictive admission-time factors, though specific feature names require code walkthrough reference for complete interpretation.</p>
+<h3 id="model-complexity-vs-performance-analysis">Model Complexity vs. Performance Analysis</h3>
+<p><strong>Decision Framework:</strong>
+- <strong>8 features:</strong> R² = 0.840, much simpler model
+- <strong>20 features:</strong> R² = 0.844, moderate complexity
+- <strong>42 features:</strong> R² = 0.843, full complexity</p>
+<p><strong>Business Case for Feature Reduction:</strong>
+- <strong>Data collection efficiency:</strong> Focus resources on 8 key variables
+- <strong>Model interpretability:</strong> Simplified model easier for clinical staff to understand
+- <strong>Deployment simplicity:</strong> Fewer features reduce integration complexity
+- <strong>Maintenance cost:</strong> Less data validation and quality assurance required</p>
+<h3 id="clinical-implementation-considerations">Clinical Implementation Considerations</h3>
+<p><strong>Advantages of Reduced Feature Set:</strong>
+- <strong>Faster predictions:</strong> Real-time capability in clinical workflow
+- <strong>Reduced data entry:</strong> Minimize burden on healthcare staff
+- <strong>Quality focus:</strong> Concentrate data quality efforts on key variables
+- <strong>Training simplification:</strong> Easier to train staff on fewer variables</p>
+<p><strong>Trade-offs:</strong>
+- <strong>Slight accuracy loss:</strong> 0.4% reduction in variance explained
+- <strong>Missing interactions:</strong> Excluded features may provide valuable context
+- <strong>Edge case handling:</strong> Full model might handle unusual cases better</p>
+<p><strong>[See Code Walkthrough Section 7]</strong></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="model-performance-analysis">Model Performance Analysis <a id="performance-analysis"></a></h2>
+<h3 id="comprehensive-model-comparison">Comprehensive Model Comparison</h3>
+<p>The analysis reveals remarkable consistency across modeling approaches:</p>
+<p><strong>Performance Summary:</strong>
+- <strong>Linear Regression (Full):</strong> R² = 0.844, RMSE = 2.67 days
+- <strong>Linear Regression (8 features):</strong> R² = 0.840, RMSE = 2.69 days
+- <strong>Regularized Models:</strong> Minimal deviation from baseline performance</p>
+<h3 id="critical-performance-assessment">Critical Performance Assessment</h3>
+<p><strong>Strengths:</strong>
+- <strong>High predictive accuracy:</strong> 84% variance explanation for admission-time prediction
+- <strong>Clinical relevance:</strong> 2-3 day prediction window aligns with hospital planning needs
+- <strong>Robust generalization:</strong> Consistent train-test performance
+- <strong>Feature efficiency:</strong> 8 features capture nearly full model performance</p>
+<p><strong>Limitations:</strong>
+- <strong>Prediction ceiling:</strong> 19% MAPE suggests inherent unpredictability in patient recovery
+- <strong>Linear assumptions:</strong> Complex medical relationships may require non-linear modeling
+- <strong>Static nature:</strong> Model doesn't update with evolving patient condition
+- <strong>Single-hospital scope:</strong> Generalizability to other hospitals uncertain</p>
+<h3 id="business-impact-quantification">Business Impact Quantification</h3>
+<p><strong>Resource Planning Benefits:</strong>
+- <strong>Bed allocation:</strong> 2-day prediction window enables 90%+ accurate bed availability forecasting
+- <strong>Staff scheduling:</strong> Department-specific predictions optimize workforce deployment
+- <strong>Equipment management:</strong> Advance notice of bed needs prevents equipment shortages</p>
+<p><strong>Financial Implications:</strong>
+- <strong>Revenue optimization:</strong> Improved bed turnover through accurate discharge planning
+- <strong>Cost reduction:</strong> Efficient resource allocation reduces waste
+- <strong>Capacity planning:</strong> Better understanding of department-specific demands</p>
+<h3 id="model-deployment-considerations">Model Deployment Considerations</h3>
+<p><strong>Implementation Requirements:</strong>
+- <strong>Data integration:</strong> Connect with hospital information systems
+- <strong>Real-time processing:</strong> Integrate with admission workflow
+- <strong>User interface:</strong> Clinical dashboard for prediction visualization
+- <strong>Validation protocol:</strong> Ongoing monitoring of prediction accuracy</p>
+<p><strong>Risk Assessment:</strong>
+- <strong>Prediction errors:</strong> 19% MAPE means occasional significant errors
+- <strong>Edge cases:</strong> Extreme illnesses may exceed model predictions
+- <strong>Data quality:</strong> Model performance depends on accurate input data
+- <strong>Staff adoption:</strong> Clinical acceptance requires training and change management</p>
+<h3 id="next-steps-and-model-enhancement">Next Steps and Model Enhancement</h3>
+<p><strong>Immediate Improvements:</strong>
+- <strong>Non-linear models:</strong> Tree-based methods may capture complex interactions
+- <strong>Ensemble approaches:</strong> Combine multiple models for improved accuracy
+- <strong>Feature engineering:</strong> Create interaction terms and derived variables
+- <strong>Temporal modeling:</strong> Incorporate seasonal and trending factors</p>
+<p><strong>Advanced Considerations:</strong>
+- <strong>Dynamic updating:</strong> Real-time model adaptation based on patient progression
+- <strong>Multi-hospital validation:</strong> Test generalizability across different healthcare settings
+- <strong>Outcome integration:</strong> Include patient satisfaction and readmission metrics
+- <strong>Economic modeling:</strong> Incorporate cost-benefit analysis for resource decisions</p>
+<hr />
+<h2 id="complete-code-walkthrough">Complete Code Walkthrough <a id="complete-code-walkthough"></a></h2>
+<h1 id="hospital-los-prediction-complete-code-walkthrough">Hospital LOS Prediction - Complete Code Walkthrough</h1>
+<p>This document provides comprehensive implementation coverage for the Hospital Length of Stay prediction analysis, designed to complement the main tutorial with detailed technical explanations.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#setup">Environment Setup and Library Configuration</a></li>
+<li><a href="#data-loading">Data Loading and Initial Inspection</a></li>
+<li><a href="#eda-implementation">Exploratory Data Analysis Implementation</a></li>
+<li><a href="#preprocessing">Data Preprocessing Pipeline</a></li>
+<li><a href="#linear-regression">Linear Regression Implementation</a></li>
+<li><a href="#regularization-implementation">Regularization Techniques Implementation</a></li>
+<li><a href="#feature-selection-implementation">Forward Feature Selection Implementation</a></li>
+<li><a href="#evaluation-framework">Model Evaluation Framework</a></li>
+</ol>
+<hr />
+<h2 id="1-environment-setup-and-library-configuration">1. Environment Setup and Library Configuration <a id="setup"></a></h2>
+<h3 id="core-library-imports">Core Library Imports</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<span class="c1"># Display configuration for data exploration</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_rows&quot;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Implementation Notes:</strong>
+- <strong>Warnings suppression:</strong> Prevents sklearn deprecation warnings during model training
+- <strong>Pandas display options:</strong> Enables viewing all columns in wide datasets (42 features post-encoding)
+- <strong>Memory considerations:</strong> Large dataset (500K rows) requires careful memory management</p>
+<h3 id="machine-learning-libraries">Machine Learning Libraries</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Model building and evaluation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">cross_val_score</span><span class="p">,</span> <span class="n">KFold</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">Ridge</span><span class="p">,</span> <span class="n">Lasso</span><span class="p">,</span> <span class="n">ElasticNet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.tree</span><span class="w"> </span><span class="kn">import</span> <span class="n">DecisionTreeRegressor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">BaggingRegressor</span>
+
+<span class="c1"># Preprocessing and encoding</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">LabelEncoder</span>
+
+<span class="c1"># Hyperparameter tuning</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridSearchCV</span>
+
+<span class="c1"># Performance metrics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_scorer</span><span class="p">,</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">r2_score</span><span class="p">,</span> <span class="n">mean_absolute_error</span>
+</code></pre></div>
+<p><strong>Technical Rationale:</strong>
+- <strong>sklearn ecosystem:</strong> Provides consistent API across all modeling approaches
+- <strong>Cross-validation:</strong> KFold enables robust model validation with large dataset
+- <strong>GridSearchCV:</strong> Systematic hyperparameter optimization for regularization
+- <strong>Multiple algorithms:</strong> Comparison between linear, regularized, and tree-based methods</p>
+<h3 id="google-colab-integration">Google Colab Integration</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">google.colab</span><span class="w"> </span><span class="kn">import</span> <span class="n">drive</span>
+<span class="n">drive</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">&#39;/content/drive&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Cloud Computing Considerations:</strong>
+- <strong>Drive mounting:</strong> Enables access to stored datasets in Google Drive
+- <strong>Computational resources:</strong> Leverages free GPU/TPU for model training
+- <strong>Collaboration:</strong> Shareable notebooks for team analysis</p>
+<hr />
+<h2 id="2-data-loading-and-initial-inspection">2. Data Loading and Initial Inspection <a id="data-loading"></a></h2>
+<h3 id="dataset-loading">Dataset Loading</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Read the healthcare dataset file</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;filepath/healthcare_data.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># Creating backup copy to preserve original data</span>
+<span class="n">same_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Data Management Strategy:</strong>
+- <strong>Original preservation:</strong> <code>same_data</code> maintains unmodified dataset for reference
+- <strong>Iterative analysis:</strong> Enables reset to original state if needed
+- <strong>Memory efficiency:</strong> Single copy strategy for 500K+ rows</p>
+<h3 id="initial-data-exploration">Initial Data Exploration</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Comprehensive data overview</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>          <span class="c1"># First 5 rows for structure understanding</span>
+<span class="n">data</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span>          <span class="c1"># Last 5 rows for consistency check</span>
+<span class="n">data</span><span class="o">.</span><span class="n">shape</span>           <span class="c1"># Dimensions: (500000, 15)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>          <span class="c1"># Data types and null value assessment</span>
+</code></pre></div>
+<p><strong>Inspection Strategy:</strong>
+- <strong>Head/tail analysis:</strong> Checks for data consistency across file
+- <strong>Shape verification:</strong> Confirms expected dimensions (500K × 15)
+- <strong>Info method:</strong> Identifies data types and missing value patterns</p>
+<h3 id="data-quality-assessment_1">Data Quality Assessment</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Patient ID analysis - checking for repeat admissions</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;patientid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+
+<span class="c1"># Duplicate row detection</span>
+<span class="n">data</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="c1"># Descriptive statistics for continuous variables</span>
+<span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+<p><strong>Quality Control Implementation:</strong>
+- <strong>Patient ID frequency:</strong> Identifies repeat admissions (max 21 per patient)
+- <strong>Duplicate detection:</strong> Ensures data uniqueness
+- <strong>Statistical summary:</strong> Establishes baseline understanding of distributions</p>
+<p><strong>Critical Finding:</strong> The <code>value_counts()</code> on patient ID reveals that some patients have up to 21 admissions, indicating either chronic conditions or multi-year data collection spanning multiple episodes.</p>
+<hr />
+<h2 id="3-exploratory-data-analysis-implementation">3. Exploratory Data Analysis Implementation <a id="eda-implementation"></a></h2>
+<h3 id="custom-visualization-functions">Custom Visualization Functions</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">histogram_boxplot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">feature</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Combined boxplot and histogram visualization</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    data : DataFrame</span>
+<span class="sd">        Source dataframe</span>
+<span class="sd">    feature : str</span>
+<span class="sd">        Column name to visualize</span>
+<span class="sd">    figsize : tuple</span>
+<span class="sd">        Figure dimensions (width, height)</span>
+<span class="sd">    kde : bool</span>
+<span class="sd">        Whether to overlay kernel density estimation</span>
+<span class="sd">    bins : int or None</span>
+<span class="sd">        Number of histogram bins</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f2</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_box2</span><span class="p">,</span> <span class="n">ax_hist2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+        <span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>                                    <span class="c1"># Two-panel layout</span>
+        <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                               <span class="c1"># Shared x-axis for alignment</span>
+        <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;height_ratios&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">)},</span> <span class="c1"># Box plot smaller than histogram</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Boxplot with mean indicator</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> 
+        <span class="n">x</span><span class="o">=</span><span class="n">feature</span><span class="p">,</span> 
+        <span class="n">ax</span><span class="o">=</span><span class="n">ax_box2</span><span class="p">,</span> 
+        <span class="n">showmeans</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>      <span class="c1"># Star marker for mean</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;violet&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Histogram with optional KDE</span>
+    <span class="k">if</span> <span class="n">bins</span><span class="p">:</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">feature</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="n">kde</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax_hist2</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;winter&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">feature</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="n">kde</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax_hist2</span><span class="p">)</span>
+
+    <span class="c1"># Statistical reference lines</span>
+    <span class="n">ax_hist2</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">)</span>    <span class="c1"># Mean</span>
+    <span class="n">ax_hist2</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>   <span class="c1"># Median</span>
+</code></pre></div>
+<p><strong>Function Design Rationale:</strong>
+- <strong>Dual visualization:</strong> Boxplot reveals outliers while histogram shows distribution shape
+- <strong>Statistical references:</strong> Mean and median lines provide central tendency context
+- <strong>Flexible parameters:</strong> Adaptable to different variable types and analysis needs</p>
+<h3 id="correlation-analysis">Correlation Analysis</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Correlation matrix visualization</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">numeric_only</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>    <span class="c1"># Only continuous variables</span>
+    <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                      <span class="c1"># Display correlation values</span>
+    <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>                <span class="c1"># Full correlation range</span>
+    <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.2f&quot;</span><span class="p">,</span>                      <span class="c1"># Two decimal places</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Spectral&quot;</span>                 <span class="c1"># Diverging color scheme</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>Technical Implementation:</strong>
+- <strong>numeric_only=True:</strong> Focuses on continuous variables only
+- <strong>Annotation:</strong> Displays exact correlation coefficients
+- <strong>Color mapping:</strong> Spectral colormap emphasizes positive/negative correlations
+- <strong>Format specification:</strong> Consistent decimal precision</p>
+<h3 id="categorical-analysis-functions">Categorical Analysis Functions</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">stacked_barplot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">predictor</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create stacked bar plots for categorical relationships</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    data : DataFrame</span>
+<span class="sd">        Source dataframe</span>
+<span class="sd">    predictor : str</span>
+<span class="sd">        Independent categorical variable</span>
+<span class="sd">    target : str</span>
+<span class="sd">        Target categorical variable for stacking</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">predictor</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+    <span class="n">sorter</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Absolute counts crosstab</span>
+    <span class="n">tab1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">predictor</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">margins</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="n">by</span><span class="o">=</span><span class="n">sorter</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">tab1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">120</span><span class="p">)</span>
+
+    <span class="c1"># Proportional crosstab</span>
+    <span class="n">tab</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">predictor</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">normalize</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="n">by</span><span class="o">=</span><span class="n">sorter</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Stacked bar visualization</span>
+    <span class="n">tab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> 
+        <span class="n">stacked</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+        <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Implementation Features:</strong>
+- <strong>Dual crosstabs:</strong> Absolute counts and proportions for complete understanding
+- <strong>Dynamic sorting:</strong> Orders categories by target variable frequency
+- <strong>Adaptive sizing:</strong> Figure width scales with category count
+- <strong>Legend positioning:</strong> Prevents overlap with plot area</p>
+<h3 id="specialized-eda-applications">Specialized EDA Applications</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Length of stay distribution analysis</span>
+<span class="n">histogram_boxplot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;Stay (in days)&quot;</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="c1"># Ward-level LOS comparison</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;Ward_Facility_Code&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Stay (in days)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Age group impact on LOS</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;Stay (in days)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Doctor performance analysis</span>
+<span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;doctor_name&#39;</span><span class="p">])[</span><span class="s1">&#39;Department&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+    <span class="n">Department_Name</span><span class="o">=</span><span class="s1">&#39;unique&#39;</span><span class="p">,</span>
+    <span class="n">Patients_Treated</span><span class="o">=</span><span class="s1">&#39;count&#39;</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>Analysis Strategy:</strong>
+- <strong>Distribution shape:</strong> KDE overlay reveals multimodality in LOS
+- <strong>Comparative analysis:</strong> Barplots identify high-impact categorical factors
+- <strong>Aggregation functions:</strong> Custom aggregations for multi-dimensional insights</p>
+<hr />
+<h2 id="4-data-preprocessing-pipeline">4. Data Preprocessing Pipeline <a id="preprocessing"></a></h2>
+<h3 id="categorical-variable-encoding">Categorical Variable Encoding</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># One-hot encoding with redundancy removal</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span>
+    <span class="n">columns</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="s2">&quot;category&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+    <span class="n">drop_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>Encoding Strategy:</strong>
+- <strong>select_dtypes:</strong> Automatically identifies categorical columns
+- <strong>drop_first=True:</strong> Prevents perfect multicollinearity in dummy variables
+- <strong>Feature expansion:</strong> 15 original features → 42 encoded features</p>
+<p><strong>Mathematical Foundation:</strong>
+For a categorical variable with k categories, one-hot encoding creates k-1 binary variables when using drop_first=True, preventing the dummy variable trap where perfect multicollinearity exists.</p>
+<h3 id="feature-target-separation">Feature-Target Separation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Independent variables (all features except target)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;Stay (in days)&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Dependent variable (target for prediction)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Stay (in days)&#39;</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Data Structure:</strong>
+- <strong>X matrix:</strong> (500000, 42) - all predictor variables
+- <strong>y vector:</strong> (500000,) - continuous target variable
+- <strong>Memory usage:</strong> ~160MB for feature matrix with float64 precision</p>
+<h3 id="train-test-split-implementation">Train-Test Split Implementation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Stratified split for model evaluation</span>
+<span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> 
+    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>      <span class="c1"># 20% for testing</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>       <span class="c1"># Random sampling</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span>      <span class="c1"># Reproducible results</span>
+<span class="p">)</span>
+
+<span class="c1"># Verify split dimensions</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape of Training set : &quot;</span><span class="p">,</span> <span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># (400000, 42)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shape of test set : &quot;</span><span class="p">,</span> <span class="n">x_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>       <span class="c1"># (100000, 42)</span>
+</code></pre></div>
+<p><strong>Split Strategy Rationale:</strong>
+- <strong>80-20 split:</strong> Large dataset supports substantial test set
+- <strong>Random sampling:</strong> No temporal ordering requires random split
+- <strong>Fixed random state:</strong> Ensures reproducible research
+- <strong>No stratification:</strong> Continuous target doesn't require stratified sampling</p>
+<hr />
+<h2 id="5-linear-regression-implementation">5. Linear Regression Implementation <a id="linear-regression"></a></h2>
+<h3 id="performance-metrics-framework">Performance Metrics Framework</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">adj_r2_score</span><span class="p">(</span><span class="n">predictors</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate adjusted R-squared for regression models</span>
+
+<span class="sd">    Formula: 1 - ((1 - R²) * (n - 1) / (n - k - 1))</span>
+<span class="sd">    where n = sample size, k = number of predictors</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">predictors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Number of observations</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">predictors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Number of predictors</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">r2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mape_score</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Mean Absolute Percentage Error calculation</span>
+
+<span class="sd">    Formula: mean(|actual - predicted| / |actual|) * 100</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">targets</span> <span class="o">-</span> <span class="n">predictions</span><span class="p">)</span> <span class="o">/</span> <span class="n">targets</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">model_performance_regression</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">predictors</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Comprehensive regression model evaluation</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    DataFrame with RMSE, MAE, R-squared, Adjusted R-squared, MAPE</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">predictors</span><span class="p">)</span>
+
+    <span class="c1"># Core metrics calculation</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+    <span class="n">adjr2</span> <span class="o">=</span> <span class="n">adj_r2_score</span><span class="p">(</span><span class="n">predictors</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+    <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">pred</span><span class="p">))</span>
+    <span class="n">mae</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+    <span class="n">mape</span> <span class="o">=</span> <span class="n">mape_score</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+
+    <span class="c1"># Results dataframe</span>
+    <span class="n">df_perf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <span class="n">rmse</span><span class="p">,</span>
+        <span class="s2">&quot;MAE&quot;</span><span class="p">:</span> <span class="n">mae</span><span class="p">,</span>
+        <span class="s2">&quot;R-squared&quot;</span><span class="p">:</span> <span class="n">r2</span><span class="p">,</span>
+        <span class="s2">&quot;Adj. R-squared&quot;</span><span class="p">:</span> <span class="n">adjr2</span><span class="p">,</span>
+        <span class="s2">&quot;MAPE&quot;</span><span class="p">:</span> <span class="n">mape</span><span class="p">,</span>
+    <span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">df_perf</span>
+</code></pre></div>
+<p><strong>Metric Implementation Details:</strong>
+- <strong>Adjusted R²:</strong> Penalizes model complexity, essential for feature selection
+- <strong>RMSE vs MAE:</strong> RMSE penalizes large errors more heavily than MAE
+- <strong>MAPE:</strong> Provides interpretable percentage error for business stakeholders
+- <strong>DataFrame output:</strong> Consistent format for model comparison</p>
+<h3 id="basic-linear-regression">Basic Linear Regression</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+
+<span class="c1"># Model initialization and training</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Performance evaluation on both sets</span>
+<span class="n">linear_reg</span> <span class="o">=</span> <span class="n">model_performance_regression</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">linear_reg_test</span> <span class="o">=</span> <span class="n">model_performance_regression</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Mathematical Foundation:</strong>
+Linear regression solves: <strong>β = (X^T X)^(-1) X^T y</strong></p>
+<p>Where:
+- <strong>X:</strong> Design matrix with dummy variables
+- <strong>y:</strong> Target vector (LOS in days)
+- <strong>β:</strong> Coefficient vector
+- <strong>Normal equation:</strong> Analytical solution for optimal coefficients</p>
+<p><strong>Implementation Advantages:</strong>
+- <strong>Analytical solution:</strong> No iterative optimization required
+- <strong>Global optimum:</strong> Guaranteed optimal solution for linear objectives
+- <strong>Coefficient interpretation:</strong> Direct relationship between features and target</p>
+<hr />
+<h2 id="6-regularization-techniques-implementation">6. Regularization Techniques Implementation <a id="regularization-implementation"></a></h2>
+<h3 id="ridge-regression-implementation">Ridge Regression Implementation</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ridge</span>
+
+<span class="c1"># Default Ridge regression</span>
+<span class="n">ridge_model</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">()</span>
+<span class="n">ridge_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Hyperparameter optimization</span>
+<span class="n">folds</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]}</span>
+
+<span class="n">model_cv</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">Ridge</span><span class="p">(),</span>
+    <span class="n">param_grid</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;r2&#39;</span><span class="p">,</span>              <span class="c1"># Optimization metric</span>
+    <span class="n">cv</span><span class="o">=</span><span class="n">folds</span><span class="p">,</span>                  <span class="c1"># 10-fold cross-validation</span>
+    <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span>    <span class="c1"># Track training performance</span>
+<span class="p">)</span>
+
+<span class="n">model_cv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best parameters:&quot;</span><span class="p">,</span> <span class="n">model_cv</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+
+<span class="c1"># Optimized model training</span>
+<span class="n">ridge_model_tuned</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">ridge_model_tuned</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Ridge Mathematical Foundation:</strong>
+<strong>Objective:</strong> minimize ||y - Xβ||² + α||β||²</p>
+<p>Where:
+- <strong>α (alpha):</strong> Regularization strength parameter
+- <strong>L2 penalty:</strong> Sum of squared coefficients
+- <strong>Shrinkage effect:</strong> Reduces coefficient magnitudes toward zero</p>
+<p><strong>Implementation Notes:</strong>
+- <strong>Alpha range:</strong> Logarithmic spacing captures different regularization strengths
+- <strong>Cross-validation:</strong> 10-fold provides robust hyperparameter selection
+- <strong>Grid search:</strong> Systematic evaluation of all parameter combinations</p>
+<h3 id="lasso-regression-implementation">Lasso Regression Implementation</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lasso</span>
+
+<span class="c1"># Hyperparameter optimization for Lasso</span>
+<span class="n">model_cv</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">Lasso</span><span class="p">(),</span>
+    <span class="n">param_grid</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>     <span class="c1"># Same alpha range as Ridge</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;r2&#39;</span><span class="p">,</span>
+    <span class="n">cv</span><span class="o">=</span><span class="n">folds</span><span class="p">,</span>
+    <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="n">model_cv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">optimal_alpha</span> <span class="o">=</span> <span class="n">model_cv</span><span class="o">.</span><span class="n">best_params_</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span>  <span class="c1"># Results: 0.001</span>
+
+<span class="c1"># Optimized Lasso model</span>
+<span class="n">lasso_model_tuned</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+<span class="n">lasso_model_tuned</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Lasso Mathematical Foundation:</strong>
+<strong>Objective:</strong> minimize ||y - Xβ||² + α||β||₁</p>
+<p>Where:
+- <strong>L1 penalty:</strong> Sum of absolute coefficient values
+- <strong>Sparsity induction:</strong> Can set coefficients exactly to zero
+- <strong>Feature selection:</strong> Automatic variable selection capability</p>
+<p><strong>Key Differences from Ridge:</strong>
+- <strong>Coefficient behavior:</strong> Lasso can eliminate features entirely
+- <strong>Solution path:</strong> Non-smooth due to absolute value penalty
+- <strong>Geometric interpretation:</strong> L1 ball has corners enabling exact zero solutions</p>
+<h3 id="elastic-net-implementation_1">Elastic Net Implementation</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElasticNet</span>
+
+<span class="c1"># Dual hyperparameter optimization</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;alpha&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>
+    <span class="s1">&#39;l1_ratio&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">model_cv</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">ElasticNet</span><span class="p">(),</span>
+    <span class="n">param_grid</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;r2&#39;</span><span class="p">,</span>
+    <span class="n">cv</span><span class="o">=</span><span class="n">folds</span><span class="p">,</span>
+    <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="n">model_cv</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">best_params</span> <span class="o">=</span> <span class="n">model_cv</span><span class="o">.</span><span class="n">best_params_</span>  <span class="c1"># alpha=0.001, l1_ratio=0.05</span>
+
+<span class="c1"># Optimized Elastic Net</span>
+<span class="n">elasticnet_model_tuned</span> <span class="o">=</span> <span class="n">ElasticNet</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">elasticnet_model_tuned</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Elastic Net Mathematical Foundation:</strong>
+<strong>Objective:</strong> minimize ||y - Xβ||² + α(ρ||β||₁ + (1-ρ)/2||β||²)</p>
+<p>Where:
+- <strong>ρ (l1_ratio):</strong> Mixing parameter between L1 and L2 penalties
+- <strong>Combined regularization:</strong> Benefits of both Ridge and Lasso
+- <strong>Group selection:</strong> Handles correlated features better than Lasso alone</p>
+<p><strong>Parameter Interpretation:</strong>
+- <strong>l1_ratio = 0:</strong> Pure Ridge regression
+- <strong>l1_ratio = 1:</strong> Pure Lasso regression
+- <strong>0 &lt; l1_ratio &lt; 1:</strong> Elastic Net combination</p>
+<h3 id="regularization-results-analysis">Regularization Results Analysis</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Comprehensive model comparison</span>
+<span class="n">models</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
+    <span class="n">linear_reg_test</span><span class="p">,</span> <span class="n">ridge_reg</span><span class="p">,</span> <span class="n">ridge_reg_tuned</span><span class="p">,</span> 
+    <span class="n">lasso_reg</span><span class="p">,</span> <span class="n">lasso_reg_tuned</span><span class="p">,</span> <span class="n">elasticnet_reg</span><span class="p">,</span> <span class="n">elasticnet_reg_tuned</span>
+<span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">models</span><span class="p">[</span><span class="s1">&#39;Models&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;Least Squares&#39;</span><span class="p">,</span> <span class="s1">&#39;Ridge Regression&#39;</span><span class="p">,</span> <span class="s1">&#39;Ridge Regression Tuned&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Lasso Regression&#39;</span><span class="p">,</span> <span class="s1">&#39;Lasso Regression Tuned&#39;</span><span class="p">,</span> <span class="s1">&#39;Elastic Net Regression&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;Elastic Net Regression Tuned&#39;</span>
+<span class="p">]</span>
+
+<span class="n">models</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]</span>  <span class="c1"># Reorder columns</span>
+</code></pre></div>
+<p><strong>Performance Analysis:</strong>
+All regularization techniques show minimal improvement over baseline linear regression, indicating:
+- <strong>Low multicollinearity:</strong> One-hot encoding creates orthogonal features
+- <strong>Adequate sample size:</strong> 500K samples prevent overfitting
+- <strong>Relevant features:</strong> Most dummy variables contribute meaningfully</p>
+<hr />
+<h2 id="7-forward-feature-selection-implementation">7. Forward Feature Selection Implementation <a id="feature-selection-implementation"></a></h2>
+<h3 id="sequential-feature-selector-setup">Sequential Feature Selector Setup</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install required library (run once)</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">mlxtend</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mlxtend.feature_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">SequentialFeatureSelector</span> <span class="k">as</span> <span class="n">SFS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mlxtend.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_sequential_feature_selection</span> <span class="k">as</span> <span class="n">plot_sfs</span>
+
+<span class="c1"># Initial model for feature selection</span>
+<span class="n">reg</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+
+<span class="c1"># Sequential Forward Selection configuration</span>
+<span class="n">sfs</span> <span class="o">=</span> <span class="n">SFS</span><span class="p">(</span>
+    <span class="n">reg</span><span class="p">,</span>                          <span class="c1"># Base estimator</span>
+    <span class="n">k_features</span><span class="o">=</span><span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>  <span class="c1"># Evaluate all possible features (42)</span>
+    <span class="n">forward</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                 <span class="c1"># Forward selection (vs backward)</span>
+    <span class="n">floating</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>               <span class="c1"># No floating selection</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;r2&quot;</span><span class="p">,</span>                 <span class="c1"># R-squared optimization</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>                    <span class="c1"># Parallel processing</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>                    <span class="c1"># Progress reporting</span>
+    <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>                         <span class="c1"># 5-fold cross-validation</span>
+<span class="p">)</span>
+
+<span class="c1"># Execute feature selection</span>
+<span class="n">sfs</span> <span class="o">=</span> <span class="n">sfs</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Algorithm Implementation:</strong>
+1. <strong>Start:</strong> Empty feature set
+2. <strong>Iteration:</strong> Add feature that maximizes CV R-squared
+3. <strong>Evaluation:</strong> 5-fold cross-validation for each candidate
+4. <strong>Termination:</strong> All features evaluated
+5. <strong>Selection:</strong> Optimal k features based on performance curve</p>
+<h3 id="feature-selection-visualization">Feature Selection Visualization</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Performance trajectory plotting</span>
+<span class="n">fig1</span> <span class="o">=</span> <span class="n">plot_sfs</span><span class="p">(</span>
+    <span class="n">sfs</span><span class="o">.</span><span class="n">get_metric_dict</span><span class="p">(),</span> 
+    <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;std_err&quot;</span><span class="p">,</span>           <span class="c1"># Error bars show standard error</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sequential Forward Selection&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Access detailed results</span>
+<span class="n">feature_metrics</span> <span class="o">=</span> <span class="n">sfs</span><span class="o">.</span><span class="n">get_metric_dict</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Visualization Components:</strong>
+- <strong>X-axis:</strong> Number of features included
+- <strong>Y-axis:</strong> Cross-validated R-squared score
+- <strong>Error bars:</strong> Standard error across CV folds
+- <strong>Performance curve:</strong> Shows optimal feature count</p>
+<h3 id="optimal-feature-subset-selection">Optimal Feature Subset Selection</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Re-run SFS for optimal feature count (8 features)</span>
+<span class="n">sfs_optimal</span> <span class="o">=</span> <span class="n">SFS</span><span class="p">(</span>
+    <span class="n">LinearRegression</span><span class="p">(),</span>
+    <span class="n">k_features</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>             <span class="c1"># Fixed at optimal count</span>
+    <span class="n">forward</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">floating</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">scoring</span><span class="o">=</span><span class="s2">&quot;r2&quot;</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">sfs_optimal</span> <span class="o">=</span> <span class="n">sfs_optimal</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Extract selected feature indices</span>
+<span class="n">feat_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sfs_optimal</span><span class="o">.</span><span class="n">k_feature_idx_</span><span class="p">)</span>
+<span class="n">selected_features</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">feat_cols</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Selected features:&quot;</span><span class="p">,</span> <span class="n">selected_features</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Feature Selection Results:</strong>
+- <strong>Optimal count:</strong> 8 features achieve 84.0% R-squared
+- <strong>Efficiency gain:</strong> 81% feature reduction with minimal performance loss
+- <strong>Selected features:</strong> Represent most predictive admission-time variables</p>
+<h3 id="reduced-model-implementation">Reduced Model Implementation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create reduced feature datasets</span>
+<span class="n">x_train_final</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">[</span><span class="n">x_train</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">feat_cols</span><span class="p">]]</span>
+<span class="n">x_test_final</span> <span class="o">=</span> <span class="n">x_test</span><span class="p">[</span><span class="n">x_train_final</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+
+<span class="c1"># Train reduced model</span>
+<span class="n">lin_reg_model2</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">lin_reg_model2</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train_final</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># Evaluate reduced model performance</span>
+<span class="n">lin_reg_model2_train_perf</span> <span class="o">=</span> <span class="n">model_performance_regression</span><span class="p">(</span><span class="n">lin_reg_model2</span><span class="p">,</span> <span class="n">x_train_final</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">lin_reg_model2_test_perf</span> <span class="o">=</span> <span class="n">model_performance_regression</span><span class="p">(</span><span class="n">lin_reg_model2</span><span class="p">,</span> <span class="n">x_test_final</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+<span class="c1"># Performance comparison</span>
+<span class="n">models_comparison</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
+    <span class="n">linear_reg_test</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> 
+    <span class="n">lin_reg_model2_test_perf</span><span class="o">.</span><span class="n">T</span>
+<span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">models_comparison</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Linear Regression (All Features)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Linear Regression (Selected Features)&quot;</span>
+<span class="p">]</span>
+</code></pre></div>
+<p><strong>Implementation Benefits:</strong>
+- <strong>Computational efficiency:</strong> Faster prediction with fewer features
+- <strong>Model interpretability:</strong> Simpler model easier to understand
+- <strong>Data collection focus:</strong> Concentrate on most important variables
+- <strong>Deployment simplification:</strong> Reduced integration complexity</p>
+<hr />
+<h2 id="8-model-evaluation-framework">8. Model Evaluation Framework <a id="evaluation-framework"></a></h2>
+<h3 id="comprehensive-performance-assessment">Comprehensive Performance Assessment</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Complete model comparison matrix</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_model_comparison</span><span class="p">(</span><span class="n">model_results_list</span><span class="p">,</span> <span class="n">model_names</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create comprehensive model comparison dataframe</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    model_results_list : list</span>
+<span class="sd">        List of performance dataframes from model_performance_regression</span>
+<span class="sd">    model_names : list</span>
+<span class="sd">        Corresponding model names</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    DataFrame with all model performances</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">comparison_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">model_results_list</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">comparison_df</span><span class="p">[</span><span class="s1">&#39;Models&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_names</span>
+    <span class="n">comparison_df</span> <span class="o">=</span> <span class="n">comparison_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]</span>  <span class="c1"># Reorder columns</span>
+    <span class="k">return</span> <span class="n">comparison_df</span>
+
+<span class="c1"># Usage example</span>
+<span class="n">all_models</span> <span class="o">=</span> <span class="n">create_model_comparison</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">linear_reg_test</span><span class="p">,</span> <span class="n">ridge_reg_tuned</span><span class="p">,</span> <span class="n">lasso_reg_tuned</span><span class="p">,</span> 
+     <span class="n">elasticnet_reg_tuned</span><span class="p">,</span> <span class="n">lin_reg_model2_test_perf</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;Linear Regression&#39;</span><span class="p">,</span> <span class="s1">&#39;Ridge Tuned&#39;</span><span class="p">,</span> <span class="s1">&#39;Lasso Tuned&#39;</span><span class="p">,</span> 
+     <span class="s1">&#39;Elastic Net Tuned&#39;</span><span class="p">,</span> <span class="s1">&#39;Linear (8 features)&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="statistical-significance-testing">Statistical Significance Testing</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">prediction_confidence_interval</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate prediction confidence intervals for linear regression</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    model : sklearn LinearRegression</span>
+<span class="sd">        Fitted linear regression model</span>
+<span class="sd">    X : array-like</span>
+<span class="sd">        Feature matrix for predictions</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Significance level (default 0.05 for 95% CI)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    tuple : (predictions, lower_bound, upper_bound)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="c1"># Calculate residual standard error</span>
+    <span class="n">residuals</span> <span class="o">=</span> <span class="n">y_train</span> <span class="o">-</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
+    <span class="n">mse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">residuals</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse</span><span class="p">)</span>
+
+    <span class="c1"># t-statistic for confidence interval</span>
+    <span class="n">t_val</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span> <span class="o">-</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Standard error of prediction</span>
+    <span class="n">se_pred</span> <span class="o">=</span> <span class="n">se</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">x_train</span><span class="p">)</span> <span class="o">@</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+
+    <span class="c1"># Confidence intervals</span>
+    <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">predictions</span> <span class="o">-</span> <span class="n">t_val</span> <span class="o">*</span> <span class="n">se_pred</span>
+    <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">predictions</span> <span class="o">+</span> <span class="n">t_val</span> <span class="o">*</span> <span class="n">se_pred</span>
+
+    <span class="k">return</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span>
+</code></pre></div>
+<h3 id="cross-validation-implementation">Cross-Validation Implementation</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">robust_model_evaluation</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv_folds</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Comprehensive cross-validation evaluation</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    model : sklearn estimator</span>
+<span class="sd">        Model to evaluate</span>
+<span class="sd">    X : array-like</span>
+<span class="sd">        Feature matrix</span>
+<span class="sd">    y : array-like</span>
+<span class="sd">        Target vector</span>
+<span class="sd">    cv_folds : int</span>
+<span class="sd">        Number of cross-validation folds</span>
+<span class="sd">    random_state : int</span>
+<span class="sd">        Random state for reproducibility</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    dict : Cross-validation results</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Cross-validation setup</span>
+    <span class="n">cv</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">cv_folds</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+
+    <span class="c1"># Multiple scoring metrics</span>
+    <span class="n">scoring_metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;r2&#39;</span><span class="p">,</span> <span class="s1">&#39;neg_mean_squared_error&#39;</span><span class="p">,</span> <span class="s1">&#39;neg_mean_absolute_error&#39;</span><span class="p">]</span>
+
+    <span class="n">cv_results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">scoring_metrics</span><span class="p">:</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span>
+        <span class="n">cv_results</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+            <span class="s1">&#39;std&#39;</span><span class="p">:</span> <span class="n">scores</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span>
+            <span class="s1">&#39;scores&#39;</span><span class="p">:</span> <span class="n">scores</span>
+        <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">cv_results</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">cv_results</span> <span class="o">=</span> <span class="n">robust_model_evaluation</span><span class="p">(</span><span class="n">LinearRegression</span><span class="p">(),</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="residual-analysis-implementation">Residual Analysis Implementation</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">residual_analysis</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Comprehensive residual analysis for regression diagnostics</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    model : fitted sklearn model</span>
+<span class="sd">    X_train, y_train : training data</span>
+<span class="sd">    X_test, y_test : testing data</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    dict : Residual analysis results</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Generate predictions</span>
+    <span class="n">train_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+    <span class="n">test_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+    <span class="c1"># Calculate residuals</span>
+    <span class="n">train_residuals</span> <span class="o">=</span> <span class="n">y_train</span> <span class="o">-</span> <span class="n">train_pred</span>
+    <span class="n">test_residuals</span> <span class="o">=</span> <span class="n">y_test</span> <span class="o">-</span> <span class="n">test_pred</span>
+
+    <span class="c1"># Residual analysis</span>
+    <span class="n">analysis</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;train_residual_mean&#39;</span><span class="p">:</span> <span class="n">train_residuals</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+        <span class="s1">&#39;test_residual_mean&#39;</span><span class="p">:</span> <span class="n">test_residuals</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+        <span class="s1">&#39;train_residual_std&#39;</span><span class="p">:</span> <span class="n">train_residuals</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span>
+        <span class="s1">&#39;test_residual_std&#39;</span><span class="p">:</span> <span class="n">test_residuals</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span>
+        <span class="s1">&#39;train_residuals&#39;</span><span class="p">:</span> <span class="n">train_residuals</span><span class="p">,</span>
+        <span class="s1">&#39;test_residuals&#39;</span><span class="p">:</span> <span class="n">test_residuals</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Visualization</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+    <span class="c1"># Residuals vs fitted</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">train_pred</span><span class="p">,</span> <span class="n">train_residuals</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Residuals vs Fitted (Training)&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fitted Values&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Residuals&#39;</span><span class="p">)</span>
+
+    <span class="c1"># QQ plot for normality</span>
+    <span class="n">stats</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span><span class="n">train_residuals</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Normal Q-Q Plot (Training Residuals)&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Histogram of residuals</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">train_residuals</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Distribution of Training Residuals&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Residuals&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Residuals vs predicted (test set)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">test_pred</span><span class="p">,</span> <span class="n">test_residuals</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Residuals vs Fitted (Testing)&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Fitted Values&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Residuals&#39;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">analysis</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">residual_results</span> <span class="o">=</span> <span class="n">residual_analysis</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="production-deployment-considerations">Production Deployment Considerations</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">create_production_pipeline</span><span class="p">(</span><span class="n">selected_features</span><span class="p">,</span> <span class="n">model_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create production-ready prediction pipeline</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    selected_features : list</span>
+<span class="sd">        Feature names selected through feature selection</span>
+<span class="sd">    model_params : dict</span>
+<span class="sd">        Model hyperparameters if needed</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    Pipeline object ready for deployment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.compose</span><span class="w"> </span><span class="kn">import</span> <span class="n">ColumnTransformer</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+
+    <span class="c1"># Feature selection transformer</span>
+    <span class="n">feature_selector</span> <span class="o">=</span> <span class="n">ColumnTransformer</span><span class="p">([</span>
+        <span class="p">(</span><span class="s1">&#39;selected&#39;</span><span class="p">,</span> <span class="s1">&#39;passthrough&#39;</span><span class="p">,</span> <span class="n">selected_features</span><span class="p">)</span>
+    <span class="p">],</span> <span class="n">remainder</span><span class="o">=</span><span class="s1">&#39;drop&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Model pipeline</span>
+    <span class="k">if</span> <span class="n">model_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">model_params</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
+        <span class="p">(</span><span class="s1">&#39;feature_selection&#39;</span><span class="p">,</span> <span class="n">feature_selector</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;regressor&#39;</span><span class="p">,</span> <span class="n">LinearRegression</span><span class="p">(</span><span class="o">**</span><span class="n">model_params</span><span class="p">))</span>
+    <span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">pipeline</span>
+
+<span class="c1"># Example pipeline creation</span>
+<span class="n">production_pipeline</span> <span class="o">=</span> <span class="n">create_production_pipeline</span><span class="p">(</span>
+    <span class="n">selected_features</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">feat_cols</span><span class="p">])</span>
+<span class="p">)</span>
+
+<span class="c1"># Fit and validate pipeline</span>
+<span class="n">production_pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">pipeline_predictions</span> <span class="o">=</span> <span class="n">production_pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Production Implementation Notes:</strong>
+- <strong>Pipeline approach:</strong> Ensures consistent preprocessing in production
+- <strong>Feature selection integration:</strong> Automatically selects relevant features
+- <strong>Scalability:</strong> Can be extended with additional preprocessing steps
+- <strong>Version control:</strong> Pipeline can be serialized for model versioning</p>
+<h3 id="model-persistence-and-loading">Model Persistence and Loading</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">save_model_artifacts</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">feature_names</span><span class="p">,</span> <span class="n">performance_metrics</span><span class="p">,</span> <span class="n">model_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save model and associated metadata for production deployment</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    model : fitted sklearn model</span>
+<span class="sd">    feature_names : list</span>
+<span class="sd">        Names of features used in model</span>
+<span class="sd">    performance_metrics : dict</span>
+<span class="sd">        Model performance on test set</span>
+<span class="sd">    model_name : str</span>
+<span class="sd">        Identifier for model version</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Model artifacts</span>
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">model</span><span class="p">,</span>
+        <span class="s1">&#39;features&#39;</span><span class="p">:</span> <span class="n">feature_names</span><span class="p">,</span>
+        <span class="s1">&#39;performance&#39;</span><span class="p">:</span> <span class="n">performance_metrics</span><span class="p">,</span>
+        <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">timestamp</span><span class="p">,</span>
+        <span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="n">model_name</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Save to disk</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;hospital_los_model_</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.pkl&quot;</span>
+    <span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">artifacts</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model saved as: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">filename</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_model_artifacts</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load saved model artifacts</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        Path to saved model file</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    dict : Model artifacts</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">artifacts</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">model_filename</span> <span class="o">=</span> <span class="n">save_model_artifacts</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">lin_reg_model2</span><span class="p">,</span>
+    <span class="n">feature_names</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">selected_features</span><span class="p">),</span>
+    <span class="n">performance_metrics</span><span class="o">=</span><span class="n">lin_reg_model2_test_perf</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;linear_8features&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>This comprehensive code walkthrough provides complete implementation details for every aspect of the Hospital LOS prediction analysis, from data loading through production deployment considerations.</p>
+<hr />
+<h3 id="conclusion">Conclusion</h3>
+<p>This analysis demonstrates that <strong>admission-time data provides substantial predictive power for hospital LOS</strong>, achieving 84% variance explanation with practical clinical accuracy. The finding that simple linear regression performs comparably to complex regularization techniques suggests that <strong>the categorical nature of healthcare decisions creates naturally separable patterns</strong> amenable to linear modeling.</p>
+<p>The <strong>8-feature model represents the optimal balance</strong> between predictive accuracy and operational simplicity, making it the recommended approach for clinical deployment. However, the 19% prediction error rate indicates that <strong>healthcare outcomes retain inherent uncertainty</strong> that no model can fully eliminate, emphasizing the importance of robust resource management strategies that account for prediction uncertainty.</p>
+<p><strong>[See Code Walkthrough Section 8]</strong></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="references">References</h2>
+<ol>
+<li>Healthcare Operations Research: Advanced Methods for Resource Planning and Patient Flow Optimization</li>
+<li>Predictive Analytics in Healthcare: Machine Learning Applications for Hospital Management</li>
+<li>Statistical Methods for Medical Research: Regression Analysis in Clinical Settings</li>
+<li>Hospital Resource Management: Evidence-Based Approaches to Capacity Planning</li>
+<li>Healthcare Data Science: Practical Applications of Machine Learning in Medical Settings</li>
+<li>Clinical Decision Support Systems: Implementation and Evaluation Strategies</li>
+<li>Healthcare Quality Metrics: Measuring and Improving Patient Outcomes</li>
+<li>Medical Informatics: Data-Driven Approaches to Healthcare Improvement</li>
+</ol>
+<hr />
+<p><em>This tutorial provides the methodological framework and interpretation layer for Hospital LOS prediction. For complete implementation details, refer to the accompanying Code Walkthrough document.</em></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2025 13:34:01 UTC">September 7, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../11-hands-on-regression-hospital_los_linear-model/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Hospital Length of Stay Prediction Hands-On Tutorial: Healthcare Analytics with Machine Learning">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Hospital Length of Stay Prediction Hands-On Tutorial: Healthcare Analytics with Machine Learning
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../51.case-study-human-generated-text/" class="md-footer__link md-footer__link--next" aria-label="Next: Case Study — Data Analysis with Human‑Generated Text (Deep Internal Notes)">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Case Study — Data Analysis with Human‑Generated Text (Deep Internal Notes)
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

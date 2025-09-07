@@ -4,7 +4,9 @@
 // Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAw1iYTwCUbF8OA8ydHlbIHrsWr-xmdkIE",
-  authDomain: "genaiatlas-new.firebaseapp.com",
+  authDomain: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? `${window.location.hostname}:${window.location.port || '8000'}`
+    : "genaiatlas-new.firebaseapp.com",
   projectId: "genaiatlas-new",
   storageBucket: "genaiatlas-new.firebasestorage.app",
   messagingSenderId: "216207834235",

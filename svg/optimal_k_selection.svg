@@ -1,0 +1,189 @@
+<svg width="900" height="650" viewBox="0 0 900 650" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: 'Arial', sans-serif; font-size: 24px; font-weight: bold; fill: #1a365d; }
+      .subtitle { font-family: 'Arial', sans-serif; font-size: 18px; fill: #2d3748; font-weight: bold; }
+      .section-title { font-family: 'Arial', sans-serif; font-size: 14px; fill: #2d3748; font-weight: bold; }
+      .axis-label { font-family: 'Arial', sans-serif; font-size: 14px; fill: #1a365d; font-weight: bold; }
+      .description { font-family: 'Arial', sans-serif; font-size: 12px; fill: #4a5568; }
+      .small-text { font-family: 'Arial', sans-serif; font-size: 11px; fill: #2d3748; font-weight: bold; }
+      .error-curve { stroke: #2b6cb0; stroke-width: 4; fill: none; }
+      .bias-curve { stroke: #e53e3e; stroke-width: 3; fill: none; stroke-dasharray: 8,4; }
+      .variance-curve { stroke: #d69e2e; stroke-width: 3; fill: none; stroke-dasharray: 4,4; }
+      .total-error-curve { stroke: #1a365d; stroke-width: 4; fill: none; }
+      .optimal-zone { fill: #38a169; opacity: 0.15; }
+      .suboptimal-zone { fill: #d69e2e; opacity: 0.15; }
+      .poor-zone { fill: #e53e3e; opacity: 0.15; }
+      .grid-line { stroke: #e2e8f0; stroke-width: 1; }
+      .axis-line { stroke: #2d3748; stroke-width: 2; }
+      .optimal-line { stroke: #38a169; stroke-width: 3; stroke-dasharray: 8,8; opacity: 0.7; }
+      .box { fill: #f7fafc; stroke: #cbd5e0; stroke-width: 2; rx: 10; }
+      .guidelines-box { fill: #f0fff4; stroke: #38a169; stroke-width: 2; rx: 10; }
+      .tradeoff-box { fill: #fffbeb; stroke: #d69e2e; stroke-width: 2; rx: 10; }
+      .evidence-box { fill: #ebf8ff; stroke: #2b6cb0; stroke-width: 2; rx: 10; }
+      .optimal-color { fill: #38a169; font-weight: bold; }
+      .suboptimal-color { fill: #d69e2e; font-weight: bold; }
+      .poor-color { fill: #e53e3e; font-weight: bold; }
+      .bias-color { fill: #e53e3e; }
+      .variance-color { fill: #d69e2e; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="900" height="650" fill="#ffffff"/>
+  
+  <!-- Title -->
+  <text x="450" y="30" text-anchor="middle" class="title">Choosing Optimal K for Cross-Validation</text>
+  <text x="450" y="50" text-anchor="middle" class="description">Understanding the Bias-Variance Tradeoff</text>
+  
+  <!-- Main Plot Area -->
+  <g transform="translate(120, 80)">
+    
+    <!-- Performance zones background -->
+    <rect x="0" y="0" width="100" height="220" class="poor-zone"/>
+    <rect x="100" y="0" width="150" height="220" class="optimal-zone"/>
+    <rect x="250" y="0" width="350" height="220" class="suboptimal-zone"/>
+    
+    <!-- Grid lines -->
+    <g class="grid-line">
+      <!-- Vertical grid lines for K values -->
+      <line x1="25" y1="0" x2="25" y2="220"/>    <!-- K=2 -->
+      <line x1="75" y1="0" x2="75" y2="220"/>    <!-- K=3 -->
+      <line x1="125" y1="0" x2="125" y2="220"/>  <!-- K=5 -->
+      <line x1="175" y1="0" x2="175" y2="220"/>  <!-- K=7 -->
+      <line x1="225" y1="0" x2="225" y2="220"/>  <!-- K=10 -->
+      <line x1="325" y1="0" x2="325" y2="220"/>  <!-- K=15 -->
+      <line x1="425" y1="0" x2="425" y2="220"/>  <!-- K=20 -->
+      <line x1="525" y1="0" x2="525" y2="220"/>  <!-- K=30 -->
+      
+      <!-- Horizontal grid lines -->
+      <line x1="0" y1="44" x2="600" y2="44"/>
+      <line x1="0" y1="88" x2="600" y2="88"/>
+      <line x1="0" y1="132" x2="600" y2="132"/>
+      <line x1="0" y1="176" x2="600" y2="176"/>
+    </g>
+    
+    <!-- Axes -->
+    <line x1="0" y1="0" x2="0" y2="230" class="axis-line"/>
+    <line x1="-10" y1="220" x2="610" y2="220" class="axis-line"/>
+    
+    <!-- Bias curve (decreasing) -->
+    <path d="M 25 170 C 75 155 125 140 175 130 C 225 125 325 115 425 110 C 525 108 575 107 600 107" class="bias-curve"/>
+    
+    <!-- Variance curve (increasing) -->
+    <path d="M 25 110 C 75 115 125 125 175 135 C 225 145 325 170 425 190 C 525 205 575 210 600 212" class="variance-curve"/>
+    
+    <!-- Total error curve (U-shaped) -->
+    <path d="M 25 180 C 75 165 125 145 175 135 C 200 132 225 135 275 150 C 325 165 425 185 525 200 C 575 207 600 210 600 210" class="total-error-curve"/>
+    
+    <!-- Optimal K indicator lines -->
+    <line x1="125" y1="0" x2="125" y2="220" class="optimal-line"/>
+    <line x1="225" y1="0" x2="225" y2="220" class="optimal-line"/>
+    
+    <!-- Zone labels -->
+    <text x="50" y="25" text-anchor="middle" class="section-title poor-color">High Bias Zone</text>
+    <text x="50" y="40" text-anchor="middle" class="description poor-color">K too small (K ≤ 3)</text>
+    <text x="50" y="55" text-anchor="middle" class="description poor-color">Insufficient training data</text>
+    
+    <text x="175" y="25" text-anchor="middle" class="section-title optimal-color">OPTIMAL ZONE</text>
+    <text x="175" y="40" text-anchor="middle" class="description optimal-color">K = 5 to 10</text>
+    <text x="175" y="55" text-anchor="middle" class="description optimal-color">Best bias-variance balance</text>
+    
+    <text x="425" y="25" text-anchor="middle" class="section-title suboptimal-color">High Variance Zone</text>
+    <text x="425" y="40" text-anchor="middle" class="description suboptimal-color">K too large (K > 15)</text>
+    <text x="425" y="55" text-anchor="middle" class="description suboptimal-color">Overly correlated estimates</text>
+    
+    <!-- Axis labels -->
+    <text x="300" y="250" text-anchor="middle" class="axis-label">K (Number of Folds)</text>
+    <text x="-35" y="110" text-anchor="middle" class="axis-label" transform="rotate(-90 -35 110)">Error</text>
+    
+    <!-- X-axis tick marks and labels -->
+    <g class="axis-label">
+      <line x1="25" y1="220" x2="25" y2="230" stroke="#2d3748" stroke-width="2"/>
+      <text x="25" y="245" text-anchor="middle" class="description">2</text>
+      
+      <line x1="75" y1="220" x2="75" y2="230" stroke="#2d3748" stroke-width="2"/>
+      <text x="75" y="245" text-anchor="middle" class="description">3</text>
+      
+      <line x1="125" y1="220" x2="125" y2="230" stroke="#2d3748" stroke-width="2"/>
+      <text x="125" y="245" text-anchor="middle" class="description optimal-color">5</text>
+      
+      <line x1="175" y1="220" x2="175" y2="230" stroke="#2d3748" stroke-width="2"/>
+      <text x="175" y="245" text-anchor="middle" class="description">7</text>
+      
+      <line x1="225" y1="220" x2="225" y2="230" stroke="#2d3748" stroke-width="2"/>
+      <text x="225" y="245" text-anchor="middle" class="description optimal-color">10</text>
+      
+      <line x1="325" y1="220" x2="325" y2="230" stroke="#2d3748" stroke-width="2"/>
+      <text x="325" y="245" text-anchor="middle" class="description">15</text>
+      
+      <line x1="425" y1="220" x2="425" y2="230" stroke="#2d3748" stroke-width="2"/>
+      <text x="425" y="245" text-anchor="middle" class="description">20</text>
+      
+      <line x1="525" y1="220" x2="525" y2="230" stroke="#2d3748" stroke-width="2"/>
+      <text x="525" y="245" text-anchor="middle" class="description">30</text>
+    </g>
+    
+    <!-- Y-axis labels -->
+    <text x="-15" y="224" text-anchor="end" class="description">Low</text>
+    <text x="-15" y="180" text-anchor="end" class="description">Medium</text>
+    <text x="-15" y="136" text-anchor="end" class="description">High</text>
+    <text x="-15" y="92" text-anchor="end" class="description">Very High</text>
+    <text x="-15" y="48" text-anchor="end" class="description">Extreme</text>
+    
+    <!-- Optimal point markers -->
+    <circle cx="125" cy="145" r="6" fill="#38a169" stroke="white" stroke-width="3"/>
+    <circle cx="225" cy="135" r="6" fill="#38a169" stroke="white" stroke-width="3"/>
+    
+    <!-- Point labels -->
+    <text x="125" y="130" text-anchor="middle" class="small-text optimal-color">K=5</text>
+    <text x="225" y="120" text-anchor="middle" class="small-text optimal-color">K=10</text>
+    
+    <!-- Legend -->
+    <g transform="translate(450, 80)">
+      <rect x="0" y="0" width="140" height="120" fill="white" stroke="#cbd5e0" stroke-width="1" rx="5"/>
+      <text x="70" y="20" text-anchor="middle" class="section-title">Legend</text>
+      
+      <line x1="10" y1="35" x2="30" y2="35" class="total-error-curve"/>
+      <text x="35" y="39" class="description">Total CV Error</text>
+      
+      <line x1="10" y1="50" x2="30" y2="50" class="bias-curve"/>
+      <text x="35" y="54" class="description bias-color">Bias²</text>
+      
+      <line x1="10" y1="65" x2="30" y2="65" class="variance-curve"/>
+      <text x="35" y="69" class="description variance-color">Variance</text>
+      
+      <line x1="10" y1="80" x2="30" y2="80" class="optimal-line"/>
+      <text x="35" y="84" class="description optimal-color">Optimal K</text>
+    </g>
+  </g>
+  
+  <!-- Bias-Variance Tradeoff Explanation -->
+  <rect x="50" y="350" width="800" height="110" class="tradeoff-box"/>
+  <text x="450" y="375" text-anchor="middle" class="subtitle" fill="#744210">Understanding the Bias-Variance Tradeoff in K Selection</text>
+  
+  <text x="70" y="400" class="description" fill="#744210">• <tspan font-weight="bold">Small K (K=2,3):</tspan> High bias due to less training data per fold, but low variance from fewer estimates to average</text>
+  <text x="70" y="417" class="description" fill="#744210">• <tspan font-weight="bold">Large K (K→n):</tspan> Low bias from maximum training data, but high variance due to highly correlated validation sets</text>
+  <text x="70" y="434" class="description" fill="#744210">• <tspan font-weight="bold">Optimal K (K=5-10):</tspan> Sweet spot that minimizes total error by balancing bias and variance components</text>
+  <text x="70" y="451" class="description" fill="#744210">• <tspan font-weight="bold">Total Error = Bias² + Variance + Irreducible Error:</tspan> The U-shaped curve shows this fundamental tradeoff</text>
+  
+  <!-- Practical Guidelines -->
+  <rect x="50" y="480" width="400" height="140" class="guidelines-box"/>
+  <text x="250" y="505" text-anchor="middle" class="subtitle" fill="#155724">Dataset Size Guidelines</text>
+  
+  <text x="70" y="530" class="description" fill="#155724" font-weight="bold">Recommended K values:</text>
+  <text x="90" y="547" class="description" fill="#155724">• n &lt; 100: K = 5 or LOOCV</text>
+  <text x="90" y="564" class="description" fill="#155724">• 100 ≤ n &lt; 1000: K = 5 or 10</text>
+  <text x="90" y="581" class="description" fill="#155724">• n ≥ 1000: K = 3, 5, or 10</text>
+  <text x="90" y="598" class="description" fill="#155724">• Very large n: Simple holdout</text>
+  
+  <!-- Special Considerations -->
+  <rect x="470" y="480" width="380" height="140" class="evidence-box"/>
+  <text x="660" y="505" text-anchor="middle" class="subtitle" fill="#1e4a72">Special Considerations</text>
+  
+  <text x="490" y="530" class="description" fill="#1e4a72" font-weight="bold">Task-specific recommendations:</text>
+  <text x="510" y="547" class="description" fill="#1e4a72">• Classification: Stratified K-fold</text>
+  <text x="510" y="564" class="description" fill="#1e4a72">• Time series: TimeSeriesSplit</text>
+  <text x="510" y="581" class="description" fill="#1e4a72">• Nested CV: Outer K=5, Inner K=3</text>
+  <text x="510" y="598" class="description" fill="#1e4a72">• Imbalanced data: Stratified + SMOTE</text>
+</svg>

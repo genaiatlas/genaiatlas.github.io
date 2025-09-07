@@ -1,0 +1,2642 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/2-additional-reference/10-hands-on-regression-advertisement/">
+      
+      
+        <link rel="prev" href="../09-hands-on-all-clustering-analysis-fantasy-sports/">
+      
+      
+        <link rel="next" href="../11-hands-on-regression-hospital_los_linear-model/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Cross-Validation Hands-On Tutorial: Effects of Advertising on Sales - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Cross-Validation Hands-On Tutorial: Effects of Advertising on Sales
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-descriptive-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../1-learning-path/00-math-foundation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3" id="__nav_2_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_2" id="__nav_2_4_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Regression - Hands on
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Regression - Hands on
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_2_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_2_1" id="__nav_2_4_3_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Sales Prediction - Advertisement
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_3_2_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            Sales Prediction - Advertisement
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Cross-Validation Hands-On Tutorial: Effects of Advertising on Sales
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cross-Validation Hands-On Tutorial: Effects of Advertising on Sales
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-loading-exploration" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Data Loading &amp; Exploration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#simple-linear-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      📈 Simple Linear Regression
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiple-linear-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Multiple Linear Regression
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#train-test-validation-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Train-Test-Validation Split
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regularization-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚙️ Regularization Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-validation-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Cross-Validation Implementation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bootstrapping-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎲 Bootstrapping Analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-walkthrough-implementation-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Code Walkthrough &amp; Implementation Logic
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Code Walkthrough &amp; Implementation Logic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-loading-initial-exploration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Loading &amp; Initial Exploration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simple-linear-regression-individual-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple Linear Regression (Individual Features)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-linear-regression_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Linear Regression
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-engineering-interaction-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature Engineering (Interaction Terms)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#train-test-validation-split_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Train-Test-Validation Split
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regularization-ridgelasso" class="md-nav__link">
+    <span class="md-ellipsis">
+      Regularization (Ridge/Lasso)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-validation-implementation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cross-Validation Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bootstrapping-analysis_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bootstrapping Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statistical-analysis-with-statsmodels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statistical Analysis with Statsmodels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#progressive-model-development-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Progressive Model Development Workflow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎓 Summary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../11-hands-on-regression-hospital_los_linear-model/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hospital Length of Stay Prediction - Linear Model
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../12-hands-on-regression-hospital_los-non-linear-model/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hospital Length of Stay Prediction - Non Linear Model
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../51.case-study-human-generated-text/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../99-unsupervised_learning_resources/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    External Resources
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="cross-validation-hands-on-tutorial-effects-of-advertising-on-sales">Cross-Validation Hands-On Tutorial: Effects of Advertising on Sales</h1>
+<p><a id="top"></a></p>
+<p><a href="https://drive.google.com/file/d/1BfWDRbhYwFpYIQLi_QOOTRyHRWB-5_ot/view?usp=sharing"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
+<a href="https://drive.google.com/file/d/1sTOij3qcgL5zJ5JuEMo2AlCikBp238h8/view?usp=sharing"><img alt="Dataset" src="https://img.shields.io/badge/Dataset-Download-blue" /></a></p>
+<h2 id="quick-navigation">📋 Quick Navigation</h2>
+<ul>
+<li><a href="#-data-loading--exploration">📊 Data Loading &amp; Exploration</a></li>
+<li><a href="#-simple-linear-regression">📈 Simple Linear Regression</a></li>
+<li><a href="#-multiple-linear-regression">🔗 Multiple Linear Regression</a></li>
+<li><a href="#-train-test-validation-split">🎯 Train-Test-Validation Split</a></li>
+<li><a href="#-regularization-models">⚙️ Regularization Models</a></li>
+<li><a href="#-cross-validation-implementation">🔄 Cross-Validation Implementation</a></li>
+<li><a href="#-bootstrapping-analysis">🎲 Bootstrapping Analysis</a></li>
+</ul>
+<hr />
+<h2 id="data-loading-exploration">📊 Data Loading &amp; Exploration</h2>
+<p>Load advertising dataset with TV, Radio, Newspaper spending and Sales targets. Quick data exploration and preprocessing.</p>
+<p><strong>Dataset Features:</strong>
+- TV: Budget for TV advertisements
+- Radio: Budget for radio advertisements<br />
+- Newspaper: Budget for newspaper advertisements
+- Sales: Target variable (dependent)</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="simple-linear-regression">📈 Simple Linear Regression</h2>
+<p>Build individual linear regression models for each advertising channel to understand their separate impact on sales.</p>
+<p><strong>Key Analysis:</strong>
+- TV R² = 61% (highest individual predictor)
+- Radio R² = lower than TV
+- Newspaper R² = lowest individual predictor
+- Visualization with scatter plots and regression lines</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="multiple-linear-regression">🔗 Multiple Linear Regression</h2>
+<p>Combine all features into a single model and add interaction terms for better prediction accuracy.</p>
+<p><strong>Model Performance:</strong>
+- Base MLR R² = 89.7% (significant improvement)
+- Added TV×Radio interaction term
+- Statistical significance testing with statsmodels
+- Confidence intervals and parameter interpretation</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="train-test-validation-split">🎯 Train-Test-Validation Split</h2>
+<p>Implement proper data splitting strategy for unbiased model evaluation and hyperparameter tuning.</p>
+<p><strong>Split Strategy:</strong>
+- Training: 72% (0.9 × 0.8)
+- Validation: 18% (0.9 × 0.2) 
+- Test: 10%
+- Compare base features vs. features with interaction terms</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="regularization-models">⚙️ Regularization Models</h2>
+<p>Apply Ridge and Lasso regression to prevent overfitting and improve generalization.</p>
+<p><strong>Regularization Comparison:</strong>
+- Ridge regression implementation
+- Lasso regression implementation
+- Performance metrics on train/validation/test sets
+- Coefficient analysis and feature selection</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="cross-validation-implementation">🔄 Cross-Validation Implementation</h2>
+<p>Implement K-Fold cross-validation for robust model evaluation and comparison with Leave-One-Out CV.</p>
+<p><strong>CV Methods:</strong>
+- 10-Fold Cross-Validation with Ridge regression
+- Mean score and confidence intervals
+- Comparison with LOO-CV approach
+- Performance stability analysis</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="bootstrapping-analysis">🎲 Bootstrapping Analysis</h2>
+<p>Apply bootstrapping technique to estimate parameter uncertainty and create confidence intervals for model coefficients.</p>
+<p><strong>Bootstrap Process:</strong>
+- 1000 bootstrap samples with replacement
+- TV coefficient distribution analysis
+- 95% confidence interval calculation (2.5% and 97.5% percentiles)
+- Visualization of coefficient distribution and regression lines</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="code-walkthrough-implementation-logic">💻 Code Walkthrough &amp; Implementation Logic</h2>
+<h3 id="data-loading-initial-exploration">Data Loading &amp; Initial Exploration</h3>
+<p><strong>Why needed:</strong> Understanding your data is fundamental before any modeling. You must know data types, distributions, and potential issues.</p>
+<div class="highlight"><pre><span></span><code><span class="n">Ad_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Advertising.csv&#39;</span><span class="p">)</span>
+<span class="n">Ad_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="s1">&#39;Unnamed: 0&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">Ad_df</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Use case:</strong> Identifies data quality issues, missing values, and feature types. Dropping the index column prevents it from being treated as a predictor. The <code>.info()</code> reveals all variables are float64, confirming numeric data suitable for regression.</p>
+<h3 id="simple-linear-regression-individual-features">Simple Linear Regression (Individual Features)</h3>
+<p><strong>Why needed:</strong> Establishes baseline understanding of each feature's individual predictive power before combining them.</p>
+<div class="highlight"><pre><span></span><code><span class="n">tv_model</span> <span class="o">=</span> <span class="n">linear_model</span><span class="o">.</span><span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">tv_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">TV</span><span class="p">,</span> <span class="n">Sales</span><span class="p">)</span>
+<span class="n">tv_rsq</span> <span class="o">=</span> <span class="n">tv_model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">TV</span><span class="p">,</span> <span class="n">Sales</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Use case:</strong> TV R² = 61% shows it's the strongest individual predictor. Radio and Newspaper have lower R² values. Identifies which features are worth including in complex models and provides interpretable coefficients for business understanding.</p>
+<h3 id="multiple-linear-regression_1">Multiple Linear Regression</h3>
+<p><strong>Why needed:</strong> Real-world relationships are rarely explained by single variables. Combining features often captures more variance.</p>
+<div class="highlight"><pre><span></span><code><span class="n">mlr_model</span> <span class="o">=</span> <span class="n">linear_model</span><span class="o">.</span><span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">mlr_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Ad_df</span><span class="p">[[</span><span class="s1">&#39;TV&#39;</span><span class="p">,</span> <span class="s1">&#39;Radio&#39;</span><span class="p">,</span> <span class="s1">&#39;Newspaper&#39;</span><span class="p">]],</span> <span class="n">Ad_df</span><span class="p">[</span><span class="s1">&#39;Sales&#39;</span><span class="p">])</span>
+</code></pre></div>
+<p><strong>Use case:</strong> R² jumps to 89.7%, demonstrating that combined advertising channels have synergistic effects. This guides budget allocation across multiple channels.</p>
+<h3 id="feature-engineering-interaction-terms">Feature Engineering (Interaction Terms)</h3>
+<p><strong>Why needed:</strong> Linear combinations may miss multiplicative effects between variables.</p>
+<div class="highlight"><pre><span></span><code><span class="n">Ad_df</span><span class="p">[</span><span class="s1">&#39;TVandRadio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ad_df</span><span class="p">[</span><span class="s1">&#39;TV&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">Ad_df</span><span class="p">[</span><span class="s1">&#39;Radio&#39;</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Use case:</strong> TV×Radio interaction captures the amplified effect when both channels are used simultaneously. Crucial for understanding advertising synergies and optimizing cross-channel strategies.</p>
+<h3 id="train-test-validation-split_1">Train-Test-Validation Split</h3>
+<p><strong>Why needed:</strong> Prevents overfitting and provides unbiased performance estimates.</p>
+<div class="highlight"><pre><span></span><code><span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">Ad_df</span><span class="p">,</span> <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.10</span><span class="p">,</span> <span class="n">train_size</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">)</span>
+<span class="n">train</span><span class="p">,</span> <span class="n">validation</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">test_size</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">train_size</span> <span class="o">=</span> <span class="mf">0.80</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Use case:</strong> Training (72%) for model development, Validation (18%) for hyperparameter tuning, Test (10%) for final unbiased assessment. Critical for real-world deployment confidence.</p>
+<h3 id="regularization-ridgelasso">Regularization (Ridge/Lasso)</h3>
+<p><strong>Why needed:</strong> Prevents overfitting, especially with multiple features or interaction terms.</p>
+<div class="highlight"><pre><span></span><code><span class="n">ridge</span> <span class="o">=</span> <span class="n">Ridge</span><span class="p">()</span>
+<span class="n">lasso</span> <span class="o">=</span> <span class="n">Lasso</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Use case:</strong> Ridge reduces coefficient magnitudes while keeping all features. Lasso can eliminate irrelevant features entirely. Essential when features &gt; samples or multicollinearity exists. Improves generalization to new advertising campaigns.</p>
+<h3 id="cross-validation-implementation_1">Cross-Validation Implementation</h3>
+<p><strong>Why needed:</strong> Single train-test splits can be misleading due to random variation.</p>
+<div class="highlight"><pre><span></span><code><span class="n">cvs</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">ridgeCV</span><span class="p">,</span> <span class="n">Ad_df</span><span class="p">[</span><span class="n">features_added</span><span class="p">],</span> <span class="n">Ad_df</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">cv</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Use case:</strong> Provides robust performance estimates across multiple data splits. Confidence intervals quantify prediction uncertainty. Critical for model selection and reduces risk of deployment failures.</p>
+<h3 id="bootstrapping-analysis_1">Bootstrapping Analysis</h3>
+<p><strong>Why needed:</strong> Quantifies uncertainty in model parameters, not just predictions.</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+  <span class="n">bootstrap_df</span> <span class="o">=</span> <span class="n">Ad_df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">replace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+  <span class="n">lm3</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span> <span class="s1">&#39;Sales ~ TV&#39;</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">bootstrap_df</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+  <span class="n">Slope</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lm3</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">TV</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Use case:</strong> Creates confidence intervals for coefficients. Answers "How confident are we that TV advertising increases sales?" Essential for business decision-making and budget justification with statistical rigor.</p>
+<h3 id="statistical-analysis-with-statsmodels">Statistical Analysis with Statsmodels</h3>
+<p><strong>Why needed:</strong> Scikit-learn focuses on prediction; statsmodels provides inferential statistics.</p>
+<div class="highlight"><pre><span></span><code><span class="n">lm1</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span> <span class="s1">&#39;Sales ~ TV+Radio+Newspaper&#39;</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">Ad_df</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lm1</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</code></pre></div>
+<p><strong>Use case:</strong> P-values determine statistical significance. Confidence intervals for coefficients. Model diagnostics and assumption checking. Required for scientific publication and regulatory approval.</p>
+<h3 id="progressive-model-development-workflow">Progressive Model Development Workflow</h3>
+<p>The notebook demonstrates proper model development progression:</p>
+<ol>
+<li><strong>Start simple</strong> (single features) → understand baseline performance</li>
+<li><strong>Add complexity</strong> (multiple features) → capture feature interactions  </li>
+<li><strong>Validate properly</strong> (train/test/CV) → ensure generalization capability</li>
+<li><strong>Quantify uncertainty</strong> (bootstrapping) → support business decisions</li>
+</ol>
+<p>Each step builds on the previous, creating a robust analytical framework for business decision-making about advertising spend allocation.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="summary">🎓 Summary</h2>
+<p>This tutorial demonstrates practical application of cross-validation and resampling techniques using real advertising data. You'll learn to evaluate model performance reliably, compare different validation strategies, and quantify parameter uncertainty through bootstrapping.</p>
+<p><strong>Key Takeaways:</strong>
+- Multiple linear regression significantly outperforms simple regression
+- Cross-validation provides robust performance estimates
+- Bootstrapping quantifies coefficient uncertainty
+- Proper train/validation/test splits prevent overfitting</p>
+<hr />
+<h2 id="references-further-reading">📚 References &amp; Further Reading</h2>
+<p><strong>Core Statistical Learning Textbooks:</strong>
+1. Hastie, T., Tibshirani, R., &amp; Friedman, J. (2009). <em>The Elements of Statistical Learning: Data Mining, Inference, and Prediction</em> (2nd ed.). Springer. <a href="https://hastie.su.domains/ElemStatLearn/">Free PDF</a></p>
+<ol>
+<li>James, G., Witten, D., Hastie, T., &amp; Tibshirani, R. (2021). <em>An Introduction to Statistical Learning: With Applications in R</em> (2nd ed.). Springer. <a href="https://www.statlearning.com/">Free PDF</a></li>
+</ol>
+<p><strong>Cross-Validation Research:</strong>
+3. Stone, M. (1974). Cross-validatory choice and assessment of statistical predictions. <em>Journal of the Royal Statistical Society</em>, 36(2), 111-147.</p>
+<ol>
+<li>
+<p>Kohavi, R. (1995). A study of cross-validation and bootstrap for accuracy estimation and model selection. <em>Proceedings of the 14th International Joint Conference on Artificial Intelligence</em>, 1137-1143.</p>
+</li>
+<li>
+<p>Arlot, S., &amp; Celisse, A. (2010). A survey of cross-validation procedures for model selection. <em>Statistics Surveys</em>, 4, 40-79.</p>
+</li>
+</ol>
+<p><strong>Bootstrap Methodology:</strong>
+6. Efron, B. (1979). Bootstrap methods: Another look at the jackknife. <em>The Annals of Statistics</em>, 7(1), 1-26.</p>
+<ol>
+<li>Efron, B., &amp; Tibshirani, R. J. (1993). <em>An Introduction to the Bootstrap</em>. Chapman and Hall/CRC.</li>
+</ol>
+<p><strong>Technical Documentation:</strong>
+8. Pedregosa, F., et al. (2011). Scikit-learn: Machine learning in Python. <em>Journal of Machine Learning Research</em>, 12, 2825-2830. <a href="https://scikit-learn.org/stable/">Documentation</a></p>
+<p><strong>Online Resources:</strong>
+9. Cross-validation (statistics). <em>Wikipedia</em>. <a href="https://en.wikipedia.org/wiki/Cross-validation_(statistics)">Link</a></p>
+<ol>
+<li>Seabold, S., &amp; Perktold, J. (2010). Statsmodels: Econometric and statistical modeling with Python. <em>9th Python in Science Conference</em>. <a href="https://www.statsmodels.org/">Documentation</a></li>
+</ol>
+<hr />
+<p><strong>🔗 Access the Complete Implementation:</strong>
+<a href="https://drive.google.com/file/d/1BfWDRbhYwFpYIQLi_QOOTRyHRWB-5_ot/view?usp=sharing"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2025 13:34:01 UTC">September 7, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../09-hands-on-all-clustering-analysis-fantasy-sports/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Hands on Study: Fantasy Sports - All Clustering Techniques">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Hands on Study: Fantasy Sports - All Clustering Techniques
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../11-hands-on-regression-hospital_los_linear-model/" class="md-footer__link md-footer__link--next" aria-label="Next: Hospital Length of Stay Prediction Hands-On Tutorial: Healthcare Analytics with Machine Learning">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Hospital Length of Stay Prediction Hands-On Tutorial: Healthcare Analytics with Machine Learning
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

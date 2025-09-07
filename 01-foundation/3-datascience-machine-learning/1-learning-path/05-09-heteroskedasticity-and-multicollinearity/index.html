@@ -1,0 +1,3921 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/1-learning-path/05-09-heteroskedasticity-and-multicollinearity/">
+      
+      
+        <link rel="prev" href="../05-08-prediction_errors_docs/">
+      
+      
+        <link rel="next" href="../05-10-latent_variables/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Heteroskedasticity and Multicollinearity in Linear Regression - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Heteroskedasticity and Multicollinearity in Linear Regression
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-descriptive-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../00-math-foundation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Foundational Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-Sup-vs-unsup-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Supervised Vs. Un-supervised Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-Clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-dimen-reduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Dimensionality Reduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-embedding/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Embedding
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_6" id="__nav_2_4_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Regression
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            Regression
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Pre Read
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-01-Intro-to-sup-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Supervised Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-02-linear-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-03-intrepretation-justificaton/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Intrepretation and Justification
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-04-r-squared-performance/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    R Square Performance
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-05-coefficient-reliability/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Co-Efficient Reliability
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-06-confidence_intervals_hypothesis_testing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Confidence Interval & Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-08-prediction_errors_docs/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Making New Prediction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_6_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_6_9" id="__nav_2_4_2_6_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Heteroskedasticity and Multicollinearity
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_2_6_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_6_9">
+            <span class="md-nav__icon md-icon"></span>
+            Heteroskedasticity and Multicollinearity
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Heteroskedasticity and Multicollinearity in Linear Regression
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Heteroskedasticity and Multicollinearity in Linear Regression
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview-what-can-go-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔍 Overview: What Can Go Wrong
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔍 Overview: What Can Go Wrong">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#categories-of-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Categories of Problems
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impact-on-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Impact on Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-roadmap-forward" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Roadmap Forward
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#heteroskedasticity-unequal-error-variance" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Heteroskedasticity: Unequal Error Variance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Heteroskedasticity: Unequal Error Variance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition-and-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Definition and Detection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-world-example-tv-advertising" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-World Example: TV Advertising
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consequences-of-heteroskedasticity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consequences of Heteroskedasticity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solutions-and-remedies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Solutions and Remedies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multicollinearity-correlated-predictors" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Multicollinearity: Correlated Predictors
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔗 Multicollinearity: Correlated Predictors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding the Problem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-tv-vs-radio-advertising" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: TV vs Radio Advertising
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Consequences
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detection-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detection Methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solutions-for-multicollinearity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Solutions for Multicollinearity
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#causality-vs-prediction-the-chocolate-paradox" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚠️ Causality vs Prediction: The Chocolate Paradox
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="⚠️ Causality vs Prediction: The Chocolate Paradox">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-chocolate-nobel-prize-study" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Chocolate-Nobel Prize Study
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-competing-explanations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Two Competing Explanations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-fundamental-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Fundamental Problem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implications-for-data-science" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implications for Data Science
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#causal-inference-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Causal Inference Requirements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mitigation-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Mitigation Strategies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Mitigation Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#general-approach-to-regression-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      General Approach to Regression Problems
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-selection-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variable Selection Strategies
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-assessment-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Performance Assessment Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Performance Assessment Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-evaluation-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Evaluation Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-strategy-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation Strategy Checklist
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-textbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Core Textbooks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Research Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applied-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌐 Applied Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datasets-for-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Datasets for Practice
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-10-latent_variables/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Latent Variables
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-11-linear-regression-with-non-linear-features/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression with Non-Linear Features
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-12-overfitting_bias_variance/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Overfitting and the Bias-Variance Trade-off
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-13-regularization_techniques/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regularization Techniques
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-14-validation_performance_assessment/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Validation Performance Assessment
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-15-cross_validation_techniques/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Cross Validation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-16-serialization-pickle-joblib/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Serialization - Pickle & Joblib
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-17-hyperparameter_tuning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hyper Parameter Tuning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="heteroskedasticity-and-multicollinearity-in-linear-regression">Heteroskedasticity and Multicollinearity in Linear Regression <a id="top"></a></h1>
+<h2 id="quick-navigation">📋 Quick Navigation</h2>
+<ul>
+<li><a href="#overview-what-can-go-wrong">🔍 Overview: What Can Go Wrong</a></li>
+<li><a href="#heteroskedasticity-unequal-error-variance">📊 Heteroskedasticity: Unequal Error Variance</a></li>
+<li><a href="#multicollinearity-correlated-predictors">🔗 Multicollinearity: Correlated Predictors</a></li>
+<li><a href="#causality-vs-prediction-the-chocolate-paradox">⚠️ Causality vs Prediction: The Chocolate Paradox</a></li>
+<li><a href="#mitigation-strategies">🛠️ Mitigation Strategies</a></li>
+<li><a href="#performance-assessment-methods">🎯 Performance Assessment Methods</a></li>
+<li><a href="#references-further-reading">📚 References &amp; Further Reading</a></li>
+</ul>
+<hr />
+<h2 id="overview-what-can-go-wrong">🔍 Overview: What Can Go Wrong</h2>
+<p>Linear regression relies on several mathematical assumptions that, when violated, can lead to unreliable results. Understanding these violations is crucial for building robust predictive models and avoiding misinterpretation of results.</p>
+<p><img alt="Regression Problems Overview" src="../../../../svg/regression_problems_overview.svg" /></p>
+<h3 id="categories-of-problems">Categories of Problems</h3>
+<p><strong>Technical/Mathematical Issues:</strong>
+- <strong>Heteroskedasticity</strong>: Non-constant error variance
+- <strong>Multicollinearity</strong>: Highly correlated predictors</p>
+<p><strong>Structural/Modeling Issues:</strong>
+- <strong>Omitted variables</strong>: Missing confounding factors
+- <strong>Causality confusion</strong>: Correlation vs causal relationships</p>
+<h3 id="impact-on-analysis">Impact on Analysis</h3>
+<p>When these assumptions are violated:
+- Standard errors become unreliable
+- Confidence intervals lose their intended coverage
+- Hypothesis tests produce incorrect p-values
+- Causal interpretations become invalid</p>
+<h3 id="the-roadmap-forward">The Roadmap Forward</h3>
+<ol>
+<li><strong>Detection</strong>: Identify when problems occur</li>
+<li><strong>Mitigation</strong>: Apply appropriate corrections</li>
+<li><strong>Regularization</strong>: Control model complexity</li>
+<li><strong>Assessment</strong>: Evaluate performance with proper validation</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="heteroskedasticity-unequal-error-variance">📊 Heteroskedasticity: Unequal Error Variance</h2>
+<p>Heteroskedasticity occurs when the variance of residuals is not constant across all levels of the independent variables. This violates the homoskedasticity assumption of classical linear regression.</p>
+<p><img alt="Heteroskedasticity Visualization" src="../../../../svg/heteroskedasticity_visualization.svg" /></p>
+<h3 id="definition-and-detection">Definition and Detection</h3>
+<div class="highlight"><pre><span></span><code>Homoskedasticity (desired): Var(εᵢ) = σ² for all i
+Heteroskedasticity (problem): Var(εᵢ) = σᵢ² varies with i
+</code></pre></div>
+<p><strong>Common Patterns:</strong>
+- Variance increases with predictor values (fan-shaped residuals)
+- Variance decreases with fitted values (funnel-shaped residuals)
+- Clustered variance patterns based on subgroups</p>
+<h3 id="real-world-example-tv-advertising">Real-World Example: TV Advertising</h3>
+<p>In advertising effectiveness studies:
+- <strong>Low TV spending</strong>: Small variance in sales (limited advertising impact)
+- <strong>High TV spending</strong>: Large variance in sales (amplified market effects)</p>
+<p>This creates a clear heteroskedastic pattern where variance increases with the predictor variable.</p>
+<h3 id="consequences-of-heteroskedasticity">Consequences of Heteroskedasticity</h3>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Impact</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Biased Standard Errors</strong></td>
+<td>Incorrect confidence intervals</td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Invalid t-statistics</strong></td>
+<td>Wrong p-values for hypothesis tests</td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Inefficient Estimates</strong></td>
+<td>θ̂ still unbiased but not optimal</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td><strong>Prediction Intervals</strong></td>
+<td>Incorrect coverage probabilities</td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<h3 id="solutions-and-remedies">Solutions and Remedies</h3>
+<h4 id="1-weighted-least-squares-wls">1. Weighted Least Squares (WLS)</h4>
+<p>When variances are known:</p>
+<div class="highlight"><pre><span></span><code>Minimize: Σ wᵢ(yᵢ - xᵢᵀθ)²
+where wᵢ = 1/σᵢ²
+</code></pre></div>
+<h4 id="2-robust-standard-errors">2. Robust Standard Errors</h4>
+<p>Use heteroskedasticity-robust standard errors (White's correction):
+- Huber-White sandwich estimator
+- HC0, HC1, HC2, HC3 variants</p>
+<h4 id="3-transformation-methods">3. Transformation Methods</h4>
+<ul>
+<li><strong>Log transformation</strong>: For multiplicative heteroskedasticity</li>
+<li><strong>Square root transformation</strong>: For count data</li>
+<li><strong>Box-Cox transformation</strong>: General variance stabilization</li>
+</ul>
+<p><img alt="Weighted Least Squares Concept" src="../../../../svg/weighted_least_squares_concept.svg" /></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="multicollinearity-correlated-predictors">🔗 Multicollinearity: Correlated Predictors</h2>
+<p>Multicollinearity occurs when predictor variables are highly correlated with each other, making it difficult to determine their individual effects on the response variable.</p>
+<p><img alt="Multicollinearity Illustration" src="../../../../svg/multicollinearity_illustration.svg" /></p>
+<h3 id="understanding-the-problem">Understanding the Problem</h3>
+<p>When predictors are highly correlated:
+- <strong>Perfect collinearity</strong>: One variable is an exact linear combination of others
+- <strong>Near collinearity</strong>: Variables are highly (but not perfectly) correlated</p>
+<h3 id="example-tv-vs-radio-advertising">Example: TV vs Radio Advertising</h3>
+<div class="highlight"><pre><span></span><code>If X_TV ≈ k × X_Radio (highly correlated)
+Then: Y = β₁X_TV + β₂X_Radio + ε
+Cannot distinguish between TV and Radio effects
+</code></pre></div>
+<p><strong>The Attribution Problem:</strong>
+- Sales increase along the correlated direction
+- Cannot determine if increase is due to TV or Radio
+- Both explanations fit the data equally well</p>
+<h3 id="mathematical-consequences">Mathematical Consequences</h3>
+<h4 id="1-matrix-singularity-issues">1. Matrix Singularity Issues</h4>
+<div class="highlight"><pre><span></span><code>θ̂ = (XᵀX)⁻¹XᵀY
+</code></pre></div>
+<p>When multicollinearity exists:
+- XᵀX becomes nearly singular
+- (XᵀX)⁻¹ becomes unstable
+- Standard errors become extremely large</p>
+<h4 id="2-variance-inflation">2. Variance Inflation</h4>
+<div class="highlight"><pre><span></span><code>Var(θ̂ⱼ) = σ²[(XᵀX)⁻¹]ⱼⱼ = σ²/(1-R²ⱼ) × 1/Σ(xᵢⱼ-x̄ⱼ)²
+</code></pre></div>
+<p>Where R²ⱼ is the R-squared from regressing Xⱼ on all other predictors.</p>
+<h3 id="detection-methods">Detection Methods</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Threshold</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Correlation Matrix</strong></td>
+<td></td>
+<td>r</td>
+</tr>
+<tr>
+<td><strong>Variance Inflation Factor (VIF)</strong></td>
+<td>VIF &gt; 10</td>
+<td>Problematic collinearity</td>
+</tr>
+<tr>
+<td><strong>Condition Number</strong></td>
+<td>κ &gt; 30</td>
+<td>Matrix near-singularity</td>
+</tr>
+<tr>
+<td><strong>Eigenvalue Analysis</strong></td>
+<td>λₘᵢₙ ≈ 0</td>
+<td>Linear dependence detected</td>
+</tr>
+</tbody>
+</table>
+<h4 id="variance-inflation-factor-vif">Variance Inflation Factor (VIF)</h4>
+<div class="highlight"><pre><span></span><code>VIFⱼ = 1/(1-R²ⱼ)
+</code></pre></div>
+<p><strong>Interpretation:</strong>
+- VIF = 1: No correlation with other predictors
+- VIF = 5: Variance inflated by factor of 5
+- VIF &gt; 10: Serious multicollinearity problem</p>
+<h3 id="solutions-for-multicollinearity">Solutions for Multicollinearity</h3>
+<h4 id="1-variable-removal">1. Variable Removal</h4>
+<ul>
+<li>Remove redundant variables</li>
+<li>Keep the most interpretable or theoretically important</li>
+</ul>
+<h4 id="2-principal-component-analysis-pca">2. Principal Component Analysis (PCA)</h4>
+<ul>
+<li>Transform to orthogonal components</li>
+<li>Use principal components as predictors</li>
+</ul>
+<h4 id="3-ridge-regression">3. Ridge Regression</h4>
+<ul>
+<li>Add penalty term: λΣβⱼ²</li>
+<li>Stabilizes coefficient estimates</li>
+</ul>
+<h4 id="4-data-collection">4. Data Collection</h4>
+<ul>
+<li>Gather data with more varied predictor combinations</li>
+<li>Design experiments to break correlations</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="causality-vs-prediction-the-chocolate-paradox">⚠️ Causality vs Prediction: The Chocolate Paradox</h2>
+<p>The famous chocolate consumption vs Nobel Prize study illustrates a critical distinction between predictive models and causal models.</p>
+<p><img alt="Causality vs Correlation Example" src="../../../../svg/causality_vs_correlation_example.svg" /></p>
+<h3 id="the-chocolate-nobel-prize-study">The Chocolate-Nobel Prize Study</h3>
+<p><strong>Observed Relationship:</strong>
+- <strong>X-axis</strong>: Chocolate consumption (kg/year/person)
+- <strong>Y-axis</strong>: Nobel Prizes per capita
+- <strong>Result</strong>: Strong positive correlation (r ≈ 0.79, p &lt; 0.001)</p>
+<p><strong>Statistical Findings:</strong>
+- Statistically significant relationship
+- High R-squared value
+- Tiny p-value (highly unlikely by chance)
+- Clear linear trend in the data</p>
+<h3 id="two-competing-explanations">Two Competing Explanations</h3>
+<h4 id="model-1-direct-causal-effect">Model 1: Direct Causal Effect</h4>
+<div class="highlight"><pre><span></span><code>Chocolate → Intelligence → Nobel Prizes
+</code></pre></div>
+<p><strong>Theory</strong>: Chocolate consumption improves cognitive function, leading to more Nobel Prizes.</p>
+<h4 id="model-2-confounding-variable">Model 2: Confounding Variable</h4>
+<div class="highlight"><pre><span></span><code>Wealth → Chocolate Consumption
+Wealth → Research Investment → Nobel Prizes
+</code></pre></div>
+<p><strong>Theory</strong>: Wealthy countries both consume more chocolate and invest more in research.</p>
+<h3 id="the-fundamental-problem">The Fundamental Problem</h3>
+<p><strong>Both models are consistent with the observed data!</strong></p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Model 1 (Direct)</th>
+<th>Model 2 (Confounding)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fits Data</strong></td>
+<td>✅ Yes</td>
+<td>✅ Yes</td>
+</tr>
+<tr>
+<td><strong>Statistical Significance</strong></td>
+<td>✅ Yes</td>
+<td>✅ Yes</td>
+</tr>
+<tr>
+<td><strong>Plausible Mechanism</strong></td>
+<td>❓ Questionable</td>
+<td>✅ Yes</td>
+</tr>
+<tr>
+<td><strong>Policy Implications</strong></td>
+<td>Buy more chocolate</td>
+<td>Invest in research</td>
+</tr>
+</tbody>
+</table>
+<h3 id="implications-for-data-science">Implications for Data Science</h3>
+<h4 id="what-the-data-can-tell-us">What the Data CAN Tell Us</h4>
+<ul>
+<li><strong>Predictive power</strong>: Given chocolate consumption, predict Nobel Prize rate</li>
+<li><strong>Statistical association</strong>: Variables are related</li>
+<li><strong>Model fit</strong>: Linear relationship describes the data well</li>
+</ul>
+<h4 id="what-the-data-cannot-tell-us">What the Data CANNOT Tell Us</h4>
+<ul>
+<li><strong>Causal direction</strong>: Does A cause B or B cause A?</li>
+<li><strong>Confounding factors</strong>: Are there hidden variables?</li>
+<li><strong>Mechanism</strong>: How does the relationship work?</li>
+<li><strong>Intervention effects</strong>: What happens if we change A?</li>
+</ul>
+<h3 id="causal-inference-requirements">Causal Inference Requirements</h3>
+<p>To establish causality, we need:</p>
+<ol>
+<li><strong>Temporal precedence</strong>: Cause precedes effect</li>
+<li><strong>Controlled experiments</strong>: Randomized interventions</li>
+<li><strong>Mechanism identification</strong>: Understand the causal pathway</li>
+<li><strong>Confounding control</strong>: Account for alternative explanations</li>
+</ol>
+<p><strong>Methods for Causal Inference:</strong>
+- Randomized controlled trials (RCTs)
+- Natural experiments
+- Instrumental variables
+- Regression discontinuity
+- Difference-in-differences</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="mitigation-strategies">🛠️ Mitigation Strategies</h2>
+<h3 id="general-approach-to-regression-problems">General Approach to Regression Problems</h3>
+<p><img alt="Mitigation Strategies Overview" src="../../../../svg/mitigation_strategies_overview.svg" /></p>
+<h4 id="1-adding-variables">1. Adding Variables</h4>
+<ul>
+<li><strong>Feature engineering</strong>: Create new variables from existing ones</li>
+<li><strong>Polynomial terms</strong>: X², X³ for nonlinear relationships</li>
+<li><strong>Interaction terms</strong>: X₁ × X₂ for combined effects</li>
+<li><strong>Domain knowledge</strong>: Include theoretically important variables</li>
+</ul>
+<h4 id="2-regularization-methods">2. Regularization Methods</h4>
+<p><strong>Ridge Regression (L2):</strong>
+<div class="highlight"><pre><span></span><code>Minimize: ||Y - Xθ||² + λ||θ||²
+</code></pre></div></p>
+<p><strong>Lasso Regression (L1):</strong>
+<div class="highlight"><pre><span></span><code>Minimize: ||Y - Xθ||² + λ||θ||₁
+</code></pre></div></p>
+<p><strong>Elastic Net:</strong>
+<div class="highlight"><pre><span></span><code>Minimize: ||Y - Xθ||² + λ₁||θ||₁ + λ₂||θ||²
+</code></pre></div></p>
+<h4 id="3-balancing-model-complexity">3. Balancing Model Complexity</h4>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Solution</th>
+<th>Trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Underfitting</strong></td>
+<td>Add variables/complexity</td>
+<td>Risk overfitting</td>
+</tr>
+<tr>
+<td><strong>Overfitting</strong></td>
+<td>Regularization/simplification</td>
+<td>Risk underfitting</td>
+</tr>
+<tr>
+<td><strong>Bias-Variance</strong></td>
+<td>Cross-validation for λ selection</td>
+<td>Computational cost</td>
+</tr>
+</tbody>
+</table>
+<h3 id="variable-selection-strategies">Variable Selection Strategies</h3>
+<h4 id="forward-selection">Forward Selection</h4>
+<ol>
+<li>Start with no variables</li>
+<li>Add variables that improve fit most</li>
+<li>Stop when improvement becomes minimal</li>
+</ol>
+<h4 id="backward-elimination">Backward Elimination</h4>
+<ol>
+<li>Start with all variables</li>
+<li>Remove variables that contribute least</li>
+<li>Stop when all remaining variables are significant</li>
+</ol>
+<h4 id="best-subset-selection">Best Subset Selection</h4>
+<ul>
+<li>Evaluate all 2ᵖ possible models</li>
+<li>Choose based on AIC, BIC, or cross-validation</li>
+<li>Computationally intensive for large p</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="performance-assessment-methods">🎯 Performance Assessment Methods</h2>
+<h3 id="model-evaluation-framework">Model Evaluation Framework</h3>
+<p>Proper assessment requires separating model training from evaluation to avoid overfitting.</p>
+<h4 id="1-cross-validation">1. Cross-Validation</h4>
+<p><strong>k-Fold Cross-Validation:</strong>
+1. Split data into k folds
+2. Train on k-1 folds, test on remaining fold
+3. Repeat k times
+4. Average performance across folds</p>
+<p><strong>Benefits:</strong>
+- More robust than single train-test split
+- Uses all data for both training and testing
+- Provides variance estimates of performance</p>
+<h4 id="2-bootstrap-methods">2. Bootstrap Methods</h4>
+<p><strong>Bootstrap Procedure:</strong>
+1. Sample n observations with replacement
+2. Fit model on bootstrap sample
+3. Evaluate on original data (or out-of-bag samples)
+4. Repeat B times (typically B = 1000)</p>
+<p><strong>Applications:</strong>
+- Confidence intervals for predictions
+- Bias correction for performance estimates
+- Variable importance assessment</p>
+<h4 id="3-performance-metrics">3. Performance Metrics</h4>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Formula</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RMSE</strong></td>
+<td>√(Σ(y-ŷ)²/n)</td>
+<td>General prediction accuracy</td>
+</tr>
+<tr>
+<td><strong>MAE</strong></td>
+<td>Σ</td>
+<td>y-ŷ</td>
+</tr>
+<tr>
+<td><strong>R²</strong></td>
+<td>1 - SS_res/SS_tot</td>
+<td>Explained variance</td>
+</tr>
+<tr>
+<td><strong>Adjusted R²</strong></td>
+<td>1 - (1-R²)(n-1)/(n-p-1)</td>
+<td>Penalizes model complexity</td>
+</tr>
+</tbody>
+</table>
+<h3 id="validation-strategy-checklist">Validation Strategy Checklist</h3>
+<ul>
+<li>[ ] <strong>Separate test set</strong>: Never used during model development</li>
+<li>[ ] <strong>Cross-validation</strong>: For hyperparameter tuning</li>
+<li>[ ] <strong>Multiple metrics</strong>: Don't rely on single measure</li>
+<li>[ ] <strong>Domain validation</strong>: Does the model make sense?</li>
+<li>[ ] <strong>Temporal validation</strong>: For time series data</li>
+<li>[ ] <strong>Robustness testing</strong>: Performance across subgroups</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="references-further-reading">📚 References &amp; Further Reading <a id="references-further-reading"></a></h2>
+<h3 id="core-textbooks">📖 Core Textbooks</h3>
+<ol>
+<li><strong>Greene, W. H.</strong> (2018). <em>Econometric Analysis</em> (8th ed.). Pearson.</li>
+<li>
+<p>Comprehensive treatment of heteroskedasticity and multicollinearity</p>
+</li>
+<li>
+<p><strong>James, G., Witten, D., Hastie, T., &amp; Tibshirani, R.</strong> (2021). <em>An Introduction to Statistical Learning</em> (2nd ed.). Springer.</p>
+</li>
+<li>
+<p>Excellent coverage of regularization and cross-validation methods</p>
+</li>
+<li>
+<p><strong>Wooldridge, J. M.</strong> (2019). <em>Introductory Econometrics: A Modern Approach</em> (7th ed.). Cengage Learning.</p>
+</li>
+<li>Practical approach to regression diagnostics and robust inference</li>
+</ol>
+<h3 id="research-papers">🔬 Research Papers</h3>
+<ol>
+<li><strong>White, H.</strong> (1980). A heteroskedasticity-consistent covariance matrix estimator and a direct test for heteroskedasticity. <em>Econometrica</em>, 48(4), 817-838.</li>
+<li>
+<p>Seminal paper on robust standard errors</p>
+</li>
+<li>
+<p><strong>Tibshirani, R.</strong> (1996). Regression shrinkage and selection via the lasso. <em>Journal of the Royal Statistical Society</em>, 58(1), 267-288.</p>
+</li>
+<li>Introduction of Lasso regression for variable selection</li>
+</ol>
+<h3 id="applied-examples">🌐 Applied Examples</h3>
+<ol>
+<li><strong>Messerli, F. H.</strong> (2012). Chocolate consumption, cognitive function, and Nobel laureates. <em>New England Journal of Medicine</em>, 367(16), 1562-1564.</li>
+<li>
+<p>The famous chocolate-Nobel Prize correlation study</p>
+</li>
+<li>
+<p><strong><a href="https://scikit-learn.org/stable/auto_examples/inspection/plot_permutation_importance_multicollinear.html">Scikit-learn: Detecting Multicollinearity</a></strong></p>
+</li>
+<li>
+<p>Practical examples of multicollinearity detection</p>
+</li>
+<li>
+<p><strong><a href="https://www.statsmodels.org/stable/examples/notebooks/generated/regression_diagnostics.html">Statsmodels: Regression Diagnostics</a></strong></p>
+</li>
+<li>Comprehensive regression diagnostic tools</li>
+</ol>
+<p><strong>Notebook Topics:</strong>
+- Heteroskedasticity detection and correction
+- Multicollinearity diagnosis with VIF
+- Ridge and Lasso regularization
+- Cross-validation for model selection
+- Bootstrap confidence intervals</p>
+<h3 id="datasets-for-practice">📊 Datasets for Practice</h3>
+<ul>
+<li><strong>Boston Housing</strong>: Classic dataset with heteroskedasticity</li>
+<li><strong>Auto MPG</strong>: Multicollinearity between engine features  </li>
+<li><strong>Wine Quality</strong>: Regularization and feature selection</li>
+<li><strong>Country Statistics</strong>: Causality vs correlation examples</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2025 13:34:01 UTC">September 7, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../05-08-prediction_errors_docs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Prediction Errors in Linear Regression">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Prediction Errors in Linear Regression
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../05-10-latent_variables/" class="md-footer__link md-footer__link--next" aria-label="Next: Latent Variables in Regression Analysis">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Latent Variables in Regression Analysis
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

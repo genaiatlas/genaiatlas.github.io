@@ -1,0 +1,4067 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/1-learning-path/05-04-r-squared-performance/">
+      
+      
+        <link rel="prev" href="../05-03-intrepretation-justificaton/">
+      
+      
+        <link rel="next" href="../05-05-coefficient-reliability/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Linear Regression Performance Assessment: R-Squared - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Linear Regression Performance Assessment: R-Squared
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-descriptive-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../00-math-foundation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Foundational Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-Sup-vs-unsup-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Supervised Vs. Un-supervised Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-Clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-dimen-reduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Dimensionality Reduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-embedding/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Embedding
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_6" id="__nav_2_4_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Regression
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            Regression
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Pre Read
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-01-Intro-to-sup-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Supervised Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-02-linear-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-03-intrepretation-justificaton/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Intrepretation and Justification
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_6_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_6_5" id="__nav_2_4_2_6_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    R Square Performance
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_2_6_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_6_5">
+            <span class="md-nav__icon md-icon"></span>
+            R Square Performance
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression Performance Assessment: R-Squared
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression Performance Assessment: R-Squared
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#course-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Course Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-assessment-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Assessment Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Assessment Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#critical-questions-for-model-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔵 Critical Questions for Model Evaluation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assessment-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assessment Methodology
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#r-squared-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      R-Squared Fundamentals
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="R-Squared Fundamentals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conceptual-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟢 Conceptual Foundation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#baseline-comparison-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Baseline Comparison Approach
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variance-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Variance Decomposition
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#total-sum-of-squares" class="md-nav__link">
+    <span class="md-ellipsis">
+      Total Sum of Squares
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Total Sum of Squares">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#measuring-total-variation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔴 Measuring Total Variation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Definition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpretation-and-significance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interpretation and Significance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Implications
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#residual-sum-of-squares" class="md-nav__link">
+    <span class="md-ellipsis">
+      Residual Sum of Squares
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Residual Sum of Squares">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#measuring-unexplained-variation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟡 Measuring Unexplained Variation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Definition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relationship-to-model-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relationship to Model Quality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#r-squared-calculation-and-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      R-Squared Calculation and Interpretation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="R-Squared Calculation and Interpretation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-coefficient-of-determination" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟢 The Coefficient of Determination
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Formula
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpretation-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interpretation Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Properties
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world-example-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-World Example Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real-World Example Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#marketing-campaign-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔵 Marketing Campaign Dataset
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Interpretation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-validation-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Validation Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#individual-variable-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Individual Variable Performance
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Individual Variable Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-variable-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟡 Single Variable Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synergistic-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Synergistic Effects
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-implications_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Implications
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adjusted-r-squared" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adjusted R-Squared
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Adjusted R-Squared">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#accounting-for-model-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔴 Accounting for Model Complexity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-formula_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Formula
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rationale-and-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rationale and Purpose
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Application
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpretation-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interpretation Guidelines
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-interpretation-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Interpretation Guidelines
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Interpretation Guidelines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-for-r-squared-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟢 Best Practices for R-Squared Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-interpretation-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Interpretation Techniques
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-it-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      Try It Yourself
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Try It Yourself">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hands-on-r-squared-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔧 Hands-On R-Squared Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hugging-face-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hugging Face Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#essential-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Essential Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-05-coefficient-reliability/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Co-Efficient Reliability
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-06-confidence_intervals_hypothesis_testing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Confidence Interval & Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-08-prediction_errors_docs/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Making New Prediction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-09-heteroskedasticity-and-multicollinearity/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Heteroskedasticity and Multicollinearity
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-10-latent_variables/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Latent Variables
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-11-linear-regression-with-non-linear-features/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression with Non-Linear Features
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-12-overfitting_bias_variance/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Overfitting and the Bias-Variance Trade-off
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-13-regularization_techniques/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regularization Techniques
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-14-validation_performance_assessment/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Validation Performance Assessment
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-15-cross_validation_techniques/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Cross Validation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-16-serialization-pickle-joblib/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Serialization - Pickle & Joblib
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-17-hyperparameter_tuning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hyper Parameter Tuning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="linear-regression-performance-assessment-r-squared">Linear Regression Performance Assessment: R-Squared</h1>
+<p><a id="top"></a></p>
+<h2 id="quick-navigation">Quick Navigation</h2>
+<ul>
+<li><a href="#course-overview">Course Overview</a></li>
+<li><a href="#performance-assessment-framework">Performance Assessment Framework</a></li>
+<li><a href="#r-squared-fundamentals">R-Squared Fundamentals</a></li>
+<li><a href="#total-sum-of-squares">Total Sum of Squares</a></li>
+<li><a href="#residual-sum-of-squares">Residual Sum of Squares</a></li>
+<li><a href="#r-squared-calculation-and-interpretation">R-Squared Calculation and Interpretation</a></li>
+<li><a href="#real-world-example-analysis">Real-World Example Analysis</a></li>
+<li><a href="#individual-variable-performance">Individual Variable Performance</a></li>
+<li><a href="#adjusted-r-squared">Adjusted R-Squared</a></li>
+<li><a href="#performance-interpretation-guidelines">Performance Interpretation Guidelines</a></li>
+<li><a href="#try-it-yourself">Try It Yourself</a></li>
+<li><a href="#references--further-reading">References &amp; Further Reading</a></li>
+</ul>
+<h2 id="course-overview">Course Overview</h2>
+<p>Performance assessment represents a critical phase in the machine learning pipeline, determining the reliability and effectiveness of trained models. This comprehensive guide explores R-squared (R²) as the primary metric for evaluating linear regression performance, providing both theoretical foundations and practical implementation strategies.</p>
+<p>R-squared quantifies the proportion of variance in the dependent variable that is predictable from the independent variables, offering intuitive insights into model quality. Understanding R-squared enables practitioners to make informed decisions about model selection, feature engineering, and deployment strategies.</p>
+<p><img alt="R-Squared Overview" src="../../../../svg/r-squared-overview.svg" /></p>
+<p>The assessment framework addresses three fundamental questions that every practitioner must answer: How much can we trust our predictions? What insights can we extract from our model? How accurate are our estimated parameters? These questions guide the entire performance evaluation process.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="performance-assessment-framework">Performance Assessment Framework</h2>
+<h3 id="critical-questions-for-model-evaluation">🔵 Critical Questions for Model Evaluation</h3>
+<p>After training a linear regression model and obtaining parameter estimates, the performance assessment phase addresses several critical questions that determine model utility and reliability.</p>
+<h4 id="trust-and-reliability-assessment">Trust and Reliability Assessment</h4>
+<p>The primary concern involves determining the confidence level we can place in model predictions. This encompasses both the accuracy of individual predictions and the consistency of performance across different data distributions.</p>
+<h4 id="model-interpretability-and-insights">Model Interpretability and Insights</h4>
+<p>Beyond prediction accuracy, models serve as tools for understanding underlying relationships between variables. The assessment framework evaluates how well the model captures true relationships and what insights can be extracted from the learned parameters.</p>
+<h4 id="parameter-accuracy-evaluation">Parameter Accuracy Evaluation</h4>
+<p>Understanding the precision of estimated parameters is crucial for applications requiring coefficient interpretation, such as scientific studies or policy analysis where parameter values carry substantive meaning.</p>
+<p><img alt="Performance Assessment Framework" src="../../../../svg/performance-assessment-framework.svg" /></p>
+<h3 id="assessment-methodology">Assessment Methodology</h3>
+<p>The systematic approach to performance evaluation involves multiple complementary metrics and diagnostic procedures:</p>
+<ul>
+<li><strong>Goodness of fit measures</strong>: Quantifying how well the model explains observed data</li>
+<li><strong>Residual analysis</strong>: Examining prediction errors for patterns and assumptions</li>
+<li><strong>Cross-validation techniques</strong>: Assessing generalization performance</li>
+<li><strong>Statistical inference</strong>: Determining parameter significance and confidence intervals</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="r-squared-fundamentals">R-Squared Fundamentals</h2>
+<h3 id="conceptual-foundation">🟢 Conceptual Foundation</h3>
+<p>R-squared (R²) represents the coefficient of determination, measuring the proportion of variance in the dependent variable that is explained by the independent variables in the regression model. This metric provides an intuitive measure of model performance on a standardized scale.</p>
+<h3 id="baseline-comparison-approach">Baseline Comparison Approach</h3>
+<p>R-squared derives its meaning through comparison with a baseline model that makes predictions without considering any independent variables. This baseline approach uses the mean of the dependent variable as the prediction for all observations.</p>
+<h4 id="null-model-prediction">Null Model Prediction</h4>
+<p>Without any regression analysis, the optimal prediction for a new observation is simply the sample mean:</p>
+<p>Ŷ_null = (1/n) Σᵢ₌₁ⁿ Yᵢ = Ȳ</p>
+<p>This constant prediction represents the best estimate when no information about independent variables is available.</p>
+<p><img alt="Baseline vs Regression Comparison" src="../../../../svg/baseline-vs-regression-comparison.svg" /></p>
+<h3 id="variance-decomposition">Variance Decomposition</h3>
+<p>R-squared partitions the total variance in the dependent variable into explained and unexplained components, providing insight into how much of the observed variation the model successfully captures.</p>
+<p>The decomposition follows the fundamental relationship:</p>
+<p>Total Variance = Explained Variance + Unexplained Variance</p>
+<p>This partition enables quantitative assessment of model performance relative to the simplest possible baseline.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="total-sum-of-squares">Total Sum of Squares</h2>
+<h3 id="measuring-total-variation">🔴 Measuring Total Variation</h3>
+<p>The Total Sum of Squares (TSS) quantifies the total variation in the dependent variable around its mean, establishing the baseline against which model performance is measured.</p>
+<h3 id="mathematical-definition">Mathematical Definition</h3>
+<p>TSS = Σᵢ₌₁ⁿ (Yᵢ - Ȳ)²</p>
+<p>Where:
+- Yᵢ represents the observed value for observation i
+- Ȳ denotes the sample mean of the dependent variable
+- n is the total number of observations</p>
+<p><img alt="Total Sum of Squares Visualization" src="../../../../svg/total-sum-of-squares-visualization.svg" /></p>
+<h3 id="interpretation-and-significance">Interpretation and Significance</h3>
+<p>TSS represents the total amount of variation in the dependent variable that could potentially be explained by any model. It serves as the denominator in the R-squared calculation, providing the reference point for measuring improvement over the null model.</p>
+<h4 id="key-properties">Key Properties</h4>
+<ul>
+<li><strong>Always non-negative</strong>: Squared deviations ensure TSS ≥ 0</li>
+<li><strong>Scale dependent</strong>: TSS increases with the scale of the dependent variable</li>
+<li><strong>Sample size dependent</strong>: Generally increases with larger sample sizes</li>
+<li><strong>Baseline performance</strong>: Represents the worst-case scenario for model performance</li>
+</ul>
+<h3 id="practical-implications">Practical Implications</h3>
+<p>Understanding TSS helps practitioners interpret R-squared values in context. High TSS indicates substantial variation in the dependent variable, suggesting greater potential for meaningful predictions. Low TSS may indicate limited variation, potentially constraining the maximum achievable R-squared.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="residual-sum-of-squares">Residual Sum of Squares</h2>
+<h3 id="measuring-unexplained-variation">🟡 Measuring Unexplained Variation</h3>
+<p>The Residual Sum of Squares (RSS) quantifies the amount of variation in the dependent variable that remains unexplained after fitting the regression model. RSS represents the prediction errors that persist despite the model's best efforts.</p>
+<h3 id="mathematical-definition_1">Mathematical Definition</h3>
+<p>RSS = Σᵢ₌₁ⁿ (Yᵢ - Ŷᵢ)² = Σᵢ₌₁ⁿ (Yᵢ - θᵀXᵢ)²</p>
+<p>Where:
+- Yᵢ is the observed value for observation i
+- Ŷᵢ is the predicted value from the regression model
+- θᵀXᵢ represents the linear prediction for observation i</p>
+<p><img alt="Residual Sum of Squares Visualization" src="../../../../svg/residual-sum-of-squares-visualization.svg" /></p>
+<h3 id="relationship-to-model-quality">Relationship to Model Quality</h3>
+<p>RSS directly reflects model performance: smaller RSS values indicate better fit, as they represent less unexplained variation. The optimization process in linear regression specifically minimizes RSS, making it the natural measure of model quality.</p>
+<h4 id="key-characteristics">Key Characteristics</h4>
+<ul>
+<li><strong>Optimization target</strong>: Linear regression minimizes RSS</li>
+<li><strong>Always non-negative</strong>: RSS ≥ 0 due to squared terms</li>
+<li><strong>Perfect fit condition</strong>: RSS = 0 when model perfectly fits data</li>
+<li><strong>Bounded by TSS</strong>: RSS ≤ TSS always holds</li>
+</ul>
+<h3 id="practical-considerations">Practical Considerations</h3>
+<h4 id="model-comparison">Model Comparison</h4>
+<p>RSS enables direct comparison between models on the same dataset. Lower RSS indicates superior fit, though this must be balanced against model complexity to avoid overfitting.</p>
+<h4 id="assumption-checking">Assumption Checking</h4>
+<p>Analyzing the pattern of residuals (Yᵢ - Ŷᵢ) helps verify model assumptions and identify potential improvements or violations of linear regression assumptions.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="r-squared-calculation-and-interpretation">R-Squared Calculation and Interpretation</h2>
+<h3 id="the-coefficient-of-determination">🟢 The Coefficient of Determination</h3>
+<p>R-squared represents the proportion of total variation explained by the regression model, calculated as the reduction in sum of squares relative to the total variation.</p>
+<h3 id="mathematical-formula">Mathematical Formula</h3>
+<p>R² = 1 - (RSS/TSS) = 1 - [Σᵢ₌₁ⁿ (Yᵢ - Ŷᵢ)²] / [Σᵢ₌₁ⁿ (Yᵢ - Ȳ)²]</p>
+<p>Alternative formulation:</p>
+<p>R² = (TSS - RSS) / TSS</p>
+<p>This shows that R² measures the fraction of total variation that has been explained by the model.</p>
+<p><img alt="R-Squared Calculation" src="../../../../svg/r-squared-calculation.svg" /></p>
+<h3 id="interpretation-framework">Interpretation Framework</h3>
+<h4 id="range-and-bounds">Range and Bounds</h4>
+<p>0 ≤ R² ≤ 1</p>
+<ul>
+<li><strong>R² = 0</strong>: Model explains no variation; predictions equal the mean</li>
+<li><strong>R² = 1</strong>: Model explains all variation; perfect fit</li>
+<li><strong>Higher values</strong>: Indicate better explanatory power</li>
+</ul>
+<h4 id="practical-meaning">Practical Meaning</h4>
+<p>R² answers the question: "What proportion of the observed variation in Y can be attributed to the linear relationship with X?"</p>
+<p>For example:
+- R² = 0.75 means 75% of the variation is explained by the model
+- R² = 0.25 means 25% of the variation is explained; 75% remains unexplained</p>
+<h3 id="mathematical-properties">Mathematical Properties</h3>
+<h4 id="simple-regression-special-case">Simple Regression Special Case</h4>
+<p>In simple linear regression (one independent variable), R² equals the square of the correlation coefficient between X and Y:</p>
+<p>R² = ρ²(X,Y)</p>
+<p>This relationship provides intuitive understanding: strong correlation implies high R².</p>
+<h4 id="multiple-regression-considerations">Multiple Regression Considerations</h4>
+<p>In multiple regression, R² loses the direct correlation interpretation but retains its meaning as the proportion of explained variation.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="real-world-example-analysis">Real-World Example Analysis</h2>
+<h3 id="marketing-campaign-dataset">🔵 Marketing Campaign Dataset</h3>
+<p>The marketing example demonstrates R-squared interpretation using advertising expenditure data across three channels: TV, Radio, and Newspaper advertising, with sales as the dependent variable.</p>
+<h4 id="multiple-regression-results">Multiple Regression Results</h4>
+<p>Sales = 2.94 + 0.046 × (TV) + 0.19 × (Radio) - 0.001 × (Newspaper)</p>
+<p>R² = 0.897</p>
+<p>This indicates that 89.7% of the variation in sales across different regions can be explained by the advertising budget allocation across the three channels.</p>
+<h3 id="performance-interpretation">Performance Interpretation</h3>
+<h4 id="strong-explanatory-power">Strong Explanatory Power</h4>
+<p>With R² = 0.897, the model demonstrates strong explanatory power, suggesting that advertising budget is a primary driver of sales variation across regions.</p>
+<h4 id="business-implications">Business Implications</h4>
+<ul>
+<li><strong>Strategic insight</strong>: Advertising budget explains nearly 90% of sales differences</li>
+<li><strong>Predictive utility</strong>: Model provides reliable sales forecasts</li>
+<li><strong>Resource allocation</strong>: Coefficient magnitudes guide optimal budget distribution</li>
+</ul>
+<p><img alt="Marketing Example Analysis" src="../../../../svg/marketing-example-analysis.svg" /></p>
+<h3 id="model-validation-considerations">Model Validation Considerations</h3>
+<h4 id="goodness-of-fit">Goodness of Fit</h4>
+<p>The high R² suggests excellent fit, but practitioners must verify that this performance generalizes to new data and doesn't represent overfitting.</p>
+<h4 id="assumption-verification">Assumption Verification</h4>
+<p>High R² doesn't guarantee model validity; residual analysis and assumption checking remain essential for reliable inference.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="individual-variable-performance">Individual Variable Performance</h2>
+<h3 id="single-variable-analysis">🟡 Single Variable Analysis</h3>
+<p>Analyzing individual variables provides insights into each predictor's contribution and helps understand the synergistic effects of multiple variables.</p>
+<h4 id="tv-advertising-alone">TV Advertising Alone</h4>
+<p>R² = 0.61</p>
+<p>TV advertising explains 61% of sales variation when used as the sole predictor, demonstrating substantial individual explanatory power.</p>
+<h4 id="radio-advertising-alone">Radio Advertising Alone</h4>
+<p>R² = 0.33</p>
+<p>Radio advertising explains 33% of sales variation independently, showing moderate individual contribution.</p>
+<h4 id="newspaper-advertising-alone">Newspaper Advertising Alone</h4>
+<p>Sales = 12.35 + 0.055 × (Newspaper)</p>
+<p>R² = 0.05</p>
+<p>Newspaper advertising explains only 5% of sales variation, indicating minimal individual predictive power.</p>
+<h3 id="synergistic-effects">Synergistic Effects</h3>
+<h4 id="combined-performance">Combined Performance</h4>
+<p>When all three variables are used together, R² = 0.897, substantially higher than any individual variable. This demonstrates synergistic effects where the combination provides greater explanatory power than the sum of individual contributions.</p>
+<h4 id="variable-interaction">Variable Interaction</h4>
+<p>The dramatic improvement from individual to combined models suggests that:
+- Variables may be correlated with each other
+- Combined information captures complementary aspects of sales drivers
+- Individual variable assessments may underestimate true importance</p>
+<p><img alt="Individual Variable Performance" src="../../../../svg/individual-variable-performance.svg" /></p>
+<h3 id="practical-implications_1">Practical Implications</h3>
+<h4 id="feature-selection">Feature Selection</h4>
+<p>Individual R² values guide feature selection decisions, but the synergistic effects highlight the importance of considering variable combinations.</p>
+<h4 id="resource-allocation">Resource Allocation</h4>
+<p>Understanding individual contributions helps prioritize data collection and model development efforts while recognizing interaction effects.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="adjusted-r-squared">Adjusted R-Squared</h2>
+<h3 id="accounting-for-model-complexity">🔴 Accounting for Model Complexity</h3>
+<p>Adjusted R-squared modifies the standard R² calculation to account for the number of predictors in the model, providing a penalty for model complexity.</p>
+<h3 id="mathematical-formula_1">Mathematical Formula</h3>
+<p>Adjusted R² = 1 - [RSS/(n-m-1)] / [TSS/(n-1)]</p>
+<p>Where:
+- n = number of observations
+- m = number of independent variables
+- RSS = Residual Sum of Squares
+- TSS = Total Sum of Squares</p>
+<p>Alternative formulation:</p>
+<p>Adjusted R² = 1 - (1-R²) × [(n-1)/(n-m-1)]</p>
+<p><img alt="Adjusted R-Squared Formula" src="../../../../svg/adjusted-r-squared-formula.svg" /></p>
+<h3 id="rationale-and-purpose">Rationale and Purpose</h3>
+<h4 id="overfitting-prevention">Overfitting Prevention</h4>
+<p>Standard R² always increases (or stays constant) when additional variables are added, regardless of their true predictive value. Adjusted R² can decrease when uninformative variables are added, discouraging overfitting.</p>
+<h4 id="model-comparison_1">Model Comparison</h4>
+<p>Adjusted R² enables fair comparison between models with different numbers of parameters, as it penalizes unnecessary complexity.</p>
+<h3 id="practical-application">Practical Application</h3>
+<h4 id="example-calculation">Example Calculation</h4>
+<p>In the marketing example:
+- Original R² = 0.897
+- Adjusted R² = 0.896
+- Minimal difference due to large n relative to m</p>
+<h4 id="when-adjustments-matter">When Adjustments Matter</h4>
+<p>The adjustment becomes more significant when:
+- Sample size (n) is small relative to the number of parameters (m)
+- Many variables are included in the model
+- Model selection involves comparing different numbers of predictors</p>
+<h3 id="interpretation-guidelines">Interpretation Guidelines</h3>
+<h4 id="small-differences">Small Differences</h4>
+<p>When n &gt;&gt; m (sample size much larger than number of variables), adjusted R² ≈ R², and the adjustment makes little practical difference.</p>
+<h4 id="substantial-differences">Substantial Differences</h4>
+<p>When the adjustment is large, it signals potential overfitting concerns and suggests that some variables may not be contributing meaningful explanatory power.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="performance-interpretation-guidelines">Performance Interpretation Guidelines</h2>
+<h3 id="best-practices-for-r-squared-analysis">🟢 Best Practices for R-Squared Analysis</h3>
+<p>Effective interpretation of R-squared requires understanding its limitations, contextual factors, and appropriate application scenarios.</p>
+<h4 id="contextual-interpretation">Contextual Interpretation</h4>
+<h5 id="domain-specific-expectations">Domain-Specific Expectations</h5>
+<ul>
+<li><strong>Physical sciences</strong>: R² &gt; 0.95 often expected due to well-understood relationships</li>
+<li><strong>Social sciences</strong>: R² &gt; 0.30 may be considered good due to inherent variability</li>
+<li><strong>Financial markets</strong>: R² &gt; 0.10 can be valuable due to market complexity</li>
+<li><strong>Medical research</strong>: Standards vary by application and measurement precision</li>
+</ul>
+<h5 id="sample-size-considerations">Sample Size Considerations</h5>
+<ul>
+<li>Large samples: Small improvements in R² may be statistically significant</li>
+<li>Small samples: High R² may be misleading due to overfitting risk</li>
+<li>Cross-validation: Essential for validating R² in smaller datasets</li>
+</ul>
+<h4 id="common-pitfalls-and-limitations">Common Pitfalls and Limitations</h4>
+<h5 id="high-r2-doesnt-guarantee-causation">High R² Doesn't Guarantee Causation</h5>
+<p>Strong correlation (high R²) doesn't imply causal relationships. Additional evidence and theoretical justification are required for causal claims.</p>
+<h5 id="model-assumption-violations">Model Assumption Violations</h5>
+<p>High R² can coexist with serious assumption violations that invalidate statistical inference. Residual analysis remains essential regardless of R² value.</p>
+<h5 id="overfitting-risks">Overfitting Risks</h5>
+<p>Perfect or near-perfect R² (approaching 1.0) may indicate overfitting, especially with limited data or many variables.</p>
+<h3 id="advanced-interpretation-techniques">Advanced Interpretation Techniques</h3>
+<h4 id="incremental-r2-analysis">Incremental R² Analysis</h4>
+<p>Examining how R² changes as variables are added helps identify the most valuable predictors and detect diminishing returns.</p>
+<h4 id="cross-validated-r2">Cross-Validated R²</h4>
+<p>Out-of-sample R² provides more realistic performance estimates and helps detect overfitting.</p>
+<h4 id="comparison-with-baseline-models">Comparison with Baseline Models</h4>
+<p>Comparing R² against relevant baselines (seasonal models, industry standards) provides better context than absolute values.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="try-it-yourself">Try It Yourself</h2>
+<h3 id="hands-on-r-squared-analysis">🔧 Hands-On R-Squared Analysis</h3>
+<h4 id="r-squared-calculation-implementation">R-Squared Calculation Implementation</h4>
+<p>👉 <strong>Basic R-Squared Calculator</strong></p>
+<p><a href="https://colab.research.google.com/github/examples/r-squared-calculator"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">r2_score</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_r_squared_components</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate R-squared and its components for educational purposes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Calculate means</span>
+    <span class="n">y_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
+
+    <span class="c1"># Total Sum of Squares (TSS)</span>
+    <span class="n">tss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_mean</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># Residual Sum of Squares (RSS)</span>
+    <span class="n">rss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># R-squared calculation</span>
+    <span class="n">r_squared</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">rss</span> <span class="o">/</span> <span class="n">tss</span><span class="p">)</span>
+
+    <span class="c1"># Alternative calculation</span>
+    <span class="n">r_squared_alt</span> <span class="o">=</span> <span class="p">(</span><span class="n">tss</span> <span class="o">-</span> <span class="n">rss</span><span class="p">)</span> <span class="o">/</span> <span class="n">tss</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total Sum of Squares (TSS): </span><span class="si">{</span><span class="n">tss</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Residual Sum of Squares (RSS): </span><span class="si">{</span><span class="n">rss</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R-squared: </span><span class="si">{</span><span class="n">r_squared</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Percentage of variance explained: </span><span class="si">{</span><span class="n">r_squared</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tss</span><span class="p">,</span> <span class="n">rss</span><span class="p">,</span> <span class="n">r_squared</span>
+
+<span class="c1"># Example with synthetic data</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">X</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span>
+
+<span class="c1"># Fit linear regression</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Calculate R-squared components</span>
+<span class="n">tss</span><span class="p">,</span> <span class="n">rss</span><span class="p">,</span> <span class="n">r2</span> <span class="o">=</span> <span class="n">calculate_r_squared_components</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+<span class="c1"># Verify with sklearn</span>
+<span class="n">r2_sklearn</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sklearn R-squared: </span><span class="si">{</span><span class="n">r2_sklearn</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="marketing-data-analysis">Marketing Data Analysis</h4>
+<p>👉 <strong>Complete Marketing Campaign Analysis</strong></p>
+<p><a href="https://colab.research.google.com/github/examples/marketing-r-squared-analysis"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">r2_score</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+<span class="c1"># Load marketing data (simulated based on lesson example)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_marketing_data</span><span class="p">():</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">200</span>
+
+    <span class="c1"># Generate correlated advertising data</span>
+    <span class="n">tv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">radio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">newspaper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+    <span class="c1"># Generate sales with known relationship</span>
+    <span class="n">sales</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.94</span> <span class="o">+</span> <span class="mf">0.046</span><span class="o">*</span><span class="n">tv</span> <span class="o">+</span> <span class="mf">0.19</span><span class="o">*</span><span class="n">radio</span> <span class="o">-</span> <span class="mf">0.001</span><span class="o">*</span><span class="n">newspaper</span> <span class="o">+</span> 
+             <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s1">&#39;TV&#39;</span><span class="p">:</span> <span class="n">tv</span><span class="p">,</span>
+        <span class="s1">&#39;Radio&#39;</span><span class="p">:</span> <span class="n">radio</span><span class="p">,</span> 
+        <span class="s1">&#39;Newspaper&#39;</span><span class="p">:</span> <span class="n">newspaper</span><span class="p">,</span>
+        <span class="s1">&#39;Sales&#39;</span><span class="p">:</span> <span class="n">sales</span>
+    <span class="p">})</span>
+
+<span class="c1"># Analyze individual and combined performance</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">analyze_variable_performance</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">X_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;TV&#39;</span><span class="p">,</span> <span class="s1">&#39;Radio&#39;</span><span class="p">,</span> <span class="s1">&#39;Newspaper&#39;</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Sales&#39;</span><span class="p">]</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Individual variable analysis</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">X_columns</span><span class="p">:</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="n">col</span><span class="p">]]</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">r2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s1">_R2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r2</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2"> alone - R²: </span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Combined analysis</span>
+    <span class="n">X_combined</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">X_columns</span><span class="p">]</span>
+    <span class="n">model_combined</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+    <span class="n">model_combined</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_combined</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">y_pred_combined</span> <span class="o">=</span> <span class="n">model_combined</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_combined</span><span class="p">)</span>
+    <span class="n">r2_combined</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred_combined</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="s1">&#39;Combined_R2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r2_combined</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Combined model - R²: </span><span class="si">{</span><span class="n">r2_combined</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Improvement over best individual: </span><span class="si">{</span><span class="n">r2_combined</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;TV_R2&#39;</span><span class="p">],</span><span class="w"> </span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;Radio_R2&#39;</span><span class="p">],</span><span class="w"> </span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;Newspaper_R2&#39;</span><span class="p">])</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Run analysis</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">create_marketing_data</span><span class="p">()</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">analyze_variable_performance</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="advanced-r-squared-diagnostics">Advanced R-Squared Diagnostics</h4>
+<p>👉 <strong>R-Squared Diagnostic Tools</strong></p>
+<p><a href="https://colab.research.google.com/github/examples/r-squared-diagnostics"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">adjusted_r_squared</span><span class="p">(</span><span class="n">r2</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate adjusted R-squared</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        r2: Regular R-squared value</span>
+<span class="sd">        n: Number of observations</span>
+<span class="sd">        m: Number of independent variables</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">adjusted</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">r2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">adjusted</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">r_squared_diagnostics</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;Model&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Comprehensive R-squared analysis with diagnostics</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="c1"># Fit model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="c1"># Calculate metrics</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">adj_r2</span> <span class="o">=</span> <span class="n">adjusted_r_squared</span><span class="p">(</span><span class="n">r2</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+
+    <span class="c1"># Calculate components</span>
+    <span class="n">y_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">tss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_mean</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">rss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> Diagnostics:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sample size (n): </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of features (m): </span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R-squared: </span><span class="si">{</span><span class="n">r2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adjusted R-squared: </span><span class="si">{</span><span class="n">adj_r2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Difference: </span><span class="si">{</span><span class="n">r2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">adj_r2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total Sum of Squares: </span><span class="si">{</span><span class="n">tss</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Residual Sum of Squares: </span><span class="si">{</span><span class="n">rss</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Explained Sum of Squares: </span><span class="si">{</span><span class="n">tss</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">rss</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;r2&#39;</span><span class="p">:</span> <span class="n">r2</span><span class="p">,</span>
+        <span class="s1">&#39;adj_r2&#39;</span><span class="p">:</span> <span class="n">adj_r2</span><span class="p">,</span>
+        <span class="s1">&#39;tss&#39;</span><span class="p">:</span> <span class="n">tss</span><span class="p">,</span>
+        <span class="s1">&#39;rss&#39;</span><span class="p">:</span> <span class="n">rss</span><span class="p">,</span>
+        <span class="s1">&#39;n&#39;</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
+        <span class="s1">&#39;m&#39;</span><span class="p">:</span> <span class="n">m</span>
+    <span class="p">}</span>
+
+<span class="c1"># Example usage with marketing data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">create_marketing_data</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;TV&#39;</span><span class="p">,</span> <span class="s1">&#39;Radio&#39;</span><span class="p">,</span> <span class="s1">&#39;Newspaper&#39;</span><span class="p">]]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Sales&#39;</span><span class="p">]</span>
+
+<span class="n">diagnostics</span> <span class="o">=</span> <span class="n">r_squared_diagnostics</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;Marketing Model&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="hugging-face-integration">Hugging Face Integration</h3>
+<p>Explore regression datasets and model implementations:
+- <a href="https://huggingface.co/datasets?task_categories=tabular-regression">Regression Datasets Hub</a>
+- <a href="https://huggingface.co/scikit-learn">Scikit-learn Models Collection</a>
+- <a href="https://huggingface.co/models?library=sklearn&amp;task=tabular-regression">Linear Regression Implementations</a></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="references-further-reading">References &amp; Further Reading</h2>
+<h3 id="essential-resources">📚 Essential Resources</h3>
+<h4 id="statistical-theory-and-foundations">Statistical Theory and Foundations</h4>
+<ul>
+<li><strong>Montgomery, D.C., Peck, E.A., Vining, G.G. (2012)</strong>: "Introduction to Linear Regression Analysis, 5th Edition" - Comprehensive treatment of R-squared and model assessment</li>
+<li><strong>Kutner, M.H., Nachtsheim, C.J., Neter, J., Li, W. (2004)</strong>: "Applied Linear Statistical Models" - Classical reference for regression diagnostics</li>
+<li><strong>Draper, N.R., Smith, H. (1998)</strong>: "Applied Regression Analysis, 3rd Edition" - Detailed coverage of goodness-of-fit measures</li>
+</ul>
+<h4 id="performance-metrics-and-model-selection">Performance Metrics and Model Selection</h4>
+<ul>
+<li><strong>Hastie, T., Tibshirani, R., Friedman, J. (2009)</strong>: "The Elements of Statistical Learning" - Chapter 7 on model assessment and selection</li>
+<li><strong>James, G., Witten, D., Hastie, T., Tibshirani, R. (2013)</strong>: "An Introduction to Statistical Learning" - Accessible treatment of R-squared interpretation</li>
+<li><strong>Burnham, K.P., Anderson, D.R. (2002)</strong>: "Model Selection and Multimodel Inference" - Information-theoretic approaches to model comparison</li>
+</ul>
+<h4 id="industry-documentation-and-implementation">Industry Documentation and Implementation</h4>
+<ul>
+<li><a href="https://scikit-learn.org/stable/modules/model_evaluation.html#regression-metrics">Scikit-learn Regression Metrics</a> - Comprehensive guide to implementation and interpretation</li>
+<li><a href="https://numpy.org/doc/stable/reference/routines.statistics.html">NumPy Statistical Functions</a> - Computational tools for statistical analysis</li>
+<li><a href="https://pandas.pydata.org/docs/user_guide/computation.html">Pandas Statistical Analysis</a> - Data manipulation and basic statistics</li>
+</ul>
+<h4 id="advanced-topics-and-extensions">Advanced Topics and Extensions</h4>
+<ul>
+<li><strong>Cross-Validation for R-squared</strong>: Techniques for out-of-sample performance assessment</li>
+<li><strong>Bayesian R-squared</strong>: Posterior distributions for uncertainty quantification</li>
+<li><strong>Robust Regression Metrics</strong>: Alternatives to R-squared for outlier-resistant analysis</li>
+<li><strong>Information Criteria</strong>: AIC, BIC, and other model selection criteria beyond R-squared</li>
+</ul>
+<h4 id="research-applications">Research Applications</h4>
+<ul>
+<li><a href="https://ai.google/research/pubs/?area=MachineLearning&amp;cat=Statistics">Google AI Research: Statistical Methods</a> - Modern approaches to model evaluation</li>
+<li><a href="https://www.microsoft.com/en-us/research/research-area/machine-learning/">Microsoft Research: Regression Analysis</a> - Large-scale regression applications</li>
+<li><a href="https://research.facebook.com/publications/?cat=machine-learning">Meta AI Research: Performance Metrics</a> - Industry perspectives on model assessment</li>
+</ul>
+<h4 id="interactive-learning-resources">Interactive Learning Resources</h4>
+<ul>
+<li><a href="https://www.kaggle.com/learn/machine-learning-explainability">Kaggle Learn: Model Validation</a> - Practical model assessment techniques</li>
+<li><a href="https://www.coursera.org/specializations/regression-analysis">Coursera Regression Courses</a> - University-level courses on regression analysis</li>
+<li><a href="https://www.edx.org/learn/statistics">edX Statistics Courses</a> - Statistical foundations for model assessment</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2025 13:34:01 UTC">September 7, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../05-03-intrepretation-justificaton/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Linear Regression: Interpretation and Justification">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Linear Regression: Interpretation and Justification
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../05-05-coefficient-reliability/" class="md-footer__link md-footer__link--next" aria-label="Next: Linear Regression: Reliability of Coefficient Estimates">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Linear Regression: Reliability of Coefficient Estimates
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

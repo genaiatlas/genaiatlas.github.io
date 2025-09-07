@@ -1,0 +1,4145 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/1-learning-path/05-01-Intro-to-sup-learning/">
+      
+      
+        <link rel="prev" href="../05-regression/">
+      
+      
+        <link rel="next" href="../05-02-linear-regression/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Introduction to Supervised Learning: Regression Fundamentals - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Introduction to Supervised Learning: Regression Fundamentals
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-descriptive-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../00-math-foundation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Foundational Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-Sup-vs-unsup-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Supervised Vs. Un-supervised Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-Clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-dimen-reduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Dimensionality Reduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-embedding/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Embedding
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_6" id="__nav_2_4_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Regression
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            Regression
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Pre Read
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_6_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_6_2" id="__nav_2_4_2_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Supervised Learning
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_2_6_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            Supervised Learning
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Introduction to Supervised Learning: Regression Fundamentals
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction to Supervised Learning: Regression Fundamentals
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#course-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Course Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Course Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#learning-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Learning Objectives
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fundamental-concepts-of-supervised-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔵 Fundamental Concepts of Supervised Learning
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔵 Fundamental Concepts of Supervised Learning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-definition-and-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Definition and Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Foundation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-prediction-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Prediction Process
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-world-applications-in-generative-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-World Applications in Generative AI
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regression-vs-classification-core-distinctions" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟢 Regression vs Classification: Core Distinctions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🟢 Regression vs Classification: Core Distinctions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fundamental-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fundamental Differences
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regression-applications-in-modern-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔵 Regression Applications in Modern AI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classification-applications-in-ai-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔴 Classification Applications in AI Systems
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#linear-predictors-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linear Predictors in Practice
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#medical-diagnosis-supervised-learning-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟢 Medical Diagnosis: Supervised Learning Example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🟢 Medical Diagnosis: Supervised Learning Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clinical-decision-making-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clinical Decision-Making Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-training-process-in-healthcare-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Training Process in Healthcare AI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-prediction-types-in-healthcare" class="md-nav__link">
+    <span class="md-ellipsis">
+      Two Prediction Types in Healthcare
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clinical-implementation-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clinical Implementation Standards
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#machine-learning-pipeline-two-approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔵 Machine Learning Pipeline: Two Approaches
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔵 Machine Learning Pipeline: Two Approaches">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#direct-prediction-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Direct Prediction Approach
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statistical-modeling-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statistical Modeling Approach
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#convergence-in-linear-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convergence in Linear Regression
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mathematical-notation-and-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      🟢 Mathematical Notation and Conventions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🟢 Mathematical Notation and Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vector-representation-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vector Representation Standards
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statistical-parameter-notation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statistical Parameter Notation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modern-ai-notation-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modern AI Notation Extensions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Implementation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linear-regression-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔵 Linear Regression Fundamentals
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔵 Linear Regression Fundamentals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-framework-and-dataset-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Framework and Dataset Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-study-advertising-and-sales-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case Study: Advertising and Sales Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-questions-and-business-intelligence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Research Questions and Business Intelligence
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-visualization-and-pattern-recognition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Visualization and Pattern Recognition
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-and-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation and Practice
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation and Practice">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#google-colab-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Google Colab Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-implementation-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Implementation Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#industry-grade-implementation-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Industry-Grade Implementation Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hugging-face-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hugging Face Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-topics-and-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Topics and Extensions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Topics and Extensions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#regularization-techniques-in-modern-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      Regularization Techniques in Modern AI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#neural-network-foundations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Neural Network Foundations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scalability-and-production-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scalability and Production Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-technical-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Technical Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#academic-resources-and-research-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Academic Resources and Research Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#industry-research-and-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Industry Research and Applications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-learning-platforms-and-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Learning Platforms and Tools
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-02-linear-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-03-intrepretation-justificaton/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Intrepretation and Justification
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-04-r-squared-performance/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    R Square Performance
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-05-coefficient-reliability/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Co-Efficient Reliability
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-06-confidence_intervals_hypothesis_testing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Confidence Interval & Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-08-prediction_errors_docs/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Making New Prediction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-09-heteroskedasticity-and-multicollinearity/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Heteroskedasticity and Multicollinearity
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-10-latent_variables/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Latent Variables
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-11-linear-regression-with-non-linear-features/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression with Non-Linear Features
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-12-overfitting_bias_variance/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Overfitting and the Bias-Variance Trade-off
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-13-regularization_techniques/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regularization Techniques
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-14-validation_performance_assessment/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Validation Performance Assessment
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-15-cross_validation_techniques/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Cross Validation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-16-serialization-pickle-joblib/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Serialization - Pickle & Joblib
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-17-hyperparameter_tuning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hyper Parameter Tuning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="introduction-to-supervised-learning-regression-fundamentals">Introduction to Supervised Learning: Regression Fundamentals</h1>
+<p><a id="top"></a></p>
+<h2 id="quick-navigation">Quick Navigation</h2>
+<ul>
+<li><a href="#course-overview">Course Overview</a></li>
+<li><a href="#fundamental-concepts">Fundamental Concepts</a></li>
+<li><a href="#regression-vs-classification">Regression vs Classification</a></li>
+<li><a href="#medical-diagnosis-example">Medical Diagnosis Example</a></li>
+<li><a href="#machine-learning-pipeline">Machine Learning Pipeline</a></li>
+<li><a href="#mathematical-notation">Mathematical Notation</a></li>
+<li><a href="#linear-regression-fundamentals">Linear Regression Fundamentals</a></li>
+<li><a href="#implementation-and-practice">Implementation and Practice</a></li>
+<li><a href="#advanced-topics">Advanced Topics</a></li>
+<li><a href="#references--further-reading">References &amp; Further Reading</a></li>
+</ul>
+<h2 id="course-overview">Course Overview</h2>
+<p>This comprehensive guide explores the foundational concepts of supervised learning with emphasis on regression methods for predictive modeling. These principles form the mathematical backbone for advanced AI systems, including modern generative models used by OpenAI's GPT series, Google's PaLM, and Microsoft's Azure AI platforms.</p>
+<h3 id="learning-objectives">Learning Objectives</h3>
+<ul>
+<li>Master the core principles of supervised learning and regression analysis</li>
+<li>Understand the mathematical framework underlying linear predictors used in neural networks</li>
+<li>Distinguish between regression and classification methodologies in modern AI systems</li>
+<li>Apply regression techniques to real-world business problems similar to those at Meta and Google</li>
+<li>Implement proper mathematical notation conventions used in AI research</li>
+<li>Develop intuition for model interpretation and limitations in production systems</li>
+</ul>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li>Basic understanding of linear algebra and statistics</li>
+<li>Familiarity with Python programming and data science libraries</li>
+<li>Elementary knowledge of data visualization concepts</li>
+<li>Understanding of mathematical notation used in machine learning research</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="fundamental-concepts-of-supervised-learning">🔵 Fundamental Concepts of Supervised Learning</h2>
+<h3 id="core-definition-and-framework">Core Definition and Framework</h3>
+<p>Supervised learning represents a machine learning paradigm where algorithms learn from labeled training examples to make predictions on new, unseen data. This foundational approach underlies major AI breakthroughs including OpenAI's language models, Google's computer vision systems, and Microsoft's recommendation engines.</p>
+<p>The "supervised" aspect indicates that the learning process is guided by known input-output pairs, enabling algorithms to understand relationships between features and target variables.</p>
+<p><img alt="Supervised Learning Concept" src="../../../../svg/supervised-learning-concept.svg" /></p>
+<h3 id="mathematical-foundation">Mathematical Foundation</h3>
+<p>The supervised learning framework operates with labeled datasets where each example consists of:</p>
+<ul>
+<li><strong>Input vectors</strong>: <strong>X₁, X₂, ..., Xₙ</strong> (features/attributes)</li>
+<li><strong>Output values</strong>: <strong>Y₁, Y₂, ..., Yₙ</strong> (labels/targets)</li>
+<li><strong>Learning objective</strong>: Discover function f(X) that accurately maps inputs to outputs</li>
+</ul>
+<h3 id="the-prediction-process">The Prediction Process</h3>
+<p>The fundamental prediction workflow involves four critical stages:</p>
+<ol>
+<li><strong>Training Phase</strong>: Algorithm analyzes labeled examples to identify patterns</li>
+<li><strong>Model Development</strong>: Mathematical relationships are established between X and Y</li>
+<li><strong>Prediction Phase</strong>: For new input X, the model generates corresponding Y prediction</li>
+<li><strong>Validation</strong>: Model performance is assessed using unseen test data</li>
+</ol>
+<p>This process forms the foundation for modern AI systems used in industry applications ranging from Netflix's recommendation algorithms to Tesla's autonomous driving systems.</p>
+<h3 id="real-world-applications-in-generative-ai">Real-World Applications in Generative AI</h3>
+<p>Supervised learning powers numerous cutting-edge AI applications:</p>
+<ul>
+<li><strong>Large Language Models</strong>: GPT-4, Claude, and PaLM use supervised training on vast text corpora</li>
+<li><strong>Computer Vision</strong>: DALL-E 2, Midjourney, and Stable Diffusion employ supervised learning on image-text pairs</li>
+<li><strong>Multimodal Systems</strong>: GPT-4V and Google's Bard integrate supervised learning across text, image, and audio modalities</li>
+<li><strong>Code Generation</strong>: GitHub Copilot and CodeT5 utilize supervised learning on code repositories</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="regression-vs-classification-core-distinctions">🟢 Regression vs Classification: Core Distinctions</h2>
+<h3 id="fundamental-differences">Fundamental Differences</h3>
+<p>Understanding the distinction between regression and classification is crucial for selecting appropriate machine learning approaches in modern AI development.</p>
+<p><img alt="Regression vs Classification" src="../../../../svg/regression-vs-classification.svg" /></p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Regression</th>
+<th>Classification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Output Type</strong></td>
+<td>Continuous numerical values</td>
+<td>Discrete categories/classes</td>
+</tr>
+<tr>
+<td><strong>Prediction Goal</strong></td>
+<td>Estimate quantities (price, probability)</td>
+<td>Determine categories (sentiment, object type)</td>
+</tr>
+<tr>
+<td><strong>Mathematical Approach</strong></td>
+<td>Minimize continuous error functions</td>
+<td>Maximize classification accuracy</td>
+</tr>
+<tr>
+<td><strong>Error Measurement</strong></td>
+<td>MSE, RMSE, MAE</td>
+<td>Accuracy, F1-Score, AUC-ROC</td>
+</tr>
+<tr>
+<td><strong>Example Applications</strong></td>
+<td>Stock prediction, temperature forecasting</td>
+<td>Image classification, spam detection</td>
+</tr>
+<tr>
+<td><strong>Loss Functions</strong></td>
+<td>L1, L2, Huber loss</td>
+<td>Cross-entropy, hinge loss</td>
+</tr>
+</tbody>
+</table>
+<h3 id="regression-applications-in-modern-ai">🔵 Regression Applications in Modern AI</h3>
+<p>Regression techniques excel in quantitative prediction scenarios across major tech companies:</p>
+<ul>
+<li><strong>Financial Technology</strong>: Square and PayPal use regression for fraud risk scoring and transaction amount prediction</li>
+<li><strong>Autonomous Vehicles</strong>: Tesla and Waymo employ regression for steering angle prediction and speed control</li>
+<li><strong>Content Recommendation</strong>: YouTube and TikTok utilize regression for engagement time prediction and content ranking</li>
+<li><strong>Generative AI</strong>: OpenAI's GPT models use regression-like objectives for next-token probability prediction</li>
+</ul>
+<h3 id="classification-applications-in-ai-systems">🔴 Classification Applications in AI Systems</h3>
+<p>Classification handles categorical decision-making in production systems:</p>
+<ul>
+<li><strong>Natural Language Processing</strong>: Sentiment analysis in Twitter's content moderation and Google's search quality</li>
+<li><strong>Computer Vision</strong>: Object detection in Facebook's photo tagging and Apple's facial recognition</li>
+<li><strong>Content Moderation</strong>: Automated content classification systems at YouTube, TikTok, and Meta</li>
+<li><strong>Medical AI</strong>: Diagnostic classification systems developed by Google Health and Microsoft Healthcare Bot</li>
+</ul>
+<h3 id="linear-predictors-in-practice">Linear Predictors in Practice</h3>
+<p>Linear regression uses mathematical functions to model relationships between variables. The core principle involves:</p>
+<p>Y = θ₀ + θ₁X₁ + θ₂X₂ + ... + θₘXₘ</p>
+<p>When new data point X arrives, the algorithm:</p>
+<ol>
+<li>Computes the linear combination of features with learned weights</li>
+<li>Applies the mathematical function to generate predictions</li>
+<li>Returns quantitative estimates for regression or probability scores for classification</li>
+</ol>
+<p>This foundational approach underlies more complex models, including the transformer architectures used in ChatGPT, Claude, and other large language models.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="medical-diagnosis-supervised-learning-example">🟢 Medical Diagnosis: Supervised Learning Example</h2>
+<h3 id="clinical-decision-making-framework">Clinical Decision-Making Framework</h3>
+<p>Consider a physician examining patients in a modern healthcare AI system similar to those developed by Google Health or Microsoft's Healthcare Bot. Each patient presents comprehensive medical data:</p>
+<ul>
+<li><strong>Input Vector X</strong>: Multi-dimensional medical data including symptoms, vital signs, laboratory results, imaging findings, and patient history</li>
+<li><strong>Target Variable Y</strong>: Health status, diagnostic outcome, or treatment recommendation</li>
+</ul>
+<p><img alt="Medical Diagnosis Workflow" src="../../../svg/medical-diagnosis-workflow.svg" /></p>
+<h3 id="the-training-process-in-healthcare-ai">The Training Process in Healthcare AI</h3>
+<p>Medical AI systems learn through extensive supervised training:</p>
+<ol>
+<li><strong>Historical Patient Data</strong>: Thousands of labeled medical records from electronic health systems</li>
+<li><strong>Pattern Recognition</strong>: Identifying complex correlations between symptoms, biomarkers, and diagnoses</li>
+<li><strong>Model Validation</strong>: Testing predictions against known clinical outcomes and expert physician assessments</li>
+<li><strong>Continuous Learning</strong>: Updating models with new clinical evidence and treatment outcomes</li>
+</ol>
+<h3 id="two-prediction-types-in-healthcare">Two Prediction Types in Healthcare</h3>
+<h4 id="classification-examples">🔴 Classification Examples</h4>
+<ul>
+<li><strong>Binary Decision</strong>: Determining if patient has specific disease (COVID-19 positive/negative)</li>
+<li><strong>Multi-class Diagnosis</strong>: Identifying specific condition from multiple possibilities (pneumonia, flu, bronchitis)</li>
+<li><strong>Risk Stratification</strong>: Categorizing patients into risk groups (low, medium, high cardiac risk)</li>
+</ul>
+<h4 id="regression-examples">🔵 Regression Examples</h4>
+<ul>
+<li><strong>Continuous Prediction</strong>: Estimating life expectancy, recovery time, or treatment efficacy scores</li>
+<li><strong>Biomarker Prediction</strong>: Forecasting blood glucose levels, blood pressure trends, or medication dosages</li>
+<li><strong>Resource Planning</strong>: Predicting length of hospital stay or rehabilitation duration</li>
+</ul>
+<h3 id="clinical-implementation-standards">Clinical Implementation Standards</h3>
+<p>Modern healthcare AI systems following FDA and regulatory guidelines demonstrate supervised learning applications in:</p>
+<ul>
+<li><strong>Diagnostic Imaging</strong>: Google's DeepMind eye disease detection and Microsoft's Project InnerEye for cancer treatment</li>
+<li><strong>Drug Discovery</strong>: Partnerships between pharmaceutical companies and AI firms like DeepMind's AlphaFold for protein structure prediction</li>
+<li><strong>Personalized Medicine</strong>: Integration with genomic data for precision treatment recommendations</li>
+<li><strong>Clinical Decision Support</strong>: Real-time risk assessment and treatment optimization in electronic health records</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="machine-learning-pipeline-two-approaches">🔵 Machine Learning Pipeline: Two Approaches</h2>
+<h3 id="direct-prediction-approach">Direct Prediction Approach</h3>
+<p>This streamlined methodology focuses purely on predictive accuracy and is commonly used in production systems at major tech companies:</p>
+<div class="highlight"><pre><span></span><code>Training Data → ML Algorithm → Trained Model → New Data → Prediction
+</code></pre></div>
+<p><strong>Characteristics:</strong>
+- Emphasis on prediction performance over interpretability
+- Model acts as optimized function for generating outputs
+- Common in deep learning systems like GPT-4, DALL-E, and recommendation engines
+- Optimal for applications prioritizing accuracy over explanation (e.g., search rankings, content recommendations)</p>
+<p><strong>Industry Examples:</strong>
+- <strong>Netflix</strong>: Content recommendation algorithms optimizing for user engagement
+- <strong>Google Search</strong>: PageRank and neural ranking models prioritizing search relevance
+- <strong>Tesla Autopilot</strong>: End-to-end neural networks for autonomous driving decisions</p>
+<h3 id="statistical-modeling-approach">Statistical Modeling Approach</h3>
+<p>This comprehensive methodology emphasizes understanding mechanisms and is preferred in research and regulated industries:</p>
+<div class="highlight"><pre><span></span><code>Training Data → Statistical Analysis → Probabilistic Model → Interpretation → Prediction
+</code></pre></div>
+<p><strong>Characteristics:</strong>
+- Creates probabilistic models explaining X-Y relationships with uncertainty quantification
+- Enables causal inference and mechanism understanding
+- Provides confidence intervals and statistical significance testing
+- Essential for scientific research, medical applications, and regulatory compliance</p>
+<p><strong>Industry Applications:</strong>
+- <strong>Clinical Trials</strong>: Pharmaceutical companies like Pfizer and Moderna use statistical models for drug efficacy analysis
+- <strong>Financial Risk</strong>: Banks and fintech companies employ statistical models for credit risk assessment and regulatory reporting
+- <strong>Scientific Research</strong>: Academic institutions and research labs use statistical approaches for hypothesis testing and discovery</p>
+<h3 id="convergence-in-linear-regression">Convergence in Linear Regression</h3>
+<p>Both approaches yield mathematically identical results in linear regression contexts, but differ significantly in:</p>
+<ul>
+<li><strong>Interpretation</strong>: Direct prediction focuses on accuracy metrics; statistical modeling emphasizes parameter significance and confidence intervals</li>
+<li><strong>Application</strong>: Production systems vs research environments and regulatory compliance</li>
+<li><strong>Validation</strong>: Cross-validation and holdout testing vs statistical hypothesis testing and p-values</li>
+<li><strong>Communication</strong>: Stakeholder requirements for explainability and regulatory documentation</li>
+</ul>
+<p>This convergence makes linear regression an ideal foundation for understanding both machine learning and statistical approaches to prediction, bridging the gap between modern AI systems and traditional statistical analysis.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="mathematical-notation-and-conventions">🟢 Mathematical Notation and Conventions</h2>
+<h3 id="vector-representation-standards">Vector Representation Standards</h3>
+<p>Understanding mathematical notation is crucial for reading AI research papers from companies like OpenAI, Google DeepMind, and Microsoft Research.</p>
+<h4 id="basic-notation-rules">Basic Notation Rules</h4>
+<table>
+<thead>
+<tr>
+<th>Symbol Type</th>
+<th>Representation</th>
+<th>Example</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Boldface</strong></td>
+<td>Vectors</td>
+<td><strong>X = [X₁, X₂, X₃]ᵀ</strong></td>
+<td>Multi-dimensional data</td>
+</tr>
+<tr>
+<td><strong>Normal Font</strong></td>
+<td>Scalars</td>
+<td>Y, n, β, θ</td>
+<td>Single values</td>
+</tr>
+<tr>
+<td><strong>Subscripts</strong></td>
+<td>Position/Index</td>
+<td><strong>X₂</strong>, <strong>θᵢ</strong></td>
+<td>Second observation, i-th parameter</td>
+</tr>
+<tr>
+<td><strong>Superscripts</strong></td>
+<td>Powers/Transpose</td>
+<td><strong>Xᵀ</strong>, <strong>X²</strong></td>
+<td>Transpose, squared</td>
+</tr>
+</tbody>
+</table>
+<h4 id="vector-operations">Vector Operations</h4>
+<p><strong>Column Vector Standard:</strong></p>
+<p>X = [X₁]
+    [X₂]
+    [X₃]</p>
+<p><strong>Transpose Operation:</strong></p>
+<p>Xᵀ = [X₁  X₂  X₃]</p>
+<p><strong>Inner Product Calculation:</strong>
+For vectors <strong>X</strong> and <strong>Y</strong>:</p>
+<p>XᵀY = X₁Y₁ + X₂Y₂ + X₃Y₃</p>
+<h3 id="statistical-parameter-notation">Statistical Parameter Notation</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>Context</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>θ</strong>*</td>
+<td>True parameter value</td>
+<td>Population parameter</td>
+<td>True population mean</td>
+</tr>
+<tr>
+<td><strong>θ̂</strong></td>
+<td>Estimated parameter</td>
+<td>Sample statistic</td>
+<td>Maximum likelihood estimate</td>
+</tr>
+<tr>
+<td><strong>n</strong></td>
+<td>Sample size</td>
+<td>Dataset dimension</td>
+<td>Number of training examples</td>
+</tr>
+<tr>
+<td><strong>lowercase</strong></td>
+<td>Realized values</td>
+<td>Observed data</td>
+<td>Actual measurement y</td>
+</tr>
+<tr>
+<td><strong>UPPERCASE</strong></td>
+<td>Random variables</td>
+<td>Theoretical construct</td>
+<td>Random variable Y</td>
+</tr>
+</tbody>
+</table>
+<h3 id="modern-ai-notation-extensions">Modern AI Notation Extensions</h3>
+<p>Contemporary AI research extends traditional notation:</p>
+<ul>
+<li><strong>W, b</strong>: Weight matrices and bias vectors in neural networks</li>
+<li><strong>L(·)</strong>: Loss functions (cross-entropy, MSE)</li>
+<li><strong>∇</strong>: Gradient operator for backpropagation</li>
+<li><strong>α</strong>: Learning rate in gradient descent</li>
+<li><strong>λ</strong>: Regularization parameters</li>
+</ul>
+<h3 id="practical-implementation">Practical Implementation</h3>
+<p>These conventions ensure consistency across:</p>
+<ul>
+<li><strong>Research Publications</strong>: Standardized mathematical communication in NIPS, ICML, ICLR conferences</li>
+<li><strong>Software Implementation</strong>: Clear variable naming in TensorFlow, PyTorch, and JAX codebases  </li>
+<li><strong>Model Documentation</strong>: Unambiguous parameter definitions in model cards and technical reports</li>
+<li><strong>Team Collaboration</strong>: Shared understanding between research scientists and ML engineers</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="linear-regression-fundamentals">🔵 Linear Regression Fundamentals</h2>
+<h3 id="mathematical-framework-and-dataset-structure">Mathematical Framework and Dataset Structure</h3>
+<p>Linear regression operates on structured datasets containing labeled examples, forming the foundation for understanding more complex models used in modern AI systems.</p>
+<p><img alt="Linear Regression Framework" src="../../../svg/linear-regression-framework.svg" /></p>
+<p><strong>Dataset Composition:</strong>
+- <strong>Input vectors</strong>: X₁, X₂, ..., Xₙ where each Xᵢ ∈ ℝᵐ (m-dimensional feature vectors)
+- <strong>Output labels</strong>: Y₁, Y₂, ..., Yₙ where each Yᵢ ∈ ℝ (continuous target values)
+- <strong>Sample size</strong>: n total training examples
+- <strong>Feature dimension</strong>: m attributes per example</p>
+<p><strong>Prediction Objective:</strong>
+Construct a function g: ℝᵐ → ℝ that maps input features to predicted outputs:</p>
+<p>Regressor/Predictor: Ŷ = g(X) = θᵀX</p>
+<h3 id="case-study-advertising-and-sales-analysis">Case Study: Advertising and Sales Analysis</h3>
+<p>A comprehensive business analytics example demonstrates linear regression principles used by companies like Google Ads, Meta Business, and Amazon Advertising.</p>
+<p><strong>Business Context:</strong>
+A multi-market retail company operates across 200 geographical markets, implementing diverse advertising strategies through multiple channels. The analytical objective involves understanding relationships between advertising investments and sales performance.</p>
+<p><strong>Dataset Specification:</strong>
+- <strong>Sample Size</strong>: n = 200 markets
+- <strong>Feature Dimension</strong>: m = 3 advertising channels<br />
+- <strong>Total Parameters</strong>: 4 (including intercept θ₀)</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Type</th>
+<th>Scale</th>
+<th>Business Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>X₁</strong></td>
+<td>TV advertising budget</td>
+<td>Continuous</td>
+<td>$0-300K</td>
+<td>Mass market reach</td>
+</tr>
+<tr>
+<td><strong>X₂</strong></td>
+<td>Radio advertising budget</td>
+<td>Continuous</td>
+<td>$0-50K</td>
+<td>Targeted demographics</td>
+</tr>
+<tr>
+<td><strong>X₃</strong></td>
+<td>Newspaper advertising budget</td>
+<td>Continuous</td>
+<td>$0-100K</td>
+<td>Local market penetration</td>
+</tr>
+<tr>
+<td><strong>Y</strong></td>
+<td>Sales revenue</td>
+<td>Continuous (Target)</td>
+<td>$5-25K</td>
+<td>Business outcome</td>
+</tr>
+</tbody>
+</table>
+<h3 id="research-questions-and-business-intelligence">Research Questions and Business Intelligence</h3>
+<p>The analysis addresses critical business intelligence requirements similar to those faced by major advertising platforms:</p>
+<ol>
+<li>
+<p><strong>Relationship Analysis</strong>: Does systematic correlation exist between channel-specific advertising spend and sales outcomes?</p>
+</li>
+<li>
+<p><strong>Channel Effectiveness</strong>: Which advertising mediums demonstrate strongest predictive power for sales performance, similar to attribution analysis in Google Analytics?</p>
+</li>
+<li>
+<p><strong>Predictive Modeling</strong>: Can budget allocations in new markets accurately forecast expected sales results for campaign optimization?</p>
+</li>
+<li>
+<p><strong>Resource Optimization</strong>: How should marketing investments be distributed across channels to maximize ROI, following optimization strategies used by Meta's ad platform?</p>
+</li>
+</ol>
+<h3 id="data-visualization-and-pattern-recognition">Data Visualization and Pattern Recognition</h3>
+<p>Given the multi-dimensional nature of the data (three predictors plus one response), analysis requires systematic visualization approaches:</p>
+<p><strong>Pairwise Analysis Results:</strong>
+- <strong>TV vs Sales</strong>: Strong positive linear correlation (R² ≈ 0.81), indicating reliable predictive relationship
+- <strong>Radio vs Sales</strong>: Moderate positive correlation (R² ≈ 0.33), suggesting complementary advertising effect<br />
+- <strong>Newspaper vs Sales</strong>: Weak correlation (R² ≈ 0.05), indicating limited effectiveness in digital era</p>
+<p>This systematic approach to exploratory data analysis mirrors techniques used by data science teams at major technology companies for understanding complex business relationships.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="implementation-and-practice">Implementation and Practice</h2>
+<h3 id="google-colab-integration">Google Colab Integration</h3>
+<p>👉 <strong><a href="https://colab.research.google.com/github/tensorflow/docs/blob/master/site/en/tutorials/keras/regression.ipynb">Linear Regression from Scratch Implementation</a></strong></p>
+<p><a href="https://colab.research.google.com/github/tensorflow/docs/blob/master/site/en/tutorials/keras/regression.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<h3 id="advanced-implementation-examples">Advanced Implementation Examples</h3>
+<p>👉 <strong><a href="https://colab.research.google.com/github/scikit-learn/scikit-learn/blob/main/examples/linear_model/plot_ols.ipynb">Scikit-learn Linear Regression Tutorial</a></strong></p>
+<p><a href="https://colab.research.google.com/github/scikit-learn/scikit-learn/blob/main/examples/linear_model/plot_ols.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<h3 id="industry-grade-implementation-pipeline">Industry-Grade Implementation Pipeline</h3>
+<h4 id="tensorflowkeras-implementation">TensorFlow/Keras Implementation</h4>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">keras</span>
+
+<span class="c1"># Define linear regression model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">Sequential</span><span class="p">([</span>
+    <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="n">m</span><span class="p">,),</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="c1"># Compile with MSE loss and Adam optimizer</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mae&#39;</span><span class="p">])</span>
+
+<span class="c1"># Train model with validation split</span>
+<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> 
+                   <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> 
+                   <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+                   <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="pytorch-implementation">PyTorch Implementation</h4>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch.optim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">optim</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">LinearRegression</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="c1"># Initialize model and training components</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="hugging-face-integration">Hugging Face Integration</h3>
+<p><strong>🤗 Regression with Transformers:</strong>
+- <a href="https://huggingface.co/docs/transformers/tasks/regression">Regression Tasks Documentation</a>
+- <a href="https://huggingface.co/models?pipeline_tag=regression">Linear Models Hub</a></p>
+<p><strong>📄 Research Papers:</strong>
+- <a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a> - Transformer architecture foundations
+- <a href="https://arxiv.org/abs/1810.04805">BERT: Pre-training of Deep Bidirectional Transformers</a> - Bidirectional representation learning</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="advanced-topics-and-extensions">Advanced Topics and Extensions</h2>
+<h3 id="regularization-techniques-in-modern-ai">Regularization Techniques in Modern AI</h3>
+<p><strong>Ridge Regression (L2 Regularization):</strong></p>
+<p>θ̂ = (XᵀX + λI)⁻¹XᵀY</p>
+<p>Used extensively in neural network training to prevent overfitting.</p>
+<p><strong>Lasso Regression (L1 Regularization):</strong>
+Promotes sparsity through L1 penalty, enabling automatic feature selection similar to attention mechanisms in transformers.</p>
+<p><strong>Elastic Net:</strong>
+Combines L1 and L2 penalties for balanced regularization, commonly used in production ML systems.</p>
+<h3 id="neural-network-foundations">Neural Network Foundations</h3>
+<p>Linear regression principles directly underlie neural network architectures used by major AI companies:</p>
+<h4 id="fundamental-connections">Fundamental Connections</h4>
+<ul>
+<li><strong>Perceptron</strong>: Single linear layer with nonlinear activation function</li>
+<li><strong>Deep Networks</strong>: Composition of linear transformations (matrix multiplications) and nonlinearities</li>
+<li><strong>Attention Mechanisms</strong>: Weighted linear combinations in Transformer models used by GPT, BERT, and T5</li>
+</ul>
+<h4 id="generative-ai-applications">Generative AI Applications</h4>
+<ul>
+<li><strong>Language Models</strong>: Next-token prediction as regression over vocabulary distributions</li>
+<li><strong>Computer Vision</strong>: CNN feature extraction followed by linear classification layers</li>
+<li><strong>Multimodal Systems</strong>: Linear projections for aligning different modalities (text, image, audio)</li>
+</ul>
+<h4 id="industry-implementations">Industry Implementations</h4>
+<ul>
+<li><strong>OpenAI GPT Models</strong>: Massive linear layers (175B+ parameters) in transformer architectures</li>
+<li><strong>Google BERT/T5</strong>: Linear output layers for fine-tuning on downstream tasks</li>
+<li><strong>Meta's LLaMA</strong>: Efficient linear projections with RMSNorm and SwiGLU activations</li>
+<li><strong>Microsoft's DialoGPT</strong>: Linear layers for dialog generation and response ranking</li>
+</ul>
+<h3 id="scalability-and-production-considerations">Scalability and Production Considerations</h3>
+<p>Modern implementations handle datasets with billions of examples and millions of features:</p>
+<ul>
+<li><strong>Distributed Training</strong>: Gradient computation across multiple GPUs and machines</li>
+<li><strong>Mixed Precision</strong>: FP16/BF16 arithmetic for memory efficiency</li>
+<li><strong>Model Parallelism</strong>: Splitting large linear layers across multiple devices</li>
+<li><strong>Gradient Accumulation</strong>: Training with effective large batch sizes</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="references-further-reading">References &amp; Further Reading</h2>
+<h3 id="core-technical-resources">Core Technical Resources</h3>
+<ul>
+<li>
+<p><strong><a href="https://scikit-learn.org/stable/modules/linear_model.html">Scikit-learn Linear Models Documentation</a></strong> - Comprehensive implementation guide with mathematical foundations and practical examples</p>
+</li>
+<li>
+<p><strong><a href="https://www.tensorflow.org/tutorials/keras/regression">TensorFlow Regression Tutorial</a></strong> - Official Google tutorial covering deep learning approaches to regression problems</p>
+</li>
+<li>
+<p><strong><a href="https://pytorch.org/docs/stable/nn.html#linear-layers">PyTorch Linear Layers Documentation</a></strong> - Meta's PyTorch documentation for neural network implementations of linear regression</p>
+</li>
+</ul>
+<h3 id="academic-resources-and-research-papers">Academic Resources and Research Papers</h3>
+<ul>
+<li>
+<p><strong><a href="https://web.stanford.edu/~hastie/ElemStatLearn/">The Elements of Statistical Learning</a></strong> by Hastie, Tibshirani, and Friedman - Advanced mathematical treatment of linear methods and statistical learning theory</p>
+</li>
+<li>
+<p><strong><a href="https://www.statlearning.com/">An Introduction to Statistical Learning</a></strong> by James, Witten, Hastie, and Tibshirani - Accessible introduction with R implementations and practical examples</p>
+</li>
+<li>
+<p><strong><a href="https://www.microsoft.com/en-us/research/people/cmbishop/prml-book/">Pattern Recognition and Machine Learning</a></strong> by Christopher Bishop - Bayesian perspective on linear regression and probabilistic machine learning</p>
+</li>
+</ul>
+<h3 id="industry-research-and-applications">Industry Research and Applications</h3>
+<ul>
+<li>
+<p><strong><a href="https://ai.google/research/">Google AI Research</a></strong> - Cutting-edge developments in large-scale machine learning, neural architecture search, and optimization techniques</p>
+</li>
+<li>
+<p><strong><a href="https://openai.com/research/">OpenAI Research</a></strong> - Advanced neural architectures building on linear algebra foundations, including GPT series and multimodal models</p>
+</li>
+<li>
+<p><strong><a href="https://www.microsoft.com/en-us/research/research-area/artificial-intelligence/">Microsoft Research</a></strong> - Enterprise AI applications, distributed training methodologies, and theoretical advances in ML</p>
+</li>
+<li>
+<p><strong><a href="https://ai.facebook.com/research/">Meta AI Research</a></strong> - Large-scale implementations, efficient training techniques, and open-source contributions to PyTorch ecosystem</p>
+</li>
+</ul>
+<h3 id="practical-learning-platforms-and-tools">Practical Learning Platforms and Tools</h3>
+<ul>
+<li>
+<p><strong><a href="https://www.kaggle.com/learn/machine-learning">Kaggle Learn</a></strong> - Hands-on courses with real datasets, competitions, and community-driven learning experiences</p>
+</li>
+<li>
+<p><strong><a href="https://colab.research.google.com/">Google Colab</a></strong> - Free cloud-based environment for machine learning experimentation with GPU/TPU access</p>
+</li>
+<li>
+<p><strong><a href="https://huggingface.co/course">Hugging Face Course</a></strong> - Comprehensive course on modern NLP and transformer architectures with practical implementations</p>
+</li>
+<li>
+<p><strong><a href="https://course.fast.ai/">Fast.ai Practical Deep Learning</a></strong> - Top-down approach to deep learning with emphasis on practical applications and code-first learning</p>
+</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 7, 2025 13:34:01 UTC">September 7, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../05-regression/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Pre-Read">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Pre-Read
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../05-02-linear-regression/" class="md-footer__link md-footer__link--next" aria-label="Next: Linear Regression: Complete Guide">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Linear Regression: Complete Guide
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>
