@@ -1,0 +1,174 @@
+<svg width="900" height="650" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 20px; font-weight: bold; fill: #333; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #333; }
+      .label { font-family: Arial, sans-serif; font-size: 12px; fill: #333; }
+      .small-label { font-family: Arial, sans-serif; font-size: 10px; fill: #333; }
+      .axis { stroke: #333; stroke-width: 2; }
+      .grid { stroke: #ddd; stroke-width: 0.5; }
+      .bias-line { stroke: #dc3545; stroke-width: 3; fill: none; }
+      .variance-line { stroke: #007bff; stroke-width: 3; fill: none; }
+      .total-error-line { stroke: #28a745; stroke-width: 3; fill: none; }
+      .optimal-line { stroke: #ffc107; stroke-width: 2; stroke-dasharray: 5,5; }
+      .target-circle { fill: none; stroke: #333; stroke-width: 2; }
+      .prediction-point { fill: #666; }
+      .underfitting { fill: #ffebee; stroke: #f44336; stroke-width: 2; }
+      .overfitting { fill: #e3f2fd; stroke: #2196f3; stroke-width: 2; }
+      .optimal { fill: #e8f5e8; stroke: #4caf50; stroke-width: 2; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="450" y="25" text-anchor="middle" class="title">Bias-Variance Trade-off</text>
+  
+  <!-- Main Chart -->
+  <g transform="translate(50, 50)">
+    <!-- Chart background and grid -->
+    <rect x="0" y="0" width="500" height="300" fill="#fafafa" stroke="#ddd" stroke-width="1" />
+    
+    <!-- Grid lines -->
+    <g class="grid">
+      <line x1="0" y1="60" x2="500" y2="60" />
+      <line x1="0" y1="120" x2="500" y2="120" />
+      <line x1="0" y1="180" x2="500" y2="180" />
+      <line x1="0" y1="240" x2="500" y2="240" />
+      <line x1="100" y1="0" x2="100" y2="300" />
+      <line x1="200" y1="0" x2="200" y2="300" />
+      <line x1="300" y1="0" x2="300" y2="300" />
+      <line x1="400" y1="0" x2="400" y2="300" />
+    </g>
+    
+    <!-- Axes -->
+    <line x1="0" y1="300" x2="500" y2="300" class="axis" />
+    <line x1="0" y1="0" x2="0" y2="300" class="axis" />
+    
+    <!-- Axis labels -->
+    <text x="250" y="330" text-anchor="middle" class="label">Model Complexity</text>
+    <text x="-30" y="150" text-anchor="middle" class="label" transform="rotate(-90 -30 150)">Error</text>
+    
+    <!-- Complexity labels -->
+    <text x="50" y="320" text-anchor="middle" class="small-label">Low</text>
+    <text x="450" y="320" text-anchor="middle" class="small-label">High</text>
+    
+    <!-- Bias curve (decreasing) -->
+    <path d="M 20 80 Q 150 90 250 120 Q 350 160 480 220" class="bias-line" />
+    <text x="480" y="235" class="label" fill="#dc3545">Bias²</text>
+    
+    <!-- Variance curve (increasing) -->
+    <path d="M 20 220 Q 150 200 250 160 Q 350 120 480 80" class="variance-line" />
+    <text x="480" y="95" class="label" fill="#007bff">Variance</text>
+    
+    <!-- Total Error curve (U-shaped) -->
+    <path d="M 20 180 Q 120 140 200 130 Q 280 135 350 150 Q 420 170 480 200" class="total-error-line" />
+    <text x="480" y="215" class="label" fill="#28a745">Total Error</text>
+    
+    <!-- Optimal point -->
+    <circle cx="200" cy="130" r="4" fill="#ffc107" stroke="#333" stroke-width="2" />
+    <line x1="200" y1="130" x2="200" y2="300" class="optimal-line" />
+    <text x="205" y="125" class="small-label">Optimal</text>
+    <text x="205" y="290" class="small-label">Sweet Spot</text>
+    
+    <!-- Region labels -->
+    <text x="80" y="20" text-anchor="middle" class="label" fill="#dc3545">High Bias</text>
+    <text x="80" y="35" text-anchor="middle" class="label" fill="#dc3545">Low Variance</text>
+    <text x="380" y="20" text-anchor="middle" class="label" fill="#007bff">Low Bias</text>
+    <text x="380" y="35" text-anchor="middle" class="label" fill="#007bff">High Variance</text>
+  </g>
+  
+  <!-- Visual Examples -->
+  <g transform="translate(600, 50)">
+    <text x="125" y="0" text-anchor="middle" class="subtitle">Target Practice Analogy</text>
+    
+    <!-- High Bias, Low Variance (Underfitting) -->
+    <g transform="translate(0, 30)">
+      <rect x="0" y="0" width="110" height="110" class="underfitting" rx="5" />
+      <text x="55" y="12" text-anchor="middle" class="small-label" font-weight="bold">High Bias</text>
+      <text x="55" y="24" text-anchor="middle" class="small-label" font-weight="bold">Low Variance</text>
+      <text x="55" y="125" text-anchor="middle" class="small-label">(Underfitting)</text>
+      
+      <!-- Target -->
+      <circle cx="55" cy="65" r="20" class="target-circle" />
+      <circle cx="55" cy="65" r="12" class="target-circle" />
+      <circle cx="55" cy="65" r="4" class="target-circle" />
+      
+      <!-- Predictions (clustered but off-center) -->
+      <circle cx="35" cy="50" r="2" class="prediction-point" />
+      <circle cx="38" cy="55" r="2" class="prediction-point" />
+      <circle cx="32" cy="48" r="2" class="prediction-point" />
+      <circle cx="36" cy="52" r="2" class="prediction-point" />
+      <circle cx="34" cy="46" r="2" class="prediction-point" />
+    </g>
+    
+    <!-- Low Bias, High Variance (Overfitting) -->
+    <g transform="translate(130, 30)">
+      <rect x="0" y="0" width="110" height="110" class="overfitting" rx="5" />
+      <text x="55" y="12" text-anchor="middle" class="small-label" font-weight="bold">Low Bias</text>
+      <text x="55" y="24" text-anchor="middle" class="small-label" font-weight="bold">High Variance</text>
+      <text x="55" y="125" text-anchor="middle" class="small-label">(Overfitting)</text>
+      
+      <!-- Target -->
+      <circle cx="55" cy="65" r="20" class="target-circle" />
+      <circle cx="55" cy="65" r="12" class="target-circle" />
+      <circle cx="55" cy="65" r="4" class="target-circle" />
+      
+      <!-- Predictions (scattered around center) -->
+      <circle cx="53" cy="63" r="2" class="prediction-point" />
+      <circle cx="40" cy="80" r="2" class="prediction-point" />
+      <circle cx="70" cy="50" r="2" class="prediction-point" />
+      <circle cx="45" cy="55" r="2" class="prediction-point" />
+      <circle cx="65" cy="75" r="2" class="prediction-point" />
+    </g>
+    
+    <!-- Low Bias, Low Variance (Good fit) -->
+    <g transform="translate(65, 170)">
+      <rect x="0" y="0" width="110" height="110" class="optimal" rx="5" />
+      <text x="55" y="12" text-anchor="middle" class="small-label" font-weight="bold">Low Bias</text>
+      <text x="55" y="24" text-anchor="middle" class="small-label" font-weight="bold">Low Variance</text>
+      <text x="55" y="125" text-anchor="middle" class="small-label">(Good Fit)</text>
+      
+      <!-- Target -->
+      <circle cx="55" cy="65" r="20" class="target-circle" />
+      <circle cx="55" cy="65" r="12" class="target-circle" />
+      <circle cx="55" cy="65" r="4" class="target-circle" />
+      
+      <!-- Predictions (clustered near center) -->
+      <circle cx="57" cy="67" r="2" class="prediction-point" />
+      <circle cx="53" cy="63" r="2" class="prediction-point" />
+      <circle cx="55" cy="65" r="2" class="prediction-point" />
+      <circle cx="54" cy="64" r="2" class="prediction-point" />
+      <circle cx="56" cy="66" r="2" class="prediction-point" />
+    </g>
+  </g>
+  
+  <!-- Key Concepts -->
+  <g transform="translate(50, 380)">
+    <rect x="0" y="0" width="800" height="200" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="8" />
+    <text x="400" y="25" text-anchor="middle" class="subtitle">Key Concepts and Implications</text>
+    
+    <!-- Bias definition -->
+    <text x="20" y="50" class="label" font-weight="bold" fill="#dc3545">Bias:</text>
+    <text x="20" y="65" class="label">• Systematic error from simplifying assumptions</text>
+    <text x="20" y="80" class="label">• High bias → model too simple → underfitting</text>
+    <text x="20" y="95" class="label">• Consistent errors across different training sets</text>
+    
+    <!-- Variance definition -->
+    <text x="20" y="120" class="label" font-weight="bold" fill="#007bff">Variance:</text>
+    <text x="20" y="135" class="label">• Sensitivity to training data variations</text>
+    <text x="20" y="150" class="label">• High variance → model too complex → overfitting</text>
+    <text x="20" y="165" class="label">• Predictions change dramatically with different data</text>
+    
+    <!-- Trade-off implications -->
+    <text x="400" y="50" class="label" font-weight="bold" fill="#28a745">Trade-off Implications:</text>
+    <text x="400" y="65" class="label">• Total Error = Bias² + Variance + Irreducible Error</text>
+    <text x="400" y="80" class="label">• Reducing bias often increases variance</text>
+    <text x="400" y="95" class="label">• Reducing variance often increases bias</text>
+    <text x="400" y="110" class="label">• Goal: Find optimal balance point</text>
+    
+    <!-- Practical strategies -->
+    <text x="400" y="135" class="label" font-weight="bold" fill="#ffc107">Practical Strategies:</text>
+    <text x="400" y="150" class="label">• Use cross-validation to detect overfitting</text>
+    <text x="400" y="165" class="label">• Regularization helps reduce variance</text>
+    <text x="400" y="180" class="label">• Ensemble methods can reduce both bias and variance</text>
+  </g>
+</svg>

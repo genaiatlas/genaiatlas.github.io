@@ -1,0 +1,3466 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/2-additional-reference/14-hands-on-auto-mpg-linear_regression/">
+      
+      
+        <link rel="prev" href="../13-hands-on-bigmart/">
+      
+      
+        <link rel="next" href="../51.case-study-human-generated-text/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Linear Regression Hands-On Tutorial: Car Mileage Prediction - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Linear Regression Hands-On Tutorial: Car Mileage Prediction
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-descriptive-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../1-learning-path/00-math-foundation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3" id="__nav_2_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_2" id="__nav_2_4_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Regression - Hands on
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Regression - Hands on
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../10-hands-on-regression-advertisement/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Sales Prediction - Advertisement
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../11-hands-on-regression-hospital_los_linear-model/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hospital Length of Stay Prediction - Linear Model
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../12-hands-on-regression-hospital_los-non-linear-model/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hospital Length of Stay Prediction - Non Linear Model
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../13-hands-on-bigmart/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Big Mart Prediction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_2_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_2_5" id="__nav_2_4_3_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Auto MPG - Linear Regression
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_3_2_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            Auto MPG - Linear Regression
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression Hands-On Tutorial: Car Mileage Prediction
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Linear Regression Hands-On Tutorial: Car Mileage Prediction
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-and-dataset-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction and Dataset Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-preprocessing-and-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Preprocessing and Engineering
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exploratory-data-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exploratory Data Analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linear-regression-modeling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linear Regression Modeling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tree-based-models-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tree-Based Models Implementation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-comparison-and-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Comparison and Evaluation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#critical-analysis-and-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical Analysis and Limitations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-walkthrough-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Walkthrough Reference
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-1-environment-setup-and-library-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 1: Environment Setup and Library Imports
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2-data-loading-and-initial-exploration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 2: Data Loading and Initial Exploration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3-data-preprocessing-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 3: Data Preprocessing Pipeline
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 3: Data Preprocessing Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-dummy-variable-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1 Dummy Variable Creation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-missing-value-detection-and-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2 Missing Value Detection and Handling
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-missing-value-imputation" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3 Missing Value Imputation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-4-exploratory-data-analysis-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 4: Exploratory Data Analysis Implementation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-5-data-splitting-and-preparation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 5: Data Splitting and Preparation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-6-linear-regression-with-statsmodels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 6: Linear Regression with Statsmodels
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 6: Linear Regression with Statsmodels">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-model-preparation" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1 Model Preparation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-model-fitting-and-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2 Model Fitting and Summary
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-7-model-performance-evaluation-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 7: Model Performance Evaluation Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 7: Model Performance Evaluation Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-performance-metric-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1 Performance Metric Functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-comprehensive-model-performance-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2 Comprehensive Model Performance Function
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-8-cross-validation-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 8: Cross-Validation Implementation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-9-decision-tree-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 9: Decision Tree Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 9: Decision Tree Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-data-preparation-for-tree-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.1 Data Preparation for Tree Models
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-decision-tree-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.2 Decision Tree Training
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-decision-tree-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.3 Decision Tree Visualization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-10-random-forest-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 10: Random Forest Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 10: Random Forest Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-random-forest-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.1 Random Forest Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-random-forest-performance-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.2 Random Forest Performance Evaluation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-11-feature-importance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 11: Feature Importance Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 11: Feature Importance Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111-decision-tree-feature-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      11.1 Decision Tree Feature Importance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-random-forest-feature-importance" class="md-nav__link">
+    <span class="md-ellipsis">
+      11.2 Random Forest Feature Importance
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-12-model-comparison-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 12: Model Comparison Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 12: Model Comparison Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-foundations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Foundations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computational-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computational Complexity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Notes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-and-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References and Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../51.case-study-human-generated-text/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../99-unsupervised_learning_resources/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    External Resources
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="linear-regression-hands-on-tutorial-car-mileage-prediction">Linear Regression Hands-On Tutorial: Car Mileage Prediction <a id="top"></a></h1>
+<p><a href="https://drive.google.com/file/d/10agSIT76mlL9VzsFxTxi2A7-A_llXuU4/view?usp=drive_link"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
+<a href="https://drive.google.com/file/d/1f6nFNmLgQ5xFofmSjSxD12uaWs610iq4/view?usp=sharing"><img alt="Dataset" src="https://img.shields.io/badge/Dataset-Download-blue" /></a></p>
+<h2 id="quick-navigation">Quick Navigation</h2>
+<ul>
+<li><a href="#introduction">Introduction and Dataset Overview</a>  </li>
+<li><a href="#preprocessing">Data Preprocessing and Engineering</a>  </li>
+<li><a href="#exploratory">Exploratory Data Analysis</a>  </li>
+<li><a href="#linear-modeling">Linear Regression Modeling</a>  </li>
+<li><a href="#tree-models">Tree-Based Models Implementation</a>  </li>
+<li><a href="#model-comparison">Model Comparison and Evaluation</a>  </li>
+<li><a href="#critical-analysis">Critical Analysis and Limitations</a>  </li>
+<li><a href="#code-walkthrough">Code Walkthrough Reference</a>  </li>
+</ul>
+<h2 id="introduction-and-dataset-overview">Introduction and Dataset Overview <a id="introduction"></a></h2>
+<p>This tutorial demonstrates a comprehensive approach to predicting automobile fuel efficiency (miles per gallon) using multiple regression techniques. The analysis progresses from classical linear regression through modern tree-based methods, providing insights into model selection and performance trade-offs.</p>
+<p><strong>Dataset Characteristics:</strong>
+The automobile dataset contains 398 observations with 8 variables measuring various car attributes. The target variable is fuel efficiency (mpg), while predictors include engine specifications, vehicle weight, acceleration, and origin. This represents a classic regression problem with mixed continuous and categorical variables.</p>
+<p><strong>Business Context:</strong>
+Understanding fuel efficiency relationships helps automotive manufacturers optimize design decisions, consumers make informed purchasing choices, and policymakers develop efficiency standards. The analysis reveals which vehicle characteristics most strongly influence fuel consumption.</p>
+<p><strong>Methodological Approach:</strong>
+We implement three distinct modeling paradigms: statistical linear regression (OLS), decision trees, and ensemble methods (Random Forest). This comparison illuminates the strengths and limitations of different approaches for automotive prediction tasks.</p>
+<p>[See Code Walkthrough Section 1: Environment Setup and Data Loading]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<h2 id="data-preprocessing-and-engineering">Data Preprocessing and Engineering <a id="preprocessing"></a></h2>
+<p><strong>Categorical Variable Transformation:</strong>
+The origin variable requires careful handling since it represents geographic regions (America, Europe, Asia) without natural ordering. Simply encoding as 1, 2, 3 would incorrectly imply that European cars fall halfway between American and Asian cars in some meaningful dimension.</p>
+<p><strong>Solution: Dummy Variable Creation</strong>
+We create binary indicator variables for each region, allowing the model to learn distinct effects for each origin without imposing artificial ordering. This approach respects the categorical nature of geographic origin while enabling quantitative analysis.</p>
+<p><strong>Missing Value Strategy:</strong>
+The dataset contains 6 missing horsepower values (1.5% of observations). Rather than dropping these rows, we employ median imputation to preserve sample size. This approach assumes missing values occur randomly and that the median provides a reasonable central tendency estimate.</p>
+<p><strong>Critical Considerations:</strong>
+- Median imputation may introduce bias if missingness is systematic
+- Alternative approaches include mode imputation, predictive imputation, or multiple imputation
+- The small proportion of missing values reduces potential bias in this case</p>
+<p><strong>Data Type Corrections:</strong>
+The preprocessing phase reveals data quality issues where numeric variables (horsepower) are stored as strings due to missing value encoding ('?' characters). This highlights the importance of thorough data validation in real-world applications.</p>
+<p>[See Code Walkthrough Section 2: Data Preprocessing Implementation]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<h2 id="exploratory-data-analysis">Exploratory Data Analysis <a id="exploratory"></a></h2>
+<p><strong>Bivariate Relationship Assessment:</strong>
+The scatter matrix visualization reveals non-linear relationships between mpg and several predictors, particularly weight and displacement. This observation has crucial implications for model selection and performance expectations.</p>
+<p><strong>Key Observations:</strong>
+- Strong negative correlation between weight and fuel efficiency
+- Engine displacement shows similar negative relationship with mpg
+- Relationships appear non-linear, potentially violating linear regression assumptions
+- Heteroscedasticity (non-constant variance) evident in several relationships</p>
+<p><strong>Statistical Implications:</strong>
+The non-linear patterns suggest that linear regression may not capture the full relationship structure. However, linear models often provide interpretable approximations that capture substantial variation despite assumption violations.</p>
+<p><strong>Methodological Decision:</strong>
+Despite observed non-linearity, we proceed with linear regression for several reasons:
+1. Interpretability advantages for stakeholders
+2. Baseline performance establishment
+3. Comparison benchmark for non-linear methods
+4. Many relationships show approximate linear trends despite curvature</p>
+<p>[See Code Walkthrough Section 3: Exploratory Data Analysis Implementation]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<h2 id="linear-regression-modeling">Linear Regression Modeling <a id="linear-modeling"></a></h2>
+<p><strong>OLS Implementation Rationale:</strong>
+We utilize statsmodels OLS (Ordinary Least Squares) for comprehensive statistical inference capabilities, including coefficient significance testing, confidence intervals, and model diagnostics. This contrasts with sklearn's LinearRegression, which focuses primarily on prediction.</p>
+<p><strong>Model Specification:</strong>
+The model includes all available predictors except one dummy variable (origin_europe) to avoid the dummy variable trap. This ensures matrix invertibility while maintaining full representation of categorical effects.</p>
+<p><strong>Statistical Interpretation Framework:</strong></p>
+<p><strong>Adjusted R-squared Analysis:</strong>
+The adjusted R-squared provides a penalized measure of model fit that accounts for the number of predictors. Values approaching 1.0 indicate strong explanatory power, while values near 0 suggest poor model performance.</p>
+<p><strong>Coefficient Interpretation:</strong>
+Each coefficient represents the expected change in mpg for a one-unit increase in the predictor, holding all other variables constant. This ceteris paribus interpretation enables precise quantification of individual variable effects.</p>
+<p><strong>Significance Testing:</strong>
+P-values test the null hypothesis that each coefficient equals zero. Values below 0.05 suggest statistically significant relationships, though practical significance requires additional context about effect sizes and domain knowledge.</p>
+<p><strong>Model Performance Evaluation:</strong></p>
+<p><strong>Cross-Validation Implementation:</strong>
+10-fold cross-validation provides robust performance estimates by repeatedly training and testing on different data subsets. This approach reduces dependence on any particular train-test split and provides confidence intervals for performance metrics.</p>
+<p><strong>Performance Metrics:</strong>
+- <strong>RMSE:</strong> Root Mean Square Error measures average prediction error magnitude
+- <strong>MAE:</strong> Mean Absolute Error provides interpretable average deviation
+- <strong>MAPE:</strong> Mean Absolute Percentage Error enables comparison across different scales</p>
+<p><strong>Overfitting Assessment:</strong>
+Comparing train and test performance reveals generalization capability. Similar performance across both sets suggests good generalization, while large discrepancies indicate overfitting.</p>
+<p>[See Code Walkthrough Section 4: Linear Regression Implementation]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<h2 id="tree-based-models-implementation">Tree-Based Models Implementation <a id="tree-models"></a></h2>
+<p><strong>Decision Tree Methodology:</strong>
+Decision trees partition the feature space through recursive binary splits, creating interpretable rules for prediction. Unlike linear regression, trees automatically capture non-linear relationships and interactions without explicit specification.</p>
+<p><strong>Advantages of Tree-Based Approaches:</strong>
+- Automatic feature interaction detection
+- Robustness to outliers and non-linear relationships<br />
+- Interpretable decision rules
+- No assumptions about data distribution</p>
+<p><strong>Decision Tree Performance Analysis:</strong>
+The decision tree achieves perfect training performance (RMSE = 0) but significantly worse test performance, indicating severe overfitting. This demonstrates the fundamental bias-variance trade-off in machine learning.</p>
+<p><strong>Overfitting Mechanisms:</strong>
+Decision trees overfit by creating overly complex rules that memorize training data rather than learning generalizable patterns. This occurs through excessive tree depth and minimal node splitting constraints.</p>
+<p><strong>Random Forest Solution:</strong>
+Random Forest addresses overfitting through ensemble averaging and random feature selection. By training multiple trees on different data subsets and features, the method reduces variance while maintaining predictive power.</p>
+<p><strong>Ensemble Benefits:</strong>
+- Variance reduction through averaging multiple models
+- Robustness to individual tree overfitting
+- Improved generalization performance
+- Maintained interpretability through feature importance</p>
+<p><strong>Feature Importance Analysis:</strong>
+Both tree-based methods provide feature importance rankings based on prediction contribution. This enables identification of the most influential variables for fuel efficiency prediction.</p>
+<p>[See Code Walkthrough Section 5: Tree-Based Models Implementation]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<h2 id="model-comparison-and-evaluation">Model Comparison and Evaluation <a id="model-comparison"></a></h2>
+<p><strong>Comparative Performance Framework:</strong>
+The three models represent different paradigms: statistical inference (OLS), interpretable machine learning (Decision Tree), and ensemble methods (Random Forest). Each offers distinct advantages and limitations.</p>
+<p><strong>Performance Summary:</strong>
+- <strong>Linear Regression:</strong> Balanced performance with good generalization
+- <strong>Decision Tree:</strong> Perfect training fit but poor generalization (overfitting)
+- <strong>Random Forest:</strong> Best overall performance with good generalization</p>
+<p><strong>Model Selection Considerations:</strong></p>
+<p><strong>Interpretability vs. Performance Trade-off:</strong>
+Linear regression provides clear coefficient interpretation and statistical inference capabilities. Tree-based methods offer better predictive performance but reduced interpretability for individual predictions.</p>
+<p><strong>Computational Efficiency:</strong>
+Linear regression requires minimal computational resources and scales well to large datasets. Tree-based methods, particularly Random Forest, require more computation but often justify the cost through improved accuracy.</p>
+<p><strong>Robustness Characteristics:</strong>
+Linear models assume specific relationships and can be sensitive to assumption violations. Tree-based methods adapt to data characteristics but may require careful hyperparameter tuning to prevent overfitting.</p>
+<p><strong>Business Application Context:</strong>
+Model choice depends on primary objectives:
+- <strong>Explanation and insights:</strong> Linear regression preferred
+- <strong>Prediction accuracy:</strong> Random Forest typically superior
+- <strong>Regulatory compliance:</strong> Linear models often required for interpretability</p>
+<p>[See Code Walkthrough Section 6: Model Comparison Implementation]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<h2 id="critical-analysis-and-limitations">Critical Analysis and Limitations <a id="critical-analysis"></a></h2>
+<p><strong>Methodological Limitations:</strong></p>
+<p><strong>Linear Regression Assumptions:</strong>
+- <strong>Linearity:</strong> Violated as shown in exploratory analysis
+- <strong>Independence:</strong> Potentially violated if cars from same manufacturer share characteristics
+- <strong>Homoscedasticity:</strong> Violated based on scatter plot evidence
+- <strong>Normality:</strong> Not thoroughly tested in this analysis</p>
+<p><strong>Sample Limitations:</strong>
+The dataset represents automobiles from a specific time period and may not generalize to modern vehicles with different technologies (hybrid, electric, advanced materials).</p>
+<p><strong>Feature Engineering Limitations:</strong>
+The analysis uses raw variables without considering:
+- Polynomial or interaction terms
+- Feature scaling or normalization
+- Domain-specific transformations (e.g., power-to-weight ratios)</p>
+<p><strong>Missing Value Implications:</strong>
+Median imputation assumes random missingness, which may not hold in practice. Systematic patterns in missing data could introduce bias.</p>
+<p><strong>Validation Limitations:</strong>
+- Single random seed for train-test split
+- Limited hyperparameter tuning for tree-based methods
+- No temporal validation (if data has time ordering)</p>
+<p><strong>Alternative Approaches Not Considered:</strong>
+- Regularized regression (Ridge, Lasso, Elastic Net)
+- Support Vector Regression
+- Gradient Boosting methods
+- Neural networks for complex non-linear patterns</p>
+<p><strong>Practical Implementation Concerns:</strong>
+- Model deployment and monitoring strategies
+- Performance degradation over time
+- Retraining frequency and criteria
+- Feature availability in production environments</p>
+<p><strong>Computational Resource Requirements:</strong>
+- Linear regression: Minimal computational needs
+- Decision trees: Moderate requirements, scales with depth
+- Random Forest: Higher memory and computational demands</p>
+<p><strong>Reproducibility Considerations:</strong>
+The analysis includes random seeds for reproducibility, but real-world deployment may encounter data drift and distribution changes not captured in static validation.</p>
+<p>[See Code Walkthrough Section 7: Advanced Analysis and Diagnostics]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<h2 id="code-walkthrough-reference">Code Walkthrough Reference <a id="code-walkthrough"></a></h2>
+<p><strong>Complete Implementation Documentation:</strong>
+The companion Code Walkthrough document provides comprehensive coverage of all implementation details, including:</p>
+<ul>
+<li>Environment setup and library imports</li>
+<li>Data loading and initial exploration procedures</li>
+<li>Complete preprocessing pipeline implementation</li>
+<li>Statistical modeling with detailed parameter explanations</li>
+<li>Tree-based model implementation with hyperparameter analysis</li>
+<li>Performance evaluation function implementations</li>
+<li>Feature importance calculation methodologies</li>
+<li>Cross-validation implementation details</li>
+</ul>
+<p><strong>Integration Instructions:</strong>
+The Code Walkthrough is designed for seamless integration with this tutorial. Each section corresponds to the methodology described above, providing the technical implementation details necessary for reproduction and customization.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#section1">Environment Setup and Library Imports</a></li>
+<li><a href="#section2">Data Loading and Initial Exploration</a></li>
+<li><a href="#section3">Data Preprocessing Pipeline</a></li>
+<li><a href="#section4">Exploratory Data Analysis Implementation</a></li>
+<li><a href="#section5">Data Splitting and Preparation</a></li>
+<li><a href="#section6">Linear Regression with Statsmodels</a></li>
+<li><a href="#section7">Model Performance Evaluation Functions</a></li>
+<li><a href="#section8">Cross-Validation Implementation</a></li>
+<li><a href="#section9">Decision Tree Implementation</a></li>
+<li><a href="#section10">Random Forest Implementation</a></li>
+<li><a href="#section11">Feature Importance Analysis</a></li>
+<li><a href="#section12">Model Comparison Framework</a></li>
+</ol>
+<hr />
+<p>↩ <a href="#top">Back to Top</a></p>
+<h2 id="section-1-environment-setup-and-library-imports">Section 1: Environment Setup and Library Imports <a id="section1"></a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+<span class="c1"># Jupyter notebook specific</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Establishes the computational environment with essential libraries for data manipulation, statistical analysis, and visualization. Each library serves specific functions in the machine learning pipeline.</p>
+<p><strong>Flow:</strong> 
+- <code>numpy</code>: Provides numerical computing foundation with efficient array operations
+- <code>pandas</code>: Enables structured data manipulation with DataFrame objects
+- <code>matplotlib.pyplot</code>: Creates static visualizations and plots
+- <code>seaborn</code>: Provides statistical visualization with enhanced aesthetics
+- <code>%matplotlib inline</code>: Jupyter magic command for inline plot display</p>
+<p><strong>Impact:</strong> Without proper imports, subsequent code will fail. These libraries form the foundation for all data science operations. Missing any library would require installation via pip or conda.</p>
+<hr />
+<p>↩ <a href="#top">Back to Top</a></p>
+<h2 id="section-2-data-loading-and-initial-exploration">Section 2: Data Loading and Initial Exploration <a id="section2"></a></h2>
+<p><div class="highlight"><pre><span></span><code><span class="c1"># Load dataset</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;auto_mpg.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># Check dataset dimensions</span>
+<span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+<span class="c1"># Output: (398, 9)</span>
+
+<span class="c1"># Display first few rows</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+
+<span class="c1"># Initial data cleaning - remove non-predictive variable</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;car name&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Transform categorical variable to meaningful labels</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;america&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;europe&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;asia&#39;</span><span class="p">})</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div>
+↩ <a href="#top">Back to Top</a>
+<strong>Purpose:</strong> Loads the automobile dataset and performs initial data exploration to understand structure and content. Removes the car name variable which is not useful for prediction and converts numeric origin codes to meaningful labels.</p>
+<p><strong>Flow:</strong> 
+1. <code>pd.read_csv()</code> loads the CSV file into a pandas DataFrame
+2. <code>.shape</code> reveals dataset dimensions (398 rows, 9 columns)
+3. <code>.head()</code> displays first 5 rows for visual inspection
+4. <code>.drop()</code> removes the 'car name' column as it's not predictive
+5. <code>.replace()</code> converts origin codes (1,2,3) to region names</p>
+<p><strong>Impact:</strong> This establishes the base dataset for analysis. Dropping 'car name' reduces dimensionality and removes noise. Converting origin codes to labels improves interpretability but requires further processing for modeling.</p>
+<hr />
+<p>↩ <a href="#top">Back to Top</a></p>
+<h2 id="section-3-data-preprocessing-pipeline">Section 3: Data Preprocessing Pipeline <a id="section3"></a></h2>
+<h3 id="31-dummy-variable-creation">3.1 Dummy Variable Creation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create dummy variables for categorical origin</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">])</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Converts categorical origin variable into binary dummy variables to avoid imposing artificial ordering on geographic regions. This is crucial for proper statistical modeling.</p>
+<p><strong>Flow:</strong> <code>pd.get_dummies()</code> creates three binary columns: <code>origin_america</code>, <code>origin_asia</code>, <code>origin_europe</code>. Each row has exactly one column equal to 1, representing the car's origin.</p>
+<p><strong>Impact:</strong> Enables proper categorical variable handling in regression models. Without this transformation, treating 'america', 'europe', 'asia' as 1, 2, 3 would incorrectly imply ordinal relationships.</p>
+<h3 id="32-missing-value-detection-and-handling">3.2 Missing Value Detection and Handling</h3>
+<p><div class="highlight"><pre><span></span><code><span class="c1"># Check data types and summary statistics</span>
+<span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+<span class="n">data</span><span class="o">.</span><span class="n">dtypes</span>
+
+<span class="c1"># Detect non-numeric entries in horsepower column</span>
+<span class="n">hpIsDigit</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">horsepower</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">isdigit</span><span class="p">())</span>
+
+<span class="c1"># Identify rows with missing values (marked as &#39;?&#39;)</span>
+<span class="n">data</span><span class="p">[</span><span class="n">hpIsDigit</span><span class="p">[</span><span class="s1">&#39;horsepower&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">]</span>
+
+<span class="c1"># Replace missing value markers with NaN</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+<span class="c1"># Display rows with missing values</span>
+<span class="n">data</span><span class="p">[</span><span class="n">hpIsDigit</span><span class="p">[</span><span class="s1">&#39;horsepower&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">]</span>
+</code></pre></div>
+↩ <a href="#top">Back to Top</a>
+<strong>Purpose:</strong> Identifies and handles missing values that are encoded as '?' strings rather than standard NaN values. This is a common data quality issue in real-world datasets.</p>
+<p><strong>Flow:</strong>
+1. <code>.describe()</code> and <code>.dtypes</code> reveal that horsepower should be numeric but is stored as object type
+2. <code>.str.isdigit()</code> tests each horsepower value to identify non-numeric entries
+3. Boolean indexing reveals rows where horsepower contains '?' characters
+4. <code>.replace()</code> standardizes missing value representation using <code>np.nan</code></p>
+<p><strong>Impact:</strong> Proper missing value identification is essential for appropriate handling. Without this step, '?' strings would cause errors in numerical operations or be incorrectly treated as valid data.</p>
+<h3 id="33-missing-value-imputation">3.3 Missing Value Imputation</h3>
+<p><div class="highlight"><pre><span></span><code><span class="c1"># Check median values for imputation reference</span>
+<span class="n">data</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+
+<span class="c1"># Create median imputation function</span>
+<span class="n">medianFiller</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">median</span><span class="p">())</span>
+
+<span class="c1"># Apply median imputation to all columns</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">medianFiller</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Convert horsepower to proper numeric type</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;horsepower&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;horsepower&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+</code></pre></div>
+↩ <a href="#top">Back to Top</a>
+<strong>Purpose:</strong> Replaces missing values with column medians to preserve sample size while providing reasonable estimates. Median is chosen over mean for robustness to outliers.</p>
+<p><strong>Flow:</strong>
+1. <code>.median()</code> calculates median for each numeric column
+2. Lambda function creates a reusable imputation method
+3. <code>.apply(axis=0)</code> applies the function column-wise to the entire dataset
+4. <code>.astype()</code> ensures horsepower is properly typed as numeric</p>
+<p><strong>Impact:</strong> Preserves all 398 observations instead of dropping 6 rows with missing horsepower. However, introduces potential bias if missingness is not random. The median provides a robust central tendency estimate.</p>
+<hr />
+<p>↩ <a href="#top">Back to Top</a></p>
+<h2 id="section-4-exploratory-data-analysis-implementation">Section 4: Exploratory Data Analysis Implementation <a id="section4"></a></h2>
+<p><div class="highlight"><pre><span></span><code><span class="c1"># Select numeric variables for visualization</span>
+<span class="n">data_attr</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span>
+
+<span class="c1"># Create comprehensive scatter plot matrix</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">data_attr</span><span class="p">,</span> <span class="n">diag_kind</span><span class="o">=</span><span class="s1">&#39;kde&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+↩ <a href="#top">Back to Top</a>
+<strong>Purpose:</strong> Creates a comprehensive visualization matrix showing relationships between all numeric variables. This reveals patterns, correlations, and potential modeling challenges.</p>
+<p><strong>Flow:</strong>
+1. <code>.iloc[:, 0:7]</code> selects first 7 columns containing numeric attributes
+2. <code>sns.pairplot()</code> creates scatter plots for all variable pairs
+3. <code>diag_kind='kde'</code> displays kernel density estimates on diagonal instead of histograms
+4. Off-diagonal plots show bivariate relationships between variables</p>
+<p><strong>Impact:</strong> Visual inspection reveals non-linear relationships and heteroscedasticity, informing model selection decisions. This analysis suggests linear regression assumptions may be violated but provides baseline understanding of data structure.</p>
+<hr />
+<h2 id="section-5-data-splitting-and-preparation">Section 5: Data Splitting and Preparation <a id="section5"></a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="c1"># Define features and target variable</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;origin_europe&#39;</span><span class="p">})</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;mpg&#39;</span><span class="p">]</span>
+
+<span class="c1"># Split data into training and testing sets</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.30</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Separates data into training and testing sets for unbiased model evaluation. Removes target variable and one dummy variable to avoid multicollinearity.</p>
+<p><strong>Flow:</strong>
+1. Feature matrix <code>X</code> excludes target variable 'mpg' and 'origin_europe' to prevent dummy variable trap
+2. Target vector <code>y</code> contains only the mpg values
+3. <code>train_test_split()</code> randomly divides data into 70% training, 30% testing
+4. <code>random_state=1</code> ensures reproducible splits</p>
+<p><strong>Impact:</strong> Proper data splitting is essential for honest performance evaluation. Dropping 'origin_europe' prevents perfect multicollinearity while maintaining all origin information through the remaining dummy variables.</p>
+<hr />
+<p>↩ <a href="#top">Back to Top</a></p>
+<h2 id="section-6-linear-regression-with-statsmodels">Section 6: Linear Regression with Statsmodels <a id="section6"></a></h2>
+<h3 id="61-model-preparation">6.1 Model Preparation</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.graphics.gofplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProbPlot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">ols</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+
+<span class="c1"># Add intercept term for OLS</span>
+<span class="n">X_train_ols</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_test_ols</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Prepares data for statsmodels OLS regression by adding intercept terms. Statsmodels requires explicit intercept addition unlike sklearn.</p>
+<p><strong>Flow:</strong>
+1. Import necessary statsmodels components for regression and diagnostics
+2. <code>sm.add_constant()</code> adds a column of ones to feature matrices
+3. This enables estimation of the y-intercept in the regression equation</p>
+<p><strong>Impact:</strong> Without intercept terms, the regression line would be forced through the origin, potentially creating biased estimates. The intercept represents the expected mpg when all features equal zero.</p>
+<h3 id="62-model-fitting-and-summary">6.2 Model Fitting and Summary</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Fit OLS regression model</span>
+<span class="n">model1</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">X_train_ols</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Display comprehensive model summary</span>
+<span class="n">model1</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Fits the linear regression model using ordinary least squares estimation and provides comprehensive statistical summary including coefficients, p-values, and model diagnostics.</p>
+<p><strong>Flow:</strong>
+1. <code>sm.OLS()</code> creates an OLS model object with target and feature data
+2. <code>.fit()</code> estimates model parameters using least squares optimization
+3. <code>.summary()</code> generates detailed statistical output including:
+   - Coefficient estimates and standard errors
+   - Statistical significance tests (t-tests, p-values)
+   - Model fit statistics (R-squared, F-statistic)
+   - Confidence intervals for coefficients</p>
+<p><strong>Impact:</strong> Provides both predictive model and statistical inference capabilities. The summary enables assessment of which variables significantly influence mpg and quantifies the strength of these relationships.</p>
+<hr />
+<h2 id="section-7-model-performance-evaluation-functions">Section 7: Model Performance Evaluation Functions <a id="section7"></a></h2>
+<h3 id="71-performance-metric-functions">7.1 Performance Metric Functions</h3>
+<p><div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rmse</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate Root Mean Square Error&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">targets</span> <span class="o">-</span> <span class="n">predictions</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mape</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate Mean Absolute Percentage Error&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">targets</span> <span class="o">-</span> <span class="n">predictions</span><span class="p">))</span> <span class="o">/</span> <span class="n">targets</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mae</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate Mean Absolute Error&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">targets</span> <span class="o">-</span> <span class="n">predictions</span><span class="p">)))</span>
+</code></pre></div>
+↩ <a href="#top">Back to Top</a>
+<strong>Purpose:</strong> Defines standard regression performance metrics for consistent model evaluation across different algorithms.</p>
+<p><strong>Flow:</strong>
+- <strong>RMSE:</strong> Calculates squared differences, takes mean, then square root - penalizes large errors heavily
+- <strong>MAPE:</strong> Calculates percentage errors, useful for interpretability and scale independence
+- <strong>MAE:</strong> Simple average of absolute errors, robust to outliers</p>
+<p><strong>Impact:</strong> These metrics provide different perspectives on model performance. RMSE emphasizes large errors, MAE provides robust central tendency, and MAPE enables comparison across different scales.</p>
+<h3 id="72-comprehensive-model-performance-function">7.2 Comprehensive Model Performance Function</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">model_pref</span><span class="p">(</span><span class="n">olsmodel</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate model performance on training and test sets&quot;&quot;&quot;</span>
+
+    <span class="c1"># Generate predictions for training set</span>
+    <span class="n">y_pred_train</span> <span class="o">=</span> <span class="n">olsmodel</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
+    <span class="n">y_observed_train</span> <span class="o">=</span> <span class="n">y_train</span>
+
+    <span class="c1"># Generate predictions for test set</span>
+    <span class="n">y_pred_test</span> <span class="o">=</span> <span class="n">olsmodel</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+    <span class="n">y_observed_test</span> <span class="o">=</span> <span class="n">y_test</span>
+
+    <span class="c1"># Calculate and display performance metrics</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s2">&quot;Data&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Train&quot;</span><span class="p">,</span> <span class="s2">&quot;Test&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="n">rmse</span><span class="p">(</span><span class="n">y_pred_train</span><span class="p">,</span> <span class="n">y_observed_train</span><span class="p">),</span>
+                <span class="n">rmse</span><span class="p">(</span><span class="n">y_pred_test</span><span class="p">,</span> <span class="n">y_observed_test</span><span class="p">),</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;MAE&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="n">mae</span><span class="p">(</span><span class="n">y_pred_train</span><span class="p">,</span> <span class="n">y_observed_train</span><span class="p">),</span>
+                <span class="n">mae</span><span class="p">(</span><span class="n">y_pred_test</span><span class="p">,</span> <span class="n">y_observed_test</span><span class="p">),</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;MAPE&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="n">mape</span><span class="p">(</span><span class="n">y_pred_train</span><span class="p">,</span> <span class="n">y_observed_train</span><span class="p">),</span>
+                <span class="n">mape</span><span class="p">(</span><span class="n">y_pred_test</span><span class="p">,</span> <span class="n">y_observed_test</span><span class="p">),</span>
+            <span class="p">],</span>
+        <span class="p">})</span>
+    <span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Provides standardized performance evaluation across training and test sets for any model type, enabling consistent comparison and overfitting detection.</p>
+<p><strong>Flow:</strong>
+1. Generates predictions for both training and test datasets
+2. Calculates all three performance metrics for both sets
+3. Formats results in readable DataFrame for easy comparison
+4. Enables quick identification of overfitting through train/test performance gaps</p>
+<p><strong>Impact:</strong> Standardizes model evaluation process and makes overfitting detection straightforward. Large differences between train and test performance indicate overfitting, while similar performance suggests good generalization.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Evaluate linear regression performance</span>
+<span class="n">model_pref</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">X_train_ols</span><span class="p">,</span> <span class="n">X_test_ols</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<p>↩ <a href="#top">Back to Top</a></p>
+<h2 id="section-8-cross-validation-implementation">Section 8: Cross-Validation Implementation <a id="section8"></a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">cross_val_score</span>
+
+<span class="c1"># Initialize sklearn linear regression</span>
+<span class="n">linearregression</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+
+<span class="c1"># Perform 10-fold cross-validation for R-squared</span>
+<span class="n">cv_Score11</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span>
+    <span class="n">linearregression</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;r2&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Perform 10-fold cross-validation for MSE</span>
+<span class="n">cv_Score12</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span>
+    <span class="n">linearregression</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
+    <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;neg_mean_squared_error&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Display cross-validation results with confidence intervals</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;R-Squared: </span><span class="si">%0.3f</span><span class="s2"> (+/- </span><span class="si">%0.3f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cv_Score11</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">cv_Score11</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean Squared Error: </span><span class="si">%0.3f</span><span class="s2"> (+/- </span><span class="si">%0.3f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">cv_Score12</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">cv_Score12</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Implements k-fold cross-validation to provide robust performance estimates and confidence intervals, reducing dependence on specific train-test splits.</p>
+<p><strong>Flow:</strong>
+1. <code>LinearRegression()</code> creates sklearn model object (different from statsmodels)
+2. <code>cross_val_score()</code> performs 10-fold cross-validation with specified scoring metrics
+3. <code>cv=10</code> divides data into 10 folds, training on 9 and testing on 1 iteratively
+4. Results provide mean performance and standard deviation across folds</p>
+<p><strong>Impact:</strong> Cross-validation provides more reliable performance estimates than single train-test splits. The confidence intervals (±2 standard deviations) indicate result stability and statistical significance.</p>
+<hr />
+<p>↩ <a href="#top">Back to Top</a></p>
+<h2 id="section-9-decision-tree-implementation">Section 9: Decision Tree Implementation <a id="section9"></a></h2>
+<h3 id="91-data-preparation-for-tree-models">9.1 Data Preparation for Tree Models</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.tree</span><span class="w"> </span><span class="kn">import</span> <span class="n">DecisionTreeRegressor</span>
+
+<span class="c1"># Prepare data without dummy variable removal (trees handle categoricals differently)</span>
+<span class="n">Y1</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;mpg&#39;</span><span class="p">]</span>
+<span class="n">X1</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;origin_europe&#39;</span><span class="p">})</span>
+
+<span class="c1"># Split data for tree-based models</span>
+<span class="n">X_train1</span><span class="p">,</span> <span class="n">X_test1</span><span class="p">,</span> <span class="n">y_train1</span><span class="p">,</span> <span class="n">y_test1</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X1</span><span class="p">,</span> <span class="n">Y1</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.30</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Prepares data specifically for tree-based models, maintaining the same train-test split for fair comparison while using appropriate feature selection.</p>
+<p><strong>Flow:</strong>
+1. Creates new variable names (Y1, X1) to distinguish from linear regression data
+2. Uses identical splitting parameters to ensure comparable evaluation
+3. Maintains dummy variable structure appropriate for tree-based methods</p>
+<p><strong>Impact:</strong> Consistent data splitting enables fair model comparison while accommodating different modeling requirements.</p>
+<h3 id="92-decision-tree-training">9.2 Decision Tree Training</h3>
+<p><div class="highlight"><pre><span></span><code><span class="c1"># Initialize decision tree regressor with default parameters</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">DecisionTreeRegressor</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Fit decision tree to training data</span>
+<span class="n">dt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train1</span><span class="p">,</span> <span class="n">y_train1</span><span class="p">)</span>
+
+<span class="c1"># Evaluate performance</span>
+<span class="n">model_pref</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">X_train1</span><span class="p">,</span> <span class="n">X_test1</span><span class="p">,</span> <span class="n">y_train1</span><span class="p">,</span> <span class="n">y_test1</span><span class="p">)</span>
+</code></pre></div>
+↩ <a href="#top">Back to Top</a>
+<strong>Purpose:</strong> Trains a decision tree regressor with default hyperparameters to establish baseline tree performance before optimization.</p>
+<p><strong>Flow:</strong>
+1. <code>DecisionTreeRegressor()</code> initializes tree with default settings (no max_depth limit)
+2. <code>.fit()</code> builds the tree by recursively splitting on features that reduce prediction error
+3. <code>random_state=1</code> ensures reproducible tree construction
+4. Performance evaluation reveals overfitting characteristics</p>
+<p><strong>Impact:</strong> Default parameters often lead to overfitting as trees grow until perfect training fit. This demonstrates the need for regularization through hyperparameter tuning.</p>
+<h3 id="93-decision-tree-visualization">9.3 Decision Tree Visualization</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.tree</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_tree</span>
+
+<span class="c1"># Get feature names for visualization</span>
+<span class="n">features</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">X1</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="c1"># Create detailed tree visualization</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+<span class="n">plot_tree</span><span class="p">(</span>
+    <span class="n">dt</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+    <span class="n">filled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">node_ids</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Visualizes the decision tree structure to understand how the model makes predictions and which features are most important at each split.</p>
+<p><strong>Flow:</strong>
+1. <code>list(X1.columns)</code> extracts feature names for node labeling
+2. <code>plot_tree()</code> creates hierarchical visualization of tree structure
+3. <code>max_depth=4</code> limits display depth for readability
+4. Various formatting parameters enhance visual clarity</p>
+<p><strong>Impact:</strong> Tree visualization reveals the decision-making process and helps identify important features and potential overfitting patterns. Large, complex trees suggest overfitting.</p>
+<hr />
+<h2 id="section-10-random-forest-implementation">Section 10: Random Forest Implementation <a id="section10"></a></h2>
+<h3 id="101-random-forest-configuration">10.1 Random Forest Configuration</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+
+<span class="c1"># Initialize Random Forest with specified hyperparameters</span>
+<span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span>
+    <span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>      <span class="c1"># Number of trees in forest</span>
+    <span class="n">max_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>          <span class="c1"># Maximum tree depth</span>
+    <span class="n">min_samples_split</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>   <span class="c1"># Minimum samples to split node</span>
+    <span class="n">max_features</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>   <span class="c1"># Features to consider at each split</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span>         <span class="c1"># Reproducibility seed</span>
+<span class="p">)</span>
+
+<span class="c1"># Train Random Forest model</span>
+<span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train1</span><span class="p">,</span> <span class="n">y_train1</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Implements Random Forest ensemble method to address decision tree overfitting while maintaining predictive accuracy and feature interaction detection.</p>
+<p><strong>Flow:</strong>
+1. <code>RandomForestRegressor()</code> creates ensemble of decision trees
+2. Key hyperparameters control model complexity and randomness:
+   - <code>n_estimators=100</code>: Builds 100 individual trees
+   - <code>max_depth=10</code>: Limits individual tree depth to prevent overfitting
+   - <code>min_samples_split=2</code>: Minimum samples required to create new split
+   - <code>max_features='auto'</code>: Randomly selects √(n_features) at each split
+3. <code>.fit()</code> trains all trees on bootstrap samples with random feature selection</p>
+<p><strong>Impact:</strong> Random Forest typically achieves better generalization than individual decision trees through ensemble averaging and controlled randomness, reducing overfitting while maintaining flexibility.</p>
+<h3 id="102-random-forest-performance-evaluation">10.2 Random Forest Performance Evaluation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Calculate R-squared score on test data</span>
+<span class="n">rf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test1</span><span class="p">,</span> <span class="n">y_test1</span><span class="p">)</span>
+
+<span class="c1"># Comprehensive performance evaluation</span>
+<span class="n">model_pref</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">X_train1</span><span class="p">,</span> <span class="n">X_test1</span><span class="p">,</span> <span class="n">y_train1</span><span class="p">,</span> <span class="n">y_test1</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Evaluates Random Forest performance using both R-squared and comprehensive metrics to assess generalization capability.</p>
+<p><strong>Flow:</strong>
+1. <code>.score()</code> calculates default R-squared metric on test data
+2. <code>model_pref()</code> provides detailed performance comparison across train/test sets
+3. Results indicate model's ability to generalize to unseen data</p>
+<p><strong>Impact:</strong> Performance evaluation reveals whether ensemble method successfully balances bias-variance trade-off compared to individual decision tree.</p>
+<hr />
+<h2 id="section-11-feature-importance-analysis">Section 11: Feature Importance Analysis <a id="section11"></a></h2>
+<h3 id="111-decision-tree-feature-importance">11.1 Decision Tree Feature Importance</h3>
+<p><div class="highlight"><pre><span></span><code><span class="c1"># Extract feature importances from decision tree</span>
+<span class="n">importances</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">feature_importances_</span>
+
+<span class="c1"># Create feature importance DataFrame</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">X1</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">importance_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">importances</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Importance&#39;</span><span class="p">]</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Importance&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Visualize feature importances</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">importance_df</span><span class="o">.</span><span class="n">Importance</span><span class="p">,</span> <span class="n">importance_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Decision Tree Feature Importance&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+↩ <a href="#top">Back to Top</a>
+<strong>Purpose:</strong> Quantifies and visualizes how much each feature contributes to prediction accuracy in the decision tree model.</p>
+<p><strong>Flow:</strong>
+1. <code>.feature_importances_</code> extracts importance scores based on impurity reduction
+2. Creates DataFrame with feature names and importance scores
+3. Sorts by importance in descending order
+4. Bar plot visualizes relative importance rankings</p>
+<p><strong>Impact:</strong> Feature importance helps identify key predictors and can guide feature selection or engineering efforts. High importance indicates strong predictive value.</p>
+<h3 id="112-random-forest-feature-importance">11.2 Random Forest Feature Importance</h3>
+<p><div class="highlight"><pre><span></span><code><span class="c1"># Extract feature importances from Random Forest</span>
+<span class="n">importances</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">feature_importances_</span>
+
+<span class="c1"># Create and visualize Random Forest feature importance</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">X1</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">importance_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">importances</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Importance&#39;</span><span class="p">]</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Importance&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">importance_df</span><span class="o">.</span><span class="n">Importance</span><span class="p">,</span> <span class="n">importance_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Random Forest Feature Importance&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+↩ <a href="#top">Back to Top</a>
+<strong>Purpose:</strong> Compares feature importance rankings between decision tree and Random Forest to identify consistently important predictors across methods.</p>
+<p><strong>Flow:</strong>
+1. Identical process to decision tree but using Random Forest importances
+2. Random Forest importance averages across all trees in ensemble
+3. Visualization enables direct comparison with decision tree results</p>
+<p><strong>Impact:</strong> Random Forest importance is typically more stable and reliable than single tree importance due to ensemble averaging. Consistent rankings across methods indicate robust feature importance.</p>
+<hr />
+<h2 id="section-12-model-comparison-framework">Section 12: Model Comparison Framework <a id="section12"></a></h2>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Linear Regression Performance:&quot;</span><span class="p">)</span>
+<span class="n">model_pref</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">X_train_ols</span><span class="p">,</span> <span class="n">X_test_ols</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Decision Tree Performance:&quot;</span><span class="p">)</span>
+<span class="n">model_pref</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">X_train1</span><span class="p">,</span> <span class="n">X_test1</span><span class="p">,</span> <span class="n">y_train1</span><span class="p">,</span> <span class="n">y_test1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Random Forest Performance:&quot;</span><span class="p">)</span>
+<span class="n">model_pref</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">X_train1</span><span class="p">,</span> <span class="n">X_test1</span><span class="p">,</span> <span class="n">y_train1</span><span class="p">,</span> <span class="n">y_test1</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Provides comprehensive side-by-side comparison of all three modeling approaches using identical performance metrics and evaluation framework.</p>
+<p><strong>Flow:</strong>
+1. Systematically evaluates each model using the standardized <code>model_pref()</code> function
+2. Displays results in consistent format for easy comparison
+3. Reveals performance trade-offs between different modeling paradigms</p>
+<p><strong>Impact:</strong> Direct comparison enables informed model selection based on:
+- <strong>Generalization capability:</strong> Train vs. test performance gaps
+- <strong>Predictive accuracy:</strong> Absolute performance levels
+- <strong>Robustness:</strong> Consistency across metrics</p>
+<h3 id="mathematical-foundations">Mathematical Foundations</h3>
+<p>↩ <a href="#top">Back to Top</a>
+<strong>Ordinary Least Squares (OLS) Estimation:</strong>
+The linear regression coefficients are estimated by minimizing the sum of squared residuals:</p>
+<p>β̂ = (X'X)⁻¹X'y</p>
+<p>Where:
+- β̂ represents the estimated coefficients
+- X is the design matrix including intercept
+- y is the target variable vector</p>
+<p><strong>Decision Tree Splitting Criterion:</strong>
+At each node, the algorithm selects the feature and threshold that maximizes the reduction in mean squared error (MSE):</p>
+<p>MSE = (1/n) Σ(yi - ŷ)²</p>
+<p><strong>Random Forest Ensemble Prediction:</strong>
+The final prediction combines individual tree predictions:</p>
+<p>ŷ_RF = (1/B) Σ ŷ_b</p>
+<p>Where B is the number of trees and ŷ_b is the prediction from tree b.</p>
+<h3 id="computational-complexity">Computational Complexity</h3>
+<ul>
+<li><strong>Linear Regression:</strong> O(p³ + np²) where n is sample size, p is features</li>
+<li><strong>Decision Tree:</strong> O(n log n × p × depth) for training</li>
+<li><strong>Random Forest:</strong> O(B × n log n × p × depth) where B is number of trees</li>
+</ul>
+<h3 id="implementation-notes">Implementation Notes</h3>
+<ol>
+<li><strong>Memory Requirements:</strong> Random Forest requires approximately B times the memory of a single decision tree</li>
+<li><strong>Parallelization:</strong> Random Forest training can be parallelized across trees</li>
+<li><strong>Prediction Speed:</strong> Linear regression fastest, Random Forest slowest but still practical</li>
+<li><strong>Hyperparameter Sensitivity:</strong> Decision trees most sensitive, Linear regression least sensitive</li>
+</ol>
+<p>This completes the comprehensive code walkthrough covering all implementation aspects of the automobile fuel efficiency prediction analysis.</p>
+<p><strong>Standalone Usage:</strong>
+Both documents can be used independently - this tutorial for conceptual understanding and methodology, the Code Walkthrough for implementation reference and technical details.</p>
+<h2 id="references-and-further-reading">References and Further Reading</h2>
+<ol>
+<li>
+<p>James, G., Witten, D., Hastie, T., &amp; Tibshirani, R. (2013). <em>An Introduction to Statistical Learning</em>. Springer.</p>
+</li>
+<li>
+<p>Hastie, T., Tibshirani, R., &amp; Friedman, J. (2009). <em>The Elements of Statistical Learning</em>. Springer.</p>
+</li>
+<li>
+<p>Breiman, L. (2001). Random forests. <em>Machine Learning</em>, 45(1), 5-32.</p>
+</li>
+<li>
+<p>Chatterjee, S., &amp; Hadi, A. S. (2012). <em>Regression Analysis by Example</em>. John Wiley &amp; Sons.</p>
+</li>
+<li>
+<p>Kuhn, M., &amp; Johnson, K. (2013). <em>Applied Predictive Modeling</em>. Springer.</p>
+</li>
+<li>
+<p>VanderPlas, J. (2016). <em>Python Data Science Handbook</em>. O'Reilly Media.</p>
+</li>
+<li>
+<p>McKinney, W. (2017). <em>Python for Data Analysis</em>. O'Reilly Media.</p>
+</li>
+<li>
+<p>Pedregosa, F., et al. (2011). Scikit-learn: Machine learning in Python. <em>Journal of Machine Learning Research</em>, 12, 2825-2830.</p>
+</li>
+</ol>
+<p>↩ <a href="#top">Back to Top</a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 8, 2025 15:43:49 UTC">September 8, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../13-hands-on-bigmart/" class="md-footer__link md-footer__link--prev" aria-label="Previous: BigMart Sales Prediction Hands-On Tutorial: Retail Analytics with Linear Regression">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                BigMart Sales Prediction Hands-On Tutorial: Retail Analytics with Linear Regression
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../51.case-study-human-generated-text/" class="md-footer__link md-footer__link--next" aria-label="Next: Case Study — Data Analysis with Human‑Generated Text (Deep Internal Notes)">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Case Study — Data Analysis with Human‑Generated Text (Deep Internal Notes)
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width", "toc.integrate"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>
