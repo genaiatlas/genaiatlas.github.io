@@ -1,0 +1,138 @@
+<svg viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title-text { font-family: 'Arial', sans-serif; font-size: 20px; font-weight: bold; fill: #2c3e50; }
+      .subtitle-text { font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold; fill: #34495e; }
+      .label-text { font-family: 'Arial', sans-serif; font-size: 12px; fill: #2c3e50; }
+      .math-text { font-family: 'Times New Roman', serif; font-size: 13px; fill: #2c3e50; }
+      .step-text { font-family: 'Arial', sans-serif; font-size: 14px; fill: #2c3e50; }
+      .box-step1 { fill: #e8f4fd; stroke: #3498db; stroke-width: 2; }
+      .box-step2 { fill: #fdf2e9; stroke: #f39c12; stroke-width: 2; }
+      .box-step3 { fill: #eafaf1; stroke: #27ae60; stroke-width: 2; }
+      .box-final { fill: #f4e8fd; stroke: #9b59b6; stroke-width: 2; }
+      .arrow { stroke: #2c3e50; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+      .lasso-highlight { fill: #e74c3c; stroke: #c0392b; }
+    </style>
+    <marker id="arrowhead" markerWidth="12" markerHeight="8" 
+            refX="11" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#2c3e50" />
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="500" y="30" text-anchor="middle" class="title-text">Partialling-Out Procedure with Lasso for Causal Inference</text>
+  <text x="500" y="50" text-anchor="middle" class="subtitle-text">Estimating β₁ in Y = β₁D + β₂'W + ε when p >> n</text>
+  
+  <!-- Original Model -->
+  <g transform="translate(50, 80)">
+    <rect x="0" y="0" width="900" height="50" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="2"/>
+    <text x="450" y="20" text-anchor="middle" class="step-text">Original High-Dimensional Model</text>
+    <text x="450" y="35" text-anchor="middle" class="math-text">Y = β₁D + β₂'W + ε,   where W ∈ ℝᵖ with p >> n</text>
+  </g>
+  
+  <!-- Step 1: Partial out W from Y -->
+  <g transform="translate(50, 160)">
+    <rect x="0" y="0" width="400" height="120" class="box-step1"/>
+    <text x="200" y="25" text-anchor="middle" class="subtitle-text">Step 1: Partial out W from Y</text>
+    
+    <text x="200" y="50" text-anchor="middle" class="math-text">Fit Lasso regression:</text>
+    <text x="200" y="70" text-anchor="middle" class="math-text">γ̂ᵧᵨ = argmin Σ(Yᵢ - γ'Wᵢ)² + λ₁Σ|γⱼ|</text>
+    <text x="160" y="70" class="math-text">γ∈ℝᵖ   i</text>
+    <text x="350" y="80" class="math-text">j</text>
+    
+    <text x="200" y="95" text-anchor="middle" class="math-text">Compute residuals: Ỹᵢ = Yᵢ - γ̂ᵧᵨ'Wᵢ</text>
+    
+    <!-- Lasso emphasis -->
+    <rect x="10" y="40" width="30" height="20" class="lasso-highlight" rx="3"/>
+    <text x="25" y="54" text-anchor="middle" class="label-text" fill="white">LASSO</text>
+  </g>
+  
+  <!-- Step 2: Partial out W from D -->
+  <g transform="translate(550, 160)">
+    <rect x="0" y="0" width="400" height="120" class="box-step2"/>
+    <text x="200" y="25" text-anchor="middle" class="subtitle-text">Step 2: Partial out W from D</text>
+    
+    <text x="200" y="50" text-anchor="middle" class="math-text">Fit Lasso regression:</text>
+    <text x="200" y="70" text-anchor="middle" class="math-text">γ̂ᴅᵨ = argmin Σ(Dᵢ - γ'Wᵢ)² + λ₂Σ|γⱼ|</text>
+    <text x="160" y="70" class="math-text">γ∈ℝᵖ   i</text>
+    <text x="350" y="80" class="math-text">j</text>
+    
+    <text x="200" y="95" text-anchor="middle" class="math-text">Compute residuals: D̃ᵢ = Dᵢ - γ̂ᴅᵨ'Wᵢ</text>
+    
+    <!-- Lasso emphasis -->
+    <rect x="10" y="40" width="30" height="20" class="lasso-highlight" rx="3"/>
+    <text x="25" y="54" text-anchor="middle" class="label-text" fill="white">LASSO</text>
+  </g>
+  
+  <!-- Arrows from steps 1 and 2 -->
+  <line x1="250" y1="290" x2="250" y2="350" class="arrow"/>
+  <line x1="750" y1="290" x2="750" y2="350" class="arrow"/>
+  
+  <!-- Combined residuals -->
+  <g transform="translate(300, 360)">
+    <rect x="0" y="0" width="400" height="80" class="box-step3"/>
+    <text x="200" y="25" text-anchor="middle" class="subtitle-text">Step 3: Simple Regression on Residuals</text>
+    
+    <text x="200" y="50" text-anchor="middle" class="math-text">β̂₁ = argmin Σ(Ỹᵢ - b₁D̃ᵢ)²</text>
+    <text x="130" y="50" class="math-text">b₁∈ℝ   i</text>
+    
+    <text x="200" y="70" text-anchor="middle" class="math-text">= (Σ D̃ᵢD̃ᵢ)⁻¹ Σ D̃ᵢỸᵢ</text>
+    <text x="150" y="70" class="math-text">i</text>
+    <text x="260" y="70" class="math-text">i</text>
+  </g>
+  
+  <!-- Arrow to final result -->
+  <line x1="500" y1="450" x2="500" y2="510" class="arrow"/>
+  
+  <!-- Final inference -->
+  <g transform="translate(200, 520)">
+    <rect x="0" y="0" width="600" height="100" class="box-final"/>
+    <text x="300" y="25" text-anchor="middle" class="subtitle-text">Step 4: Statistical Inference</text>
+    
+    <text x="300" y="50" text-anchor="middle" class="math-text">Under approximate sparsity: β̂₁ ~ N(β₁, V/n)</text>
+    
+    <text x="300" y="70" text-anchor="middle" class="math-text">95% Confidence Interval: [β̂₁ - 2√(V̂/n), β̂₁ + 2√(V̂/n)]</text>
+    
+    <text x="300" y="90" text-anchor="middle" class="step-text">Valid causal inference when both γᵧᵨ and γᴅᵨ are sparse</text>
+  </g>
+  
+  <!-- Side explanations -->
+  <g transform="translate(50, 650)">
+    <text x="0" y="20" class="subtitle-text">Key Requirements:</text>
+    
+    <text x="0" y="45" class="step-text">1. Approximate Sparsity in Y → W relationship</text>
+    <text x="20" y="62" class="math-text">|γᵧᵨ|(j) ≤ Aj⁻ᵃ with a > 1/2</text>
+    
+    <text x="0" y="85" class="step-text">2. Approximate Sparsity in D → W relationship</text>
+    <text x="20" y="102" class="math-text">|γᴅᵨ|(j) ≤ Aj⁻ᵃ with a > 1/2</text>
+    
+    <text x="0" y="125" class="step-text">3. Penalty levels chosen appropriately</text>
+    <text x="20" y="142" class="math-text">λ₁, λ₂ ~ √(log(pn)/n)</text>
+  </g>
+  
+  <g transform="translate(550, 650)">
+    <text x="0" y="20" class="subtitle-text">Why This Works:</text>
+    
+    <text x="0" y="45" class="step-text">• Lasso identifies sparse confounding patterns</text>
+    <text x="0" y="62" class="step-text">• Residuals remove high-dimensional confounding</text>
+    <text x="0" y="79" class="step-text">• Simple regression recovers causal effect</text>
+    <text x="0" y="96" class="step-text">• Normal theory applies for inference</text>
+    <text x="0" y="113" class="step-text">• Robust to high-dimensional controls</text>
+    
+    <text x="0" y="135" class="math-text">Traditional OLS fails when p/n not small!</text>
+  </g>
+  
+  <!-- Mathematical intuition box -->
+  <g transform="translate(750, 360)">
+    <rect x="0" y="0" width="200" height="120" fill="#fff3cd" stroke="#ffc107" stroke-width="2"/>
+    <text x="100" y="20" text-anchor="middle" class="subtitle-text">Intuition</text>
+    
+    <text x="10" y="40" class="label-text">After partialling-out:</text>
+    <text x="10" y="55" class="math-text">Ỹ ≈ β₁D̃ + ε̃</text>
+    
+    <text x="10" y="75" class="label-text">Simple bivariate relationship</text>
+    <text x="10" y="90" class="label-text">with confounding removed</text>
+    
+    <text x="10" y="110" class="label-text">via high-dimensional Lasso</text>
+  </g>
+</svg>
