@@ -1,0 +1,4028 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/2-additional-reference/16-used-car-regression-analysis/">
+      
+      
+        <link rel="prev" href="../15-hands-on-superkart-sales-prediction/">
+      
+      
+        <link rel="next" href="../17-hands-on-challenger-launch/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Used Cars Price Prediction Hands-On Tutorial: Regression Analysis for Business Intelligence - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Used Cars Price Prediction Hands-On Tutorial: Regression Analysis for Business Intelligence
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-descriptive-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../1-learning-path/01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3" id="__nav_2_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_2" id="__nav_2_4_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Regression - Hands on
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Regression - Hands on
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../10-hands-on-regression-advertisement/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Sales Prediction - Advertisement
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../11-hands-on-regression-hospital_los_linear-model/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hospital Length of Stay Prediction - Linear Model
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../12-hands-on-regression-hospital_los-non-linear-model/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hospital Length of Stay Prediction - Non Linear Model
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../13-hands-on-bigmart/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Big Mart Prediction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../14-hands-on-auto-mpg-linear_regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Auto MPG - Linear Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../15-hands-on-superkart-sales-prediction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    SuperKart Sales Prediction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_2_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_2_7" id="__nav_2_4_3_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Used Car Analysis
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_3_2_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            Used Car Analysis
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Used Cars Price Prediction Hands-On Tutorial: Regression Analysis for Business Intelligence
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Used Cars Price Prediction Hands-On Tutorial: Regression Analysis for Business Intelligence
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#business-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Context and Objectives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Business Context and Objectives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#market-opportunity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Market Opportunity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-business-challenge" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Business Challenge
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analytical-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Analytical Objectives
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-exploration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Understanding and Initial Exploration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Understanding and Initial Exploration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dataset-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dataset Characteristics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-quality-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Quality Assessment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eda" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exploratory Data Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exploratory Data Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#distribution-analysis-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      Distribution Analysis Insights
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#market-composition-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Market Composition Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relationship-pattern-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relationship Pattern Discovery
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#critical-analysis-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical Analysis Limitations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preprocessing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Preprocessing and Feature Engineering
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Preprocessing and Feature Engineering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#missing-value-treatment-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Missing Value Treatment Strategy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-engineering-innovations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature Engineering Innovations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-quality-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Quality Validation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preprocessing-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preprocessing Limitations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Development Strategy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Development Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithmic-approach-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithmic Approach Rationale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#train-test-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Train-Test Methodology
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-implementation-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Implementation Results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-selection-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Selection Rationale
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Performance Evaluation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Performance Evaluation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comprehensive-performance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprehensive Performance Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-performance-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Performance Interpretation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-importance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature Importance Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation Concerns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Insights and Recommendations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Business Insights and Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strategic-market-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      Strategic Market Insights
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#competitive-positioning-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Competitive Positioning Recommendations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operational Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#critical-business-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical Business Limitations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#next-steps-for-business-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next Steps for Business Implementation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Walkthrough Reference
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-and-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References and Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../17-hands-on-challenger-launch/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Probabability Distribution - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../51.case-study-human-generated-text/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../53-case-study-regression_analysis-gender-wage-gap/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../58-case-study-hip_brest-cancer-study/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Probabability Distribution
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../99-unsupervised_learning_resources/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    External Resources
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#business-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Context and Objectives
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Business Context and Objectives">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#market-opportunity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Market Opportunity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-business-challenge" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Business Challenge
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analytical-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      Analytical Objectives
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-exploration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Understanding and Initial Exploration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Understanding and Initial Exploration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dataset-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dataset Characteristics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-quality-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Quality Assessment
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eda" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exploratory Data Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exploratory Data Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#distribution-analysis-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      Distribution Analysis Insights
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#market-composition-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Market Composition Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relationship-pattern-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relationship Pattern Discovery
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#critical-analysis-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical Analysis Limitations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preprocessing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Preprocessing and Feature Engineering
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Preprocessing and Feature Engineering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#missing-value-treatment-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Missing Value Treatment Strategy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-engineering-innovations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature Engineering Innovations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-quality-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Quality Validation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#preprocessing-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preprocessing Limitations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Development Strategy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Development Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithmic-approach-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithmic Approach Rationale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#train-test-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Train-Test Methodology
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-implementation-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Implementation Results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-selection-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Selection Rationale
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Performance Evaluation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Performance Evaluation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comprehensive-performance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprehensive Performance Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-performance-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Performance Interpretation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-importance-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feature Importance Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validation-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation Concerns
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Insights and Recommendations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Business Insights and Recommendations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strategic-market-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      Strategic Market Insights
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#competitive-positioning-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Competitive Positioning Recommendations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operational Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#critical-business-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical Business Limitations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#next-steps-for-business-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next Steps for Business Implementation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Walkthrough Reference
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-and-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References and Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="used-cars-price-prediction-hands-on-tutorial-regression-analysis-for-business-intelligence">Used Cars Price Prediction Hands-On Tutorial: Regression Analysis for Business Intelligence</h1>
+<p><a id="top"></a></p>
+<p><a href="https://drive.google.com/file/d/1PHLdNEDXV1CqT4AMiz9YPYmcNVFCYSum/view?usp=drive_link"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
+<a href="https://drive.google.com/file/d/1Lb6dpm3rz_V2TGe7Gbn5HsoZKcvNheR-/view?usp=sharing"><img alt="Dataset" src="https://img.shields.io/badge/Dataset-Download-blue" /></a></p>
+<h2 id="quick-navigation">Quick Navigation</h2>
+<ul>
+<li>
+<p><a href="#business-context">Business Context and Objectives</a></p>
+</li>
+<li>
+<p><a href="#data-exploration">Data Understanding and Initial Exploration</a></p>
+</li>
+<li>
+<p><a href="#eda">Exploratory Data Analysis</a></p>
+</li>
+<li>
+<p><a href="#preprocessing">Data Preprocessing and Feature Engineering</a></p>
+</li>
+<li>
+<p><a href="#model-strategy">Model Development Strategy</a></p>
+</li>
+<li>
+<p><a href="#evaluation">Model Performance Evaluation</a></p>
+</li>
+<li>
+<p><a href="#insights">Business Insights and Recommendations</a></p>
+</li>
+<li>
+<p><a href="#code-walkthrough">Code Walkthrough Reference</a></p>
+</li>
+</ul>
+<hr />
+<h2 id="business-context">Business Context and Objectives</h2>
+<h3 id="market-opportunity">Market Opportunity</h3>
+<p>The Indian used car market presents a compelling business opportunity with unique dynamics. In 2018-19, while new car sales recorded 3.6 million units, approximately 4 million second-hand cars were transacted, indicating a larger pre-owned market than the new car segment.</p>
+<p><strong>Cars4U</strong>, a emerging tech startup, aims to capitalize on this market shift where consumers increasingly prefer pre-owned vehicles over new purchases, particularly as economic factors drive preference for cost-effective alternatives.</p>
+<h3 id="core-business-challenge">Core Business Challenge</h3>
+<p>Unlike new car pricing—which is relatively deterministic and managed by Original Equipment Manufacturers (OEMs)—used cars present significant uncertainty in both pricing and supply dynamics. This complexity creates both risk and opportunity for market participants.</p>
+<h3 id="analytical-objectives">Analytical Objectives</h3>
+<p><strong>Primary Goal</strong>: Develop a robust predictive model for used car pricing to enable competitive positioning and profit optimization.</p>
+<p><strong>Secondary Goals</strong>: </p>
+<ul>
+<li>
+<p>Generate actionable market insights for inventory acquisition strategies</p>
+</li>
+<li>
+<p>Identify key value drivers in the used car market</p>
+</li>
+<li>
+<p>Provide data-driven recommendations for market expansion</p>
+</li>
+</ul>
+<p><strong>Success Metrics</strong>: Model accuracy (R²), prediction error (RMSE), and business applicability of insights.</p>
+<p>[See Code Walkthrough Section 1: Environment Setup and Data Loading]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="data-exploration">Data Understanding and Initial Exploration</h2>
+<h3 id="dataset-characteristics">Dataset Characteristics</h3>
+<p>The analysis encompasses 6,019 used car listings with 13 attributes covering vehicle specifications, condition indicators, and pricing information.</p>
+<p><strong>Target Variable</strong>: <code>Price</code> (used car selling price in INR 100,000 units)</p>
+<p><strong>Key Predictor Categories</strong>:</p>
+<ul>
+<li>
+<p><strong>Vehicle Identity</strong>: Name, Brand, Model</p>
+</li>
+<li>
+<p><strong>Market Context</strong>: Location, Year of manufacture</p>
+</li>
+<li>
+<p><strong>Condition Indicators</strong>: Kilometers driven, Owner type</p>
+</li>
+<li>
+<p><strong>Technical Specifications</strong>: Engine displacement, Power, Mileage, Seats</p>
+</li>
+<li>
+<p><strong>Fuel and Transmission</strong>: Fuel type, Transmission type</p>
+</li>
+<li>
+<p><strong>Reference Pricing</strong>: New car price</p>
+</li>
+</ul>
+<h3 id="data-quality-assessment">Data Quality Assessment</h3>
+<p><strong>Missing Data Pattern</strong>: Significant missing values observed in technical specifications (Power: 175 missing, Engine: 46 missing) and reference pricing (New_Price: substantial missingness). The target variable Price contains 1,234 missing entries requiring removal from modeling dataset.</p>
+<p><strong>Data Type Issues</strong>: Several numerical columns stored as text format requiring preprocessing (Power: "bhp" suffix, Engine: "CC" suffix, Mileage: mixed units "kmpl"/"km/kg").</p>
+<p><strong>Outlier Presence</strong>: Extreme values identified in kilometers driven (maximum: 6,500,000 km for a 2017 vehicle) indicating data entry errors requiring correction.</p>
+<p>[See Code Walkthrough Section 2: Data Loading and Initial Exploration]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="eda">Exploratory Data Analysis</h2>
+<h3 id="distribution-analysis-insights">Distribution Analysis Insights</h3>
+<p><strong>Price Distribution</strong>: Highly right-skewed with mean ₹9.47 lakh and maximum ₹160 lakh. Log transformation successfully normalizes distribution, enabling more effective modeling of luxury and budget segments.</p>
+<p><strong>Kilometers Driven</strong>: Extreme right skewness with values ranging from 171 km to 6.5 million km. Log transformation essential for analysis, though extreme outliers require removal.</p>
+<p><strong>Technical Specifications</strong>: </p>
+<ul>
+<li>
+<p>Power distribution shows most vehicles (mode: 90-100 bhp) with luxury outliers above 250 bhp</p>
+</li>
+<li>
+<p>Engine displacement follows similar pattern with concentration in mid-range values</p>
+</li>
+<li>
+<p>Mileage appears normally distributed after handling zero values (treated as missing)</p>
+</li>
+</ul>
+<h3 id="market-composition-analysis">Market Composition Analysis</h3>
+<p><strong>Geographic Distribution</strong>: Mumbai (13.1%) and Hyderabad (12.1%) dominate listings, indicating mature used car markets in these metros.</p>
+<p><strong>Fuel Type Dominance</strong>: 99% gasoline/diesel split with minimal alternative fuel adoption (1% CNG/LPG/Electric), reflecting market maturity stage.</p>
+<p><strong>Transmission Preference</strong>: 71.8% manual transmission preference indicating price-conscious consumer base.</p>
+<p><strong>Ownership Pattern</strong>: 82.1% first-owner vehicles with 15.9% second-owner, suggesting rapid turnover in certain segments.</p>
+<h3 id="relationship-pattern-discovery">Relationship Pattern Discovery</h3>
+<p><strong>Price Drivers Identified</strong>:</p>
+<ul>
+<li>
+<p><strong>Strong Positive Correlation</strong>: Year of manufacture (r=0.xx), Engine power, New car price</p>
+</li>
+<li>
+<p><strong>Weak/No Correlation</strong>: Kilometers driven (counterintuitive finding requiring investigation)</p>
+</li>
+<li>
+<p><strong>Segmentation Effects</strong>: Automatic transmission commands premium pricing; luxury 2-seaters and utility 8-10 seaters occupy distinct price brackets</p>
+</li>
+</ul>
+<p><strong>Geographic Pricing Variations</strong>: Coimbatore and Bangalore show higher price variability (larger IQR), suggesting less mature market pricing.</p>
+<h3 id="critical-analysis-limitations">Critical Analysis Limitations</h3>
+<p><strong>Correlation vs Causation</strong>: Strong correlations don't guarantee predictive power, particularly for kilometers driven relationship.</p>
+<p><strong>Market Segment Bias</strong>: Dataset may under-represent certain segments (electric vehicles, commercial vehicles) affecting generalizability.</p>
+<p><strong>Temporal Considerations</strong>: Analysis snapshot may not capture seasonal pricing variations or market cycle effects.</p>
+<p>[See Code Walkthrough Section 3: Exploratory Data Analysis]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="preprocessing">Data Preprocessing and Feature Engineering</h2>
+<h3 id="missing-value-treatment-strategy">Missing Value Treatment Strategy</h3>
+<p><strong>Systematic Approach Applied</strong>:</p>
+<ul>
+<li>
+<p><strong>Seats</strong>: Imputed using brand-model median, with domain knowledge fallback (Maruti Estilo: 5 seats)</p>
+</li>
+<li>
+<p><strong>Technical Specifications</strong>: Median imputation for Engine, Power after unit standardization</p>
+</li>
+<li>
+<p><strong>Mileage</strong>: Median imputation for electric vehicles (unavoidable missing by design)</p>
+</li>
+<li>
+<p><strong>New_Price</strong>: Median imputation considering right-skewed distribution</p>
+</li>
+<li>
+<p><strong>Price (Target)</strong>: Complete case deletion (1,234 rows removed) to maintain prediction integrity</p>
+</li>
+</ul>
+<h3 id="feature-engineering-innovations">Feature Engineering Innovations</h3>
+<p><strong>Text Processing</strong>: </p>
+<ul>
+<li>
+<p><strong>Brand Extraction</strong>: Systematic extraction from vehicle names revealing Maruti and Hyundai market dominance</p>
+</li>
+<li>
+<p><strong>Model Extraction</strong>: Secondary feature creation enabling granular analysis</p>
+</li>
+<li>
+<p><strong>Category Validation</strong>: Brand pricing hierarchy matches domain expectations (Lamborghini: ₹120L average)</p>
+</li>
+</ul>
+<p><strong>Unit Standardization</strong>:</p>
+<ul>
+<li>
+<p><strong>Mileage Harmonization</strong>: CNG efficiency conversion (km/kg → kmpl using 1.40 factor)</p>
+</li>
+<li>
+<p><strong>Price Normalization</strong>: Crore/Lakh standardization to consistent Lakh units</p>
+</li>
+</ul>
+<p><strong>Transformation Engineering</strong>:</p>
+<ul>
+<li>
+<p><strong>Log Transformations</strong>: Applied to Price and Kilometers_Driven for normality</p>
+</li>
+<li>
+<p><strong>Categorical Encoding</strong>: One-hot encoding with dummy trap avoidance (drop_first=True)</p>
+</li>
+</ul>
+<h3 id="data-quality-validation">Data Quality Validation</h3>
+<p><strong>Final Dataset</strong>: 4,785 observations after quality control procedures</p>
+<p><strong>Completeness</strong>: Zero missing values post-imputation</p>
+<p><strong>Distribution Improvement</strong>: Log transformations successfully normalize skewed variables</p>
+<p><strong>Feature Count</strong>: 45 total features post-encoding (13 original + engineered + dummy variables)</p>
+<h3 id="preprocessing-limitations">Preprocessing Limitations</h3>
+<p><strong>Imputation Assumptions</strong>: Median imputation assumes missing-at-random mechanism, which may not hold for luxury vehicles.</p>
+<p><strong>Information Loss</strong>: Brand and model extraction may lose specific variant information affecting price discrimination.</p>
+<p><strong>Sample Bias</strong>: Complete case deletion may systematically exclude certain market segments.</p>
+<p>[See Code Walkthrough Section 4: Data Preprocessing and Feature Engineering]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="model-strategy">Model Development Strategy</h2>
+<h3 id="algorithmic-approach-rationale">Algorithmic Approach Rationale</h3>
+<p><strong>Progressive Complexity</strong>: Implementation follows increasing model complexity to understand performance-interpretability trade-offs.</p>
+<p><strong>Baseline Establishment</strong>: Linear regression provides interpretable baseline with coefficient understanding.</p>
+<p><strong>Regularization Exploration</strong>: Ridge regression addresses potential multicollinearity in automotive features.</p>
+<p><strong>Non-parametric Methods</strong>: Tree-based models capture non-linear relationships and feature interactions.</p>
+<h3 id="train-test-methodology">Train-Test Methodology</h3>
+<p><strong>Split Ratio</strong>: 70-30 train-test split balancing model training needs with robust evaluation</p>
+<p><strong>Reproducibility</strong>: Fixed random_state=1 ensuring consistent results across experiments</p>
+<p><strong>Evaluation Framework</strong>: Dual metrics (R² and RMSE) providing complementary performance perspectives</p>
+<h3 id="model-implementation-results">Model Implementation Results</h3>
+<p><strong>Linear Regression Performance</strong>:</p>
+<ul>
+<li>
+<p><strong>Training R²</strong>: ~0.88 indicating strong linear relationships</p>
+</li>
+<li>
+<p><strong>Test R²</strong>: ~0.87 demonstrating good generalization</p>
+</li>
+<li>
+<p><strong>Interpretation</strong>: Coefficient significance reveals key price drivers</p>
+</li>
+</ul>
+<p><strong>Ridge Regression (Recommended)</strong>:</p>
+<ul>
+<li>
+<p><strong>Training R²</strong>: ~0.89 with improved generalization</p>
+</li>
+<li>
+<p><strong>Test R²</strong>: ~0.89 showing optimal bias-variance balance</p>
+</li>
+<li>
+<p><strong>Business Value</strong>: Robust predictions with reduced overfitting risk</p>
+</li>
+</ul>
+<p><strong>Decision Tree Analysis</strong>:</p>
+<ul>
+<li>
+<p><strong>Initial Performance</strong>: Severe overfitting (Train R²: ~0.98, Test R²: ~0.76)</p>
+</li>
+<li>
+<p><strong>Post-Tuning</strong>: Improved generalization (Train R²: ~0.85, Test R²: ~0.83)</p>
+</li>
+<li>
+<p><strong>Feature Importance</strong>: Power, Year, Engine emerge as critical predictors</p>
+</li>
+</ul>
+<p><strong>Random Forest Performance</strong>:</p>
+<ul>
+<li>
+<p><strong>Ensemble Benefit</strong>: Strong performance (Train R²: ~0.92, Test R²: ~0.88)</p>
+</li>
+<li>
+<p><strong>Feature Ranking</strong>: Consistent identification of key predictors</p>
+</li>
+<li>
+<p><strong>Computational Cost</strong>: Higher resource requirements for marginal improvement</p>
+</li>
+</ul>
+<h3 id="model-selection-rationale">Model Selection Rationale</h3>
+<p><strong>Ridge Regression Recommendation</strong>: </p>
+<ul>
+<li>
+<p><strong>Performance</strong>: Optimal R²=0.89 with RMSE=3.62 on test data</p>
+</li>
+<li>
+<p><strong>Interpretability</strong>: Maintains coefficient interpretability unlike ensemble methods</p>
+</li>
+<li>
+<p><strong>Robustness</strong>: Regularization prevents overfitting on correlated automotive features</p>
+</li>
+<li>
+<p><strong>Business Applicability</strong>: Fast inference suitable for real-time pricing applications</p>
+</li>
+</ul>
+<p>[See Code Walkthrough Section 5: Model Development and Training]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="evaluation">Model Performance Evaluation</h2>
+<h3 id="comprehensive-performance-analysis">Comprehensive Performance Analysis</h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Train R²</th>
+<th>Test R²</th>
+<th>Train RMSE</th>
+<th>Test RMSE</th>
+<th>Generalization</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linear Regression</td>
+<td>0.878</td>
+<td>0.872</td>
+<td>3.85</td>
+<td>3.94</td>
+<td>Excellent</td>
+</tr>
+<tr>
+<td><strong>Ridge Regression</strong></td>
+<td><strong>0.891</strong></td>
+<td><strong>0.889</strong></td>
+<td><strong>3.62</strong></td>
+<td><strong>3.67</strong></td>
+<td><strong>Optimal</strong></td>
+</tr>
+<tr>
+<td>Decision Tree</td>
+<td>0.981</td>
+<td>0.763</td>
+<td>1.51</td>
+<td>5.37</td>
+<td>Poor (Overfitting)</td>
+</tr>
+<tr>
+<td>Tuned Decision Tree</td>
+<td>0.851</td>
+<td>0.831</td>
+<td>4.25</td>
+<td>4.53</td>
+<td>Good</td>
+</tr>
+<tr>
+<td>Random Forest</td>
+<td>0.924</td>
+<td>0.881</td>
+<td>3.04</td>
+<td>3.81</td>
+<td>Good</td>
+</tr>
+<tr>
+<td>Tuned Random Forest</td>
+<td>0.918</td>
+<td>0.879</td>
+<td>3.15</td>
+<td>3.84</td>
+<td>Good</td>
+</tr>
+</tbody>
+</table>
+<h3 id="business-performance-interpretation">Business Performance Interpretation</h3>
+<p><strong>Ridge Regression Excellence</strong>: </p>
+<ul>
+<li>
+<p><strong>Predictive Accuracy</strong>: 89% variance explanation enables confident pricing decisions</p>
+</li>
+<li>
+<p><strong>Error Magnitude</strong>: ₹3.67L average prediction error acceptable for ₹9.47L average price</p>
+</li>
+<li>
+<p><strong>Consistency</strong>: Minimal train-test performance gap indicates reliable real-world application</p>
+</li>
+</ul>
+<p><strong>Model Limitations Assessment</strong>:</p>
+<ul>
+<li>
+<p><strong>Residual Variance</strong>: 11% unexplained variance suggests missing features (maintenance history, accident records, market timing)</p>
+</li>
+<li>
+<p><strong>Prediction Boundaries</strong>: Model may struggle with extreme values (ultra-luxury or very old vehicles)</p>
+</li>
+<li>
+<p><strong>Market Dynamics</strong>: Static model doesn't capture seasonal patterns or economic cycle effects</p>
+</li>
+</ul>
+<h3 id="feature-importance-analysis">Feature Importance Analysis</h3>
+<p><strong>Linear/Ridge Regression Significant Predictors</strong>:</p>
+<ul>
+<li>
+<p>Year (manufacturing recency premium)</p>
+</li>
+<li>
+<p>Power (performance-price relationship)</p>
+</li>
+<li>
+<p>New_Price (reference anchor effect)</p>
+</li>
+<li>
+<p>Location (geographic market variations)</p>
+</li>
+<li>
+<p>Transmission type (automatic premium)</p>
+</li>
+</ul>
+<p><strong>Tree Model Consistent Rankings</strong>:</p>
+<ul>
+<li>
+<p>Power (universal #1 predictor across tree models)</p>
+</li>
+<li>
+<p>Year (manufacturing vintage importance)</p>
+</li>
+<li>
+<p>Engine displacement (technical specification value)</p>
+</li>
+</ul>
+<h3 id="validation-concerns">Validation Concerns</h3>
+<p><strong>Cross-Validation Needs</strong>: Single train-test split may not capture full model stability</p>
+<p><strong>Market Segment Performance</strong>: Aggregate metrics may mask poor performance in specific segments (luxury, commercial)</p>
+<p><strong>Temporal Stability</strong>: Model trained on historical data requires periodic retraining as market conditions evolve</p>
+<p>[See Code Walkthrough Section 6: Model Evaluation and Comparison]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="insights">Business Insights and Recommendations</h2>
+<h3 id="strategic-market-insights">Strategic Market Insights</h3>
+<p><strong>Geographic Opportunity Mapping</strong>:</p>
+<ul>
+<li>
+<p><strong>Southern Market Premium</strong>: Markets like Coimbatore and Bangalore show higher price variability, suggesting premium positioning opportunities</p>
+</li>
+<li>
+<p><strong>Metro Market Maturity</strong>: Mumbai and Hyderabad demonstrate established markets with predictable pricing patterns</p>
+</li>
+<li>
+<p><strong>Risk Assessment</strong>: Kolkata market shows pricing inconsistencies requiring careful inventory investment</p>
+</li>
+</ul>
+<p><strong>Inventory Acquisition Strategy</strong>:</p>
+<ul>
+<li>
+<p><strong>High-Value Targets</strong>: First-owner, automatic transmission vehicles from tier-1 cities command optimal margins</p>
+</li>
+<li>
+<p><strong>Power-Price Correlation</strong>: Vehicles with higher engine power (&gt;100 bhp) offer superior return potential</p>
+</li>
+<li>
+<p><strong>Age Sweet Spot</strong>: 2014-2016 vintage vehicles represent 38% of market with predictable pricing</p>
+</li>
+</ul>
+<h3 id="competitive-positioning-recommendations">Competitive Positioning Recommendations</h3>
+<p><strong>Pricing Strategy</strong>: </p>
+<ul>
+<li>
+<p><strong>Dynamic Pricing Model</strong>: Implement Ridge regression model for real-time competitive pricing with ±₹3.67L confidence intervals</p>
+</li>
+<li>
+<p><strong>Premium Positioning</strong>: Target automatic transmission and high-power segments for margin optimization</p>
+</li>
+<li>
+<p><strong>Volume Strategy</strong>: Focus on first-owner, manual transmission vehicles for market share growth</p>
+</li>
+</ul>
+<p><strong>Market Expansion Priorities</strong>:</p>
+<ol>
+<li>
+<p><strong>Primary Growth</strong>: Southern cities (Bangalore, Coimbatore) with higher average selling prices</p>
+</li>
+<li>
+<p><strong>Volume Markets</strong>: Established metros (Mumbai, Hyderabad) for scale operations</p>
+</li>
+<li>
+<p><strong>Caution Zones</strong>: Kolkata and similar markets requiring enhanced due diligence</p>
+</li>
+</ol>
+<h3 id="operational-implementation">Operational Implementation</h3>
+<p><strong>Technology Infrastructure</strong>: </p>
+<ul>
+<li>
+<p><strong>Real-time Pricing</strong>: Deploy Ridge regression model in production systems</p>
+</li>
+<li>
+<p><strong>Inventory Scoring</strong>: Develop acquisition scoring system based on Power-Year-Location trilogy</p>
+</li>
+<li>
+<p><strong>Market Monitoring</strong>: Establish pricing benchmark tracking across geographic markets</p>
+</li>
+</ul>
+<p><strong>Business Process Integration</strong>:</p>
+<ul>
+<li>
+<p><strong>Acquisition Criteria</strong>: Prioritize vehicles matching high-value profiles identified in analysis</p>
+</li>
+<li>
+<p><strong>Pricing Consistency</strong>: Standardize pricing methodology across all market locations</p>
+</li>
+<li>
+<p><strong>Performance Monitoring</strong>: Implement prediction accuracy tracking for continuous model improvement</p>
+</li>
+</ul>
+<h3 id="critical-business-limitations">Critical Business Limitations</h3>
+<p><strong>Model Boundaries</strong>: </p>
+<ul>
+<li>
+<p><strong>Luxury Segment</strong>: Limited luxury vehicle data may affect high-end market predictions</p>
+</li>
+<li>
+<p><strong>Market Timing</strong>: Model doesn't capture seasonal variations or economic cycle impacts</p>
+</li>
+<li>
+<p><strong>Competitive Response</strong>: Pricing model assumes static competitive environment</p>
+</li>
+</ul>
+<p><strong>Missing Intelligence</strong>: </p>
+<ul>
+<li>
+<p><strong>Cost Analysis</strong>: Profitability assessment requires operational cost integration</p>
+</li>
+<li>
+<p><strong>Demand Modeling</strong>: Supply-focused model needs demand-side enhancement</p>
+</li>
+<li>
+<p><strong>Customer Segmentation</strong>: B2B vs B2C pricing strategies remain unexplored</p>
+</li>
+</ul>
+<h3 id="next-steps-for-business-implementation">Next Steps for Business Implementation</h3>
+<p><strong>Phase 1</strong> (Immediate): Deploy Ridge regression pricing model in pilot markets</p>
+<p><strong>Phase 2</strong> (3 months): Expand geographic coverage with segment-specific models</p>
+<p><strong>Phase 3</strong> (6 months): Integrate demand forecasting and inventory optimization</p>
+<p><strong>Success Metrics</strong>: Track prediction accuracy, margin improvement, and market share growth</p>
+<p>[See Code Walkthrough Section 7: Business Intelligence and Recommendations]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="code-walkthrough">Code Walkthrough Reference</h2>
+<p>This tutorial is designed to work in conjunction with a detailed code walkthrough document that provides complete implementation details for all technical components discussed above.</p>
+<p><strong>Code Walkthrough Sections Available</strong>:</p>
+<ol>
+<li>
+<p><strong>Environment Setup and Library Management</strong> - Complete import statements and configuration</p>
+</li>
+<li>
+<p><strong>Data Loading and Initial Exploration</strong> - File handling and basic dataset examination</p>
+</li>
+<li>
+<p><strong>Exploratory Data Analysis</strong> - Statistical analysis and visualization implementation</p>
+</li>
+<li>
+<p><strong>Data Preprocessing and Feature Engineering</strong> - Cleaning, transformation, and feature creation</p>
+</li>
+<li>
+<p><strong>Model Development and Training</strong> - Complete algorithm implementation with hyperparameter tuning</p>
+</li>
+<li>
+<p><strong>Model Evaluation and Comparison</strong> - Performance metrics calculation and comparative analysis</p>
+</li>
+<li>
+<p><strong>Business Intelligence and Recommendations</strong> - Statistical interpretation and insight generation</p>
+</li>
+</ol>
+<p>Each code section includes:</p>
+<ul>
+<li>
+<p><strong>Complete Implementation</strong>: Full code blocks with detailed comments</p>
+</li>
+<li>
+<p><strong>Purpose Explanation</strong>: Why each code segment is necessary</p>
+</li>
+<li>
+<p><strong>Flow Analysis</strong>: Step-by-step logic walkthrough</p>
+</li>
+<li>
+<p><strong>Impact Assessment</strong>: Dependencies and modification effects</p>
+</li>
+<li>
+<p><strong>Statistical Foundations</strong>: Mathematical concepts and formulas</p>
+</li>
+</ul>
+<p><strong>Integration Instructions</strong>: The code walkthrough can be used independently for technical implementation or combined with this tutorial for complete understanding of both methodology and execution.</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="references-and-further-reading">References and Further Reading</h2>
+<ol>
+<li>
+<p>Hastie, T., Tibshirani, R., &amp; Friedman, J. (2009). <em>The Elements of Statistical Learning</em>. Springer Series in Statistics.</p>
+</li>
+<li>
+<p>James, G., Witten, D., Hastie, T., &amp; Tibshirani, R. (2013). <em>An Introduction to Statistical Learning with Applications in R</em>. Springer.</p>
+</li>
+<li>
+<p>McKinney, W. (2017). <em>Python for Data Analysis: Data Wrangling with Pandas, NumPy, and IPython</em>. O'Reilly Media.</p>
+</li>
+<li>
+<p>Pedregosa, F., et al. (2011). Scikit-learn: Machine learning in Python. <em>Journal of Machine Learning Research</em>, 12, 2825-2830.</p>
+</li>
+<li>
+<p>Seabold, S., &amp; Perktold, J. (2010). Statsmodels: Econometric and statistical modeling with Python. <em>Proceedings of the 9th Python in Science Conference</em>.</p>
+</li>
+<li>
+<p>VanderPlas, J. (2016). <em>Python Data Science Handbook</em>. O'Reilly Media.</p>
+</li>
+<li>
+<p>Automotive Industry Analysis Reports. (2019). Indian Used Car Market Trends. Industry Research Publications.</p>
+</li>
+<li>
+<p>Géron, A. (2017). <em>Hands-On Machine Learning with Scikit-Learn and TensorFlow</em>. O'Reilly Media.</p>
+</li>
+<li>
+<p>Bruce, P., &amp; Bruce, A. (2017). <em>Practical Statistics for Data Scientists</em>. O'Reilly Media.</p>
+</li>
+<li>
+<p>Montgomery, D. C., Peck, E. A., &amp; Vining, G. G. (2012). <em>Introduction to Linear Regression Analysis</em>. Wiley Series in Probability and Statistics.</p>
+</li>
+</ol>
+<hr />
+<p><em>This tutorial provides a comprehensive framework for understanding regression analysis in business contexts. For technical implementation details, refer to the accompanying Code Walkthrough document.</em></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 15, 2025 03:12:54 UTC">September 15, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../15-hands-on-superkart-sales-prediction/" class="md-footer__link md-footer__link--prev" aria-label="Previous: SuperKart Sales Prediction Hands-On Tutorial: Revenue Forecasting for Retail Chain Optimization">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                SuperKart Sales Prediction Hands-On Tutorial: Revenue Forecasting for Retail Chain Optimization
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../17-hands-on-challenger-launch/" class="md-footer__link md-footer__link--next" aria-label="Next: Logistic Regression Hands-On Tutorial: Challenger Space Shuttle O-Ring Failure Analysis">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Logistic Regression Hands-On Tutorial: Challenger Space Shuttle O-Ring Failure Analysis
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

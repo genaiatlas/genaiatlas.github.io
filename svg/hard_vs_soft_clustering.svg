@@ -1,0 +1,208 @@
+<svg width="800" height="700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; fill: #2c3e50; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #34495e; }
+      .label { font-family: Arial, sans-serif; font-size: 12px; fill: #2c3e50; }
+      .center { fill: #e74c3c; stroke: #c0392b; stroke-width: 3; }
+      .point-cluster1 { fill: #3498db; stroke: #2980b9; stroke-width: 2; }
+      .point-cluster2 { fill: #f39c12; stroke: #e67e22; stroke-width: 2; }
+      .point-uncertain { fill: #95a5a6; stroke: #7f8c8d; stroke-width: 2; }
+      .boundary-hard { stroke: #e74c3c; stroke-width: 3; fill: none; stroke-dasharray: 10,5; }
+      .boundary-soft { stroke: #27ae60; stroke-width: 2; fill: none; stroke-dasharray: 5,5; opacity: 0.7; }
+      .grid { stroke: #ecf0f1; stroke-width: 0.5; }
+      .background { fill: #f8f9fa; stroke: #dee2e6; stroke-width: 1; }
+      .soft-gradient1 { fill: url(#gradient1); }
+      .soft-gradient2 { fill: url(#gradient2); }
+      .probability-bar { fill: #3498db; stroke: #2980b9; stroke-width: 1; }
+      .probability-bar2 { fill: #f39c12; stroke: #e67e22; stroke-width: 1; }
+    </style>
+    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3498db;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#3498db;stop-opacity:0.1"/>
+    </linearGradient>
+    <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f39c12;stop-opacity:0.1"/>
+      <stop offset="100%" style="stop-color:#f39c12;stop-opacity:0.8"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" class="title">Hard vs Soft Clustering: Comparison</text>
+  
+  <!-- Hard Clustering Section -->
+  <g transform="translate(50, 60)">
+    <rect x="0" y="0" width="320" height="250" class="background" rx="10"/>
+    <text x="160" y="25" text-anchor="middle" class="subtitle">Hard Clustering (Standard K-Means)</text>
+    
+    <!-- Plot area -->
+    <g transform="translate(40, 60)">
+      <!-- Grid -->
+      <defs>
+        <pattern id="grid-hard" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 20" fill="none" class="grid"/>
+        </pattern>
+      </defs>
+      <rect x="0" y="0" width="240" height="150" fill="url(#grid-hard)"/>
+      
+      <!-- Cluster centers -->
+      <circle cx="70" cy="50" r="8" class="center"/>
+      <circle cx="170" cy="100" r="8" class="center"/>
+      
+      <!-- Cluster 1 points -->
+      <circle cx="50" cy="40" r="5" class="point-cluster1"/>
+      <circle cx="60" cy="60" r="5" class="point-cluster1"/>
+      <circle cx="80" cy="45" r="5" class="point-cluster1"/>
+      <circle cx="75" cy="65" r="5" class="point-cluster1"/>
+      <circle cx="55" cy="70" r="5" class="point-cluster1"/>
+      
+      <!-- Cluster 2 points -->
+      <circle cx="150" cy="90" r="5" class="point-cluster2"/>
+      <circle cx="180" cy="110" r="5" class="point-cluster2"/>
+      <circle cx="160" cy="120" r="5" class="point-cluster2"/>
+      <circle cx="190" cy="95" r="5" class="point-cluster2"/>
+      <circle cx="165" cy="85" r="5" class="point-cluster2"/>
+      
+      <!-- Boundary points (assigned to one cluster) -->
+      <circle cx="110" cy="75" r="5" class="point-cluster1"/>
+      <circle cx="120" cy="80" r="5" class="point-cluster2"/>
+      
+      <!-- Hard decision boundary -->
+      <path d="M 115 0 L 115 150" class="boundary-hard"/>
+      
+      <!-- Labels -->
+      <text x="70" y="35" text-anchor="middle" class="label">μ₁</text>
+      <text x="170" y="90" text-anchor="middle" class="label">μ₂</text>
+      <text x="120" y="10" text-anchor="middle" class="label" style="color: #e74c3c; font-weight: bold;">Hard Boundary</text>
+    </g>
+    
+    <!-- Hard clustering properties -->
+    <g transform="translate(20, 220)">
+      <text x="0" y="0" class="label" style="font-weight: bold;">Properties:</text>
+      <text x="0" y="15" class="label">• Each point belongs to exactly one cluster</text>
+      <text x="0" y="30" class="label">• Binary assignment: 0 or 1</text>
+    </g>
+  </g>
+  
+  <!-- Soft Clustering Section -->
+  <g transform="translate(430, 60)">
+    <rect x="0" y="0" width="320" height="250" class="background" rx="10"/>
+    <text x="160" y="25" text-anchor="middle" class="subtitle">Soft Clustering (Fuzzy/GMM)</text>
+    
+    <!-- Plot area -->
+    <g transform="translate(40, 60)">
+      <rect x="0" y="0" width="240" height="150" fill="url(#grid-hard)"/>
+      
+      <!-- Soft membership regions -->
+      <ellipse cx="70" cy="75" rx="50" ry="35" class="soft-gradient1"/>
+      <ellipse cx="170" cy="75" rx="50" ry="35" class="soft-gradient2"/>
+      
+      <!-- Cluster centers -->
+      <circle cx="70" cy="50" r="8" class="center"/>
+      <circle cx="170" cy="100" r="8" class="center"/>
+      
+      <!-- Points with varying membership -->
+      <circle cx="50" cy="40" r="5" class="point-cluster1"/>
+      <circle cx="60" cy="60" r="5" class="point-cluster1"/>
+      <circle cx="80" cy="45" r="5" class="point-cluster1"/>
+      
+      <circle cx="150" cy="90" r="5" class="point-cluster2"/>
+      <circle cx="180" cy="110" r="5" class="point-cluster2"/>
+      <circle cx="190" cy="95" r="5" class="point-cluster2"/>
+      
+      <!-- Uncertain points in boundary region -->
+      <circle cx="110" cy="75" r="5" class="point-uncertain"/>
+      <circle cx="120" cy="80" r="5" class="point-uncertain"/>
+      <circle cx="130" cy="70" r="5" class="point-uncertain"/>
+      
+      <!-- Soft boundaries -->
+      <ellipse cx="70" cy="75" rx="50" ry="35" class="boundary-soft"/>
+      <ellipse cx="170" cy="75" rx="50" ry="35" class="boundary-soft"/>
+      
+      <!-- Labels -->
+      <text x="70" y="35" text-anchor="middle" class="label">μ₁</text>
+      <text x="170" y="90" text-anchor="middle" class="label">μ₂</text>
+      <text x="120" y="10" text-anchor="middle" class="label" style="color: #27ae60; font-weight: bold;">Soft Boundaries</text>
+    </g>
+    
+    <!-- Soft clustering properties -->
+    <g transform="translate(20, 220)">
+      <text x="0" y="0" class="label" style="font-weight: bold;">Properties:</text>
+      <text x="0" y="15" class="label">• Points have membership degrees</text>
+      <text x="0" y="30" class="label">• Probability distribution: [0,1]</text>
+    </g>
+  </g>
+  
+  <!-- Membership Visualization -->
+  <g transform="translate(50, 340)">
+    <rect x="0" y="0" width="700" height="180" class="background" rx="10"/>
+    <text x="350" y="25" text-anchor="middle" class="subtitle">Membership Comparison for Boundary Points</text>
+    
+    <!-- Point A visualization -->
+    <g transform="translate(50, 50)">
+      <text x="100" y="0" text-anchor="middle" class="label" style="font-weight: bold;">Point A: Clear Assignment</text>
+      
+      <!-- Hard clustering bar -->
+      <text x="0" y="25" class="label">Hard:</text>
+      <rect x="40" y="15" width="80" height="15" fill="#3498db" stroke="#2980b9" stroke-width="1"/>
+      <rect x="120" y="15" width="20" height="15" fill="#f39c12" stroke="#e67e22" stroke-width="1"/>
+      <text x="160" y="40" class="label">Cluster 1: 100%</text>
+      
+      <!-- Soft clustering bar -->
+      <text x="0" y="65" class="label">Soft:</text>
+      <rect x="40" y="55" width="70" height="15" fill="#3498db" stroke="#2980b9" stroke-width="1"/>
+      <rect x="110" y="55" width="30" height="15" fill="#f39c12" stroke="#e67e22" stroke-width="1"/>
+      <text x="160" y="70" class="label">Cluster 1: 70%</text>
+      <text x="160" y="85" class="label">Cluster 2: 30%</text>
+    </g>
+    
+    <!-- Point B visualization -->
+    <g transform="translate(350, 50)">
+      <text x="100" y="0" text-anchor="middle" class="label" style="font-weight: bold;">Point B: Boundary Point</text>
+      
+      <!-- Hard clustering bar -->
+      <text x="0" y="25" class="label">Hard:</text>
+      <rect x="40" y="15" width="20" height="15" fill="#3498db" stroke="#2980b9" stroke-width="1"/>
+      <rect x="60" y="15" width="80" height="15" fill="#f39c12" stroke="#e67e22" stroke-width="1"/>
+      <text x="160" y="40" class="label">Cluster 2: 100%</text>
+      
+      <!-- Soft clustering bar -->
+      <text x="0" y="65" class="label">Soft:</text>
+      <rect x="40" y="55" width="45" height="15" fill="#3498db" stroke="#2980b9" stroke-width="1"/>
+      <rect x="85" y="55" width="55" height="15" fill="#f39c12" stroke="#e67e22" stroke-width="1"/>
+      <text x="160" y="70" class="label">Cluster 1: 45%</text>
+      <text x="160" y="85" class="label">Cluster 2: 55%</text>
+    </g>
+    
+    <!-- Legend -->
+    <g transform="translate(50, 130)">
+      <rect x="0" y="0" width="15" height="15" class="probability-bar"/>
+      <text x="20" y="12" class="label">Cluster 1 Membership</text>
+      
+      <rect x="150" y="0" width="15" height="15" class="probability-bar2"/>
+      <text x="170" y="12" class="label">Cluster 2 Membership</text>
+    </g>
+  </g>
+  
+  <!-- Algorithm Comparison -->
+  <g transform="translate(50, 540)">
+    <rect x="0" y="0" width="700" height="120" fill="#e8f8f5" stroke="#27ae60" stroke-width="2" rx="10"/>
+    <text x="350" y="25" text-anchor="middle" class="subtitle" style="color: #27ae60;">When to Use Each Approach</text>
+    
+    <g transform="translate(50, 40)">
+      <!-- Hard clustering use cases -->
+      <text x="0" y="0" class="label" style="font-weight: bold; color: #e74c3c;">Hard Clustering (K-Means):</text>
+      <text x="0" y="18" class="label">• Well-separated clusters</text>
+      <text x="0" y="33" class="label">• Speed and simplicity required</text>
+      <text x="0" y="48" class="label">• Clear decision boundaries needed</text>
+      <text x="0" y="63" class="label">• Large datasets with limited resources</text>
+      
+      <!-- Soft clustering use cases -->
+      <text x="350" y="0" class="label" style="font-weight: bold; color: #f39c12;">Soft Clustering (Fuzzy/GMM):</text>
+      <text x="350" y="18" class="label">• Overlapping clusters</text>
+      <text x="350" y="33" class="label">• Uncertainty quantification needed</text>
+      <text x="350" y="48" class="label">• Probabilistic reasoning</text>
+      <text x="350" y="63" class="label">• Points near cluster boundaries</text>
+    </g>
+  </g>
+</svg>

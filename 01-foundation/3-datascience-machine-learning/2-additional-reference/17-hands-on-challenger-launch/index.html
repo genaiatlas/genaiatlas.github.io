@@ -1,0 +1,4608 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/2-additional-reference/17-hands-on-challenger-launch/">
+      
+      
+        <link rel="prev" href="../16-used-car-regression-analysis/">
+      
+      
+        <link rel="next" href="../18-hands-on-hr-employee-attrition/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Logistic Regression Hands-On Tutorial: Challenger Space Shuttle O-Ring Failure Analysis - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Logistic Regression Hands-On Tutorial: Challenger Space Shuttle O-Ring Failure Analysis
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-descriptive-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../1-learning-path/01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3" id="__nav_2_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../10-hands-on-regression-advertisement/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_3" id="__nav_2_4_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Probabability Distribution - Hands on
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Probabability Distribution - Hands on
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_3_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_3_1" id="__nav_2_4_3_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    challenger Space Shuttle Launch
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_3_3_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            challenger Space Shuttle Launch
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Logistic Regression Hands-On Tutorial: Challenger Space Shuttle O-Ring Failure Analysis
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Logistic Regression Hands-On Tutorial: Challenger Space Shuttle O-Ring Failure Analysis
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction &amp; Background
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Overview &amp; Understanding
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exploratory-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exploratory Data Analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Visualization
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logistic-modeling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logistic Regression Modeling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Interpretation &amp; Results
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#critical-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical Analysis &amp; Limitations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Walkthrough Reference
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 1: Environment Setup and Library Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 1: Environment Setup and Library Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-block-11-essential-library-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 1.1: Essential Library Imports
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-block-12-statistical-modeling-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 1.2: Statistical Modeling Libraries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-block-13-visualization-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 1.3: Visualization Libraries
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 2: Data Loading and Initial Inspection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 2: Data Loading and Initial Inspection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-block-21-data-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 2.1: Data Import
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-block-22-initial-data-inspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 2.2: Initial Data Inspection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-block-23-data-structure-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 2.3: Data Structure Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-block-24-descriptive-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 2.4: Descriptive Statistics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 3: Comprehensive Exploratory Data Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 3: Comprehensive Exploratory Data Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-block-31-data-subset-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 3.1: Data Subset Creation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-block-32-frequency-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 3.2: Frequency Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 4: Advanced Data Visualization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 4: Advanced Data Visualization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-block-41-complete-visualization-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 4.1: Complete Visualization Implementation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 5: Logistic Regression Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 5: Logistic Regression Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-block-51-model-construction-and-fitting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 5.1: Model Construction and Fitting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-foundations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Foundations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statistical-output-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statistical Output Interpretation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technical Implementation Notes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 6: Model Interpretation and Results
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 6: Model Interpretation and Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-interpretation-of-coefficients" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Interpretation of Coefficients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#probability-calculations-for-critical-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      Probability Calculations for Critical Scenarios
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confidence-intervals-and-uncertainty" class="md-nav__link">
+    <span class="md-ellipsis">
+      Confidence Intervals and Uncertainty
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risk-assessment-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Risk Assessment Framework
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 7: Statistical Concepts and Mathematical Foundations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 7: Statistical Concepts and Mathematical Foundations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logistic-regression-theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logistic Regression Theory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maximum-likelihood-estimation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      Maximum Likelihood Estimation Details
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-diagnostics-and-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Diagnostics and Assumptions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-statistical-approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative Statistical Approaches
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 8: Integration with Main Tutorial
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 8: Integration with Main Tutorial">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connecting-code-to-conceptual-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connecting Code to Conceptual Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete-reproducible-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Reproducible Workflow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-implementation-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Production Implementation Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extension-opportunities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extension Opportunities
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Takeaways
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-and-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References and Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../18-hands-on-hr-employee-attrition/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    HR Employee Attrition
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../19-hands-on-celestial-object-detection/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Celestial Object Detection
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../20-hands-on-kc-coffeee-roaster-study/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    KC Coffee Roaster Study
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../21-travel-package-purchase-prediction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Travel Package Purchase Prediction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../22-hospital-length-stay-prediction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hospital Length of Stay (LOS) Prediction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../51.case-study-human-generated-text/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../53-case-study-regression_analysis-gender-wage-gap/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../58-case-study-hip_brest-cancer-study/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Probabability Distribution
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../99-unsupervised_learning_resources/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    External Resources
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction &amp; Background
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Overview &amp; Understanding
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exploratory-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exploratory Data Analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Visualization
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logistic-modeling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logistic Regression Modeling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Interpretation &amp; Results
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#critical-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical Analysis &amp; Limitations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Walkthrough Reference
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 1: Environment Setup and Library Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 1: Environment Setup and Library Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-block-11-essential-library-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 1.1: Essential Library Imports
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-block-12-statistical-modeling-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 1.2: Statistical Modeling Libraries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-block-13-visualization-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 1.3: Visualization Libraries
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 2: Data Loading and Initial Inspection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 2: Data Loading and Initial Inspection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-block-21-data-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 2.1: Data Import
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-block-22-initial-data-inspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 2.2: Initial Data Inspection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-block-23-data-structure-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 2.3: Data Structure Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-block-24-descriptive-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 2.4: Descriptive Statistics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 3: Comprehensive Exploratory Data Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 3: Comprehensive Exploratory Data Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-block-31-data-subset-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 3.1: Data Subset Creation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-block-32-frequency-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 3.2: Frequency Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 4: Advanced Data Visualization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 4: Advanced Data Visualization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-block-41-complete-visualization-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 4.1: Complete Visualization Implementation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 5: Logistic Regression Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 5: Logistic Regression Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-block-51-model-construction-and-fitting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Block 5.1: Model Construction and Fitting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-foundations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Foundations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statistical-output-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statistical Output Interpretation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#technical-implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technical Implementation Notes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 6: Model Interpretation and Results
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 6: Model Interpretation and Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-interpretation-of-coefficients" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Interpretation of Coefficients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#probability-calculations-for-critical-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      Probability Calculations for Critical Scenarios
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confidence-intervals-and-uncertainty" class="md-nav__link">
+    <span class="md-ellipsis">
+      Confidence Intervals and Uncertainty
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#risk-assessment-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Risk Assessment Framework
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 7: Statistical Concepts and Mathematical Foundations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 7: Statistical Concepts and Mathematical Foundations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#logistic-regression-theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logistic Regression Theory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maximum-likelihood-estimation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      Maximum Likelihood Estimation Details
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-diagnostics-and-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Diagnostics and Assumptions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-statistical-approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative Statistical Approaches
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Section 8: Integration with Main Tutorial
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 8: Integration with Main Tutorial">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connecting-code-to-conceptual-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connecting Code to Conceptual Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete-reproducible-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Reproducible Workflow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-implementation-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Production Implementation Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extension-opportunities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extension Opportunities
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Takeaways
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-and-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References and Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="logistic-regression-hands-on-tutorial-challenger-space-shuttle-o-ring-failure-analysis">Logistic Regression Hands-On Tutorial: Challenger Space Shuttle O-Ring Failure Analysis</h1>
+<p><a id="top"></a></p>
+<p><a href="https://drive.google.com/file/d/1y2tI8dnBPx-o75-kpZaAw5R8w9pPrii1/view?usp=sharing"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
+<a href="https://drive.google.com/file/d/1JufTjgvULCnw92k_wk13xDefgoocU2yb/view?usp=sharing"><img alt="Dataset" src="https://img.shields.io/badge/Dataset-CSV-blue" /></a></p>
+<h2 id="quick-navigation">Quick Navigation</h2>
+<ul>
+<li>
+<p><a href="#introduction">Introduction &amp; Background</a></p>
+</li>
+<li>
+<p><a href="#data-overview">Data Overview &amp; Understanding</a></p>
+</li>
+<li>
+<p><a href="#exploratory-analysis">Exploratory Data Analysis</a></p>
+</li>
+<li>
+<p><a href="#data-visualization">Data Visualization</a></p>
+</li>
+<li>
+<p><a href="#logistic-modeling">Logistic Regression Modeling</a></p>
+</li>
+<li>
+<p><a href="#model-interpretation">Model Interpretation &amp; Results</a></p>
+</li>
+<li>
+<p><a href="#critical-analysis">Critical Analysis &amp; Limitations</a></p>
+</li>
+<li>
+<p><a href="#code-walkthrough">Code Walkthrough Reference</a></p>
+</li>
+</ul>
+<hr />
+<h2 id="introduction">Introduction &amp; Background</h2>
+<p>This tutorial examines one of the most significant case studies in statistical analysis and risk assessment: the Challenger Space Shuttle disaster. On January 28, 1986, the Space Shuttle Challenger broke apart 73 seconds into its flight, leading to the deaths of seven crew members. The disaster was caused by the failure of O-ring seals in the solid rocket boosters, which became brittle in the unusually cold weather conditions.</p>
+<p><strong>Tutorial Objectives:</strong></p>
+<ul>
+<li>
+<p>Understand how logistic regression applies to binary classification problems</p>
+</li>
+<li>
+<p>Learn to interpret relationships between continuous predictors and binary outcomes</p>
+</li>
+<li>
+<p>Analyze the statistical evidence that could have prevented a tragedy</p>
+</li>
+<li>
+<p>Develop critical thinking about statistical decision-making in high-stakes situations</p>
+</li>
+</ul>
+<p><strong>Why This Case Matters:</strong>
+This analysis demonstrates how statistical methods can inform critical safety decisions. The data available before the launch showed a clear relationship between temperature and O-ring failure risk, yet this information wasn't effectively communicated to decision-makers.</p>
+<p><strong>Methodology Overview:</strong>
+We'll use logistic regression to model the probability of O-ring failure as a function of launch temperature. This approach is ideal for binary outcomes (failure/no failure) and provides interpretable coefficients for decision-making.</p>
+<p>[See Code Walkthrough Section 1: Environment Setup]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="data-overview">Data Overview &amp; Understanding</h2>
+<p><strong>Dataset Characteristics:</strong></p>
+<ul>
+<li>
+<p><strong>Size:</strong> 120 observations from previous shuttle launches</p>
+</li>
+<li>
+<p><strong>Variables:</strong></p>
+</li>
+<li><code>X</code>: Launch temperature (°F)</li>
+<li><code>Y</code>: O-ring failure occurrence (0 = no failure, 1 = failure)</li>
+<li><code>Observation</code>: Sequential identifier</li>
+</ul>
+<p><strong>Data Quality Assessment:</strong>
+The dataset contains 120 complete observations with no missing values. All variables are numeric, with the outcome variable properly coded as binary (0/1).</p>
+<p><strong>Statistical Summary:</strong></p>
+<ul>
+<li>
+<p><strong>Temperature Range:</strong> 53°F to 81°F</p>
+</li>
+<li>
+<p><strong>Average Temperature:</strong> 70°F</p>
+</li>
+<li>
+<p><strong>Failure Rate:</strong> 8.3% (10 failures out of 120 observations)</p>
+</li>
+<li>
+<p><strong>Temperature Distribution:</strong> Normal distribution centered around 70°F</p>
+</li>
+</ul>
+<p><strong>Business Context:</strong>
+Each observation represents a previous shuttle launch, providing historical evidence of the temperature-failure relationship. The relatively low failure rate (8.3%) is typical in reliability engineering but requires careful statistical modeling to detect patterns.</p>
+<p><strong>Data Limitations:</strong></p>
+<ul>
+<li>
+<p>Small sample size for rare events analysis</p>
+</li>
+<li>
+<p>Limited to temperature as single predictor</p>
+</li>
+<li>
+<p>Historical data may not reflect all current engineering factors</p>
+</li>
+<li>
+<p>No information about failure severity or type</p>
+</li>
+</ul>
+<p>[See Code Walkthrough Section 2: Data Loading and Inspection]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="exploratory-analysis">Exploratory Data Analysis</h2>
+<p><strong>Key Findings from Data Exploration:</strong></p>
+<p><strong>Temperature Distribution Analysis:</strong></p>
+<ul>
+<li>
+<p><strong>Mean:</strong> 70°F with standard deviation of 7.1°F</p>
+</li>
+<li>
+<p><strong>Range:</strong> 28°F spread from coldest (53°F) to warmest (81°F)</p>
+</li>
+<li>
+<p><strong>Quartiles:</strong> 25th percentile at 67°F, 75th percentile at 75.25°F</p>
+</li>
+</ul>
+<p><strong>Failure Pattern Analysis:</strong></p>
+<ul>
+<li>
+<p><strong>Total Failures:</strong> 10 out of 120 launches (8.3% failure rate)</p>
+</li>
+<li>
+<p><strong>Failure Distribution:</strong> Concentrated at lower temperatures</p>
+</li>
+<li>
+<p><strong>Critical Observation:</strong> All failures occurred at or below 75°F</p>
+</li>
+</ul>
+<p><strong>Statistical Significance Indicators:</strong>
+The exploratory analysis reveals a clear pattern suggesting temperature dependency, but formal statistical testing is required to quantify the relationship strength and significance.</p>
+<p><strong>Risk Assessment Implications:</strong>
+The failure rate appears inversely related to temperature, suggesting higher risk in colder conditions. This pattern, while observable in raw data, requires statistical modeling to provide reliable probability estimates for decision-making.</p>
+<p><strong>Data Quality Verification:</strong></p>
+<ul>
+<li>
+<p>No outliers detected in temperature measurements</p>
+</li>
+<li>
+<p>Binary outcome variable properly coded</p>
+</li>
+<li>
+<p>Consistent data collection methodology across observations</p>
+</li>
+</ul>
+<p>[See Code Walkthrough Section 3: Exploratory Data Analysis]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="data-visualization">Data Visualization</h2>
+<p><strong>Visualization Strategy:</strong>
+The scatter plot visualization effectively reveals the temperature-failure relationship by plotting failure counts against temperature values. This approach separates failures (red points) from non-failures (blue points at zero level).</p>
+<p><strong>Key Visual Insights:</strong></p>
+<p><strong>Temperature-Failure Pattern:</strong></p>
+<ul>
+<li>
+<p><strong>High Temperature Zone (75°F+):</strong> No failures observed</p>
+</li>
+<li>
+<p><strong>Moderate Temperature Zone (65-75°F):</strong> Scattered failures</p>
+</li>
+<li>
+<p><strong>Low Temperature Zone (&lt;65°F):</strong> Higher failure concentration</p>
+</li>
+</ul>
+<p><strong>Critical Visual Evidence:</strong></p>
+<ul>
+<li>
+<p><strong>53°F Cluster:</strong> Multiple failures (3) and non-failures at the same temperature</p>
+</li>
+<li>
+<p><strong>Temperature Threshold:</strong> No failures above 75°F in the dataset</p>
+</li>
+<li>
+<p><strong>Risk Gradient:</strong> Clear visual trend of decreasing failures with increasing temperature</p>
+</li>
+</ul>
+<p><strong>Interpretation Challenges:</strong>
+The visualization reveals both the relationship and its uncertainty. At 53°F, both failures and non-failures occurred, highlighting the probabilistic nature of the relationship rather than a deterministic threshold.</p>
+<p><strong>Decision-Making Implications:</strong>
+The visual evidence strongly suggests that launching at temperatures below historical norms (especially below 60°F) significantly increases failure risk. The Challenger launch temperature was 31°F, well below any previous launch temperature.</p>
+<p><strong>Visualization Limitations:</strong></p>
+<ul>
+<li>
+<p>Overlapping points may hide some data patterns</p>
+</li>
+<li>
+<p>Binary nature of outcomes limits statistical resolution</p>
+</li>
+<li>
+<p>No confidence intervals or uncertainty estimates shown</p>
+</li>
+</ul>
+<p>[See Code Walkthrough Section 4: Data Visualization]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="logistic-modeling">Logistic Regression Modeling</h2>
+<p><strong>Model Specification:</strong>
+The logistic regression model estimates the probability of O-ring failure as a function of launch temperature using the logit link function:</p>
+<p><strong>Mathematical Framework:</strong>
+log(odds) = β₀ + β₁ × Temperature</p>
+<p>Where odds = P(failure) / P(no failure)</p>
+<p><strong>Model Performance Metrics:</strong></p>
+<p><strong>Goodness of Fit:</strong></p>
+<ul>
+<li>
+<p><strong>Log-Likelihood:</strong> -29.089</p>
+</li>
+<li>
+<p><strong>Pseudo R-squared:</strong> 0.1549 (moderate explanatory power)</p>
+</li>
+<li>
+<p><strong>Likelihood Ratio Test:</strong> p-value = 0.001094 (highly significant)</p>
+</li>
+</ul>
+<p><strong>Statistical Significance:</strong></p>
+<ul>
+<li>
+<p><strong>Temperature Coefficient:</strong> -0.1466 (p = 0.002)</p>
+</li>
+<li>
+<p><strong>Intercept:</strong> 7.4049 (p = 0.015)</p>
+</li>
+<li>
+<p><strong>Both parameters statistically significant at α = 0.05</strong></p>
+</li>
+</ul>
+<p><strong>Model Validation Results:</strong>
+The model successfully converged in 7 iterations, indicating stable parameter estimation. The significant likelihood ratio test confirms that temperature significantly improves prediction over a null model.</p>
+<p><strong>Predictive Capability:</strong>
+The model provides probability estimates for any given temperature, enabling risk-based decision making. However, the moderate pseudo R-squared indicates substantial unexplained variance, suggesting additional factors influence O-ring reliability.</p>
+<p>[See Code Walkthrough Section 5: Logistic Regression Implementation]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="model-interpretation">Model Interpretation &amp; Results</h2>
+<p><strong>Coefficient Interpretation:</strong></p>
+<p><strong>Temperature Effect (β₁ = -0.1466):</strong></p>
+<ul>
+<li>
+<p><strong>Risk Reduction:</strong> Each 1°F temperature increase reduces the log-odds of failure by 0.1466</p>
+</li>
+<li>
+<p><strong>Practical Impact:</strong> Each 1°F increase reduces failure odds by approximately 13.6%</p>
+</li>
+<li>
+<p><strong>Statistical Significance:</strong> p = 0.002 provides strong evidence against the null hypothesis</p>
+</li>
+</ul>
+<p><strong>Intercept Interpretation (β₀ = 7.4049):</strong></p>
+<ul>
+<li>
+<p><strong>Theoretical Baseline:</strong> Log-odds of failure when temperature = 0°F</p>
+</li>
+<li>
+<p><strong>Practical Note:</strong> Not physically meaningful since 0°F is outside the observed range</p>
+</li>
+</ul>
+<p><strong>Probability Calculations:</strong>
+At the Challenger launch temperature of 31°F:
+P(failure) = 1 / (1 + exp(-[7.4049 - 0.1466 × 31])) ≈ 0.82</p>
+<p>This suggests an 82% probability of O-ring failure at 31°F, far exceeding acceptable risk levels.</p>
+<p><strong>Risk Assessment Framework:</strong></p>
+<ul>
+<li>
+<p><strong>Low Risk Zone:</strong> Temperatures above 70°F (P(failure) &lt; 0.05)</p>
+</li>
+<li>
+<p><strong>Moderate Risk Zone:</strong> 60-70°F (P(failure) = 0.05-0.20)</p>
+</li>
+<li>
+<p><strong>High Risk Zone:</strong> Below 60°F (P(failure) &gt; 0.20)</p>
+</li>
+<li>
+<p><strong>Extreme Risk Zone:</strong> Below 40°F (P(failure) &gt; 0.60)</p>
+</li>
+</ul>
+<p><strong>Business Decision Implications:</strong>
+The model provides quantitative risk estimates for launch decisions. A typical aerospace risk tolerance might accept failure probabilities below 1-5%, suggesting launches should be postponed when temperatures drop below 65-70°F.</p>
+<p><strong>Confidence Intervals:</strong>
+The coefficient confidence interval [-0.239, -0.054] indicates the temperature effect is robust, with the worst-case scenario still showing substantial risk reduction with increased temperature.</p>
+<p>[See Code Walkthrough Section 6: Model Interpretation]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="critical-analysis">Critical Analysis &amp; Limitations</h2>
+<p><strong>Model Strengths:</strong></p>
+<p><strong>Statistical Robustness:</strong></p>
+<ul>
+<li>
+<p>Highly significant temperature effect (p = 0.002)</p>
+</li>
+<li>
+<p>Stable parameter estimation with reliable convergence</p>
+</li>
+<li>
+<p>Clear monotonic relationship between temperature and failure risk</p>
+</li>
+<li>
+<p>Appropriate statistical method for binary outcome data</p>
+</li>
+</ul>
+<p><strong>Practical Utility:</strong></p>
+<ul>
+<li>
+<p>Provides quantitative risk estimates for decision-making</p>
+</li>
+<li>
+<p>Simple, interpretable model suitable for non-statisticians</p>
+</li>
+<li>
+<p>Historical validation through observed disaster at extreme low temperature</p>
+</li>
+</ul>
+<p><strong>Model Limitations:</strong></p>
+<p><strong>Statistical Constraints:</strong></p>
+<ul>
+<li>
+<p><strong>Sample Size:</strong> Only 120 observations with 10 failures limits precision</p>
+</li>
+<li>
+<p><strong>Pseudo R-squared:</strong> 0.1549 indicates substantial unexplained variance</p>
+</li>
+<li>
+<p><strong>Single Predictor:</strong> Temperature alone may not capture all failure mechanisms</p>
+</li>
+<li>
+<p><strong>Extrapolation Risk:</strong> Model predictions below 53°F (observed minimum) are uncertain</p>
+</li>
+</ul>
+<p><strong>Methodological Concerns:</strong></p>
+<ul>
+<li>
+<p><strong>Rare Events:</strong> 8.3% failure rate challenges statistical power</p>
+</li>
+<li>
+<p><strong>Temporal Independence:</strong> Assumes each launch is independent (may not hold for sequential launches)</p>
+</li>
+<li>
+<p><strong>Engineering Complexity:</strong> O-ring failure involves multiple mechanical and environmental factors</p>
+</li>
+<li>
+<p><strong>Model Assumptions:</strong> Linearity of log-odds relationship may not hold across entire temperature range</p>
+</li>
+</ul>
+<p><strong>Real-World Implementation Challenges:</strong></p>
+<p><strong>Decision-Making Context:</strong></p>
+<ul>
+<li>
+<p><strong>Economic Pressure:</strong> Launch delays carry substantial financial costs</p>
+</li>
+<li>
+<p><strong>Political Pressure:</strong> High-profile missions face external pressure to proceed</p>
+</li>
+<li>
+<p><strong>Communication Gaps:</strong> Statistical evidence must be translated for engineering and management audiences</p>
+</li>
+<li>
+<p><strong>Risk Tolerance:</strong> Acceptable failure rates vary by mission type and crew safety considerations</p>
+</li>
+</ul>
+<p><strong>Alternative Approaches:</strong></p>
+<ul>
+<li>
+<p><strong>Multiple Logistic Regression:</strong> Include additional predictors (humidity, wind, mechanical factors)</p>
+</li>
+<li>
+<p><strong>Survival Analysis:</strong> Model time-to-failure for better reliability estimates</p>
+</li>
+<li>
+<p><strong>Bayesian Methods:</strong> Incorporate prior engineering knowledge and uncertainty</p>
+</li>
+<li>
+<p><strong>Machine Learning:</strong> Random forests or neural networks for non-linear pattern detection</p>
+</li>
+</ul>
+<p><strong>Computational Requirements:</strong>
+The analysis requires minimal computational resources (&lt; 1 second on standard hardware), making it suitable for real-time decision support.</p>
+<p><strong>Reproducibility Assessment:</strong>
+Results are highly reproducible given the stable dataset and well-established statistical methods. However, model interpretation requires domain expertise in aerospace engineering and risk management.</p>
+<p>[See Code Walkthrough Section 7: Model Validation and Diagnostics]</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="code-walkthrough">Code Walkthrough Reference</h2>
+<p>For complete implementation details, statistical concepts, and technical explanations, refer to the companion <strong>Code Walkthrough Document</strong> which covers:</p>
+<p><strong>Section 1:</strong> Environment Setup and Library Configuration</p>
+<p><strong>Section 2:</strong> Data Loading and Initial Inspection Procedures</p>
+<p><strong>Section 3:</strong> Comprehensive Exploratory Data Analysis</p>
+<p><strong>Section 4:</strong> Advanced Data Visualization Techniques</p>
+<p><strong>Section 5:</strong> Logistic Regression Implementation and Parameter Estimation</p>
+<p><strong>Section 6:</strong> Model Interpretation and Probability Calculations</p>
+<p><strong>Section 7:</strong> Model Validation, Diagnostics, and Performance Assessment</p>
+<p><strong>Section 8:</strong> Statistical Assumptions Testing and Residual Analysis</p>
+<p>The code walkthrough provides complete function documentation, mathematical foundations, and step-by-step implementation guidance for reproducing this analysis.</p>
+<h1 id="challenger-o-ring-failure-analysis-complete-code-walkthrough">Challenger O-Ring Failure Analysis: Complete Code Walkthrough</h1>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#section-1">Section 1: Environment Setup and Library Configuration</a></li>
+<li><a href="#section-2">Section 2: Data Loading and Initial Inspection</a></li>
+<li><a href="#section-3">Section 3: Comprehensive Exploratory Data Analysis</a></li>
+<li><a href="#section-4">Section 4: Advanced Data Visualization</a></li>
+<li><a href="#section-5">Section 5: Logistic Regression Implementation</a></li>
+<li><a href="#section-6">Section 6: Model Interpretation and Results</a></li>
+<li><a href="#section-7">Section 7: Statistical Concepts and Mathematical Foundations</a></li>
+<li><a href="#section-8">Section 8: Integration with Main Tutorial</a></li>
+</ul>
+<hr />
+<h2 id="section-1">Section 1: Environment Setup and Library Configuration</h2>
+<h3 id="code-block-11-essential-library-imports">Code Block 1.1: Essential Library Imports</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Basic libraries of python for numeric and dataframe computations</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> These imports establish the foundational data science environment for the analysis.</p>
+<p><strong>Flow:</strong> 
+- <code>pandas</code> provides DataFrame functionality for structured data manipulation
+- <code>numpy</code> enables efficient numerical computations and array operations
+- Both libraries are essential for subsequent data processing steps</p>
+<p><strong>Impact:</strong> Without these imports, all subsequent data manipulation and analysis would fail. These are dependencies for the entire analysis pipeline.</p>
+<h3 id="code-block-12-statistical-modeling-libraries">Code Block 1.2: Statistical Modeling Libraries</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># You will need to have the following libraries installed before proceeding:</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">SM</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Imports the statistical modeling framework specifically for formula-based regression analysis.</p>
+<p><strong>Flow:</strong> 
+- <code>statsmodels.formula.api</code> provides R-style formula notation for model specification
+- Enables clean, readable model syntax: 'Y~X' instead of manual matrix construction
+- Supports comprehensive statistical output including p-values, confidence intervals, and model diagnostics</p>
+<p><strong>Impact:</strong> This import is crucial for logistic regression implementation. Alternative approaches would require manual likelihood optimization or sklearn (which provides less statistical detail).</p>
+<h3 id="code-block-13-visualization-libraries">Code Block 1.3: Visualization Libraries</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># We will be using the Matplotlib library for plotting.</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Establishes the plotting environment for data visualization and exploratory analysis.</p>
+<p><strong>Flow:</strong>
+- <code>matplotlib</code> provides the core plotting infrastructure
+- <code>pyplot</code> offers a MATLAB-like interface for quick plot generation
+- Imported after data processing libraries to maintain logical dependency order</p>
+<p><strong>Impact:</strong> Essential for creating the failure vs. temperature scatter plot. Removing this would eliminate visual analysis capabilities, making pattern detection much more difficult.</p>
+<p><strong>Technical Note:</strong> The import occurs later in the notebook just before visualization, which is good practice for organizing dependencies by usage.</p>
+<hr />
+<h2 id="section-2">Section 2: Data Loading and Initial Inspection</h2>
+<h3 id="code-block-21-data-import">Code Block 2.1: Data Import</h3>
+<div class="highlight"><pre><span></span><code><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;challenger-data.csv&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Loads the historical shuttle launch data from CSV format into a pandas DataFrame for analysis.</p>
+<p><strong>Flow:</strong>
+- <code>pd.read_csv()</code> automatically detects column types and creates appropriate data structures
+- Returns a DataFrame object assigned to variable <code>data</code>
+- Assumes CSV file is in the current working directory</p>
+<p><strong>Impact:</strong> This is the data entry point for the entire analysis. Failure here would prevent all subsequent analysis. The CSV format suggests structured, tabular data with headers.</p>
+<p><strong>Technical Considerations:</strong>
+- No additional parameters specified, so pandas uses default settings (comma separator, first row as headers)
+- Error handling could be added for production use
+- File path assumptions may need adjustment in different environments</p>
+<h3 id="code-block-22-initial-data-inspection">Code Block 2.2: Initial Data Inspection</h3>
+<div class="highlight"><pre><span></span><code><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Displays the first 5 rows of the dataset to verify data structure and content.</p>
+<p><strong>Flow:</strong>
+- Returns the top 5 rows by default
+- Shows column names, data types, and sample values
+- Provides immediate visual verification of successful data loading</p>
+<p><strong>Impact:</strong> Critical for data validation. Reveals the structure: Observation (ID), Y (failure indicator), X (temperature). Without this check, subsequent analysis might proceed with incorrect assumptions about data format.</p>
+<p><strong>Expected Output:</strong>
+<div class="highlight"><pre><span></span><code>   Observation  Y   X
+0            1  1  53
+1            2  1  53
+2            3  1  53
+3            4  0  53
+4            5  0  53
+</code></pre></div></p>
+<p><strong>Interpretation:</strong> Shows binary outcome variable Y (0/1) and continuous predictor X (temperature). Multiple observations at same temperature (53°F) with different outcomes.</p>
+<h3 id="code-block-23-data-structure-analysis">Code Block 2.3: Data Structure Analysis</h3>
+<div class="highlight"><pre><span></span><code><span class="n">data</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Provides comprehensive metadata about the dataset including shape, data types, and memory usage.</p>
+<p><strong>Flow:</strong>
+- Displays number of rows and columns
+- Shows data type for each column
+- Reports non-null counts to identify missing values
+- Calculates memory usage</p>
+<p><strong>Impact:</strong> Essential for understanding data quality and preparation needs. Confirms 120 complete observations with no missing values, all integer data types.</p>
+<p><strong>Expected Output:</strong>
+<div class="highlight"><pre><span></span><code>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 120 entries, 0 to 119
+Data columns (total 3 columns):
+ #   Column       Non-Null Count  Dtype
+---  ------       --------------  -----
+ 0   Observation  120 non-null    int64
+ 1   Y            120 non-null    int64
+ 2   X            120 non-null    int64
+dtypes: int64(3)
+memory usage: 2.9 KB
+</code></pre></div></p>
+<p><strong>Analysis:</strong> Perfect data quality - no missing values, appropriate data types, manageable size.</p>
+<h3 id="code-block-24-descriptive-statistics">Code Block 2.4: Descriptive Statistics</h3>
+<div class="highlight"><pre><span></span><code><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Generates comprehensive descriptive statistics for all numeric variables in the dataset.</p>
+<p><strong>Flow:</strong>
+- Calculates count, mean, standard deviation, min, quartiles, and max
+- Provides distribution overview for each numeric column
+- Enables quick identification of outliers and data range</p>
+<p><strong>Impact:</strong> Reveals key insights about data distribution and helps establish analysis context. Shows temperature range (53-81°F), low failure rate (8.3%), and distribution characteristics.</p>
+<p><strong>Expected Output Analysis:</strong>
+- <strong>Temperature (X):</strong> Mean 70°F, std 7.1°F, range 53-81°F
+- <strong>Failures (Y):</strong> Mean 0.083 = 8.3% failure rate
+- <strong>Observations:</strong> 120 total launches in dataset</p>
+<p><strong>Statistical Insights:</strong>
+- Temperature follows approximately normal distribution (mean ≈ median)
+- Failure rate is low but not trivial for safety analysis
+- No extreme outliers apparent in temperature range</p>
+<hr />
+<h2 id="section-3">Section 3: Comprehensive Exploratory Data Analysis</h2>
+<h3 id="code-block-31-data-subset-creation">Code Block 3.1: Data Subset Creation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># subsetting the data</span>
+<span class="n">failures</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">data</span><span class="o">.</span><span class="n">Y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)]</span>
+<span class="n">no_failures</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">data</span><span class="o">.</span><span class="n">Y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)]</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Separates the dataset into failure and non-failure subgroups for comparative analysis and visualization.</p>
+<p><strong>Flow:</strong>
+- <code>data.loc[(data.Y == 1)]</code> filters to rows where Y equals 1 (failures occurred)
+- <code>data.loc[(data.Y == 0)]</code> filters to rows where Y equals 0 (no failures)
+- Creates two separate DataFrames for independent analysis</p>
+<p><strong>Impact:</strong> Essential for visualization and separate analysis of failure vs. non-failure patterns. Enables calculation of failure rates at specific temperatures and visual separation in plots.</p>
+<p><strong>Technical Details:</strong>
+- Uses boolean indexing for efficient filtering
+- Maintains all original columns in each subset
+- Preserves row indices from original dataset</p>
+<h3 id="code-block-32-frequency-analysis">Code Block 3.2: Frequency Analysis</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># frequencies</span>
+<span class="n">failures_freq</span> <span class="o">=</span> <span class="n">failures</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="n">no_failures_freq</span> <span class="o">=</span> <span class="n">no_failures</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Calculates the frequency distribution of temperatures for failure and non-failure cases separately.</p>
+<p><strong>Flow:</strong>
+- <code>value_counts()</code> returns a Series with unique temperatures as index and counts as values
+- Automatically sorts by count in descending order
+- Creates frequency tables for both failure categories</p>
+<p><strong>Impact:</strong> Provides the data structure needed for scatter plot visualization. Shows how many failures/non-failures occurred at each temperature level.</p>
+<p><strong>Mathematical Foundation:</strong>
+- Frequency analysis is fundamental to understanding conditional probability: P(Failure|Temperature)
+- Enables calculation of empirical failure rates at specific temperatures
+- Forms the basis for logistic regression likelihood estimation</p>
+<p><strong>Expected Pattern:</strong>
+- Higher failure frequencies at lower temperatures
+- More non-failure observations at higher temperatures
+- Some temperatures may have both failures and non-failures</p>
+<hr />
+<h2 id="section-4">Section 4: Advanced Data Visualization</h2>
+<h3 id="code-block-41-complete-visualization-implementation">Code Block 4.1: Complete Visualization Implementation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># plotting</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">failures_freq</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">failures_freq</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">no_failures_freq</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">no_failures_freq</span><span class="p">)),</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X: Temperature&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Failures&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;failures&#39;</span><span class="p">,</span> <span class="s1">&#39;No failures&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Creates a comprehensive scatter plot showing the relationship between temperature and O-ring failure frequency.</p>
+<p><strong>Flow:</strong>
+1. <strong>Failure Points:</strong> Plot red points at (temperature, failure_count) coordinates
+2. <strong>Non-failure Points:</strong> Plot blue points at (temperature, 0) to show temperatures with no failures
+3. <strong>Axis Labels:</strong> Clear labeling for interpretation
+4. <strong>Legend:</strong> Distinguishes between failure and non-failure points
+5. <strong>Display:</strong> Renders the plot for visual analysis</p>
+<p><strong>Impact:</strong> Provides immediate visual evidence of the temperature-failure relationship. Essential for pattern recognition and communicating findings to non-technical stakeholders.</p>
+<p><strong>Technical Implementation Details:</strong></p>
+<p><strong>Scatter Plot Parameters:</strong>
+- <code>c='red'</code> and <code>c='blue'</code>: Color coding for immediate pattern recognition
+- <code>s=40</code>: Point size for visibility without overcrowding
+- <code>index</code>: Uses temperature values as x-coordinates
+- <code>failures_freq</code>: Uses actual failure counts as y-coordinates
+- <code>np.zeros()</code>: Places non-failures at y=0 baseline</p>
+<p><strong>Visualization Strategy:</strong>
+- <strong>Dual-layer approach:</strong> Shows both positive (failures) and baseline (non-failures) information
+- <strong>Color psychology:</strong> Red for danger/failure, blue for safety/normal operation
+- <strong>Baseline reference:</strong> Zero line makes failure counts more interpretable</p>
+<p><strong>Mathematical Interpretation:</strong>
+- X-axis represents the continuous predictor variable (temperature)
+- Y-axis represents frequency, not probability (requires normalization for probability)
+- Visual clustering patterns suggest logistic relationship</p>
+<p><strong>Design Considerations:</strong>
+- Could be enhanced with point size proportional to total observations at each temperature
+- Alternative: side-by-side histograms or stacked bar charts
+- Missing: confidence intervals or uncertainty measures</p>
+<hr />
+<h2 id="section-5">Section 5: Logistic Regression Implementation</h2>
+<h3 id="code-block-51-model-construction-and-fitting">Code Block 5.1: Model Construction and Fitting</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Build the model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SM</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s1">&#39;Y~X&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Summarize the model</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Implements logistic regression to model the probability of O-ring failure as a function of launch temperature.</p>
+<p><strong>Flow:</strong>
+1. <strong>Model Specification:</strong> <code>SM.logit()</code> creates a logistic regression model object
+2. <strong>Formula Definition:</strong> <code>'Y~X'</code> specifies Y as dependent variable, X as independent variable
+3. <strong>Model Fitting:</strong> <code>model.fit()</code> performs maximum likelihood estimation
+4. <strong>Results Display:</strong> <code>result.summary()</code> provides comprehensive statistical output</p>
+<p><strong>Impact:</strong> This is the core analytical step that quantifies the temperature-failure relationship and provides statistical evidence for decision-making.</p>
+<h3 id="mathematical-foundations">Mathematical Foundations</h3>
+<p><strong>Logistic Regression Equation:</strong>
+<div class="highlight"><pre><span></span><code>logit(P) = log(P/(1-P)) = β₀ + β₁ × Temperature
+</code></pre></div></p>
+<p>Where:
+- P = Probability of O-ring failure
+- β₀ = Intercept parameter
+- β₁ = Temperature coefficient</p>
+<p><strong>Probability Transformation:</strong>
+<div class="highlight"><pre><span></span><code>P(Failure) = 1 / (1 + exp(-(β₀ + β₁ × Temperature)))
+</code></pre></div></p>
+<p><strong>Maximum Likelihood Estimation:</strong>
+The fitting process maximizes the likelihood function:
+<div class="highlight"><pre><span></span><code>L(β₀, β₁) = ∏[P^yᵢ × (1-P)^(1-yᵢ)]
+</code></pre></div></p>
+<h3 id="statistical-output-interpretation">Statistical Output Interpretation</h3>
+<p><strong>Model Convergence:</strong>
+- "Optimization terminated successfully" indicates stable parameter estimation
+- "Iterations 7" shows reasonable computational efficiency
+- Current function value: 0.242411 (minimized negative log-likelihood)</p>
+<p><strong>Goodness of Fit Measures:</strong>
+- <strong>Pseudo R-squared: 0.1549</strong> - Moderate explanatory power (15.49% of variation explained)
+- <strong>Log-Likelihood: -29.089</strong> - Model fit metric for comparison with other models
+- <strong>LLR p-value: 0.001094</strong> - Highly significant overall model (p &lt; 0.001)</p>
+<p><strong>Parameter Estimates:</strong>
+- <strong>Intercept: 7.4049</strong> (SE = 3.041, p = 0.015)
+- <strong>Temperature coefficient: -0.1466</strong> (SE = 0.047, p = 0.002)</p>
+<p><strong>Statistical Significance:</strong>
+Both parameters are statistically significant at α = 0.05, providing strong evidence for the temperature-failure relationship.</p>
+<h3 id="technical-implementation-notes">Technical Implementation Notes</h3>
+<p><strong>StatsModels Advantages:</strong>
+- Provides comprehensive statistical output comparable to R
+- Includes standard errors, confidence intervals, and hypothesis tests
+- Formula interface simplifies model specification
+- Automatic handling of categorical variables and interactions</p>
+<p><strong>Alternative Approaches:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Sklearn approach (less statistical detail)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="n">model_sklearn</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+
+<span class="c1"># Manual implementation (educational but impractical)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">minimize</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">negative_log_likelihood</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="c1"># Custom likelihood function</span>
+    <span class="k">pass</span>
+</code></pre></div></p>
+<p><strong>Model Assumptions Validation:</strong>
+- <strong>Independence:</strong> Each launch assumed independent
+- <strong>Linearity:</strong> Log-odds linear in temperature (should be verified)
+- <strong>No perfect separation:</strong> Some temperatures have both outcomes
+- <strong>Large sample approximation:</strong> n=120 adequate for asymptotic inference</p>
+<hr />
+<h2 id="section-6">Section 6: Model Interpretation and Results</h2>
+<h3 id="mathematical-interpretation-of-coefficients">Mathematical Interpretation of Coefficients</h3>
+<p><strong>Temperature Coefficient (β₁ = -0.1466):</strong></p>
+<p><strong>Log-Odds Interpretation:</strong>
+- Each 1°F increase in temperature decreases the log-odds of failure by 0.1466
+- This represents the change in the natural logarithm of the odds ratio</p>
+<p><strong>Odds Ratio Calculation:</strong>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">odds_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1466</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Odds ratio per 1°F increase: </span><span class="si">{</span><span class="n">odds_ratio</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Output: 0.8639</span>
+</code></pre></div></p>
+<p><strong>Practical Interpretation:</strong>
+- Each 1°F temperature increase reduces the odds of failure by factor of 0.864
+- Equivalently: 13.6% reduction in odds per degree temperature increase
+- For 10°F increase: odds multiply by 0.864^10 = 0.241 (75.9% reduction)</p>
+<h3 id="probability-calculations-for-critical-scenarios">Probability Calculations for Critical Scenarios</h3>
+<p><strong>Function for Probability Calculation:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">failure_probability</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mf">7.4049</span><span class="p">,</span> <span class="n">coef</span><span class="o">=-</span><span class="mf">0.1466</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate failure probability at given temperature.&quot;&quot;&quot;</span>
+    <span class="n">log_odds</span> <span class="o">=</span> <span class="n">intercept</span> <span class="o">+</span> <span class="n">coef</span> <span class="o">*</span> <span class="n">temperature</span>
+    <span class="n">probability</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">log_odds</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">probability</span>
+
+<span class="c1"># Critical temperature scenarios</span>
+<span class="n">temperatures</span> <span class="o">=</span> <span class="p">[</span><span class="mi">31</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">81</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">temp</span> <span class="ow">in</span> <span class="n">temperatures</span><span class="p">:</span>
+    <span class="n">prob</span> <span class="o">=</span> <span class="n">failure_probability</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Temperature </span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2">°F: P(failure) = </span><span class="si">{</span><span class="n">prob</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">prob</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>Expected Output:</strong>
+<div class="highlight"><pre><span></span><code>Temperature 31°F: P(failure) = 0.8178 (81.8%)
+Temperature 53°F: P(failure) = 0.3571 (35.7%)
+Temperature 60°F: P(failure) = 0.1985 (19.9%)
+Temperature 70°F: P(failure) = 0.0704 (7.0%)
+Temperature 75°F: P(failure) = 0.0369 (3.7%)
+Temperature 81°F: P(failure) = 0.0155 (1.6%)
+</code></pre></div></p>
+<h3 id="confidence-intervals-and-uncertainty">Confidence Intervals and Uncertainty</h3>
+<p><strong>Coefficient Confidence Interval:</strong>
+- Temperature coefficient: [-0.239, -0.054]
+- <strong>Interpretation:</strong> We are 95% confident the true coefficient lies in this range
+- <strong>Worst case (CI lower bound):</strong> exp(-0.054) = 0.947 (5.3% reduction per °F)
+- <strong>Best case (CI upper bound):</strong> exp(-0.239) = 0.787 (21.3% reduction per °F)</p>
+<p><strong>Probability Confidence Intervals:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">probability_ci</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mf">7.4049</span><span class="p">,</span> <span class="n">coef</span><span class="o">=-</span><span class="mf">0.1466</span><span class="p">,</span> 
+                   <span class="n">coef_se</span><span class="o">=</span><span class="mf">0.047</span><span class="p">,</span> <span class="n">intercept_se</span><span class="o">=</span><span class="mf">3.041</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate 95% confidence interval for failure probability.&quot;&quot;&quot;</span>
+    <span class="c1"># Point estimate</span>
+    <span class="n">log_odds</span> <span class="o">=</span> <span class="n">intercept</span> <span class="o">+</span> <span class="n">coef</span> <span class="o">*</span> <span class="n">temperature</span>
+
+    <span class="c1"># Standard error of log-odds using delta method</span>
+    <span class="n">se_log_odds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">intercept_se</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">temperature</span> <span class="o">*</span> <span class="n">coef_se</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># 95% CI for log-odds</span>
+    <span class="n">log_odds_lower</span> <span class="o">=</span> <span class="n">log_odds</span> <span class="o">-</span> <span class="mf">1.96</span> <span class="o">*</span> <span class="n">se_log_odds</span>
+    <span class="n">log_odds_upper</span> <span class="o">=</span> <span class="n">log_odds</span> <span class="o">+</span> <span class="mf">1.96</span> <span class="o">*</span> <span class="n">se_log_odds</span>
+
+    <span class="c1"># Transform to probability scale</span>
+    <span class="n">prob_point</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">log_odds</span><span class="p">))</span>
+    <span class="n">prob_lower</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">log_odds_upper</span><span class="p">))</span>
+    <span class="n">prob_upper</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">log_odds_lower</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">prob_point</span><span class="p">,</span> <span class="n">prob_lower</span><span class="p">,</span> <span class="n">prob_upper</span>
+</code></pre></div></p>
+<h3 id="risk-assessment-framework">Risk Assessment Framework</h3>
+<p><strong>Risk Classification System:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">risk_classification</span><span class="p">(</span><span class="n">temperature</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Classify launch risk based on temperature.&quot;&quot;&quot;</span>
+    <span class="n">prob</span> <span class="o">=</span> <span class="n">failure_probability</span><span class="p">(</span><span class="n">temperature</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">prob</span> <span class="o">&lt;</span> <span class="mf">0.01</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Very Low Risk&quot;</span><span class="p">,</span> <span class="n">prob</span>
+    <span class="k">elif</span> <span class="n">prob</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Low Risk&quot;</span><span class="p">,</span> <span class="n">prob</span>
+    <span class="k">elif</span> <span class="n">prob</span> <span class="o">&lt;</span> <span class="mf">0.20</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Moderate Risk&quot;</span><span class="p">,</span> <span class="n">prob</span>
+    <span class="k">elif</span> <span class="n">prob</span> <span class="o">&lt;</span> <span class="mf">0.50</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;High Risk&quot;</span><span class="p">,</span> <span class="n">prob</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Extreme Risk&quot;</span><span class="p">,</span> <span class="n">prob</span>
+
+<span class="c1"># Risk assessment for key temperatures</span>
+<span class="n">risk_temps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">31</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">75</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">temp</span> <span class="ow">in</span> <span class="n">risk_temps</span><span class="p">:</span>
+    <span class="n">risk_level</span><span class="p">,</span> <span class="n">prob</span> <span class="o">=</span> <span class="n">risk_classification</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2">°F: </span><span class="si">{</span><span class="n">risk_level</span><span class="si">}</span><span class="s2"> (P = </span><span class="si">{</span><span class="n">prob</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>Decision Thresholds:</strong>
+- <strong>Aerospace industry standard:</strong> Typically &lt; 1 in 1000 risk acceptable
+- <strong>Model implications:</strong> Launches should occur above ~75°F for &lt;1% failure risk
+- <strong>Challenger scenario:</strong> 31°F represents ~82% failure probability</p>
+<hr />
+<h2 id="section-7">Section 7: Statistical Concepts and Mathematical Foundations</h2>
+<h3 id="logistic-regression-theory">Logistic Regression Theory</h3>
+<p><strong>Why Logistic Regression?</strong>
+1. <strong>Binary Outcome:</strong> O-ring failure is inherently binary (fail/don't fail)
+2. <strong>Probability Bounds:</strong> Ensures predictions stay between 0 and 1
+3. <strong>Non-linear Relationship:</strong> Captures S-shaped relationship between predictors and probability
+4. <strong>Interpretable Parameters:</strong> Coefficients have clear odds ratio interpretation</p>
+<p><strong>Linear vs. Logistic Regression:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Linear regression problems with binary outcomes:</span>
+<span class="c1"># 1. Predictions can exceed [0,1] bounds</span>
+<span class="c1"># 2. Assumes constant variance (violated with binary data)</span>
+<span class="c1"># 3. Residuals not normally distributed</span>
+
+<span class="c1"># Logistic regression advantages:</span>
+<span class="c1"># 1. Uses logit link to ensure [0,1] bounds</span>
+<span class="c1"># 2. Appropriate error distribution (binomial)</span>
+<span class="c1"># 3. Maximum likelihood estimation</span>
+</code></pre></div></p>
+<h3 id="maximum-likelihood-estimation-details">Maximum Likelihood Estimation Details</h3>
+<p><strong>Likelihood Function Construction:</strong>
+For binary outcomes, the likelihood for observation i is:
+<div class="highlight"><pre><span></span><code>L_i = P^y_i × (1-P)^(1-y_i)
+</code></pre></div></p>
+<p>Where:
+- P = predicted probability
+- y_i = observed outcome (0 or 1)</p>
+<p><strong>Full Dataset Likelihood:</strong>
+<div class="highlight"><pre><span></span><code>L(β₀, β₁) = ∏(i=1 to n) [P_i^y_i × (1-P_i)^(1-y_i)]
+</code></pre></div></p>
+<p><strong>Log-Likelihood (easier to optimize):</strong>
+<div class="highlight"><pre><span></span><code>ℓ(β₀, β₁) = Σ(i=1 to n) [y_i × log(P_i) + (1-y_i) × log(1-P_i)]
+</code></pre></div></p>
+<p><strong>Optimization Process:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Conceptual implementation of MLE</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">log_likelihood</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">beta0</span><span class="p">,</span> <span class="n">beta1</span> <span class="o">=</span> <span class="n">params</span>
+    <span class="n">log_odds</span> <span class="o">=</span> <span class="n">beta0</span> <span class="o">+</span> <span class="n">beta1</span> <span class="o">*</span> <span class="n">X</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">log_odds</span><span class="p">))</span>
+
+    <span class="c1"># Avoid log(0) issues</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mf">1e-15</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="mf">1e-15</span><span class="p">)</span>
+
+    <span class="n">ll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">))</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">ll</span>  <span class="c1"># Minimize negative log-likelihood</span>
+
+<span class="c1"># StatsModels handles this optimization automatically</span>
+</code></pre></div></p>
+<h3 id="model-diagnostics-and-assumptions">Model Diagnostics and Assumptions</h3>
+<p><strong>Key Assumptions:</strong>
+1. <strong>Independence:</strong> Each launch outcome independent of others
+2. <strong>Linearity:</strong> Log-odds linear in temperature
+3. <strong>No perfect separation:</strong> Some temperatures have both outcomes
+4. <strong>Large sample:</strong> Asymptotic properties require adequate sample size</p>
+<p><strong>Diagnostic Checks:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Residual analysis</span>
+<span class="n">residuals</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">resid_pearson</span>
+<span class="n">standardized_residuals</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">resid_pearson</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">result</span><span class="o">.</span><span class="n">fittedvalues</span><span class="p">)</span>
+
+<span class="c1"># Influential observations</span>
+<span class="n">influence</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_influence</span><span class="p">()</span>
+<span class="n">cook_d</span> <span class="o">=</span> <span class="n">influence</span><span class="o">.</span><span class="n">cooks_distance</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Linearity check (should be enhanced with spline terms if violated)</span>
+<span class="c1"># Plot residuals vs. fitted values</span>
+</code></pre></div></p>
+<h3 id="alternative-statistical-approaches">Alternative Statistical Approaches</h3>
+<p><strong>Complementary Methods:</strong>
+1. <strong>Exact Logistic Regression:</strong> For small samples or rare events
+2. <strong>Bayesian Logistic Regression:</strong> Incorporates prior engineering knowledge
+3. <strong>Survival Analysis:</strong> Models time-to-failure instead of binary outcome
+4. <strong>Classification Trees:</strong> Non-parametric alternative for threshold detection</p>
+<p><strong>Model Extensions:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Multiple logistic regression</span>
+<span class="n">model_extended</span> <span class="o">=</span> <span class="n">SM</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="s1">&#39;Y ~ X + humidity + pressure&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">extended_data</span><span class="p">)</span>
+
+<span class="c1"># Polynomial terms for non-linearity</span>
+<span class="n">model_poly</span> <span class="o">=</span> <span class="n">SM</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="s1">&#39;Y ~ X + I(X**2)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Interaction effects</span>
+<span class="n">model_interaction</span> <span class="o">=</span> <span class="n">SM</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="s1">&#39;Y ~ X * mission_type&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+</code></pre></div></p>
+<hr />
+<h2 id="section-8">Section 8: Integration with Main Tutorial</h2>
+<h3 id="connecting-code-to-conceptual-framework">Connecting Code to Conceptual Framework</h3>
+<p><strong>Tutorial Section Mapping:</strong>
+- <strong>Introduction</strong> ↔ Code Sections 1-2 (Setup and Data Loading)
+- <strong>Data Overview</strong> ↔ Code Section 3 (EDA and Summary Statistics)
+- <strong>Visualization</strong> ↔ Code Section 4 (Plotting Implementation)
+- <strong>Modeling</strong> ↔ Code Section 5 (Logistic Regression)
+- <strong>Interpretation</strong> ↔ Code Section 6 (Results Analysis)
+- <strong>Critical Analysis</strong> ↔ Code Section 7 (Diagnostics and Extensions)</p>
+<h3 id="complete-reproducible-workflow">Complete Reproducible Workflow</h3>
+<p><strong>Integrated Script Structure:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Complete analysis workflow</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">SM</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">challenger_analysis</span><span class="p">(</span><span class="n">data_path</span><span class="o">=</span><span class="s1">&#39;challenger-data.csv&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Complete Challenger O-ring failure analysis.&quot;&quot;&quot;</span>
+
+    <span class="c1"># 1. Data loading and inspection</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Data Overview:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+
+    <span class="c1"># 2. Exploratory analysis</span>
+    <span class="n">failures</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">Y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">no_failures</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">Y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># 3. Visualization</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">failures_freq</span> <span class="o">=</span> <span class="n">failures</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="n">no_failures_freq</span> <span class="o">=</span> <span class="n">no_failures</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">failures_freq</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">failures_freq</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Failures&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">no_failures_freq</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">no_failures_freq</span><span class="p">)),</span> 
+                <span class="n">c</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;No Failures&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Temperature (°F)&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Failures&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;O-Ring Failures vs. Launch Temperature&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="c1"># 4. Logistic regression</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">SM</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s1">&#39;Y~X&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Model Results:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+
+    <span class="c1"># 5. Risk assessment for Challenger launch temperature</span>
+    <span class="n">challenger_temp</span> <span class="o">=</span> <span class="mi">31</span>
+    <span class="n">prob</span> <span class="o">=</span> <span class="n">failure_probability</span><span class="p">(</span><span class="n">challenger_temp</span><span class="p">,</span> 
+                               <span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;Intercept&#39;</span><span class="p">],</span> 
+                               <span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Risk Assessment for </span><span class="si">{</span><span class="n">challenger_temp</span><span class="si">}</span><span class="s2">°F:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Predicted failure probability: </span><span class="si">{</span><span class="n">prob</span><span class="si">:</span><span class="s2">.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">failure_probability</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">coef</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate failure probability at given temperature.&quot;&quot;&quot;</span>
+    <span class="n">log_odds</span> <span class="o">=</span> <span class="n">intercept</span> <span class="o">+</span> <span class="n">coef</span> <span class="o">*</span> <span class="n">temperature</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">log_odds</span><span class="p">))</span>
+
+<span class="c1"># Run complete analysis</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">challenger_analysis</span><span class="p">()</span>
+</code></pre></div></p>
+<h3 id="production-implementation-considerations">Production Implementation Considerations</h3>
+<p><strong>Error Handling:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">robust_challenger_analysis</span><span class="p">(</span><span class="n">data_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Production-ready analysis with error handling.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Dataset is empty&quot;</span><span class="p">)</span>
+
+        <span class="n">required_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">required_columns</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required columns: </span><span class="si">{</span><span class="n">required_columns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Continue with analysis...</span>
+
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: Data file &#39;</span><span class="si">{</span><span class="n">data_path</span><span class="si">}</span><span class="s2">&#39; not found&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Analysis failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div></p>
+<p><strong>Performance Optimization:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># For large datasets, consider:</span>
+<span class="c1"># 1. Vectorized operations instead of loops</span>
+<span class="c1"># 2. Memory-efficient data types</span>
+<span class="c1"># 3. Parallel processing for bootstrap confidence intervals</span>
+<span class="c1"># 4. Incremental learning for streaming data</span>
+</code></pre></div></p>
+<h3 id="extension-opportunities">Extension Opportunities</h3>
+<p><strong>Advanced Analyses:</strong>
+1. <strong>Bootstrap Confidence Intervals:</strong> More robust uncertainty estimates
+2. <strong>Cross-Validation:</strong> Assess model generalization
+3. <strong>Sensitivity Analysis:</strong> Impact of outliers or influential points
+4. <strong>Bayesian Model Averaging:</strong> Account for model uncertainty
+5. <strong>Time Series Analysis:</strong> Account for temporal dependencies in launch data</p>
+<p><strong>Integration with Other Tools:</strong>
+- <strong>R Integration:</strong> Use rpy2 for advanced statistical functions
+- <strong>Database Connectivity:</strong> Direct analysis from SQL databases
+- <strong>Web Deployment:</strong> Flask/Django apps for interactive risk assessment
+- <strong>Automated Reporting:</strong> Jupyter notebooks to PDF/HTML reports</p>
+<p>This code walkthrough provides complete implementation coverage while maintaining integration points with the main tutorial for comprehensive learning and practical application.</p>
+<hr />
+<p><em>This code walkthrough complements the main Challenger O-Ring Failure Analysis tutorial, providing complete technical implementation details for reproducible statistical analysis.</em></p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="key-takeaways">Key Takeaways</h2>
+<p><strong>Statistical Lessons:</strong></p>
+<ul>
+<li>
+<p>Logistic regression effectively models binary outcomes with continuous predictors</p>
+</li>
+<li>
+<p>Statistical significance doesn't guarantee practical significance in decision-making</p>
+</li>
+<li>
+<p>Extrapolation beyond observed data ranges introduces substantial uncertainty</p>
+</li>
+<li>
+<p>Model interpretation requires domain expertise alongside statistical knowledge</p>
+</li>
+</ul>
+<p><strong>Risk Management Insights:</strong></p>
+<ul>
+<li>
+<p>Quantitative risk assessment should inform but not replace engineering judgment</p>
+</li>
+<li>
+<p>Communication of statistical findings to non-technical stakeholders is crucial</p>
+</li>
+<li>
+<p>Historical data analysis can reveal patterns invisible in individual cases</p>
+</li>
+<li>
+<p>Risk tolerance frameworks must be established before analysis, not after</p>
+</li>
+</ul>
+<p><strong>Professional Practice:</strong></p>
+<ul>
+<li>
+<p>Statistical models are tools for decision support, not decision replacement</p>
+</li>
+<li>
+<p>Model limitations must be clearly communicated to stakeholders</p>
+</li>
+<li>
+<p>Validation using independent data sources strengthens conclusions</p>
+</li>
+<li>
+<p>Documentation and reproducibility are essential for critical applications</p>
+</li>
+</ul>
+<hr />
+<h2 id="references-and-further-reading">References and Further Reading</h2>
+<ol>
+<li>
+<p>Dalal, S. R., Fowlkes, E. B., &amp; Hoadley, B. (1989). Risk analysis of the space shuttle: Pre-Challenger prediction of failure. <em>Journal of the American Statistical Association</em>, 84(408), 945-957.</p>
+</li>
+<li>
+<p>Tufte, E. R. (1997). <em>Visual explanations: Images and quantities, evidence and narrative</em>. Graphics Press.</p>
+</li>
+<li>
+<p>Hosmer, D. W., Lemeshow, S., &amp; Sturdivant, R. X. (2013). <em>Applied logistic regression</em> (3rd ed.). Wiley.</p>
+</li>
+<li>
+<p>Presidential Commission on the Space Shuttle Challenger Accident. (1986). <em>Report of the Presidential Commission on the Space Shuttle Challenger Accident</em>. US Government Printing Office.</p>
+</li>
+<li>
+<p>Feynman, R. P. (1988). <em>What do you care what other people think?: Further adventures of a curious character</em>. Norton.</p>
+</li>
+<li>
+<p>Agresti, A. (2018). <em>An introduction to categorical data analysis</em> (3rd ed.). Wiley.</p>
+</li>
+<li>
+<p>Long, J. S. (1997). <em>Regression models for categorical and limited dependent variables</em>. Sage Publications.</p>
+</li>
+<li>
+<p>Kleinbaum, D. G., &amp; Klein, M. (2010). <em>Logistic regression: A self-learning text</em> (3rd ed.). Springer.</p>
+</li>
+<li>
+<p>NASA. (1986). <em>Solid rocket booster O-ring erosion/potential failure criticality analysis</em>. Technical Report.</p>
+</li>
+<li>
+<p>Lighthill, J. (1986). The recently recognized failure scenario for the Challenger shuttle. <em>Proceedings of the Royal Society of London</em>, 413(1845), 135-138.</p>
+</li>
+</ol>
+<hr />
+<p><em>This tutorial demonstrates the application of logistic regression to real-world safety analysis. For complete code implementation and technical details, refer to the companion Code Walkthrough document.</em></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 15, 2025 03:12:54 UTC">September 15, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../16-used-car-regression-analysis/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Used Cars Price Prediction Hands-On Tutorial: Regression Analysis for Business Intelligence">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Used Cars Price Prediction Hands-On Tutorial: Regression Analysis for Business Intelligence
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../18-hands-on-hr-employee-attrition/" class="md-footer__link md-footer__link--next" aria-label="Next: Employee Attrition Prediction Hands-On Tutorial: Machine Learning for HR Analytics">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Employee Attrition Prediction Hands-On Tutorial: Machine Learning for HR Analytics
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,4066 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/1-learning-path/04-clustering/">
+      
+      
+        <link rel="prev" href="../03-ai_applications_across_industries/">
+      
+      
+        <link rel="next" href="../04-01-supervised_unsupervised_learning_doc/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Clustering Fundamentals: Linear Algebra to Unsupervised Learning - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Clustering Fundamentals: Linear Algebra to Unsupervised Learning
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-descriptive-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Introduction of Data Science
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-data-science-lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Life Cycle
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-ai_applications_across_industries/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Application
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_4" id="__nav_2_4_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Clustering
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Clustering
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_4_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_4_1" id="__nav_2_4_2_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Fundamentals
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_2_4_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            Fundamentals
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Clustering Fundamentals: Linear Algebra to Unsupervised Learning
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Clustering Fundamentals: Linear Algebra to Unsupervised Learning
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linear-algebra-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔢 Linear Algebra Fundamentals
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔢 Linear Algebra Fundamentals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#matrix-and-vector-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Matrix and Vector Operations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Operations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#determinant-of-a-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      Determinant of a Matrix
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eigenvectors-and-eigenvalues" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Eigenvectors and Eigenvalues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Eigenvectors and Eigenvalues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Definition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finding-eigenvalues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finding Eigenvalues
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications-in-machine-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications in Machine Learning
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#covariance-and-kl-divergence" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Covariance and KL Divergence
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Covariance and KL Divergence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#covariance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Covariance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kullback-leibler-kl-divergence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kullback-Leibler (KL) Divergence
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unsupervised-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      🤖 Unsupervised Learning
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🤖 Unsupervised Learning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#types-of-unsupervised-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Types of Unsupervised Learning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clustering-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clustering Applications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Characteristics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dimensionality-reduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      📉 Dimensionality Reduction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📉 Dimensionality Reduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principal-component-analysis-pca" class="md-nav__link">
+    <span class="md-ellipsis">
+      Principal Component Analysis (PCA)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#t-sne-t-distributed-stochastic-neighbor-embedding" class="md-nav__link">
+    <span class="md-ellipsis">
+      t-SNE (t-Distributed Stochastic Neighbor Embedding)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-pca-vs-t-sne" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparison: PCA vs t-SNE
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distance-measures-and-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      📏 Distance Measures and Scaling
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📏 Distance Measures and Scaling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-distance-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Distance Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-scaling-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Scaling Methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scaling-impact-on-clustering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scaling Impact on Clustering
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#k-means-clustering" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎪 K-Means Clustering
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎪 K-Means Clustering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm Steps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Foundation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation Methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assumptions-and-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assumptions and Limitations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graph-theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌐 Graph Theory
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌐 Graph Theory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#graph-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Graph Fundamentals
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph-based-clustering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Graph-Based Clustering
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications-in-machine-learning_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications in Machine Learning
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#essential-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Essential Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#video-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎥 Video Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Practical Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datasets-for-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Datasets for Practice
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-01-supervised_unsupervised_learning_doc/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Supervised and Un Supervised Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-02-clustering-concepts-usecases/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering and Applications
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-03-kmeans_clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    K-Means Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-04-clustering_evaluation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering Evaluation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-05-kmeans_beyond_basics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    K-Means Beyond Basics
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-06-kmeans_assumptions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Assumptions K-Means Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-10-modular-clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Modular Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-11-embedding-types/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Embedding Types
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-12-spectral-clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Spectral Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-07-principal-component-analysis/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Dimensionality Reduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../05-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../06-probability-distribution/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Probability Distribution
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linear-algebra-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔢 Linear Algebra Fundamentals
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔢 Linear Algebra Fundamentals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#matrix-and-vector-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Matrix and Vector Operations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Operations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#determinant-of-a-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      Determinant of a Matrix
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eigenvectors-and-eigenvalues" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Eigenvectors and Eigenvalues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Eigenvectors and Eigenvalues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Definition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finding-eigenvalues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finding Eigenvalues
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications-in-machine-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications in Machine Learning
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#covariance-and-kl-divergence" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Covariance and KL Divergence
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📊 Covariance and KL Divergence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#covariance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Covariance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kullback-leibler-kl-divergence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kullback-Leibler (KL) Divergence
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unsupervised-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      🤖 Unsupervised Learning
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🤖 Unsupervised Learning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#types-of-unsupervised-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Types of Unsupervised Learning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clustering-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clustering Applications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Characteristics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dimensionality-reduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      📉 Dimensionality Reduction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📉 Dimensionality Reduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principal-component-analysis-pca" class="md-nav__link">
+    <span class="md-ellipsis">
+      Principal Component Analysis (PCA)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#t-sne-t-distributed-stochastic-neighbor-embedding" class="md-nav__link">
+    <span class="md-ellipsis">
+      t-SNE (t-Distributed Stochastic Neighbor Embedding)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-pca-vs-t-sne" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparison: PCA vs t-SNE
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distance-measures-and-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      📏 Distance Measures and Scaling
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📏 Distance Measures and Scaling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-distance-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Distance Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-scaling-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Scaling Methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scaling-impact-on-clustering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scaling Impact on Clustering
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#k-means-clustering" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎪 K-Means Clustering
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎪 K-Means Clustering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm Steps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Foundation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation Methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#assumptions-and-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assumptions and Limitations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graph-theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌐 Graph Theory
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌐 Graph Theory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#graph-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Graph Fundamentals
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph-based-clustering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Graph-Based Clustering
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications-in-machine-learning_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications in Machine Learning
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#essential-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Essential Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#video-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎥 Video Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Practical Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datasets-for-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Datasets for Practice
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="clustering-fundamentals-linear-algebra-to-unsupervised-learning">Clustering Fundamentals: Linear Algebra to Unsupervised Learning</h1>
+<p><a id="top"></a></p>
+<p><a href="https://colab.research.google.com/github/your-repo/clustering-fundamentals"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
+<a href="https://arxiv.org/abs/2301.12345"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-2301.12345-b31b1b.svg" /></a>
+<a href="https://huggingface.co/models?other=clustering"><img alt="Hugging Face" src="https://img.shields.io/badge/🤗-Models-yellow" /></a></p>
+<h2 id="quick-navigation">📋 Quick Navigation</h2>
+<ul>
+<li><a href="#linear-algebra-fundamentals">🔢 Linear Algebra Fundamentals</a></li>
+<li><a href="#eigenvectors-and-eigenvalues">🎯 Eigenvectors and Eigenvalues</a></li>
+<li><a href="#covariance-and-kl-divergence">📊 Covariance and KL Divergence</a></li>
+<li><a href="#unsupervised-learning">🤖 Unsupervised Learning</a></li>
+<li><a href="#dimensionality-reduction">📉 Dimensionality Reduction</a></li>
+<li><a href="#distance-measures-and-scaling">📏 Distance Measures and Scaling</a></li>
+<li><a href="#k-means-clustering">🎪 K-Means Clustering</a></li>
+<li><a href="#graph-theory">🌐 Graph Theory</a></li>
+<li><a href="#references-further-reading">📚 References &amp; Further Reading</a></li>
+</ul>
+<hr />
+<h2 id="linear-algebra-fundamentals">🔢 Linear Algebra Fundamentals</h2>
+<p>Understanding clustering algorithms requires a solid foundation in linear algebra. This section covers the essential concepts of matrices and vectors that form the backbone of machine learning algorithms.</p>
+<h3 id="matrix-and-vector-operations">Matrix and Vector Operations</h3>
+<p><strong>Matrix</strong>: A two-dimensional array with <strong>m</strong> rows and <strong>n</strong> columns, denoted as <strong>m×n</strong>. Matrices are fundamental for representing input variables in machine learning.</p>
+<p><strong>Vector</strong>: A one-dimensional array that can be either a row vector (1×n) or column vector (n×1).</p>
+<p><img alt="Matrix Operations" src="../../../../svg/matrix_operations.svg" /></p>
+<h3 id="key-operations">Key Operations</h3>
+<p><strong>Addition and Subtraction</strong>: Both matrices must have identical dimensions. Operations are performed element-wise:</p>
+<div class="highlight"><pre><span></span><code>A + B = [a₁₁ + b₁₁  a₁₂ + b₁₂]
+        [a₂₁ + b₂₁  a₂₂ + b₂₂]
+</code></pre></div>
+<p><strong>Matrix-Vector Multiplication</strong>: The number of columns in the matrix must equal the number of elements in the vector:</p>
+<div class="highlight"><pre><span></span><code>AX = [a₁₁x₁ + a₁₂x₂]
+     [a₂₁x₁ + a₂₂x₂]
+     [a₃₁x₁ + a₃₂x₂]
+</code></pre></div>
+<p><strong>Matrix-Matrix Multiplication (Dot Product)</strong>: For matrices A(m×n) and B(n×p), the result is C(m×p):</p>
+<div class="highlight"><pre><span></span><code>C[i,j] = Σ(k=1 to n) A[i,k] × B[k,j]
+</code></pre></div>
+<h3 id="determinant-of-a-matrix">Determinant of a Matrix</h3>
+<p>For a 2×2 matrix:</p>
+<div class="highlight"><pre><span></span><code>det(A) = ad - bc
+</code></pre></div>
+<p>where A = [a b]
+          [c d]</p>
+<p>The determinant is crucial for understanding matrix invertibility and eigenvalue calculations.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="eigenvectors-and-eigenvalues">🎯 Eigenvectors and Eigenvalues</h2>
+<p>Eigenvectors and eigenvalues are fundamental concepts in linear algebra that play a crucial role in dimensionality reduction techniques like PCA.</p>
+<p><img alt="Eigenvector Visualization" src="../../../../svg/eigenvector_visualization.svg" /></p>
+<h3 id="mathematical-definition">Mathematical Definition</h3>
+<p>An eigenvector <strong>v</strong> of a matrix <strong>A</strong> is a non-zero vector that, when <strong>A</strong> is applied to it, results in a scaled version of itself:</p>
+<div class="highlight"><pre><span></span><code>Av = λv
+</code></pre></div>
+<p>where:
+- <strong>A</strong> = transformation matrix
+- <strong>v</strong> = eigenvector (direction preserved)
+- <strong>λ</strong> (lambda) = eigenvalue (scaling factor)</p>
+<h3 id="finding-eigenvalues">Finding Eigenvalues</h3>
+<p>To find eigenvalues, we solve the characteristic equation:</p>
+<div class="highlight"><pre><span></span><code>det(A - λI) = 0
+</code></pre></div>
+<p>For a 2×2 matrix A = [a b], this becomes:
+                      [c d]</p>
+<div class="highlight"><pre><span></span><code>det([a-λ  b  ]) = (a-λ)(d-λ) - bc = 0
+   ([c  d-λ])
+</code></pre></div>
+<h3 id="applications-in-machine-learning">Applications in Machine Learning</h3>
+<p><strong>Principal Component Analysis (PCA)</strong>: Eigenvectors of the covariance matrix become the principal components, with eigenvalues indicating the variance explained by each component.</p>
+<p><strong>Spectral Clustering</strong>: Uses eigenvectors of similarity matrices to identify clusters in non-linearly separable data.</p>
+<p><strong>PageRank Algorithm</strong>: The dominant eigenvector of the web link matrix determines page importance.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="covariance-and-kl-divergence">📊 Covariance and KL Divergence</h2>
+<h3 id="covariance">Covariance</h3>
+<p><strong>Variance</strong> measures how far a random variable spreads from its mean:</p>
+<div class="highlight"><pre><span></span><code>σ²ₓ = Σ(xᵢ - x̄)² / (n-1)
+</code></pre></div>
+<p><strong>Covariance</strong> measures how two random variables vary together:</p>
+<div class="highlight"><pre><span></span><code>Cov(X,Y) = Σ(xᵢ - x̄)(yᵢ - ȳ) / (n-1)
+</code></pre></div>
+<p><strong>Covariance Matrix</strong> for multiple dimensions:</p>
+<div class="highlight"><pre><span></span><code>C = [σ²ₓ     Cov(X,Y)]
+    [Cov(Y,X)   σ²ᵧ  ]
+</code></pre></div>
+<h3 id="kullback-leibler-kl-divergence">Kullback-Leibler (KL) Divergence</h3>
+<p>KL divergence quantifies how one probability distribution differs from another:</p>
+<div class="highlight"><pre><span></span><code>D_KL(P||Q) = Σ P(x) log(P(x)/Q(x))
+</code></pre></div>
+<p><strong>Key Properties</strong>:
+- <strong>Non-symmetric</strong>: D_KL(P||Q) ≠ D_KL(Q||P)
+- <strong>Non-negative</strong>: D_KL(P||Q) ≥ 0
+- <strong>Zero</strong> when distributions are identical</p>
+<p><strong>Applications</strong>:
+- <strong>Variational Autoencoders</strong>: Regularization term in loss function
+- <strong>t-SNE</strong>: Optimizes KL divergence between high and low-dimensional distributions
+- <strong>Information Theory</strong>: Measures information gain</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="unsupervised-learning">🤖 Unsupervised Learning</h2>
+<p>Unsupervised learning algorithms discover hidden patterns in data without labeled examples. The main categories include:</p>
+<h3 id="types-of-unsupervised-learning">Types of Unsupervised Learning</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Clustering</strong></td>
+<td>Group similar data points</td>
+<td>K-means, Hierarchical, DBSCAN</td>
+</tr>
+<tr>
+<td><strong>Association</strong></td>
+<td>Find relationships between variables</td>
+<td>Market basket analysis, Apriori</td>
+</tr>
+<tr>
+<td><strong>Dimensionality Reduction</strong></td>
+<td>Reduce feature space</td>
+<td>PCA, t-SNE, UMAP</td>
+</tr>
+</tbody>
+</table>
+<h3 id="clustering-applications">Clustering Applications</h3>
+<p><strong>Customer Segmentation</strong>: Group customers by purchasing behavior, demographics, or preferences for targeted marketing campaigns.</p>
+<p><strong>Image Segmentation</strong>: Partition images into meaningful regions for computer vision tasks.</p>
+<p><strong>Gene Expression Analysis</strong>: Identify groups of genes with similar expression patterns across different conditions.</p>
+<p><strong>Document Classification</strong>: Cluster documents by topic without predefined categories.</p>
+<h3 id="key-characteristics">Key Characteristics</h3>
+<ul>
+<li><strong>No labeled data</strong> required for training</li>
+<li><strong>Pattern discovery</strong> through statistical relationships</li>
+<li><strong>Exploratory analysis</strong> to understand data structure</li>
+<li><strong>Preprocessing step</strong> for supervised learning</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="dimensionality-reduction">📉 Dimensionality Reduction</h2>
+<p>High-dimensional data presents challenges for analysis, visualization, and algorithm performance. Dimensionality reduction techniques address these issues while preserving essential information.</p>
+<p><img alt="PCA Dimensionality Reduction" src="../../../../svg/pca_dimensionality_reduction.svg" /></p>
+<h3 id="principal-component-analysis-pca">Principal Component Analysis (PCA)</h3>
+<p>PCA transforms correlated variables into a smaller set of uncorrelated principal components:</p>
+<p><strong>Algorithm Steps</strong>:
+1. <strong>Standardize</strong> the data (μ=0, σ=1)
+2. <strong>Compute</strong> covariance matrix C
+3. <strong>Calculate</strong> eigenvalues and eigenvectors of C
+4. <strong>Sort</strong> eigenvectors by eigenvalue magnitude
+5. <strong>Project</strong> data onto top-k eigenvectors</p>
+<p><strong>Mathematical Foundation</strong>:</p>
+<div class="highlight"><pre><span></span><code>C = X&#39;X / (n-1)  # Covariance matrix
+Cv = λv          # Eigenvalue equation
+Y = XW           # Projection (W = eigenvector matrix)
+</code></pre></div>
+<h3 id="t-sne-t-distributed-stochastic-neighbor-embedding">t-SNE (t-Distributed Stochastic Neighbor Embedding)</h3>
+<p>t-SNE preserves local neighborhood structure when mapping to lower dimensions:</p>
+<p><strong>Key Features</strong>:
+- <strong>Non-linear</strong> dimensionality reduction
+- <strong>Preserves</strong> local similarities
+- <strong>Optimizes</strong> KL divergence between probability distributions
+- <strong>Excellent</strong> for visualization (2D/3D)</p>
+<h3 id="comparison-pca-vs-t-sne">Comparison: PCA vs t-SNE</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>PCA</th>
+<th>t-SNE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Type</strong></td>
+<td>Linear</td>
+<td>Non-linear</td>
+</tr>
+<tr>
+<td><strong>Speed</strong></td>
+<td>Fast</td>
+<td>Slow</td>
+</tr>
+<tr>
+<td><strong>Interpretability</strong></td>
+<td>High</td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>Global Structure</strong></td>
+<td>Preserved</td>
+<td>Not preserved</td>
+</tr>
+<tr>
+<td><strong>Local Structure</strong></td>
+<td>Moderate</td>
+<td>Excellent</td>
+</tr>
+<tr>
+<td><strong>Use Case</strong></td>
+<td>Feature reduction</td>
+<td>Visualization</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="distance-measures-and-scaling">📏 Distance Measures and Scaling</h2>
+<p>Distance metrics are fundamental to clustering algorithms, determining how similarity between data points is calculated.</p>
+<p><img alt="Distance Measures and Scaling" src="../../../../svg/distance_measures_scaling.svg" /></p>
+<h3 id="common-distance-metrics">Common Distance Metrics</h3>
+<p><strong>Euclidean Distance</strong>: Straight-line distance in n-dimensional space</p>
+<div class="highlight"><pre><span></span><code>d = √[(x₂-x₁)² + (y₂-y₁)² + ... + (zₙ-z₁)²]
+</code></pre></div>
+<p><strong>Manhattan Distance</strong>: Sum of absolute differences (L1 norm)</p>
+<div class="highlight"><pre><span></span><code>d = |x₂-x₁| + |y₂-y₁| + ... + |zₙ-z₁|
+</code></pre></div>
+<p><strong>Cosine Distance</strong>: Measures angle between vectors</p>
+<div class="highlight"><pre><span></span><code>d = 1 - (A·B)/(||A|| ||B||)
+</code></pre></div>
+<h3 id="data-scaling-methods">Data Scaling Methods</h3>
+<p><strong>Normalization (Min-Max Scaling)</strong>:</p>
+<div class="highlight"><pre><span></span><code>y = (x - min) / (max - min)
+</code></pre></div>
+<ul>
+<li>Range: [0, 1]</li>
+<li>Preserves relationships</li>
+<li>Sensitive to outliers</li>
+</ul>
+<p><strong>Standardization (Z-score)</strong>:</p>
+<div class="highlight"><pre><span></span><code>y = (x - μ) / σ
+</code></pre></div>
+<ul>
+<li>Mean: 0, Standard deviation: 1</li>
+<li>Less sensitive to outliers</li>
+<li>Assumes normal distribution</li>
+</ul>
+<h3 id="scaling-impact-on-clustering">Scaling Impact on Clustering</h3>
+<p>Without scaling, features with larger numerical ranges dominate distance calculations:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Before scaling</span>
+<span class="n">Age</span><span class="p">:</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">35</span><span class="p">]</span>        <span class="c1"># Range: 10</span>
+<span class="n">Income</span><span class="p">:</span> <span class="p">[</span><span class="mi">30000</span><span class="p">,</span> <span class="mi">50000</span><span class="p">,</span> <span class="mi">70000</span><span class="p">]</span>  <span class="c1"># Range: 40000 (dominates!)</span>
+
+<span class="c1"># After standardization</span>
+<span class="n">Age</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>          <span class="c1"># Balanced contribution</span>
+<span class="n">Income</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>       <span class="c1"># Balanced contribution</span>
+</code></pre></div>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="k-means-clustering">🎪 K-Means Clustering</h2>
+<p>K-means is one of the most popular clustering algorithms, partitioning data into k clusters based on feature similarity.</p>
+<p><img alt="K-Means Clustering Process" src="../../../../svg/kmeans_clustering_process.svg" /></p>
+<h3 id="algorithm-steps">Algorithm Steps</h3>
+<ol>
+<li><strong>Choose K</strong>: Determine the number of clusters</li>
+<li><strong>Initialize</strong>: Place k centroids randomly in data space</li>
+<li><strong>Assign</strong>: Assign each point to the nearest centroid</li>
+<li><strong>Update</strong>: Move centroids to the mean of assigned points</li>
+<li><strong>Repeat</strong>: Continue until convergence (centroids stop moving)</li>
+</ol>
+<h3 id="mathematical-foundation">Mathematical Foundation</h3>
+<p><strong>Distance Calculation</strong> (Euclidean):</p>
+<div class="highlight"><pre><span></span><code>d(p,c) = √Σᵢ(pᵢ - cᵢ)²
+</code></pre></div>
+<p><strong>Centroid Update</strong>:</p>
+<div class="highlight"><pre><span></span><code>cⱼ = (1/|Sⱼ|) Σ_{x∈Sⱼ} x
+</code></pre></div>
+<p><strong>Objective Function</strong> (minimize Within-Cluster Sum of Squares):</p>
+<div class="highlight"><pre><span></span><code>WCSS = ΣΣ ||x - μⱼ||²
+</code></pre></div>
+<h3 id="evaluation-methods">Evaluation Methods</h3>
+<p><strong>Elbow Method</strong>: Plot WCSS vs K and find the "elbow" point where improvement diminishes.</p>
+<p><strong>Silhouette Score</strong>: Measures cluster cohesion and separation:</p>
+<div class="highlight"><pre><span></span><code>s(i) = (b(i) - a(i)) / max{a(i), b(i)}
+</code></pre></div>
+<p>where:
+- a(i) = average distance to points in same cluster
+- b(i) = average distance to points in nearest cluster</p>
+<p><strong>Silhouette Score Interpretation</strong>:
+- <strong>+1</strong>: Perfect clustering
+- <strong>0</strong>: Overlapping clusters<br />
+- <strong>-1</strong>: Incorrect clustering</p>
+<h3 id="assumptions-and-limitations">Assumptions and Limitations</h3>
+<table>
+<thead>
+<tr>
+<th>Assumption</th>
+<th>Limitation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Spherical clusters</strong></td>
+<td>Fails with elongated or irregular shapes</td>
+</tr>
+<tr>
+<td><strong>Similar cluster sizes</strong></td>
+<td>Unbalanced clusters cause poor performance</td>
+</tr>
+<tr>
+<td><strong>Similar densities</strong></td>
+<td>Dense and sparse clusters mixed poorly</td>
+</tr>
+<tr>
+<td><strong>Linear boundaries</strong></td>
+<td>Cannot handle non-linear cluster boundaries</td>
+</tr>
+</tbody>
+</table>
+<h3 id="applications">Applications</h3>
+<ul>
+<li><strong>Customer Segmentation</strong>: Group customers by purchasing behavior</li>
+<li><strong>Image Segmentation</strong>: Partition images into regions</li>
+<li><strong>Market Research</strong>: Identify consumer groups</li>
+<li><strong>Data Compression</strong>: Reduce color palettes in images</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="graph-theory">🌐 Graph Theory</h2>
+<p>Graph theory provides the mathematical foundation for understanding relationships and structures in data, essential for advanced clustering techniques.</p>
+<h3 id="graph-fundamentals">Graph Fundamentals</h3>
+<p><strong>Mathematical Representation</strong>: G = (V, E)
+- <strong>V</strong>: Set of vertices (nodes)
+- <strong>E</strong>: Set of edges (connections)</p>
+<p><strong>Types of Graphs</strong>:
+- <strong>Directed</strong>: Edges have direction (A → B)
+- <strong>Undirected</strong>: Edges are bidirectional (A ↔ B)
+- <strong>Weighted</strong>: Edges have associated weights/costs
+- <strong>Unweighted</strong>: All edges are equivalent</p>
+<h3 id="graph-based-clustering">Graph-Based Clustering</h3>
+<p><strong>Spectral Clustering</strong>: Uses eigenvalues and eigenvectors of graph Laplacian matrices to identify clusters in non-convex shapes.</p>
+<p><strong>Community Detection</strong>: Identifies groups of densely connected nodes in networks.</p>
+<p><strong>Minimum Spanning Tree</strong>: Creates hierarchical clustering by removing edges in order of weight.</p>
+<h3 id="applications-in-machine-learning_1">Applications in Machine Learning</h3>
+<ul>
+<li><strong>Social Network Analysis</strong>: Identify communities and influencers</li>
+<li><strong>Recommendation Systems</strong>: Model user-item relationships</li>
+<li><strong>Knowledge Graphs</strong>: Represent entities and relationships</li>
+<li><strong>Molecular Biology</strong>: Analyze protein interaction networks</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="references-further-reading">📚 References &amp; Further Reading</h2>
+<h3 id="essential-papers">📖 Essential Papers</h3>
+<ol>
+<li><strong>MacQueen, J.</strong> (1967). "Some methods for classification and analysis of multivariate observations." <em>Proceedings of the Fifth Berkeley Symposium on Mathematical Statistics and Probability</em></li>
+<li><strong>Pearson, K.</strong> (1901). "On lines and planes of closest fit to systems of points in space." <em>The London, Edinburgh, and Dublin Philosophical Magazine and Journal of Science</em></li>
+<li><strong>Van der Maaten, L., &amp; Hinton, G.</strong> (2008). "Visualizing data using t-SNE." <em>Journal of Machine Learning Research</em>, 9, 2579-2605</li>
+<li><strong>Arthur, D., &amp; Vassilvitskii, S.</strong> (2007). "k-means++: The advantages of careful seeding." <em>Proceedings of the Eighteenth Annual ACM-SIAM Symposium on Discrete Algorithms</em></li>
+</ol>
+<h3 id="video-resources">🎥 Video Resources</h3>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=PFDu9oVAE-g">3Blue1Brown: Eigenvectors and Eigenvalues</a></li>
+<li><a href="https://www.youtube.com/watch?v=4b5d3muPQmA">StatQuest: K-means Clustering</a></li>
+<li><a href="https://www.coursera.org/learn/machine-learning">Andrew Ng: Unsupervised Learning</a></li>
+</ul>
+<h3 id="practical-implementation">🛠️ Practical Implementation</h3>
+<ul>
+<li><a href="https://scikit-learn.org/stable/modules/clustering.html">Scikit-learn Clustering</a></li>
+<li><a href="https://github.com/scikit-learn/scikit-learn/blob/main/examples/cluster/plot_cluster_comparison.py">Clustering Algorithms Comparison</a></li>
+</ul>
+<h3 id="datasets-for-practice">📊 Datasets for Practice</h3>
+<ul>
+<li><a href="https://archive.ics.uci.edu/ml/index.php">UCI Machine Learning Repository</a></li>
+<li><a href="https://www.kaggle.com/competitions?search=clustering">Kaggle Clustering Competitions</a></li>
+<li><a href="https://archive.ics.uci.edu/ml/datasets/iris">Iris Dataset</a> - Classic clustering benchmark</li>
+</ul>
+<hr />
+<p><em>This documentation provides a comprehensive foundation for understanding clustering fundamentals, from mathematical principles to practical applications. The combination of theoretical knowledge and visual representations ensures both conceptual clarity and implementation readiness.</em></p>
+<p><a href="https://colab.research.google.com/github/your-repo/clustering-fundamentals"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p><a href="#top">↩ Back to Top</a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 15, 2025 03:12:54 UTC">September 15, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../03-ai_applications_across_industries/" class="md-footer__link md-footer__link--prev" aria-label="Previous: AI Applications Across Industries">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                AI Applications Across Industries
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../04-01-supervised_unsupervised_learning_doc/" class="md-footer__link md-footer__link--next" aria-label="Next: Supervised and Unsupervised Learning: A Comprehensive Guide">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Supervised and Unsupervised Learning: A Comprehensive Guide
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

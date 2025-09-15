@@ -1,0 +1,3583 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/2-additional-reference/55-case-study-regression-model-predicting-wage/">
+      
+      
+        <link rel="prev" href="../54-case-study-penalized_regression_countries-growth/">
+      
+      
+        <link rel="next" href="../56-case-study-neural_networks_causal_inference/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Wage Prediction and Non-Linear Regression Models - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Wage Prediction and Non-Linear Regression Models
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-descriptive-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../1-learning-path/01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3" id="__nav_2_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../10-hands-on-regression-advertisement/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../17-hands-on-challenger-launch/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Probabability Distribution - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../51.case-study-human-generated-text/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_5" id="__nav_2_4_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Regression
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_3_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            Case Studies - Regression
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../53-case-study-regression_analysis-gender-wage-gap/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gender Wag Gap Study - Regression Analysis
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../54-case-study-penalized_regression_countries-growth/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gender Wag Gap Study - Penalized Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_5_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_5_3" id="__nav_2_4_3_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Wage Prediction - Regression Analysis
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_3_5_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            Wage Prediction - Regression Analysis
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Wage Prediction and Non-Linear Regression Models
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wage Prediction and Non-Linear Regression Models
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔍 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      📈 Dataset Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📈 Dataset Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Configurations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regression-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌳 Regression Trees
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌳 Regression Trees">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-formulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Formulation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tree-growing-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tree Growing Process
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-wage-prediction-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Wage Prediction Tree
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tree-pruning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tree Pruning
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#random-forest" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌲 Random Forest
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌲 Random Forest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advantages
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#boosting-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Boosting Algorithms
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Boosting Algorithms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boosting-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Boosting Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-differences-from-bagging" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Differences from Bagging
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tuning-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tuning Parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-comparison-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Model Comparison Results
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📋 Model Comparison Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#performance-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-observations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Observations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ensemble-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Ensemble Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Ensemble Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aggregated-prediction-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Aggregated Prediction Rules
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregation-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Aggregation Methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregation-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Aggregation Results
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Key Findings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔑 Key Findings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-selection-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Selection Insights
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Recommendations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statistical-significance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statistical Significance
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../56-case-study-neural_networks_causal_inference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Neural Networks and Causal Inference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../57-case-study-pca-holiday-study/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    PCA - Holiday Study
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../58-case-study-hip_brest-cancer-study/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Probabability Distribution
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../99-unsupervised_learning_resources/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    External Resources
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔍 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      📈 Dataset Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📈 Dataset Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Configurations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#regression-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌳 Regression Trees
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌳 Regression Trees">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-formulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Formulation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tree-growing-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tree Growing Process
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-wage-prediction-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Wage Prediction Tree
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tree-pruning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tree Pruning
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#random-forest" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌲 Random Forest
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌲 Random Forest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Principles
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advantages
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#boosting-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Boosting Algorithms
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Boosting Algorithms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boosting-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Boosting Algorithm
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-differences-from-bagging" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Differences from Bagging
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tuning-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tuning Parameters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-comparison-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Model Comparison Results
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📋 Model Comparison Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#performance-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-observations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Observations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ensemble-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Ensemble Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Ensemble Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aggregated-prediction-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Aggregated Prediction Rules
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregation-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Aggregation Methods
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregation-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Aggregation Results
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔑 Key Findings
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔑 Key Findings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-selection-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Selection Insights
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Recommendations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statistical-significance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statistical Significance
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="wage-prediction-and-non-linear-regression-models">Wage Prediction and Non-Linear Regression Models</h1>
+<p><a id="top"></a></p>
+<p><a href="https://drive.google.com/file/d/1E6Jkf5QGvmTXUZsPTDuF52MbORq49yNl/view?usp=sharing"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
+<a href="https://drive.google.com/file/d/1ZzmLMwWoOsNzGlvj6EYnakNJQ6RXtw9E/view?usp=sharing"><img alt="Train Dataset" src="https://img.shields.io/badge/Dataset-Train%20Data-blue" /></a>
+<a href="https://drive.google.com/file/d/1N2LVVdb7aG0B9wIM_9MXfuHdcMavOuaX/view?usp=sharing"><img alt="Test Dataset" src="https://img.shields.io/badge/Dataset-Test%20Data-green" /></a></p>
+<h2 id="quick-navigation">🔍 Quick Navigation</h2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#dataset-overview">Dataset Overview</a></li>
+<li><a href="#regression-trees">Regression Trees</a></li>
+<li><a href="#random-forest">Random Forest</a></li>
+<li><a href="#boosting-algorithms">Boosting Algorithms</a></li>
+<li><a href="#model-comparison-results">Model Comparison Results</a></li>
+<li><a href="#ensemble-methods">Ensemble Methods</a></li>
+<li><a href="#key-findings">Key Findings</a></li>
+<li><a href="#references--further-reading">References &amp; Further Reading</a></li>
+</ul>
+<h2 id="introduction">📊 Introduction</h2>
+<p>This documentation explores the application of modern regression methods for wage prediction, comparing linear and non-linear approaches on real-world data. We examine how advanced algorithms like Random Forest, Boosted Trees, and Neural Networks perform against classical methods when predicting log wages using worker characteristics.</p>
+<p>The best prediction rule for outcome Y using features Z is the conditional expectation:</p>
+<div class="highlight"><pre><span></span><code>g(Z) = E(Y | Z)
+</code></pre></div>
+<p>Modern regression methods provide estimated prediction rules ĝ(Z) that approximate the true function g(Z) under appropriate regularity conditions. Theoretical work demonstrates that with sufficient sample size n, the mean squared approximation error converges to zero:</p>
+<div class="highlight"><pre><span></span><code>E_Z(ĝ(Z) - g(Z))² → 0, as n → ∞
+</code></pre></div>
+<p>where E_Z denotes the expectation taken over Z, holding everything else fixed.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="dataset-overview">📈 Dataset Overview</h2>
+<p>Our analysis uses data from the <strong>March Current Population Survey Supplement 2015</strong> containing:</p>
+<ul>
+<li><strong>Sample Size</strong>: 12,697 observations</li>
+<li><strong>Target Variable</strong>: Log wages (natural logarithms of actual wages) of never-married workers in the United States</li>
+<li><strong>Features</strong>: Worker characteristics including:</li>
+<li>Experience levels</li>
+<li>Race indicators</li>
+<li>Education levels</li>
+<li>23 industry indicators</li>
+<li>22 occupation indicators</li>
+<li>Other demographic characteristics</li>
+</ul>
+<h3 id="model-configurations">Model Configurations</h3>
+<p><strong>Linear Models</strong>: Prediction rule of the form ĝ(Z) = β̂'X</p>
+<ol>
+<li><strong>Basic Model</strong>: 72 raw regressors (Z) plus constant</li>
+<li><strong>Flexible Model</strong>: 2,336 constructed regressors including:</li>
+<li>Raw regressors Z</li>
+<li>Four polynomials in experience</li>
+<li>All two-way interactions</li>
+</ol>
+<p><strong>Non-Linear Models</strong>: Direct estimation of ĝ(Z) through:
+- Regression Trees
+- Random Forests
+- Boosted Trees
+- Neural Networks</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="regression-trees">🌳 Regression Trees</h2>
+<p>Regression trees partition the regressor space into rectangles, assigning predicted values to each region. This creates an intuitive, interpretable model structure.</p>
+<p><img alt="Regression Tree Structure" src="../../../../svg/regression_tree_structure.svg" /></p>
+<h3 id="mathematical-formulation">Mathematical Formulation</h3>
+<p>Given n observations (Z_i, Y_i), a partition into M rectangles R_1 through R_M yields:</p>
+<div class="highlight"><pre><span></span><code>ĝ(Z) = Σ(m=1 to M) β_m · 1(Z ∈ R_m)
+</code></pre></div>
+<p>where:
+- <code>1(Z ∈ R_m)</code> returns 1 if Z falls in rectangle R_m, 0 otherwise
+- <code>β_m</code> is the predicted value for region m</p>
+<p>The predicted values are obtained by minimizing sample MSE:</p>
+<div class="highlight"><pre><span></span><code>β̂ = argmin Σ(i=1 to n) (Y_i - Σ(m=1 to M) β_m · 1(Z_i ∈ R_m))²
+</code></pre></div>
+<p>This results in β_m equaling the average of Y_i values falling in rectangle R_m.</p>
+<h3 id="tree-growing-process">Tree Growing Process</h3>
+<p><strong>Recursive Binary Partitioning</strong>:</p>
+<ol>
+<li><strong>Initial Split</strong>: Choose regressor and split point minimizing sample MSE</li>
+<li><strong>Recursive Splitting</strong>: Repeat for each resulting region</li>
+<li><strong>Stopping Criteria</strong>: Reach desired depth or minimum node size</li>
+</ol>
+<p><img alt="Tree Growing Process" src="../../../../svg/tree_growing_process.svg" /></p>
+<h3 id="example-wage-prediction-tree">Example: Wage Prediction Tree</h3>
+<p>For college graduates with &gt;9.5 years experience: <strong><span class="arithmatex">\(24/hour**
+For college graduates with ≤9.5 years experience: **\)</span>17/hour</strong>
+For non-graduates with &gt;14 years experience: <strong><span class="arithmatex">\(14/hour**
+For non-graduates with ≤14 years experience: **\)</span>12/hour</strong></p>
+<h3 id="tree-pruning">Tree Pruning</h3>
+<p>Pruning prevents overfitting by removing redundant subtrees. Deeper trees provide better approximation but become noisier due to fewer observations per terminal node. Cross-validation helps determine optimal tree depth.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="random-forest">🌲 Random Forest</h2>
+<p>Random Forest improves upon single trees through <strong>Bootstrap Aggregation (Bagging)</strong>. It constructs multiple decision trees and averages their predictions.</p>
+<p><img alt="Random Forest Ensemble" src="../../../../svg/random_forest_ensemble.svg" /></p>
+<h3 id="algorithm">Algorithm</h3>
+<ol>
+<li><strong>Bootstrap Sampling</strong>: Create B bootstrap samples from original data</li>
+<li><strong>Tree Construction</strong>: Build deep trees on each sample</li>
+<li><strong>Averaging</strong>: Combine predictions</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ĝ_random_forest(Z) = (1/B) Σ(b=1 to B) ĝ_b(Z)
+</code></pre></div>
+<h3 id="key-principles">Key Principles</h3>
+<ul>
+<li><strong>Deep Trees</strong>: Minimize approximation error</li>
+<li><strong>Averaging</strong>: Reduce variance from individual noisy trees</li>
+<li><strong>Bootstrap</strong>: Simulate multiple independent datasets</li>
+<li><strong>No Pruning</strong>: Trees grown to full depth</li>
+</ul>
+<h3 id="advantages">Advantages</h3>
+<ul>
+<li>Reduces overfitting compared to single trees</li>
+<li>Handles high-dimensional data well</li>
+<li>Provides feature importance measures</li>
+<li>Robust to outliers and missing values</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="boosting-algorithms">🚀 Boosting Algorithms</h2>
+<p>Boosting trains weak learners sequentially, with each focusing on observations poorly predicted by previous models.</p>
+<p><img alt="Boosting Algorithm Workflow" src="../../../../svg/boosting_algorithm_workflow.svg" /></p>
+<h3 id="boosting-algorithm">Boosting Algorithm</h3>
+<p><strong>Step 1</strong>: Initialize residuals R_i = Y_i for i = 1,...,n</p>
+<p><strong>Step 2</strong>: For j = 1,...,J:</p>
+<ol>
+<li>Fit tree-based prediction rule ĝ_j(Z) to data (Z_i, R_i)</li>
+<li>Update residuals: R_i ← R_i - λĝ_j(Z_i)</li>
+</ol>
+<p><strong>Step 3</strong>: Construct boosted prediction rule:</p>
+<div class="highlight"><pre><span></span><code>ĝ(Z) = Σ(j=1 to J) λĝ_j(Z)
+</code></pre></div>
+<h3 id="key-differences-from-bagging">Key Differences from Bagging</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Bagging (Random Forest)</th>
+<th>Boosting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Training</td>
+<td>Parallel</td>
+<td>Sequential</td>
+</tr>
+<tr>
+<td>Tree Depth</td>
+<td>Deep trees</td>
+<td>Shallow trees</td>
+</tr>
+<tr>
+<td>Focus</td>
+<td>Variance reduction</td>
+<td>Bias reduction</td>
+</tr>
+<tr>
+<td>Data Weighting</td>
+<td>Random sampling</td>
+<td>Error-focused weighting</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tuning-parameters">Tuning Parameters</h3>
+<ul>
+<li><strong>J</strong>: Number of boosting steps</li>
+<li><strong>λ</strong>: Learning rate (degree of residual updating)</li>
+<li>Selected via cross-validation to prevent overfitting</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="model-comparison-results">📋 Model Comparison Results</h2>
+<p>The empirical comparison uses a single train-test split on the wage dataset:</p>
+<p><img alt="Model Performance Comparison" src="../../../svg/model_performance_comparison.svg" /></p>
+<h3 id="performance-table">Performance Table</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Test MSE</th>
+<th>Std Error</th>
+<th>R-squared</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Random Forest</strong></td>
+<td><strong>0.249</strong></td>
+<td><strong>0.015</strong></td>
+<td><strong>0.350</strong></td>
+</tr>
+<tr>
+<td>Least Squares</td>
+<td>0.253</td>
+<td>0.017</td>
+<td>0.340</td>
+</tr>
+<tr>
+<td>Lasso</td>
+<td>0.260</td>
+<td>0.016</td>
+<td>0.322</td>
+</tr>
+<tr>
+<td>Boosted Trees</td>
+<td>0.259</td>
+<td>0.016</td>
+<td>0.324</td>
+</tr>
+<tr>
+<td>Post-Lasso</td>
+<td>0.260</td>
+<td>0.017</td>
+<td>0.321</td>
+</tr>
+<tr>
+<td>Cross-Validated Elastic Net</td>
+<td>0.271</td>
+<td>0.017</td>
+<td>0.292</td>
+</tr>
+<tr>
+<td>Neural Network</td>
+<td>0.488</td>
+<td>0.045</td>
+<td>0.000</td>
+</tr>
+<tr>
+<td>Least Squares (Flexible)</td>
+<td>11.262</td>
+<td>2.915</td>
+<td>0.000</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-observations">Key Observations</h3>
+<ol>
+<li>
+<p><strong>Random Forest</strong> achieves the best performance with lowest Test MSE (0.249) and highest R² (0.350)</p>
+</li>
+<li>
+<p><strong>Simple OLS</strong> performs remarkably well, nearly matching Random Forest performance (MSE: 0.253 vs 0.249)</p>
+</li>
+<li>
+<p><strong>Flexible OLS</strong> performs poorly due to overfitting with 2,336 regressors</p>
+</li>
+<li>
+<p><strong>Penalized methods</strong> (Lasso, Elastic Net) significantly improve upon flexible OLS by reducing variance</p>
+</li>
+<li>
+<p><strong>Neural Networks</strong> with few neurons perform poorly due to crude approximation</p>
+</li>
+<li>
+<p>Most methods perform within one standard error of each other, suggesting statistical equivalence</p>
+</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="ensemble-methods">🎯 Ensemble Methods</h2>
+<h3 id="aggregated-prediction-rules">Aggregated Prediction Rules</h3>
+<p>We can combine multiple prediction rules using weighted averages:</p>
+<div class="highlight"><pre><span></span><code>ĝ(Z) = Σ(k=1 to K) α̃_k ĝ_k(Z)
+</code></pre></div>
+<p>where α̃_k represents coefficients assigned to different prediction rules.</p>
+<h3 id="aggregation-methods">Aggregation Methods</h3>
+<p><strong>Small K</strong>: Use least squares on test data</p>
+<div class="highlight"><pre><span></span><code>min Σ(i∈V) (Y_i - Σ(k=1 to K) α_k ĝ_k(Z_i))²
+</code></pre></div>
+<p><strong>Large K</strong>: Use Lasso aggregation with penalty term</p>
+<div class="highlight"><pre><span></span><code>min Σ(i∈V) (Y_i - Σ(k=1 to K) α_k ĝ_k(Z_i))² + λ Σ(k=1 to K) |α_k|
+</code></pre></div>
+<h3 id="aggregation-results">Aggregation Results</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Weight (OLS)</th>
+<th>Weight (Lasso)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OLS-Simple</td>
+<td>0.41</td>
+<td>0.42</td>
+</tr>
+<tr>
+<td>Random Forest</td>
+<td>0.65</td>
+<td>0.59</td>
+</tr>
+<tr>
+<td>Lasso</td>
+<td>0.22</td>
+<td>0.04</td>
+</tr>
+<tr>
+<td>Cross-Validated Elastic Net</td>
+<td>-0.24</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>Boosted Trees</td>
+<td>0.08</td>
+<td>0.00</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Performance Improvement</strong>: Aggregated methods achieve <strong>36.5% R²</strong> compared to <strong>35% R²</strong> from Random Forest alone.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="key-findings">🔑 Key Findings</h2>
+<h3 id="model-selection-insights">Model Selection Insights</h3>
+<ol>
+<li>
+<p><strong>Simplicity vs Complexity</strong>: Simple OLS with basic features nearly matches sophisticated non-linear methods</p>
+</li>
+<li>
+<p><strong>Feature Engineering Matters</strong>: Flexible models with many features require regularization to avoid overfitting</p>
+</li>
+<li>
+<p><strong>Ensemble Benefits</strong>: Aggregating multiple models provides modest but consistent improvements</p>
+</li>
+<li>
+<p><strong>Context Dependency</strong>: The relative advantage of complex methods depends on the underlying data structure</p>
+</li>
+</ol>
+<h3 id="practical-recommendations">Practical Recommendations</h3>
+<ul>
+<li><strong>Start Simple</strong>: Begin with OLS on carefully selected features</li>
+<li><strong>Cross-Validate</strong>: Use proper validation for model selection and hyperparameter tuning</li>
+<li><strong>Consider Ensembles</strong>: Aggregate multiple approaches for robust predictions</li>
+<li><strong>Regularize High-Dimensional Models</strong>: Apply penalization when feature count is large</li>
+</ul>
+<h3 id="statistical-significance">Statistical Significance</h3>
+<p>The performance differences between top methods (Random Forest, OLS, Lasso) are within one standard error, suggesting they are <strong>statistically indistinguishable</strong> for this particular dataset and prediction task.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="references-further-reading">📚 References &amp; Further Reading</h2>
+<ol>
+<li><strong>Breiman, L.</strong> (2001). "Random Forests." <em>Machine Learning</em>, 45(1), 5-32.</li>
+<li>
+<p>Seminal paper introducing Random Forest methodology</p>
+</li>
+<li>
+<p><strong>Hastie, T., Tibshirani, R., &amp; Friedman, J.</strong> (2009). "The Elements of Statistical Learning: Data Mining, Inference, and Prediction" (2nd ed.). Springer.</p>
+</li>
+<li>
+<p>Comprehensive reference for statistical learning methods</p>
+</li>
+<li>
+<p><strong>James, G., Witten, D., Hastie, T., &amp; Tibshirani, R.</strong> (2021). "An Introduction to Statistical Learning: with Applications in R" (2nd ed.). Springer.</p>
+</li>
+<li>
+<p>Accessible introduction to machine learning concepts</p>
+</li>
+<li>
+<p><strong>Chen, T., &amp; Guestrin, C.</strong> (2016). "XGBoost: A Scalable Tree Boosting System." <em>Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>.</p>
+</li>
+<li>
+<p>Modern boosting implementation and theory</p>
+</li>
+<li>
+<p><strong>Mullainathan, S., &amp; Spiess, J.</strong> (2017). "Machine Learning: An Applied Econometric Approach." <em>Journal of Economic Perspectives</em>, 31(2), 87-106.</p>
+</li>
+<li>
+<p>Economic perspective on machine learning applications</p>
+</li>
+<li>
+<p><strong>Athey, S., &amp; Imbens, G.W.</strong> (2019). "Machine Learning Methods That Economists Should Know About." <em>Annual Review of Economics</em>, 11, 685-725.</p>
+</li>
+<li>
+<p>Survey of ML methods relevant to economic analysis</p>
+</li>
+<li>
+<p><strong>Breiman, L.</strong> (1996). "Bagging Predictors." <em>Machine Learning</em>, 24(2), 123-140.</p>
+</li>
+<li>
+<p>Foundation of bootstrap aggregation methods</p>
+</li>
+<li>
+<p><strong>Freund, Y., &amp; Schapire, R.E.</strong> (1997). "A Decision-Theoretic Generalization of On-Line Learning and an Application to Boosting." <em>Journal of Computer and System Sciences</em>, 55(1), 119-139.</p>
+</li>
+<li>Theoretical foundations of boosting algorithms</li>
+</ol>
+<hr />
+<p><em>This documentation provides a comprehensive guide to wage prediction using modern regression methods, combining theoretical foundations with practical empirical results from real-world data analysis.</em></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 15, 2025 03:12:55 UTC">September 15, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../54-case-study-penalized_regression_countries-growth/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Penalized Regression Methods:">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Penalized Regression Methods:
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../56-case-study-neural_networks_causal_inference/" class="md-footer__link md-footer__link--next" aria-label="Next: Neural Networks, Regression, and Causal Inference">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Neural Networks, Regression, and Causal Inference
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>
