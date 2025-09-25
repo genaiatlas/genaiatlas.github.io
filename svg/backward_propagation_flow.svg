@@ -1,0 +1,334 @@
+<svg viewBox="0 0 1000 750" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="backwardGrad" x1="100%" y1="0%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#e17055;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d63031;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="gradientGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff7675;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fd79a8;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <marker id="backwardArrow" markerWidth="12" markerHeight="12" refX="2" refY="3" orient="auto">
+      <path d="M12,0 L12,6 L0,3 z" fill="#e17055"/>
+    </marker>
+    <marker id="gradArrow" markerWidth="10" markerHeight="10" refX="2" refY="2" orient="auto">
+      <path d="M10,0 L10,4 L0,2 z" fill="#2d3436"/>
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1000" height="750" fill="#fafafa"/>
+  
+  <!-- Title -->
+  <text x="500" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#2c3e50">
+    Backward Propagation: Gradient Flow Through Network
+  </text>
+  
+  <!-- Backward Flow Indicator -->
+  <g transform="translate(50, 50)">
+    <rect x="0" y="0" width="900" height="40" fill="url(#backwardGrad)" rx="20"/>
+    <text x="450" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="white" font-weight="bold">
+      Backward Direction: Loss ← Output ← Hidden ← Input (Gradient Computation)
+    </text>
+  </g>
+  
+  <!-- Step 1: Loss Gradient -->
+  <g transform="translate(800, 150)">
+    <rect x="0" y="0" width="140" height="180" fill="white" stroke="#e17055" stroke-width="3" rx="10" filter="url(#shadow)"/>
+    <text x="70" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#d63031">
+      Step 1: Loss Gradient
+    </text>
+    
+    <!-- Error computation -->
+    <rect x="10" y="35" width="120" height="40" fill="#ffebee" stroke="#e17055" stroke-width="2" rx="5"/>
+    <text x="70" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#2c3e50" font-weight="bold">
+      ∂ℒ/∂z = ŷ - y
+    </text>
+    <text x="70" y="62" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50">
+      = 0.609 - 1.0 = -0.391
+    </text>
+    <text x="70" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#636e72">
+      Error signal
+    </text>
+    
+    <!-- Key insight -->
+    <g transform="translate(10, 90)">
+      <rect x="0" y="0" width="120" height="70" fill="#fff3e0" stroke="#ff9800" stroke-width="1" rx="3"/>
+      <text x="60" y="12" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#e65100" font-weight="bold">
+        Key Insight:
+      </text>
+      <text x="60" y="24" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2c3e50">
+        If ŷ = y (perfect prediction)
+      </text>
+      <text x="60" y="34" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2c3e50">
+        then ∂ℒ/∂z = 0
+      </text>
+      <text x="60" y="44" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2c3e50">
+        → No gradient signal
+      </text>
+      <text x="60" y="54" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2c3e50">
+        → No learning needed
+      </text>
+    </g>
+  </g>
+  
+  <!-- Arrow 1 -->
+  <line x1="790" y1="240" x2="740" y2="240" stroke="#e17055" stroke-width="4" marker-end="url(#backwardArrow)"/>
+  <text x="765" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#e17055" font-weight="bold">
+    Backpropagate error
+  </text>
+  
+  <!-- Step 2: Output Layer Gradients -->
+  <g transform="translate(580, 150)">
+    <rect x="0" y="0" width="150" height="180" fill="white" stroke="#fdcb6e" stroke-width="3" rx="10" filter="url(#shadow)"/>
+    <text x="75" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#f39c12">
+      Step 2: Output Gradients
+    </text>
+    
+    <!-- Output weight gradients -->
+    <rect x="10" y="35" width="130" height="50" fill="#fff9e6" stroke="#fdcb6e" stroke-width="1" rx="5"/>
+    <text x="75" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50" font-weight="bold">
+      ∂ℒ/∂v₁ = (∂ℒ/∂z) × (∂z/∂v₁)
+    </text>
+    <text x="75" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50">
+      = (-0.391) × a₁
+    </text>
+    <text x="75" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50">
+      = (-0.391) × 0.49 = -0.192
+    </text>
+    <text x="75" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#636e72">
+      Weight v₁ gradient
+    </text>
+    
+    <rect x="10" y="95" width="130" height="40" fill="#fff9e6" stroke="#fdcb6e" stroke-width="1" rx="5"/>
+    <text x="75" y="108" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50">
+      ∂ℒ/∂v₂ = (-0.391) × 0.37 = -0.145
+    </text>
+    <text x="75" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#636e72">
+      Weight v₂ gradient
+    </text>
+    
+    <!-- Hidden layer error -->
+    <rect x="10" y="145" width="130" height="25" fill="#ffe0e0" stroke="#ff6b6b" stroke-width="1" rx="3"/>
+    <text x="75" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50" font-weight="bold">
+      δₕ = (∂ℒ/∂z) × v
+    </text>
+    <text x="75" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="7" fill="#636e72">
+      Error for hidden layer
+    </text>
+  </g>
+  
+  <!-- Arrow 2 -->
+  <line x1="570" y1="240" x2="520" y2="240" stroke="#e17055" stroke-width="4" marker-end="url(#backwardArrow)"/>
+  <text x="545" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#e17055" font-weight="bold">
+    Chain through weights
+  </text>
+  
+  <!-- Step 3: Hidden Layer Gradients -->
+  <g transform="translate(350, 150)">
+    <rect x="0" y="0" width="160" height="180" fill="white" stroke="#fd79a8" stroke-width="3" rx="10" filter="url(#shadow)"/>
+    <text x="80" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#e84393">
+      Step 3: Hidden Gradients
+    </text>
+    
+    <!-- ReLU derivative effect -->
+    <rect x="10" y="35" width="140" height="45" fill="#fdf2f8" stroke="#fd79a8" stroke-width="1" rx="5"/>
+    <text x="80" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50" font-weight="bold">
+      ∂a₁/∂z₁ = ReLU'(z₁)
+    </text>
+    <text x="80" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50">
+      = 1 if z₁ > 0, else 0
+    </text>
+    <text x="80" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50">
+      = 1 (neuron is active)
+    </text>
+    <text x="80" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="7" fill="#636e72">
+      Activation function derivative
+    </text>
+    
+    <!-- Combined gradient -->
+    <rect x="10" y="90" width="140" height="55" fill="#f3e5f5" stroke="#9c27b0" stroke-width="1" rx="5"/>
+    <text x="80" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50" font-weight="bold">
+      δ₁ = δₕ × v₁ × ReLU'(z₁)
+    </text>
+    <text x="80" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2c3e50">
+      = (-0.391) × 0.6 × 1
+    </text>
+    <text x="80" y="125" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#2c3e50">
+      = -0.235
+    </text>
+    <text x="80" y="135" text-anchor="middle" font-family="Arial, sans-serif" font-size="7" fill="#636e72">
+      Error signal for hidden unit 1
+    </text>
+    
+    <!-- Dead neuron case -->
+    <rect x="10" y="155" width="140" height="20" fill="#ffebee" stroke="#f44336" stroke-width="1" rx="3"/>
+    <text x="80" y="167" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#c62828" font-weight="bold">
+      If z₁ ≤ 0: δ₁ = 0 (dead neuron)
+    </text>
+  </g>
+  
+  <!-- Arrow 3 -->
+  <line x1="340" y1="240" x2="290" y2="240" stroke="#e17055" stroke-width="4" marker-end="url(#backwardArrow)"/>
+  <text x="315" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#e17055" font-weight="bold">
+    Weight gradients
+  </text>
+  
+  <!-- Step 4: Input Weight Gradients -->
+  <g transform="translate(80, 150)">
+    <rect x="0" y="0" width="200" height="180" fill="white" stroke="#74b9ff" stroke-width="3" rx="10" filter="url(#shadow)"/>
+    <text x="100" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#0984e3">
+      Step 4: Input Weight Gradients
+    </text>
+    
+    <!-- Weight gradients computation -->
+    <rect x="10" y="35" width="180" height="50" fill="#e8f4fd" stroke="#74b9ff" stroke-width="1" rx="5"/>
+    <text x="100" y="48" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50" font-weight="bold">
+      ∂ℒ/∂w₁₁ = δ₁ × (∂z₁/∂w₁₁)
+    </text>
+    <text x="100" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50">
+      = δ₁ × x₁
+    </text>
+    <text x="100" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50">
+      = (-0.235) × 0.8 = -0.188
+    </text>
+    <text x="100" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#636e72">
+      Gradient for weight w₁₁
+    </text>
+    
+    <rect x="10" y="95" width="180" height="40" fill="#e8f4fd" stroke="#74b9ff" stroke-width="1" rx="5"/>
+    <text x="100" y="108" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50">
+      ∂ℒ/∂w₁₂ = (-0.235) × 0.3 = -0.071
+    </text>
+    <text x="100" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#636e72">
+      Gradient for weight w₁₂
+    </text>
+    
+    <!-- Complete gradient -->
+    <rect x="10" y="145" width="180" height="25" fill="#c8e6c9" stroke="#4caf50" stroke-width="1" rx="3"/>
+    <text x="100" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#2c3e50" font-weight="bold">
+      All gradients computed!
+    </text>
+    <text x="100" y="162" text-anchor="middle" font-family="Arial, sans-serif" font-size="7" fill="#636e72">
+      Ready for parameter update
+    </text>
+  </g>
+  
+  <!-- Complete Chain Rule Visualization -->
+  <g transform="translate(50, 370)">
+    <rect x="0" y="0" width="900" height="300" fill="white" stroke="#bdc3c7" stroke-width="2" rx="10" filter="url(#shadow)"/>
+    
+    <text x="450" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#2c3e50">
+      Complete Chain Rule Decomposition
+    </text>
+    
+    <!-- Chain rule equation -->
+    <rect x="50" y="40" width="800" height="50" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1" rx="5"/>
+    <text x="450" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#2c3e50" font-weight="bold">
+      ∂ℒ/∂w₁₁ = (∂ℒ/∂z) × (∂z/∂a₁) × (∂a₁/∂z₁) × (∂z₁/∂w₁₁)
+    </text>
+    <text x="450" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#636e72">
+      Error × Output Weight × Activation Derivative × Input Value
+    </text>
+    
+    <!-- Numerical example -->
+    <g transform="translate(50, 110)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50" font-weight="bold">
+        Numerical Example:
+      </text>
+      
+      <!-- Components -->
+      <rect x="0" y="15" width="200" height="40" fill="#ffebee" stroke="#e17055" stroke-width="1" rx="3"/>
+      <text x="100" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#2c3e50" font-weight="bold">∂ℒ/∂z = -0.391</text>
+      <text x="100" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#636e72">Error term</text>
+      <text x="100" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#636e72">(prediction error)</text>
+      
+      <text x="210" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50">×</text>
+      
+      <rect x="220" y="15" width="120" height="40" fill="#fff9e6" stroke="#fdcb6e" stroke-width="1" rx="3"/>
+      <text x="280" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#2c3e50" font-weight="bold">∂z/∂a₁ = 0.6</text>
+      <text x="280" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#636e72">Output weight v₁</text>
+      
+      <text x="350" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50">×</text>
+      
+      <rect x="360" y="15" width="120" height="40" fill="#fdf2f8" stroke="#fd79a8" stroke-width="1" rx="3"/>
+      <text x="420" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#2c3e50" font-weight="bold">∂a₁/∂z₁ = 1</text>
+      <text x="420" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#636e72">ReLU derivative</text>
+      <text x="420" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#636e72">(neuron active)</text>
+      
+      <text x="490" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50">×</text>
+      
+      <rect x="500" y="15" width="120" height="40" fill="#e8f4fd" stroke="#74b9ff" stroke-width="1" rx="3"/>
+      <text x="560" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#2c3e50" font-weight="bold">∂z₁/∂w₁₁ = 0.8</text>
+      <text x="560" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#636e72">Input value x₁</text>
+      
+      <text x="630" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50">=</text>
+      
+      <rect x="650" y="15" width="120" height="40" fill="#e8f5e8" stroke="#4caf50" stroke-width="2" rx="3"/>
+      <text x="710" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#2c3e50" font-weight="bold">-0.188</text>
+      <text x="710" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#636e72">Final gradient</text>
+      <text x="710" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#636e72">∂ℒ/∂w₁₁</text>
+    </g>
+    
+    <!-- Key insights -->
+    <g transform="translate(50, 180)">
+      <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50" font-weight="bold">
+        Backward Propagation Key Properties:
+      </text>
+      
+      <g transform="translate(0, 20)">
+        <circle cx="5" cy="5" r="3" fill="#e17055"/>
+        <text x="15" y="10" font-family="Arial, sans-serif" font-size="10" fill="#2c3e50">
+          <tspan font-weight="bold">Error Propagation:</tspan> Loss gradients flow backward through each layer
+        </text>
+        
+        <circle cx="5" cy="25" r="3" fill="#fdcb6e"/>
+        <text x="15" y="30" font-family="Arial, sans-serif" font-size="10" fill="#2c3e50">
+          <tspan font-weight="bold">Chain Multiplication:</tspan> Gradients multiply through the computational graph
+        </text>
+        
+        <circle cx="5" cy="45" r="3" fill="#fd79a8"/>
+        <text x="15" y="50" font-family="Arial, sans-serif" font-size="10" fill="#2c3e50">
+          <tspan font-weight="bold">Activation Gating:</tspan> Inactive ReLU neurons (z ≤ 0) block gradient flow
+        </text>
+        
+        <circle cx="5" cy="65" r="3" fill="#74b9ff"/>
+        <text x="15" y="70" font-family="Arial, sans-serif" font-size="10" fill="#2c3e50">
+          <tspan font-weight="bold">Local Gradients:</tspan> Each layer computes gradients using local information only
+        </text>
+        
+        <circle cx="450" cy="5" r="3" fill="#00b894"/>
+        <text x="460" y="10" font-family="Arial, sans-serif" font-size="10" fill="#2c3e50">
+          <tspan font-weight="bold">Automatic Differentiation:</tspan> Modern frameworks compute these gradients automatically
+        </text>
+        
+        <circle cx="450" cy="25" r="3" fill="#a29bfe"/>
+        <text x="460" y="30" font-family="Arial, sans-serif" font-size="10" fill="#2c3e50">
+          <tspan font-weight="bold">Vanishing Gradients:</tspan> Deep networks may have very small gradients in early layers
+        </text>
+        
+        <circle cx="450" cy="45" r="3" fill="#fd79a8"/>
+        <text x="460" y="50" font-family="Arial, sans-serif" font-size="10" fill="#2c3e50">
+          <tspan font-weight="bold">Error Attribution:</tspan> Larger gradients indicate parameters that need more adjustment
+        </text>
+      </g>
+    </g>
+  </g>
+  
+  <!-- Update Rule Preview -->
+  <g transform="translate(50, 690)">
+    <rect x="0" y="0" width="900" height="50" fill="#e8f5e8" stroke="#4caf50" stroke-width="2" rx="8" filter="url(#shadow)"/>
+    <text x="450" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#2c3e50" font-weight="bold">
+      Next Step: Parameter Update
+    </text>
+    <text x="450" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#2c3e50">
+      w₁₁ ← w₁₁ - α × (∂ℒ/∂w₁₁) = 0.5 - 0.01 × (-0.188) = 0.502
+    </text>
+    <text x="450" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#636e72">
+      (α = learning rate, typically 0.01 to 0.001)
+    </text>
+  </g>
+</svg>

@@ -1,0 +1,111 @@
+<svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .axis { stroke: #333; stroke-width: 2; fill: none; }
+      .curve { stroke: #e91e63; stroke-width: 3; fill: none; }
+      .convex-curve { stroke: #2196f3; stroke-width: 3; fill: none; }
+      .point { fill: #ff5722; stroke: #d84315; stroke-width: 2; }
+      .global-min { fill: #4caf50; stroke: #388e3c; stroke-width: 2; }
+      .local-min { fill: #ff9800; stroke: #f57c00; stroke-width: 2; }
+      .text { font-family: 'Segoe UI', sans-serif; font-size: 14px; fill: #333; }
+      .title { font-family: 'Segoe UI', sans-serif; font-size: 18px; font-weight: bold; fill: #1976d2; }
+      .label { font-family: 'Segoe UI', sans-serif; font-size: 12px; fill: #666; }
+      .formula { font-family: 'Segoe UI', sans-serif; font-size: 14px; fill: #e91e63; font-weight: bold; }
+      .stuck-text { font-family: 'Segoe UI', sans-serif; font-size: 12px; fill: #ff5722; font-weight: bold; }
+      .success-text { font-family: 'Segoe UI', sans-serif; font-size: 12px; fill: #4caf50; font-weight: bold; }
+      .warning { fill: #ff5722; stroke: #d84315; stroke-width: 2; }
+      .success { fill: #4caf50; stroke: #388e3c; stroke-width: 2; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="450" y="30" class="title" text-anchor="middle">Convex vs Non-Convex Optimization: The Fundamental Difference</text>
+  
+  <!-- Left side: Convex Function (Good) -->
+  <g id="convex-side">
+    <!-- Axes -->
+    <line x1="50" y1="250" x2="300" y2="250" class="axis"/>
+    <line x1="175" y1="100" x2="175" y2="300" class="axis"/>
+    
+    <!-- Convex curve -->
+    <path d="M 80 240 Q 175 120 270 240" class="convex-curve"/>
+    
+    <!-- Global minimum -->
+    <circle cx="175" cy="120" r="5" class="global-min"/>
+    
+    <!-- Success indicators -->
+    <rect x="60" y="80" width="230" height="25" class="success" rx="5"/>
+    <text x="175" y="97" class="success-text" text-anchor="middle">GRADIENT DESCENT NEVER GETS STUCK</text>
+    
+    <text x="175" y="340" class="title" text-anchor="middle">Convex Function</text>
+    <text x="175" y="355" class="formula" text-anchor="middle">f(x) = x²</text>
+    
+    <!-- Properties list -->
+    <text x="60" y="380" class="text">✓ Single global minimum</text>
+    <text x="60" y="395" class="text">✓ No local minima</text>
+    <text x="60" y="410" class="text">✓ Guaranteed convergence</text>
+  </g>
+  
+  <!-- Right side: Non-Convex Function (Problematic) -->
+  <g id="nonconvex-side">
+    <!-- Axes -->
+    <line x1="400" y1="250" x2="850" y2="250" class="axis"/>
+    <line x1="625" y1="100" x2="625" y2="300" class="axis"/>
+    
+    <!-- Non-convex curve with multiple minima -->
+    <path d="M 420 200 Q 480 120 540 180 Q 580 240 620 160 Q 680 120 740 180 Q 780 240 830 200" class="curve"/>
+    
+    <!-- Local minima -->
+    <circle cx="540" cy="180" r="5" class="local-min"/>
+    <circle cx="740" cy="180" r="5" class="local-min"/>
+    
+    <!-- Global minimum -->
+    <circle cx="620" cy="160" r="5" class="global-min"/>
+    
+    <!-- Warning box -->
+    <rect x="410" y="80" width="430" height="25" class="warning" rx="5"/>
+    <text x="625" y="97" class="stuck-text" text-anchor="middle">GRADIENT DESCENT CAN GET STUCK</text>
+    
+    <text x="625" y="340" class="title" text-anchor="middle">Non-Convex Function</text>
+    <text x="625" y="355" class="formula" text-anchor="middle">f(x) = (x-1)²(x-2)(x-3)</text>
+    
+    <!-- Labels for minima -->
+    <text x="520" y="170" class="stuck-text" text-anchor="middle">Local Min</text>
+    <text x="620" y="150" class="success-text" text-anchor="middle">Global Min</text>
+    <text x="760" y="170" class="stuck-text" text-anchor="middle">Local Min</text>
+    
+    <!-- Problems list -->
+    <text x="410" y="380" class="text">✗ Multiple local minima</text>
+    <text x="410" y="395" class="text">✗ Can get trapped</text>
+    <text x="410" y="410" class="text">✗ No global guarantee</text>
+  </g>
+  
+  <!-- Comparison arrows and stuck indicator -->
+  <g id="stuck-example">
+    <!-- Arrow showing getting stuck -->
+    <defs>
+      <marker id="red-arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#ff5722"/>
+      </marker>
+      <marker id="green-arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#4caf50"/>
+      </marker>
+    </defs>
+    
+    <!-- Gradient descent path that gets stuck -->
+    <line x1="560" y1="200" x2="545" y2="185" stroke="#ff5722" stroke-width="2" marker-end="url(#red-arrow)"/>
+    <text x="490" y="220" class="stuck-text">Stuck at</text>
+    <text x="490" y="235" class="stuck-text">local minimum!</text>
+    
+    <!-- Successful path on convex side -->
+    <line x1="200" y1="180" x2="180" y2="140" stroke="#4caf50" stroke-width="2" marker-end="url(#green-arrow)"/>
+    <text x="190" y="200" class="success-text">Always finds</text>
+    <text x="190" y="215" class="success-text">global minimum</text>
+  </g>
+  
+  <!-- Bottom explanation box -->
+  <rect x="50" y="440" width="800" height="50" fill="#f8f9fa" stroke="#dee2e6" rx="5"/>
+  <text x="60" y="460" class="title">Key Insight: Why Deep Learning is Challenging</text>
+  <text x="60" y="475" class="text">Deep neural networks create non-convex optimization landscapes with many local minima</text>
+  <text x="60" y="485" class="text">Yet gradient descent still works surprisingly well in practice - this remains one of deep learning's greatest mysteries!</text>
+</svg>

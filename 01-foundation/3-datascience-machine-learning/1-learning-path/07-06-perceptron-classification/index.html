@@ -1,0 +1,4690 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/1-learning-path/07-06-perceptron-classification/">
+      
+      
+        <link rel="prev" href="../07-06-hierarchical_representations/">
+      
+      
+        <link rel="next" href="../07-07-multi-class-prediction/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Classification Using a Single Perceptron - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Classification Using a Single Perceptron
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-descriptive-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Introduction of Data Science
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-data-science-lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Life Cycle
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-ai_applications_across_industries/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Application
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-07-principal-component-analysis/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Dimensionality Reduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../05-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../06-hypothesis-testing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_8" id="__nav_2_4_2_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            Deep Learning
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-deep-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-01-dl-fundamental/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fundamentals
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-02-feedforward_neural_networks/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Feed Forward Neural Network
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-03-neural_networks_building_blocks/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Neural Network Building Blocks
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-04-neural_networks_one-hidden-layer/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Neural Network One Hidden Layer
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-05-hidden_neurons_decision_boundaries/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hidden Neurons Decision Boundaries
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-06-hierarchical_representations/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hierarchical Representations
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_8_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_8_8" id="__nav_2_4_2_8_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Perceptron Classification
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_2_8_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_8_8">
+            <span class="md-nav__icon md-icon"></span>
+            Perceptron Classification
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Classification Using a Single Perceptron
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Classification Using a Single Perceptron
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-to-deep-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction to Deep Learning
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction to Deep Learning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-characteristics-of-deep-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Characteristics of Deep Learning
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-perceptron-basic-building-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Perceptron: Basic Building Block
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Perceptron: Basic Building Block">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#perceptron-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Perceptron Operation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameter Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-to-support-vector-machines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection to Support Vector Machines
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#image-classification-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Image Classification Example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Image Classification Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#image-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Image Representation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-linear-function-challenge" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Linear Function Challenge
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-linear-functions-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Linear Functions Fail
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-layer-perceptrons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Layer Perceptrons
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-Layer Perceptrons">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#network-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-counting-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer Counting Convention
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameter Calculation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numerical-example-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Numerical Example Walkthrough
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Numerical Example Walkthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#network-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      Input Values
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hidden-layer-calculations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hidden Layer Calculations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-layer-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output Layer Calculation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameter Summary
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deep-neural-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deep Neural Networks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deep Neural Networks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hierarchical-feature-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hierarchical Feature Learning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biological-inspiration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Biological Inspiration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Implementation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#activation-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Activation Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Activation Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-non-linearity-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Non-linearity Matters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-activation-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Activation Functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selection-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Selection Guidelines
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Guidelines
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Guidelines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#weight-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Weight Initialization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Training Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture Decisions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#academic-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Academic Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#books" class="md-nav__link">
+    <span class="md-ellipsis">
+      Books
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#online-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Online Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-frameworks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Frameworks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-07-multi-class-prediction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Multi-Class Prediction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-08-loss-function/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Loss Function
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-09-gradient-descent/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gradient Descent
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-10-chain-rule-single-layer/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Chain Rule - Single Layer
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-11-chain-rule-backpropogation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Chain Rule - Backpropogation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-12-weight-initialization/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Weight Initialization
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-13-step-size-optimization/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Step Size Optimization
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-14-Optimizer/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Optimizer
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-15-regularization-techniques/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regularization Techniques
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-16-parameter_optimization/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Parameter Optimizaiton
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-17-computing-gradient-using-backpropagation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Computing Gradient using Backpropagation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-18-convolutional-neural-networks/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Convolutional Neural Networks
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-19-limitation-of-deep-neural-network/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Limitation of Deep Neural Network
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-q%26a/01-q%26a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Q&A
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-to-deep-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction to Deep Learning
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction to Deep Learning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-characteristics-of-deep-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Characteristics of Deep Learning
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-perceptron-basic-building-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Perceptron: Basic Building Block
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Perceptron: Basic Building Block">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#perceptron-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Perceptron Operation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameter Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-to-support-vector-machines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connection to Support Vector Machines
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#image-classification-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Image Classification Example
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Image Classification Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#image-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Image Representation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-linear-function-challenge" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Linear Function Challenge
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-linear-functions-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Linear Functions Fail
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-layer-perceptrons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Layer Perceptrons
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-Layer Perceptrons">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#network-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-counting-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer Counting Convention
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameter Calculation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#numerical-example-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Numerical Example Walkthrough
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Numerical Example Walkthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#network-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      Input Values
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hidden-layer-calculations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hidden Layer Calculations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-layer-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output Layer Calculation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameter-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parameter Summary
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deep-neural-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deep Neural Networks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deep Neural Networks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hierarchical-feature-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hierarchical Feature Learning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biological-inspiration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Biological Inspiration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Implementation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#activation-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Activation Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Activation Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-non-linearity-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Non-linearity Matters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-activation-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Activation Functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selection-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Selection Guidelines
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Guidelines
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Guidelines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#weight-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Weight Initialization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#training-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Training Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture Decisions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#academic-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Academic Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#books" class="md-nav__link">
+    <span class="md-ellipsis">
+      Books
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#online-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Online Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-frameworks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Frameworks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="classification-using-a-single-perceptron">Classification Using a Single Perceptron <a id="top"></a></h1>
+<h2 id="quick-navigation">Quick Navigation</h2>
+<ul>
+<li><a href="#introduction-to-deep-learning">Introduction to Deep Learning</a></li>
+<li><a href="#the-perceptron-basic-building-block">The Perceptron: Basic Building Block</a></li>
+<li><a href="#image-classification-example">Image Classification Example</a></li>
+<li><a href="#multi-layer-perceptrons">Multi-Layer Perceptrons</a></li>
+<li><a href="#numerical-example-walkthrough">Numerical Example Walkthrough</a></li>
+<li><a href="#deep-neural-networks">Deep Neural Networks</a></li>
+<li><a href="#activation-functions">Activation Functions</a></li>
+<li><a href="#implementation-guidelines">Implementation Guidelines</a></li>
+<li><a href="#references-further-reading">References &amp; Further Reading</a></li>
+</ul>
+<hr />
+<h2 id="introduction-to-deep-learning">Introduction to Deep Learning</h2>
+<p>Deep learning derives its name from the hierarchical layers that compose these neural networks. The "deep" in deep learning refers to the multiple layers that enable these systems to learn complex patterns through hierarchical feature extraction.</p>
+<p><img alt="Deep Learning Architecture" src="../../../../svg/deep_learning_concept.svg" /></p>
+<p>As Ian Goodfellow, inventor of Generative Adversarial Networks (GANs), explains:</p>
+<blockquote>
+<p>"The hierarchy of concepts allows the computer to learn complicated concepts by building them out of simpler ones. If we draw a graph showing how these concepts are built on top of each other, the graph is deep, with many layers."</p>
+</blockquote>
+<h3 id="key-characteristics-of-deep-learning">Key Characteristics of Deep Learning</h3>
+<ul>
+<li><strong>Automatic Feature Extraction</strong>: Deep learning models perform feature learning directly from raw data</li>
+<li><strong>Hierarchical Representations</strong>: Lower layers identify basic features, higher layers combine them into complex patterns</li>
+<li><strong>Non-linear Transformations</strong>: Each layer introduces non-linearity to capture complex relationships</li>
+</ul>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="the-perceptron-basic-building-block">The Perceptron: Basic Building Block</h2>
+<p>The perceptron serves as the fundamental unit of neural networks, sometimes called a neuron. Understanding its operation is crucial for grasping deep learning concepts.</p>
+<p><img alt="Perceptron Structure" src="../../../../svg/perceptron_architecture.svg" /></p>
+<h3 id="perceptron-operation">Perceptron Operation</h3>
+<p>A perceptron operates in two distinct steps:</p>
+<p><strong>Step 1: Linear Combination</strong></p>
+<p>The perceptron computes a weighted sum of its inputs:</p>
+<div class="arithmatex">\[z = w_1x_1 + w_2x_2 + w_3x_3 + ... + w_nx_n\]</div>
+<p><strong>Step 2: Threshold Function</strong></p>
+<p>The linear combination is passed through a threshold function:</p>
+<div class="arithmatex">\[output = \begin{cases} 
++1 &amp; \text{if } z &gt; \tau \\
+-1 &amp; \text{if } z \leq \tau
+\end{cases}\]</div>
+<h3 id="parameter-requirements">Parameter Requirements</h3>
+<p>Each perceptron requires:</p>
+<ul>
+<li><strong>n weights</strong> corresponding to n inputs</li>
+<li><strong>1 threshold value</strong> (τ)</li>
+<li><strong>Total parameters</strong>: n + 1</li>
+</ul>
+<h3 id="connection-to-support-vector-machines">Connection to Support Vector Machines</h3>
+<p><strong>Limitation</strong>: Perceptrons only recognize linear patterns</p>
+<p><strong>SVM Approach</strong>: Map input space to higher dimensions using kernels</p>
+<p><strong>Deep Learning Approach</strong>: Layer perceptrons to achieve non-linearity</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="image-classification-example">Image Classification Example</h2>
+<p>Consider the classic problem of identifying whether an image contains a dog. This example illustrates why simple linear functions are insufficient for complex pattern recognition.</p>
+<p><img alt="Image Classification Challenge" src="../../../../svg/image_classification_example.svg" /></p>
+<h3 id="image-representation">Image Representation</h3>
+<p><strong>Color Images</strong>: Each pixel contains three values (RGB)</p>
+<p><strong>Dimensions</strong>: 256 × 256 × 3 array
+- Width: 256 pixels
+- Height: 256 pixels<br />
+- Channels: 3 (Red, Green, Blue)</p>
+<p><strong>Total Features</strong>: 196,608 pixel values</p>
+<h3 id="the-linear-function-challenge">The Linear Function Challenge</h3>
+<p>A single perceptron attempts to find a linear function of pixels that:</p>
+<ul>
+<li>Returns <strong>positive</strong> values for dog images</li>
+<li>Returns <strong>negative</strong> values for non-dog images</li>
+</ul>
+<p><strong>Problem</strong>: No simple linear function of pixels can reliably distinguish complex visual patterns like the presence of animals.</p>
+<h3 id="why-linear-functions-fail">Why Linear Functions Fail</h3>
+<ul>
+<li><strong>Complex Patterns</strong>: Real-world objects have non-linear boundaries</li>
+<li><strong>Spatial Relationships</strong>: Linear functions cannot capture spatial arrangements</li>
+<li><strong>Invariance Requirements</strong>: Objects appear at different scales, rotations, and positions</li>
+</ul>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="multi-layer-perceptrons">Multi-Layer Perceptrons</h2>
+<p>To overcome the limitations of single perceptrons, we combine multiple perceptrons in layers, creating more expressive functions.</p>
+<p><img alt="Multi-Layer Architecture" src="../../../../svg/multilayer_perceptron.svg" /></p>
+<h3 id="network-architecture">Network Architecture</h3>
+<p><strong>Input Layer</strong>: Raw data features (not counted in layer count)</p>
+<p><strong>Hidden Layer</strong>: Intermediate processing layer that computes complex patterns</p>
+<p><strong>Output Layer</strong>: Final classification decision</p>
+<h3 id="layer-counting-convention">Layer Counting Convention</h3>
+<div class="arithmatex">\[\text{Total Layers} = \text{Hidden Layers} + \text{Output Layer}\]</div>
+<p>The input layer is not included in the total count.</p>
+<h3 id="parameter-calculation">Parameter Calculation</h3>
+<p>For a network with:
+- <strong>n</strong> input features
+- <strong>m</strong> hidden layer perceptrons<br />
+- <strong>1</strong> output perceptron</p>
+<p><strong>Total Parameters</strong>:</p>
+<div class="arithmatex">\[\text{Parameters} = (n + 1) \times m + (m + 1)\]</div>
+<p><strong>Breakdown</strong>:
+- Hidden layer: (n + 1) × m parameters
+- Output layer: (m + 1) parameters</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="numerical-example-walkthrough">Numerical Example Walkthrough</h2>
+<p>Let's trace through a concrete example with specific values to understand the computational process.</p>
+<h3 id="network-configuration">Network Configuration</h3>
+<ul>
+<li><strong>Input Features</strong>: 6 values</li>
+<li><strong>Hidden Layer</strong>: 2 perceptrons</li>
+<li><strong>Output Layer</strong>: 1 perceptron</li>
+</ul>
+<h3 id="input-values">Input Values</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>x₁</td>
+<td>10</td>
+</tr>
+<tr>
+<td>x₂</td>
+<td>24</td>
+</tr>
+<tr>
+<td>x₃</td>
+<td>15</td>
+</tr>
+<tr>
+<td>x₄</td>
+<td>18</td>
+</tr>
+<tr>
+<td>x₅</td>
+<td>5</td>
+</tr>
+<tr>
+<td>x₆</td>
+<td>20</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hidden-layer-calculations">Hidden Layer Calculations</h3>
+<p><strong>Perceptron 1 (Threshold = 10)</strong></p>
+<p>Weights: [0.2, 0.1, 0.15, 0.25, 0.4, 0.12]</p>
+<div class="arithmatex">\[z_1 = (10 \times 0.2) + (24 \times 0.1) + (15 \times 0.15) + (18 \times 0.25) + (5 \times 0.4) + (20 \times 0.12)\]</div>
+<div class="arithmatex">\[z_1 = 2.0 + 2.4 + 2.25 + 4.5 + 2.0 + 2.4 = 15.55\]</div>
+<p>Since 15.55 &gt; 10, output = <strong>+1</strong></p>
+<p><strong>Perceptron 2 (Threshold = 15)</strong></p>
+<p>Weights: [0.14, 0.23, 0.2, 0.3, 0.28, 0.1]</p>
+<div class="arithmatex">\[z_2 = (10 \times 0.14) + (24 \times 0.23) + (15 \times 0.2) + (18 \times 0.3) + (5 \times 0.28) + (20 \times 0.1)\]</div>
+<div class="arithmatex">\[z_2 = 1.4 + 5.52 + 3.0 + 5.4 + 1.4 + 2.0 = 18.72\]</div>
+<p>Since 18.72 &gt; 15, output = <strong>+1</strong></p>
+<h3 id="output-layer-calculation">Output Layer Calculation</h3>
+<p><strong>Input</strong>: [+1, +1] from hidden layer</p>
+<p><strong>Weights</strong>: [0.5, 0.2], <strong>Threshold</strong>: 0.5</p>
+<div class="arithmatex">\[z_{output} = (1 \times 0.5) + (1 \times 0.2) = 0.7\]</div>
+<p>Since 0.7 &gt; 0.5, <strong>Final Output = +1</strong></p>
+<h3 id="parameter-summary">Parameter Summary</h3>
+<div class="arithmatex">\[\text{Total Parameters} = (6 + 1) \times 2 + (2 + 1) = 14 + 3 = 17\]</div>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="deep-neural-networks">Deep Neural Networks</h2>
+<p>Modern deep learning extends the multi-layer concept to create networks with 6-8 layers and millions of parameters, enabling sophisticated pattern recognition.</p>
+<h3 id="hierarchical-feature-learning">Hierarchical Feature Learning</h3>
+<p><strong>Lower Layers</strong>: Identify basic features (edges, textures)</p>
+<p><strong>Middle Layers</strong>: Combine basic features into parts (eyes, wheels, corners)</p>
+<p><strong>Higher Layers</strong>: Assemble parts into complete objects (faces, cars, buildings)</p>
+<h3 id="biological-inspiration">Biological Inspiration</h3>
+<p>Deep networks parallel the visual cortex structure:</p>
+<ul>
+<li><strong>Similar Hierarchy</strong>: Both use layered processing</li>
+<li><strong>Feature Progression</strong>: Simple to complex feature detection</li>
+<li><strong>Computational Depth</strong>: 6-8 layers match biological constraints</li>
+<li><strong>Processing Speed</strong>: Human recognition speed validates layer depth limits</li>
+</ul>
+<h3 id="practical-implementation">Practical Implementation</h3>
+<p><strong>Modern Networks</strong>: 6-8 layers with millions of perceptrons</p>
+<p><strong>Feature Sharing</strong>: Lower-level features useful across multiple object classes</p>
+<p><strong>Efficiency</strong>: Common feature extraction reduces parameter redundancy</p>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="activation-functions">Activation Functions</h2>
+<p>The threshold function is just one type of activation function. Modern networks use various activation functions to introduce non-linearity effectively.</p>
+<p><img alt="Activation Functions" src="../../../../svg/activation_functions_comparison.svg" /></p>
+<h3 id="why-non-linearity-matters">Why Non-linearity Matters</h3>
+<p><strong>Without Non-linearity</strong>: Stacked linear functions remain linear regardless of depth</p>
+<p><strong>Real-world Complexity</strong>: Physical phenomena rarely follow linear patterns</p>
+<p><strong>Decision Boundaries</strong>: Complex problems require curved decision boundaries</p>
+<h3 id="common-activation-functions">Common Activation Functions</h3>
+<h4 id="1-sigmoid-function">1. Sigmoid Function</h4>
+<p><strong>Range</strong>: (0, 1)</p>
+<p><strong>Use Case</strong>: Binary classification output layers</p>
+<p><strong>Advantages</strong>:
+- Smooth, differentiable
+- Probabilistic interpretation</p>
+<p><strong>Disadvantages</strong>:
+- Vanishing gradient problem
+- Not zero-centered</p>
+<h4 id="2-tanh-hyperbolic-tangent">2. Tanh (Hyperbolic Tangent)</h4>
+<p><strong>Range</strong>: (-1, 1)</p>
+<p><strong>Advantages</strong>:
+- Zero-centered output
+- Faster learning than sigmoid</p>
+<p><strong>Disadvantages</strong>:
+- Still suffers from vanishing gradients</p>
+<h4 id="3-relu-rectified-linear-unit">3. ReLU (Rectified Linear Unit)</h4>
+<p><strong>Function</strong>: f(x) = max(0, x)</p>
+<p><strong>Range</strong>: [0, ∞)</p>
+<p><strong>Advantages</strong>:
+- Computationally efficient
+- Reduces vanishing gradient problem
+- Default choice for hidden layers</p>
+<p><strong>Disadvantages</strong>:
+- Dying ReLU problem (neurons stuck at zero)</p>
+<h4 id="4-leaky-relu">4. Leaky ReLU</h4>
+<p><strong>Function</strong>: f(x) = max(αx, x) where α ≈ 0.01</p>
+<p><strong>Advantages</strong>:
+- Solves dying ReLU problem
+- Better gradient flow</p>
+<h4 id="5-softmax">5. Softmax</h4>
+<p><strong>Use Case</strong>: Multi-class classification</p>
+<p><strong>Function</strong>: Converts logits to probability distribution</p>
+<div class="arithmatex">\[\text{softmax}(x_i) = \frac{e^{x_i}}{\sum_{j=1}^{n} e^{x_j}}\]</div>
+<h3 id="selection-guidelines">Selection Guidelines</h3>
+<p><strong>Output Layer Selection</strong>:</p>
+<ul>
+<li><strong>Regression</strong>: Linear (no activation)</li>
+<li><strong>Binary Classification</strong>: Sigmoid  </li>
+<li><strong>Multi-class Classification</strong>: Softmax</li>
+</ul>
+<p><strong>Hidden Layer Selection</strong>:</p>
+<ul>
+<li><strong>Default Choice</strong>: ReLU or variants</li>
+<li><strong>Specific Needs</strong>: Tanh for zero-centered data</li>
+</ul>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="implementation-guidelines">Implementation Guidelines</h2>
+<h3 id="weight-initialization">Weight Initialization</h3>
+<p><strong>Problem with Zero Initialization</strong>:</p>
+<ul>
+<li><strong>Symmetry Problem</strong>: All neurons compute identical outputs</li>
+<li><strong>Identical Gradients</strong>: All weights receive the same gradient updates  </li>
+<li><strong>No Learning</strong>: Network behaves like a linear model regardless of depth</li>
+<li><strong>Wasted Capacity</strong>: Hidden units remain symmetric throughout training</li>
+</ul>
+<p><strong>Recommended Approaches</strong>:</p>
+<ul>
+<li><strong>Xavier/Glorot</strong>: For sigmoid and tanh activations</li>
+<li><strong>He Initialization</strong>: For ReLU activations</li>
+<li><strong>Research Topic</strong>: Active area of ongoing investigation</li>
+</ul>
+<h3 id="training-considerations">Training Considerations</h3>
+<p><strong>Parameter Learning</strong>: Weights must be learned from data, not set randomly</p>
+<p><strong>Optimization Challenges</strong>:</p>
+<ul>
+<li><strong>High Dimensionality</strong>: Millions of parameters create vast search spaces</li>
+<li><strong>Local Minima</strong>: Gradient-based methods may get stuck</li>
+<li><strong>Mysterious Success</strong>: Why these methods work remains partially understood</li>
+</ul>
+<p><strong>Practical Solutions</strong>:</p>
+<ul>
+<li>Stochastic gradient descent variants</li>
+<li>Adaptive learning rates</li>
+<li>Regularization techniques</li>
+<li>Batch normalization</li>
+</ul>
+<h3 id="architecture-decisions">Architecture Decisions</h3>
+<p><strong>Network Depth</strong>: </p>
+<ul>
+<li>Start with 2-3 hidden layers</li>
+<li>Increase depth based on problem complexity</li>
+<li>Monitor for overfitting</li>
+</ul>
+<p><strong>Layer Width</strong>:</p>
+<ul>
+<li>Hidden layer size typically between input and output dimensions</li>
+<li>Experiment with different configurations</li>
+<li>Consider computational constraints</li>
+</ul>
+<p>↩ <a href="#top">Back to Top</a></p>
+<hr />
+<h2 id="references-further-reading">References &amp; Further Reading</h2>
+<h3 id="academic-papers">Academic Papers</h3>
+<ol>
+<li>
+<p><strong>Rosenblatt, F. (1958)</strong>: "The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain" - <em>Psychological Review</em></p>
+</li>
+<li>
+<p><strong>Rumelhart, D.E., Hinton, G.E., Williams, R.J. (1986)</strong>: "Learning representations by back-propagating errors" - <em>Nature</em></p>
+</li>
+<li>
+<p><strong>LeCun, Y., Bengio, Y., Hinton, G. (2015)</strong>: "Deep learning" - <em>Nature</em></p>
+</li>
+</ol>
+<h3 id="books">Books</h3>
+<ol>
+<li>
+<p><strong>Goodfellow, I., Bengio, Y., Courville, A.</strong>: "Deep Learning" - MIT Press (2016)</p>
+</li>
+<li>
+<p><strong>Nielsen, M.</strong>: "Neural Networks and Deep Learning" - Online textbook</p>
+</li>
+</ol>
+<h3 id="online-resources">Online Resources</h3>
+<ol>
+<li>
+<p><strong>CS231n Stanford Course</strong>: Convolutional Neural Networks for Visual Recognition</p>
+</li>
+<li>
+<p><strong>Andrew Ng's Machine Learning Course</strong>: Coursera specialization</p>
+</li>
+<li>
+<p><strong>Papers With Code</strong>: Latest research implementations and benchmarks</p>
+</li>
+</ol>
+<h3 id="implementation-frameworks">Implementation Frameworks</h3>
+<ul>
+<li><strong>PyTorch</strong>: Dynamic computation graphs, research-friendly</li>
+<li><strong>TensorFlow</strong>: Production-ready, extensive ecosystem  </li>
+<li><strong>JAX</strong>: High-performance, functional programming approach</li>
+</ul>
+<p>↩ <a href="#top">Back to Top</a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 25, 2025 22:43:33 UTC">September 25, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../07-06-hierarchical_representations/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Hierarchical Representations: Multiple Layers in Neural Networks">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Hierarchical Representations: Multiple Layers in Neural Networks
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../07-07-multi-class-prediction/" class="md-footer__link md-footer__link--next" aria-label="Next: Neural Network Multi-Class Predictions">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Neural Network Multi-Class Predictions
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

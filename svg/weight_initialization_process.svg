@@ -1,0 +1,123 @@
+<svg width="900" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: 'Segoe UI', Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #2c3e50; }
+      .step-title { font-family: 'Segoe UI', Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #ffffff; }
+      .step-text { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; fill: #34495e; }
+      .problem-box { fill: #e74c3c; stroke: #c0392b; stroke-width: 2; rx: 10; }
+      .solution-box { fill: #27ae60; stroke: #229954; stroke-width: 2; rx: 10; }
+      .process-box { fill: #3498db; stroke: #2980b9; stroke-width: 2; rx: 10; }
+      .formula-box { fill: #f39c12; stroke: #e67e22; stroke-width: 2; rx: 5; }
+      .arrow { stroke: #7f8c8d; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+      .bad-example { fill: #e74c3c; font-family: monospace; font-size: 14px; }
+      .good-example { fill: #27ae60; font-family: monospace; font-size: 14px; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="900" height="600" fill="#ffffff"/>
+  
+  <!-- Title -->
+  <text x="450" y="35" class="title" text-anchor="middle">Weight Initialization Process</text>
+  
+  <!-- Problem: Zero Initialization -->
+  <rect x="50" y="70" width="200" height="120" class="problem-box"/>
+  <text x="150" y="95" class="step-title" text-anchor="middle">❌ PROBLEM</text>
+  <text x="150" y="115" class="step-title" text-anchor="middle">Zero Initialization</text>
+  
+  <text x="60" y="140" class="step-text" fill="#ffffff">w = [0, 0, 0, 0]</text>
+  <text x="60" y="157" class="step-text" fill="#ffffff">→ All neurons identical</text>
+  <text x="60" y="174" class="step-text" fill="#ffffff">→ No learning occurs</text>
+  
+  <!-- Arrow to Random Initialization -->
+  <path d="M 250 130 L 320 130" class="arrow"/>
+  
+  <!-- Solution: Random Initialization -->
+  <rect x="330" y="70" width="200" height="120" class="solution-box"/>
+  <text x="430" y="95" class="step-title" text-anchor="middle">✅ SOLUTION</text>
+  <text x="430" y="115" class="step-title" text-anchor="middle">Random Initialization</text>
+  
+  <text x="340" y="140" class="step-text" fill="#ffffff">w ~ N(0, σ²)</text>
+  <text x="340" y="157" class="step-text" fill="#ffffff">→ Break symmetry</text>
+  <text x="340" y="174" class="step-text" fill="#ffffff">→ Enable learning</text>
+  
+  <!-- Arrow to Key Question -->
+  <path d="M 530 130 L 600 130" class="arrow"/>
+  
+  <!-- Key Question -->
+  <rect x="610" y="70" width="200" height="120" class="formula-box"/>
+  <text x="710" y="95" class="step-title" text-anchor="middle" fill="#ffffff">🤔 KEY QUESTION</text>
+  <text x="710" y="115" class="step-title" text-anchor="middle" fill="#ffffff">What variance σ²?</text>
+  
+  <text x="620" y="140" class="step-text" fill="#ffffff">Too small → Vanishing</text>
+  <text x="620" y="157" class="step-text" fill="#ffffff">Too large → Exploding</text>
+  <text x="620" y="174" class="step-text" fill="#ffffff">Just right → Good training</text>
+  
+  <!-- Process Steps -->
+  <g transform="translate(50, 230)">
+    <text x="400" y="20" class="title" text-anchor="middle" font-size="20">Initialization Process Steps</text>
+    
+    <!-- Step 1 -->
+    <rect x="0" y="40" width="180" height="80" class="process-box"/>
+    <text x="90" y="60" class="step-title" text-anchor="middle">1. Choose Distribution</text>
+    <text x="10" y="85" class="step-text" fill="#ffffff">• Gaussian N(μ, σ²)</text>
+    <text x="10" y="102" class="step-text" fill="#ffffff">• Mean μ = 0 (no bias)</text>
+    
+    <!-- Step 2 -->
+    <rect x="200" y="40" width="180" height="80" class="process-box"/>
+    <text x="290" y="60" class="step-title" text-anchor="middle">2. Select Variance</text>
+    <text x="210" y="85" class="step-text" fill="#ffffff">• Based on layer size</text>
+    <text x="210" y="102" class="step-text" fill="#ffffff">• σ² = f(n_inputs)</text>
+    
+    <!-- Step 3 -->
+    <rect x="400" y="40" width="180" height="80" class="process-box"/>
+    <text x="490" y="60" class="step-title" text-anchor="middle">3. Apply Method</text>
+    <text x="410" y="85" class="step-text" fill="#ffffff">• He: σ² = 2/n_in (ReLU)</text>
+    <text x="410" y="102" class="step-text" fill="#ffffff">• Xavier: σ² = 1/n_in</text>
+    
+    <!-- Step 4 -->
+    <rect x="600" y="40" width="180" height="80" class="process-box"/>
+    <text x="690" y="60" class="step-title" text-anchor="middle">4. Generate Weights</text>
+    <text x="610" y="85" class="step-text" fill="#ffffff">• Sample from N(0, σ²)</text>
+    <text x="610" y="102" class="step-text" fill="#ffffff">• Initialize all layers</text>
+    
+    <!-- Arrows between steps -->
+    <path d="M 180 80 L 200 80" class="arrow"/>
+    <path d="M 380 80 L 400 80" class="arrow"/>
+    <path d="M 580 80 L 600 80" class="arrow"/>
+  </g>
+  
+  <!-- Comparison: Bad vs Good -->
+  <g transform="translate(50, 380)">
+    <text x="400" y="20" class="title" text-anchor="middle" font-size="18">Impact Comparison</text>
+    
+    <!-- Bad initialization -->
+    <rect x="0" y="40" width="350" height="120" fill="#fdf2f2" stroke="#e74c3c" stroke-width="2" rx="8"/>
+    <text x="175" y="60" class="step-title" text-anchor="middle" fill="#e74c3c">Poor Initialization</text>
+    
+    <text x="20" y="85" class="bad-example">Weights: [0.001, 0.001, 0.001, 0.001]</text>
+    <text x="20" y="105" class="step-text">• Activations vanish in deep layers</text>
+    <text x="20" y="125" class="step-text">• Gradients become zero</text>
+    <text x="20" y="145" class="step-text">• No learning progress</text>
+    
+    <!-- Good initialization -->
+    <rect x="400" y="40" width="350" height="120" fill="#e8f8f5" stroke="#27ae60" stroke-width="2" rx="8"/>
+    <text x="575" y="60" class="step-title" text-anchor="middle" fill="#27ae60">Proper Initialization</text>
+    
+    <text x="420" y="85" class="good-example">Weights: [0.15, -0.08, 0.12, -0.19]</text>
+    <text x="420" y="105" class="step-text">• Activations preserved across layers</text>
+    <text x="420" y="125" class="step-text">• Gradients flow properly</text>
+    <text x="420" y="145" class="step-text">• Efficient learning</text>
+    
+    <!-- VS indicator -->
+    <text x="375" y="105" class="step-title" text-anchor="middle" fill="#7f8c8d" font-size="24">VS</text>
+  </g>
+  
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+     refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#7f8c8d"/>
+    </marker>
+  </defs>
+</svg>

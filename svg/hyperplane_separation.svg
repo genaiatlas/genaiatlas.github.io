@@ -1,0 +1,186 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 18px; font-weight: bold; text-anchor: middle; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; text-anchor: middle; }
+      .label { font-family: Arial, sans-serif; font-size: 12px; text-anchor: middle; }
+      .small-label { font-family: Arial, sans-serif; font-size: 10px; text-anchor: middle; }
+      .axis-label { font-family: Arial, sans-serif; font-size: 10px; text-anchor: middle; }
+      .red-dot { fill: #E74C3C; stroke: #C0392B; stroke-width: 1.5; }
+      .blue-dot { fill: #3498DB; stroke: #2980B9; stroke-width: 1.5; }
+      .hyperplane { stroke-width: 2; fill: none; opacity: 0.8; }
+      .optimal-boundary { stroke: #27AE60; stroke-width: 4; fill: none; }
+      .grid-line { stroke: #ECF0F1; stroke-width: 1; }
+      .background { fill: #FAFBFC; stroke: #D5DBDB; stroke-width: 1; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="25" class="title">Hyperplane Separation: Finding the Optimal Number of Neurons</text>
+  
+  <!-- Problem Setup -->
+  <g id="problem-setup">
+    <text x="200" y="60" class="subtitle">Blue-Red Classification Problem</text>
+    <rect x="50" y="80" width="300" height="200" class="background"/>
+    
+    <!-- Grid -->
+    <line x1="50" y1="130" x2="350" y2="130" class="grid-line"/>
+    <line x1="50" y1="180" x2="350" y2="180" class="grid-line"/>
+    <line x1="50" y1="230" x2="350" y2="230" class="grid-line"/>
+    <line x1="100" y1="80" x2="100" y2="280" class="grid-line"/>
+    <line x1="150" y1="80" x2="150" y2="280" class="grid-line"/>
+    <line x1="200" y1="80" x2="200" y2="280" class="grid-line"/>
+    <line x1="250" y1="80" x2="250" y2="280" class="grid-line"/>
+    <line x1="300" y1="80" x2="300" y2="280" class="grid-line"/>
+    
+    <!-- Axes -->
+    <line x1="50" y1="280" x2="350" y2="280" stroke="#2C3E50" stroke-width="2"/>
+    <line x1="50" y1="80" x2="50" y2="280" stroke="#2C3E50" stroke-width="2"/>
+    
+    <!-- Red dots (upper region) -->
+    <circle cx="80" cy="100" r="4" class="red-dot"/>
+    <circle cx="95" cy="110" r="4" class="red-dot"/>
+    <circle cx="120" cy="95" r="4" class="red-dot"/>
+    <circle cx="140" cy="115" r="4" class="red-dot"/>
+    <circle cx="180" cy="105" r="4" class="red-dot"/>
+    <circle cx="200" cy="120" r="4" class="red-dot"/>
+    <circle cx="230" cy="100" r="4" class="red-dot"/>
+    <circle cx="260" cy="110" r="4" class="red-dot"/>
+    <circle cx="290" cy="95" r="4" class="red-dot"/>
+    <circle cx="320" cy="115" r="4" class="red-dot"/>
+    
+    <!-- Blue dots (lower region) -->
+    <circle cx="70" cy="220" r="4" class="blue-dot"/>
+    <circle cx="90" cy="240" r="4" class="blue-dot"/>
+    <circle cx="110" cy="210" r="4" class="blue-dot"/>
+    <circle cx="135" cy="235" r="4" class="blue-dot"/>
+    <circle cx="160" cy="215" r="4" class="blue-dot"/>
+    <circle cx="185" cy="245" r="4" class="blue-dot"/>
+    <circle cx="210" cy="225" r="4" class="blue-dot"/>
+    <circle cx="240" cy="250" r="4" class="blue-dot"/>
+    <circle cx="270" cy="230" r="4" class="blue-dot"/>
+    <circle cx="300" cy="240" r="4" class="blue-dot"/>
+    <circle cx="330" cy="220" r="4" class="blue-dot"/>
+    
+    <!-- Axis labels -->
+    <text x="200" y="300" class="axis-label">x₁</text>
+    <text x="30" y="185" class="axis-label" transform="rotate(-90, 30, 185)">x₂</text>
+    
+    <!-- Data distribution note -->
+    <text x="200" y="320" class="small-label">Linearly separable data: Red (top), Blue (bottom)</text>
+  </g>
+  
+  <!-- Solution with 2 Hyperplanes -->
+  <g id="two-hyperplane-solution">
+    <text x="600" y="60" class="subtitle">Optimal Solution: 2 Hyperplanes</text>
+    <rect x="450" y="80" width="300" height="200" class="background"/>
+    
+    <!-- Grid -->
+    <line x1="450" y1="130" x2="750" y2="130" class="grid-line"/>
+    <line x1="450" y1="180" x2="750" y2="180" class="grid-line"/>
+    <line x1="450" y1="230" x2="750" y2="230" class="grid-line"/>
+    <line x1="500" y1="80" x2="500" y2="280" class="grid-line"/>
+    <line x1="550" y1="80" x2="550" y2="280" class="grid-line"/>
+    <line x1="600" y1="80" x2="600" y2="280" class="grid-line"/>
+    <line x1="650" y1="80" x2="650" y2="280" class="grid-line"/>
+    <line x1="700" y1="80" x2="700" y2="280" class="grid-line"/>
+    
+    <!-- Axes -->
+    <line x1="450" y1="280" x2="750" y2="280" stroke="#2C3E50" stroke-width="2"/>
+    <line x1="450" y1="80" x2="450" y2="280" stroke="#2C3E50" stroke-width="2"/>
+    
+    <!-- Same data points -->
+    <circle cx="480" cy="100" r="4" class="red-dot"/>
+    <circle cx="495" cy="110" r="4" class="red-dot"/>
+    <circle cx="520" cy="95" r="4" class="red-dot"/>
+    <circle cx="540" cy="115" r="4" class="red-dot"/>
+    <circle cx="580" cy="105" r="4" class="red-dot"/>
+    <circle cx="600" cy="120" r="4" class="red-dot"/>
+    <circle cx="630" cy="100" r="4" class="red-dot"/>
+    <circle cx="660" cy="110" r="4" class="red-dot"/>
+    <circle cx="690" cy="95" r="4" class="red-dot"/>
+    <circle cx="720" cy="115" r="4" class="red-dot"/>
+    
+    <circle cx="470" cy="220" r="4" class="blue-dot"/>
+    <circle cx="490" cy="240" r="4" class="blue-dot"/>
+    <circle cx="510" cy="210" r="4" class="blue-dot"/>
+    <circle cx="535" cy="235" r="4" class="blue-dot"/>
+    <circle cx="560" cy="215" r="4" class="blue-dot"/>
+    <circle cx="585" cy="245" r="4" class="blue-dot"/>
+    <circle cx="610" cy="225" r="4" class="blue-dot"/>
+    <circle cx="640" cy="250" r="4" class="blue-dot"/>
+    <circle cx="670" cy="230" r="4" class="blue-dot"/>
+    <circle cx="700" cy="240" r="4" class="blue-dot"/>
+    <circle cx="730" cy="220" r="4" class="blue-dot"/>
+    
+    <!-- Two hyperplanes -->
+    <line x1="460" y1="150" x2="600" y2="160" stroke="#E74C3C" stroke-width="3" class="hyperplane"/>
+    <line x1="600" y1="160" x2="740" y2="170" stroke="#3498DB" stroke-width="3" class="hyperplane"/>
+    
+    <!-- Optimal combined boundary -->
+    <path d="M 460,155 L 600,165 L 740,175" class="optimal-boundary"/>
+    
+    <!-- Hyperplane labels -->
+    <text x="530" y="145" class="small-label" fill="#E74C3C">H₁</text>
+    <text x="670" y="165" class="small-label" fill="#3498DB">H₂</text>
+    <text x="600" y="185" class="small-label" fill="#27AE60">Combined Boundary</text>
+    
+    <!-- Axis labels -->
+    <text x="600" y="300" class="axis-label">x₁</text>
+    <text x="430" y="185" class="axis-label" transform="rotate(-90, 430, 185)">x₂</text>
+    
+    <!-- Solution note -->
+    <text x="600" y="320" class="small-label">Perfect separation with minimal complexity</text>
+  </g>
+  
+  <!-- Neuron Requirements Analysis -->
+  <g id="neuron-analysis">
+    <text x="400" y="370" class="subtitle">Neuron Requirements Analysis</text>
+    
+    <!-- Comparison table background -->
+    <rect x="50" y="390" width="700" height="160" fill="#F8F9FA" stroke="#DEE2E6" stroke-width="1" rx="5"/>
+    
+    <!-- Table headers -->
+    <text x="150" y="410" class="label" font-weight="bold">Hidden Neurons</text>
+    <text x="300" y="410" class="label" font-weight="bold">Hyperplanes</text>
+    <text x="450" y="410" class="label" font-weight="bold">Separation Quality</text>
+    <text x="600" y="410" class="label" font-weight="bold">Learning Status</text>
+    
+    <!-- Table content -->
+    <line x1="60" y1="420" x2="740" y2="420" stroke="#BDC3C7" stroke-width="1"/>
+    
+    <!-- Row 1: 1 Neuron -->
+    <text x="150" y="440" class="small-label">1</text>
+    <text x="300" y="440" class="small-label">1</text>
+    <text x="450" y="440" class="small-label">Poor (underfitting)</text>
+    <text x="600" y="440" class="small-label">❌ Insufficient</text>
+    
+    <!-- Row 2: 2 Neurons -->
+    <text x="150" y="460" class="small-label">2</text>
+    <text x="300" y="460" class="small-label">2</text>
+    <text x="450" y="460" class="small-label">Perfect</text>
+    <text x="600" y="460" class="small-label">✅ Optimal</text>
+    
+    <!-- Row 3: 10 Neurons -->
+    <text x="150" y="480" class="small-label">10</text>
+    <text x="300" y="480" class="small-label">10</text>
+    <text x="450" y="480" class="small-label">Overcomplex</text>
+    <text x="600" y="480" class="small-label">⚠️ Not really learning</text>
+    
+    <!-- Row 4: 100+ Neurons -->
+    <text x="150" y="500" class="small-label">100+</text>
+    <text x="300" y="500" class="small-label">100+</text>
+    <text x="450" y="500" class="small-label">Severe overfitting</text>
+    <text x="600" y="500" class="small-label">❌ Memorizing data</text>
+    
+    <!-- Mathematical insight -->
+    <text x="400" y="530" class="label" font-weight="bold">Mathematical Insight</text>
+    <text x="400" y="545" class="small-label">For linearly separable data in ℝ², at most 2 hyperplanes are needed</text>
+  </g>
+  
+  <!-- Key takeaways -->
+  <rect x="50" y="560" width="700" height="30" fill="#E8F5E8" stroke="#27AE60" stroke-width="1" rx="3"/>
+  <text x="400" y="580" class="label" fill="#27AE60">
+    <tspan font-weight="bold">Key Takeaway:</tspan> More neurons ≠ Better performance. Choose the minimum number that solves the problem.
+  </text>
+</svg>

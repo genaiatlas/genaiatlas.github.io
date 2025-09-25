@@ -1,0 +1,192 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="curveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3498db;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2980b9;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#e74c3c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c0392b;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feMorphology operator="dilate" radius="2"/>
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#2c3e50">
+    Loss Function Landscape &amp; Gradient Descent Path
+  </text>
+  
+  <!-- Coordinate System -->
+  <g id="axes" stroke="#34495e" stroke-width="2">
+    <!-- Y-axis (Loss) -->
+    <line x1="100" y1="80" x2="100" y2="420"/>
+    <!-- X-axis (Weight) -->
+    <line x1="100" y1="420" x2="650" y2="420"/>
+    
+    <!-- Arrowheads -->
+    <polygon points="100,75 95,85 105,85" fill="#34495e"/>
+    <polygon points="655,420 645,415 645,425" fill="#34495e"/>
+  </g>
+  
+  <!-- Axis Labels -->
+  <text x="50" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#2c3e50" font-weight="bold" 
+        transform="rotate(-90, 50, 250)">Loss</text>
+  <text x="375" y="450" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#2c3e50" font-weight="bold">
+    Weight (w_ij)
+  </text>
+  
+  <!-- Loss Function Curve (Parabolic) -->
+  <g id="loss-curve">
+    <path d="M 120 300 Q 200 150 280 120 Q 360 100 400 105 Q 440 100 480 120 Q 560 150 640 300" 
+          stroke="url(#curveGradient)" stroke-width="4" fill="none" filter="url(#glow)"/>
+  </g>
+  
+  <!-- Grid lines for reference -->
+  <g id="grid" stroke="#ecf0f1" stroke-width="1" opacity="0.7">
+    <line x1="100" y1="150" x2="650" y2="150"/>
+    <line x1="100" y1="200" x2="650" y2="200"/>
+    <line x1="100" y1="250" x2="650" y2="250"/>
+    <line x1="100" y1="300" x2="650" y2="300"/>
+    <line x1="100" y1="350" x2="650" y2="350"/>
+    
+    <line x1="200" y1="80" x2="200" y2="420"/>
+    <line x1="300" y1="80" x2="300" y2="420"/>
+    <line x1="400" y1="80" x2="400" y2="420"/>
+    <line x1="500" y1="80" x2="500" y2="420"/>
+    <line x1="600" y1="80" x2="600" y2="420"/>
+  </g>
+  
+  <!-- Gradient Descent Path -->
+  <g id="gd-path">
+    <!-- Starting point (high loss) -->
+    <circle cx="180" cy="220" r="8" fill="#e74c3c" stroke="#c0392b" stroke-width="2" filter="url(#shadow)"/>
+    <text x="180" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#e74c3c" font-weight="bold">Start</text>
+    
+    <!-- Intermediate steps -->
+    <circle cx="250" cy="140" r="6" fill="#f39c12" stroke="#d68910" stroke-width="2"/>
+    <circle cx="320" cy="115" r="6" fill="#f39c12" stroke="#d68910" stroke-width="2"/>
+    <circle cx="370" cy="108" r="6" fill="#f39c12" stroke="#d68910" stroke-width="2"/>
+    
+    <!-- Global minimum -->
+    <circle cx="400" cy="105" r="10" fill="#27ae60" stroke="#1e8449" stroke-width="3" filter="url(#glow)"/>
+    <text x="400" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#27ae60" font-weight="bold">Global Minimum</text>
+    
+    <!-- Path arrows -->
+    <g stroke="#e74c3c" stroke-width="3" fill="none" marker-end="url(#redarrow)">
+      <path d="M 190 215 L 240 145"/>
+      <path d="M 260 138 L 310 118"/>
+      <path d="M 330 113 L 365 109"/>
+      <path d="M 380 107 L 395 106"/>
+    </g>
+  </g>
+  
+  <!-- Gradient Vectors -->
+  <g id="gradients" stroke="#8e44ad" stroke-width="2">
+    <!-- Negative gradient at starting point -->
+    <line x1="180" y1="220" x2="220" y2="190" marker-end="url(#purplearrow)"/>
+    <text x="200" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#8e44ad">∂L/∂w &gt; 0</text>
+    <text x="200" y="252" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#8e44ad">(move left)</text>
+    
+    <!-- Gradient at intermediate point -->
+    <line x1="320" y1="115" x2="340" y2="108" marker-end="url(#purplearrow)"/>
+    <text x="330" y="135" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#8e44ad">∂L/∂w &gt; 0</text>
+    
+    <!-- Zero gradient at minimum -->
+    <circle cx="400" cy="105" r="3" fill="#8e44ad"/>
+    <text x="420" y="110" font-family="Arial, sans-serif" font-size="10" fill="#8e44ad">∂L/∂w = 0</text>
+  </g>
+  
+  <!-- Mathematical Equations -->
+  <g id="equations" transform="translate(50, 480)">
+    <rect x="0" y="0" width="700" height="100" fill="#f8f9fa" stroke="#6c757d" stroke-width="2" rx="10" filter="url(#shadow)"/>
+    <text x="350" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#2c3e50">
+      Gradient Descent Update Rule
+    </text>
+    
+    <text x="50" y="50" font-family="Arial, sans-serif" font-size="14" fill="#2c3e50">
+      <tspan font-weight="bold">Weight Update:</tspan>
+    </text>
+    <text x="50" y="70" font-family="monospace" font-size="16" fill="#8e44ad">
+      w_{i+1} = w_i - α × ∂L/∂w_i
+    </text>
+    
+    <text x="400" y="50" font-family="Arial, sans-serif" font-size="14" fill="#2c3e50">
+      <tspan font-weight="bold">Where:</tspan>
+    </text>
+    <text x="400" y="70" font-family="Arial, sans-serif" font-size="12" fill="#7f8c8d">
+      α = learning rate, ∂L/∂w = gradient
+    </text>
+    <text x="400" y="85" font-family="Arial, sans-serif" font-size="12" fill="#7f8c8d">
+      Always move opposite to gradient direction
+    </text>
+  </g>
+  
+  <!-- Learning Rate Effects -->
+  <g id="lr-effects" transform="translate(700, 150)">
+    <rect x="0" y="0" width="90" height="200" fill="#ecf0f1" stroke="#95a5a6" stroke-width="2" rx="8"/>
+    <text x="45" y="20" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#2c3e50">
+      Learning Rate
+    </text>
+    
+    <!-- Large α -->
+    <g transform="translate(10, 35)">
+      <text x="35" y="0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#e74c3c" font-weight="bold">
+        Large α
+      </text>
+      <path d="M 10 10 Q 35 5 60 15 Q 35 25 10 30" stroke="#e74c3c" stroke-width="2" fill="none"/>
+      <text x="35" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#e74c3c">
+        May overshoot
+      </text>
+    </g>
+    
+    <!-- Optimal α -->
+    <g transform="translate(10, 90)">
+      <text x="35" y="0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#27ae60" font-weight="bold">
+        Optimal α
+      </text>
+      <path d="M 10 10 L 25 8 L 40 6 L 55 5 L 70 5" stroke="#27ae60" stroke-width="2" fill="none" 
+            marker-end="url(#greenarrow)"/>
+      <text x="35" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#27ae60">
+        Smooth descent
+      </text>
+    </g>
+    
+    <!-- Small α -->
+    <g transform="translate(10, 140)">
+      <text x="35" y="0" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#f39c12" font-weight="bold">
+        Small α
+      </text>
+      <path d="M 10 15 L 15 14 L 20 13.5 L 25 13 L 30 12.8 L 35 12.6 L 40 12.4 L 45 12.2 L 50 12" 
+            stroke="#f39c12" stroke-width="2" fill="none" marker-end="url(#orangearrow)"/>
+      <text x="35" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#f39c12">
+        Slow convergence
+      </text>
+    </g>
+  </g>
+  
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="redarrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#e74c3c"/>
+    </marker>
+    <marker id="purplearrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#8e44ad"/>
+    </marker>
+    <marker id="greenarrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#27ae60"/>
+    </marker>
+    <marker id="orangearrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#f39c12"/>
+    </marker>
+  </defs>
+</svg>
