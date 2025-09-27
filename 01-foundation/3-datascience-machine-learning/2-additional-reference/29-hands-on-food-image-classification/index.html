@@ -2648,6 +2648,57 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-input-images-are-huge" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Input Images Are Huge
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-convolutional-layers-conv2d" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Convolutional Layers (Conv2D)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-pooling-layers-maxpooling2d" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Pooling Layers (MaxPooling2D)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-flatten" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Flatten
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-dense-fully-connected-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Dense (Fully Connected Layers)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Dense (Fully Connected Layers)">
+      <ul class="md-nav__list">
+        
           <li class="md-nav__item">
   <a href="#optimizer-and-compilation" class="md-nav__link">
     <span class="md-ellipsis">
@@ -4493,6 +4544,57 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-input-images-are-huge" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Input Images Are Huge
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-convolutional-layers-conv2d" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Convolutional Layers (Conv2D)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-pooling-layers-maxpooling2d" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Pooling Layers (MaxPooling2D)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-flatten" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Flatten
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-dense-fully-connected-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Dense (Fully Connected Layers)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Dense (Fully Connected Layers)">
+      <ul class="md-nav__list">
+        
           <li class="md-nav__item">
   <a href="#optimizer-and-compilation" class="md-nav__link">
     <span class="md-ellipsis">
@@ -5862,6 +5964,68 @@ The 80% test accuracy represents meaningful improvement over random guessing (33
 - <strong>Conv2D(32, 3x3):</strong> (3×3×32 + 1) × 32 = 9,248 parameters
 - <strong>Dense(100):</strong> Depends on flattened size + bias
 - <strong>Dense(3):</strong> 100×3 + 3 = 303 parameters</p>
+<h1 id="why-do-we-need-multiple-steps-in-a-cnn">🧠 Why Do We Need Multiple Steps in a CNN?</h1>
+<p>When building a Convolutional Neural Network (CNN), we add multiple layers (Conv2D, Pooling, Flatten, Dense). Here’s <strong>why each step is important</strong>.</p>
+<hr />
+<h2 id="1-input-images-are-huge">1. Input Images Are Huge</h2>
+<ul>
+<li>Example: <strong>150 × 150 pixels, 3 channels (RGB)</strong> → <code>67,500 numbers</code>.</li>
+<li>Feeding raw pixels directly into Dense layers would create <strong>millions of parameters</strong>.</li>
+<li>Risk: <strong>overfitting, very slow, not scalable</strong>.</li>
+</ul>
+<p>✅ We need a smarter way to extract features.</p>
+<hr />
+<h2 id="2-convolutional-layers-conv2d">2. Convolutional Layers (Conv2D)</h2>
+<ul>
+<li><strong>Purpose</strong>: Detect <strong>local patterns</strong> like edges, corners, textures.  </li>
+<li>Use <strong>filters (kernels)</strong> that slide across the image.  </li>
+<li>Hierarchy of features:</li>
+<li>Early layers → edges, simple colors.  </li>
+<li>Middle layers → textures, shapes.  </li>
+<li>Deeper layers → objects.  </li>
+</ul>
+<p>👉 Example: <code>(150,150,3)</code> → <code>(150,150,64)</code> (64 feature maps).</p>
+<hr />
+<h2 id="3-pooling-layers-maxpooling2d">3. Pooling Layers (MaxPooling2D)</h2>
+<ul>
+<li><strong>Purpose</strong>: Downsample feature maps to reduce size.  </li>
+<li>Keeps <strong>important info</strong> while shrinking resolution:</li>
+<li><code>(150,150)</code> → <code>(75,75)</code>  </li>
+<li><code>(75,75)</code> → <code>(38,38)</code>  </li>
+<li><code>(38,38)</code> → <code>(19,19)</code>  </li>
+<li>Benefits:</li>
+<li>Less computation.  </li>
+<li>Reduces overfitting.  </li>
+<li>Acts like “zooming out” to focus on bigger structures.</li>
+</ul>
+<hr />
+<h2 id="4-flatten">4. Flatten</h2>
+<ul>
+<li><strong>Purpose</strong>: Convert 3D feature maps into a 1D vector.  </li>
+<li>Example: <code>(19,19,32)</code> → <code>11552</code>.  </li>
+<li>This step prepares data for Dense layers.</li>
+</ul>
+<hr />
+<h2 id="5-dense-fully-connected-layers">5. Dense (Fully Connected Layers)</h2>
+<ul>
+<li><strong>Purpose</strong>: Decision-making layers.  </li>
+<li>First Dense (e.g., 100 neurons): learns combinations of features.  </li>
+<li>Final Dense (e.g., 3 neurons): outputs <strong>class probabilities</strong> (e.g., Burrito / Bread / Burger).</li>
+</ul>
+<p>👉 Most parameters live here (e.g., <strong>1.15M parameters</strong> in one Dense layer).</p>
+<hr />
+<h1 id="why-so-many-steps">✅ Why So Many Steps?</h1>
+<p>Because CNNs mimic how humans see:</p>
+<ol>
+<li><strong>Detect small details</strong> → Conv2D.  </li>
+<li><strong>Simplify &amp; focus</strong> → Pooling.  </li>
+<li><strong>Combine patterns into bigger features</strong> → More Conv2D.  </li>
+<li><strong>Summarize info into vector form</strong> → Flatten.  </li>
+<li><strong>Classify the object</strong> → Dense layers.  </li>
+</ol>
+<p>Without these steps, the model would just memorize raw pixels instead of learning <strong>meaningful patterns</strong>.</p>
+<hr />
+<h1 id="cnn-flow-overview">📊 CNN Flow Overview</h1>
 <h3 id="optimizer-and-compilation">Optimizer and Compilation</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Using SGD Optimizer</span>
 <span class="n">opt</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">momentum</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">)</span>
@@ -6477,7 +6641,7 @@ The 80% test accuracy represents meaningful improvement over random guessing (33
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 26, 2025 00:36:19 UTC">September 26, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 27, 2025 02:35:13 UTC">September 27, 2025</span>
   </span>
 
     
