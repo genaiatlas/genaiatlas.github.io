@@ -1,0 +1,3457 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/2-statistics/1-learning-path/09-bayesian_statistics/">
+      
+      
+        <link rel="prev" href="../08-resampling-advanced-inference/">
+      
+      
+        <link rel="next" href="../10-multivariate-time-series/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Bayesian Statistics: Foundations for Machine Learning - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Bayesian Statistics: Foundations for Machine Learning
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-fast-track/01-ft-python-basics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_2" id="__nav_2_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-probability_distributions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Distributions & the Central Limit Theorem
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-descriptive-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Descriptive Statistics
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-sampling-experimental-design/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Sampling & Experimental Design
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../04-inferential-statistics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Inferential Statistics
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-statistical-inference-extensions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    statistical Inference Extension
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../06-hypothesis-testing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../07-regression-correlation-analysis/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression & Correlation Analysis
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-resampling-advanced-inference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Resampling & Advanced Inference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_2_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_2_9" id="__nav_2_3_2_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Bayesian Statistics
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_3_2_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_3_2_9">
+            <span class="md-nav__icon md-icon"></span>
+            Bayesian Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Bayesian Statistics: Foundations for Machine Learning
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Bayesian Statistics: Foundations for Machine Learning
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Introduction to Bayesian Statistics
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bayes-theorem" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Bayes' Theorem Fundamentals
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#priors-likelihood-posterior" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔍 Priors, Likelihood, and Posterior
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔍 Priors, Likelihood, and Posterior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prior-distributions-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prior Distributions P(θ)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#likelihood-function-pd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Likelihood Function P(D|θ)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#posterior-distribution-pd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Posterior Distribution P(θ|D)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#map-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📈 Maximum a Posteriori (MAP) Estimation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bayesian-inference-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Bayesian Inference Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔬 Bayesian Inference Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-coin-flip-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 1: Coin Flip Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-linear-regression-with-gaussian-prior" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 2: Linear Regression with Gaussian Prior
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-ab-testing-with-beta-binomial-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 3: A/B Testing with Beta-Binomial Model
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conjugate-priors" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧮 Conjugate Priors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Practical Applications in ML
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Practical Applications in ML">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-bayesian-neural-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Bayesian Neural Networks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-gaussian-processes" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Gaussian Processes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-bayesian-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Bayesian Optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-approximate-inference-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Approximate Inference Methods
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-examples-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Code Examples &amp; Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Code Examples &amp; Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#google-colab-notebooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Google Colab Notebooks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relevant-models-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relevant Models &amp; Libraries
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#essential-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Essential Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Topics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../10-multivariate-time-series/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Multivariate & Time Series Statistics
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-statistics-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../3-datascience-machine-learning/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../3-datascience-machine-learning/1-learning-path/01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../3-datascience-machine-learning/2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../3-datascience-machine-learning/3-fast-track/01-datascience-ml-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Introduction to Bayesian Statistics
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bayes-theorem" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Bayes' Theorem Fundamentals
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#priors-likelihood-posterior" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔍 Priors, Likelihood, and Posterior
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔍 Priors, Likelihood, and Posterior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prior-distributions-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prior Distributions P(θ)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#likelihood-function-pd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Likelihood Function P(D|θ)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#posterior-distribution-pd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Posterior Distribution P(θ|D)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#map-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📈 Maximum a Posteriori (MAP) Estimation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bayesian-inference-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Bayesian Inference Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔬 Bayesian Inference Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-coin-flip-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 1: Coin Flip Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-linear-regression-with-gaussian-prior" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 2: Linear Regression with Gaussian Prior
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-3-ab-testing-with-beta-binomial-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 3: A/B Testing with Beta-Binomial Model
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conjugate-priors" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧮 Conjugate Priors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚀 Practical Applications in ML
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Practical Applications in ML">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-bayesian-neural-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Bayesian Neural Networks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-gaussian-processes" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Gaussian Processes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-bayesian-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Bayesian Optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-approximate-inference-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Approximate Inference Methods
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-examples-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Code Examples &amp; Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Code Examples &amp; Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#google-colab-notebooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Google Colab Notebooks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relevant-models-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relevant Models &amp; Libraries
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#essential-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Essential Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Advanced Topics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="bayesian-statistics-foundations-for-machine-learning">Bayesian Statistics: Foundations for Machine Learning</h1>
+<p><a id="top"></a></p>
+<h2 id="quick-navigation">📋 Quick Navigation</h2>
+<ul>
+<li><a href="#introduction">🎯 Introduction to Bayesian Statistics</a></li>
+<li><a href="#bayes-theorem">📊 Bayes' Theorem Fundamentals</a></li>
+<li><a href="#priors-likelihood-posterior">🔍 Priors, Likelihood, and Posterior</a></li>
+<li><a href="#map-estimation">📈 Maximum a Posteriori (MAP) Estimation</a></li>
+<li><a href="#bayesian-inference-examples">🔬 Bayesian Inference Examples</a></li>
+<li><a href="#conjugate-priors">🧮 Conjugate Priors</a></li>
+<li><a href="#practical-applications">🚀 Practical Applications in ML</a></li>
+<li><a href="#references">📚 References &amp; Further Reading</a></li>
+</ul>
+<hr />
+<h2 id="introduction">🎯 Introduction to Bayesian Statistics</h2>
+<p>Bayesian statistics provides a powerful framework for reasoning under uncertainty, making it invaluable for machine learning applications. Unlike frequentist approaches, Bayesian methods treat parameters as random variables with probability distributions, allowing us to incorporate prior knowledge and update beliefs as new data becomes available.</p>
+<p><img alt="Bayesian Framework Overview" src="../../../../svg/bayesian_framework_overview.svg" /></p>
+<p><strong>Key Advantages for Machine Learning:</strong></p>
+<ul>
+<li><strong>Uncertainty Quantification:</strong> Provides full posterior distributions rather than point estimates</li>
+<li><strong>Prior Knowledge Integration:</strong> Incorporates domain expertise through prior distributions</li>
+<li><strong>Sequential Learning:</strong> Updates beliefs incrementally as new data arrives</li>
+<li><strong>Model Selection:</strong> Natural framework for comparing competing hypotheses</li>
+<li><strong>Regularization:</strong> Priors act as regularizers, preventing overfitting</li>
+</ul>
+<p><strong>Core Philosophy:</strong></p>
+<p>Bayesian inference treats all unknowns as random variables characterized by probability distributions. This probabilistic approach enables principled reasoning about uncertainty and provides a coherent framework for learning from data.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="bayes-theorem">📊 Bayes' Theorem Fundamentals</h2>
+<p>Bayes' theorem forms the mathematical foundation of Bayesian statistics, providing the mechanism for updating beliefs in light of new evidence.</p>
+<p><strong>Bayes' Theorem:</strong></p>
+<div class="highlight"><pre><span></span><code>P(θ|D) = P(D|θ) × P(θ) / P(D)
+</code></pre></div>
+<p><strong>Component Breakdown:</strong></p>
+<ul>
+<li><strong>P(θ|D):</strong> Posterior distribution - updated beliefs about parameter θ after observing data D</li>
+<li><strong>P(D|θ):</strong> Likelihood function - probability of observing data D given parameter θ</li>
+<li><strong>P(θ):</strong> Prior distribution - initial beliefs about parameter θ before seeing data</li>
+<li><strong>P(D):</strong> Marginal likelihood (evidence) - normalizing constant ensuring posterior integrates to 1</li>
+</ul>
+<p><strong>Alternative Form:</strong></p>
+<div class="highlight"><pre><span></span><code>Posterior ∝ Likelihood × Prior
+</code></pre></div>
+<p>The marginal likelihood P(D) often acts as a normalizing constant and can be computed as:</p>
+<div class="highlight"><pre><span></span><code>P(D) = ∫ P(D|θ) × P(θ) dθ
+</code></pre></div>
+<p><strong>Intuitive Interpretation:</strong></p>
+<p>Bayes' theorem mathematically formalizes how we should update our beliefs when presented with new evidence. The posterior distribution represents our refined understanding after combining prior knowledge with observed data.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="priors-likelihood-posterior">🔍 Priors, Likelihood, and Posterior</h2>
+<p>Understanding the three core components of Bayesian inference is essential for effective application in machine learning contexts.</p>
+<h3 id="prior-distributions-p">Prior Distributions P(θ)</h3>
+<p>Prior distributions encode our initial beliefs or assumptions about parameters before observing any data.</p>
+<p><img alt="Prior Distribution Examples" src="../../../../svg/prior_distribution_examples.svg" /></p>
+<p><strong>Types of Priors:</strong></p>
+<ul>
+<li><strong>Informative Priors:</strong> Incorporate substantial domain knowledge</li>
+<li><strong>Example:</strong> Beta(2, 8) for click-through rates based on historical data</li>
+<li>
+<p><strong>Use Case:</strong> When prior experience provides strong guidance</p>
+</li>
+<li>
+<p><strong>Weakly Informative Priors:</strong> Provide gentle regularization without strong assumptions</p>
+</li>
+<li><strong>Example:</strong> Normal(0, 1) for regression coefficients</li>
+<li>
+<p><strong>Use Case:</strong> When some constraints are reasonable but flexibility is desired</p>
+</li>
+<li>
+<p><strong>Non-informative (Flat) Priors:</strong> Express minimal prior knowledge</p>
+</li>
+<li><strong>Example:</strong> Uniform distribution over reasonable parameter range</li>
+<li>
+<p><strong>Use Case:</strong> When prior knowledge is limited or objectivity is prioritized</p>
+</li>
+<li>
+<p><strong>Conjugate Priors:</strong> Mathematically convenient priors that yield closed-form posteriors</p>
+</li>
+<li><strong>Example:</strong> Beta prior with Binomial likelihood yields Beta posterior</li>
+<li><strong>Use Case:</strong> When computational efficiency is important</li>
+</ul>
+<h3 id="likelihood-function-pd">Likelihood Function P(D|θ)</h3>
+<p>The likelihood function quantifies how probable the observed data is for different parameter values.</p>
+<p><img alt="Likelihood Function Illustration" src="../../../../svg/likelihood_function_illustration.svg" /></p>
+<p><strong>Key Properties:</strong></p>
+<ul>
+<li><strong>Data Dependency:</strong> Function of observed data D</li>
+<li><strong>Parameter Function:</strong> Viewed as function of θ for fixed data</li>
+<li><strong>Not a Probability:</strong> Does not integrate to 1 over θ</li>
+<li><strong>Information Source:</strong> Carries all information about θ contained in the data</li>
+</ul>
+<p><strong>Maximum Likelihood Estimation (MLE):</strong></p>
+<div class="highlight"><pre><span></span><code>θ_MLE = argmax_θ P(D|θ)
+</code></pre></div>
+<p>MLE finds the parameter value that makes the observed data most probable.</p>
+<h3 id="posterior-distribution-pd">Posterior Distribution P(θ|D)</h3>
+<p>The posterior distribution represents our updated beliefs about parameters after observing data.</p>
+<p><img alt="Posterior Distribution Example" src="../../../../svg/posterior_distribution_example.svg" /></p>
+<p><strong>Posterior Characteristics:</strong></p>
+<ul>
+<li><strong>Combines Information:</strong> Balances prior beliefs with data evidence</li>
+<li><strong>Uncertainty Quantification:</strong> Full distribution rather than point estimate</li>
+<li><strong>Sequential Updates:</strong> Can serve as prior for future observations</li>
+<li><strong>Decision Making:</strong> Provides foundation for optimal decision theory</li>
+</ul>
+<p><strong>Posterior Predictive Distribution:</strong></p>
+<p>For predicting new observations, we integrate over parameter uncertainty:</p>
+<div class="highlight"><pre><span></span><code>P(D_new|D) = ∫ P(D_new|θ) × P(θ|D) dθ
+</code></pre></div>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="map-estimation">📈 Maximum a Posteriori (MAP) Estimation</h2>
+<p>Maximum a Posteriori estimation finds the parameter value that maximizes the posterior distribution, providing a point estimate that balances likelihood and prior information.</p>
+<p><img alt="MAP Estimation Visualization" src="../../../../svg/map_estimation_visualization.svg" /></p>
+<p><strong>MAP Objective:</strong></p>
+<div class="highlight"><pre><span></span><code>θ_MAP = argmax_θ P(θ|D) = argmax_θ [P(D|θ) × P(θ)]
+</code></pre></div>
+<p><strong>Log-MAP Formulation:</strong></p>
+<div class="highlight"><pre><span></span><code>θ_MAP = argmax_θ [log P(D|θ) + log P(θ)]
+</code></pre></div>
+<p><strong>Relationship to Regularization:</strong></p>
+<p>MAP estimation is equivalent to regularized maximum likelihood:</p>
+<ul>
+<li><strong>L2 Regularization:</strong> Corresponds to Gaussian prior</li>
+<li><strong>L1 Regularization:</strong> Corresponds to Laplace prior</li>
+<li><strong>Elastic Net:</strong> Combination of Gaussian and Laplace priors</li>
+</ul>
+<p><strong>MAP vs MLE Comparison:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>MLE</th>
+<th>MAP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Objective</strong></td>
+<td>Maximize likelihood only</td>
+<td>Maximize posterior</td>
+</tr>
+<tr>
+<td><strong>Prior</strong></td>
+<td>No prior information</td>
+<td>Incorporates prior</td>
+</tr>
+<tr>
+<td><strong>Regularization</strong></td>
+<td>None (can overfit)</td>
+<td>Natural regularization</td>
+</tr>
+<tr>
+<td><strong>Uncertainty</strong></td>
+<td>No uncertainty quantification</td>
+<td>Point estimate only</td>
+</tr>
+<tr>
+<td><strong>Computation</strong></td>
+<td>Often simpler</td>
+<td>Requires prior specification</td>
+</tr>
+</tbody>
+</table>
+<p><strong>When to Use MAP:</strong></p>
+<ul>
+<li><strong>Limited Data:</strong> Prior helps when data is scarce</li>
+<li><strong>Regularization Needed:</strong> Prevents overfitting in high-dimensional problems</li>
+<li><strong>Domain Knowledge:</strong> When reliable prior information exists</li>
+<li><strong>Computational Constraints:</strong> Easier than full Bayesian inference</li>
+</ul>
+<p><strong>Limitations of MAP:</strong></p>
+<ul>
+<li><strong>Point Estimate:</strong> Loses uncertainty information</li>
+<li><strong>Prior Sensitivity:</strong> Results depend on prior choice</li>
+<li><strong>Mode Focus:</strong> May miss multimodal posteriors</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="bayesian-inference-examples">🔬 Bayesian Inference Examples</h2>
+<p>Practical examples demonstrate how Bayesian inference works in real machine learning scenarios.</p>
+<p><img alt="Bayesian Inference Workflow" src="../../../../svg/bayesian_inference_workflow.svg" /></p>
+<h3 id="example-1-coin-flip-analysis">Example 1: Coin Flip Analysis</h3>
+<p><strong>Problem:</strong> Estimate the probability θ of heads for a biased coin.</p>
+<p><strong>Setup:</strong></p>
+<ul>
+<li><strong>Data:</strong> 7 heads out of 10 flips</li>
+<li><strong>Likelihood:</strong> Binomial(n=10, θ)</li>
+<li><strong>Prior:</strong> Beta(α=1, β=1) - uniform prior</li>
+</ul>
+<p><strong>Bayesian Update:</strong></p>
+<div class="highlight"><pre><span></span><code>Prior: θ ~ Beta(1, 1)
+Likelihood: P(D|θ) = θ^7 × (1-θ)^3
+Posterior: θ|D ~ Beta(1+7, 1+3) = Beta(8, 4)
+</code></pre></div>
+<p><strong>Results:</strong></p>
+<ul>
+<li><strong>Prior Mean:</strong> 0.5 (uninformed)</li>
+<li><strong>MLE:</strong> 0.7 (7/10)</li>
+<li><strong>Posterior Mean:</strong> 0.67 (8/12)</li>
+<li><strong>95% Credible Interval:</strong> [0.44, 0.85]</li>
+</ul>
+<h3 id="example-2-linear-regression-with-gaussian-prior">Example 2: Linear Regression with Gaussian Prior</h3>
+<p><strong>Problem:</strong> Predict house prices with Bayesian linear regression.</p>
+<p><strong>Model:</strong></p>
+<div class="highlight"><pre><span></span><code>y = Xβ + ε, where ε ~ N(0, σ²I)
+Prior: β ~ N(0, τ²I)
+</code></pre></div>
+<p><strong>Posterior Distribution:</strong></p>
+<div class="highlight"><pre><span></span><code>β|D ~ N(μ_post, Σ_post)
+μ_post = (X^T X + σ²/τ² I)^(-1) X^T y
+Σ_post = σ² (X^T X + σ²/τ² I)^(-1)
+</code></pre></div>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li><strong>Uncertainty Quantification:</strong> Confidence intervals for predictions</li>
+<li><strong>Regularization:</strong> Prior prevents overfitting</li>
+<li><strong>Feature Selection:</strong> Sparse priors encourage feature selection</li>
+</ul>
+<h3 id="example-3-ab-testing-with-beta-binomial-model">Example 3: A/B Testing with Beta-Binomial Model</h3>
+<p><strong>Problem:</strong> Compare conversion rates between two website versions.</p>
+<p><strong>Setup:</strong></p>
+<ul>
+<li><strong>Version A:</strong> 120 conversions out of 1000 visitors</li>
+<li><strong>Version B:</strong> 135 conversions out of 1000 visitors</li>
+<li><strong>Prior:</strong> Beta(1, 1) for both versions</li>
+</ul>
+<p><strong>Posterior Distributions:</strong></p>
+<div class="highlight"><pre><span></span><code>θ_A|D_A ~ Beta(121, 881)
+θ_B|D_B ~ Beta(136, 866)
+</code></pre></div>
+<p><strong>Decision Making:</strong></p>
+<div class="highlight"><pre><span></span><code>P(θ_B &gt; θ_A) = ∫∫_{θ_B &gt; θ_A} f(θ_A|D_A) × f(θ_B|D_B) dθ_A dθ_B
+</code></pre></div>
+<p><strong>Results:</strong></p>
+<ul>
+<li><strong>Probability B is better:</strong> 89.3%</li>
+<li><strong>Expected improvement:</strong> 1.2% conversion rate increase</li>
+<li><strong>Decision:</strong> Deploy Version B with high confidence</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="conjugate-priors">🧮 Conjugate Priors</h2>
+<p>Conjugate priors provide mathematical convenience by ensuring the posterior has the same distributional form as the prior.</p>
+<p><img alt="Conjugate Priors Example" src="../../../../svg/conjugate_priors_example.svg" /></p>
+<p><strong>Definition:</strong></p>
+<p>A prior P(θ) is conjugate to likelihood P(D|θ) if the posterior P(θ|D) belongs to the same distributional family as the prior.</p>
+<p><strong>Common Conjugate Pairs:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Likelihood</th>
+<th>Parameter</th>
+<th>Conjugate Prior</th>
+<th>Posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Binomial</strong></td>
+<td>Success probability θ</td>
+<td>Beta(α, β)</td>
+<td>Beta(α + successes, β + failures)</td>
+</tr>
+<tr>
+<td><strong>Poisson</strong></td>
+<td>Rate λ</td>
+<td>Gamma(α, β)</td>
+<td>Gamma(α + sum(x), β + n)</td>
+</tr>
+<tr>
+<td><strong>Normal</strong></td>
+<td>Mean μ (known σ²)</td>
+<td>Normal(μ₀, σ₀²)</td>
+<td>Normal(μ_post, σ_post²)</td>
+</tr>
+<tr>
+<td><strong>Normal</strong></td>
+<td>Variance σ² (known μ)</td>
+<td>Inverse-Gamma(α, β)</td>
+<td>Inverse-Gamma(α + n/2, β + SSE/2)</td>
+</tr>
+<tr>
+<td><strong>Multinomial</strong></td>
+<td>Probabilities θ</td>
+<td>Dirichlet(α)</td>
+<td>Dirichlet(α + counts)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Advantages of Conjugate Priors:</strong></p>
+<ul>
+<li><strong>Computational Efficiency:</strong> Closed-form posterior updates</li>
+<li><strong>Sequential Learning:</strong> Easy incremental updates</li>
+<li><strong>Interpretability:</strong> Clear parameter meaning</li>
+<li><strong>Theoretical Tractability:</strong> Mathematical analysis possible</li>
+</ul>
+<p><strong>Beta-Binomial Example in Detail:</strong></p>
+<div class="highlight"><pre><span></span><code>Prior: θ ~ Beta(α, β)
+Likelihood: X|θ ~ Binomial(n, θ)
+Posterior: θ|X ~ Beta(α + x, β + n - x)
+</code></pre></div>
+<p><strong>Parameter Interpretation:</strong></p>
+<ul>
+<li><strong>α:</strong> Equivalent prior successes</li>
+<li><strong>β:</strong> Equivalent prior failures</li>
+<li><strong>α + β:</strong> Effective prior sample size</li>
+</ul>
+<p><strong>Updating Rules:</strong></p>
+<ul>
+<li><strong>New α:</strong> α_new = α_old + observed_successes</li>
+<li><strong>New β:</strong> β_new = β_old + observed_failures</li>
+</ul>
+<p><strong>Practical Benefits:</strong></p>
+<ul>
+<li><strong>Online Learning:</strong> Real-time updates as new data arrives</li>
+<li><strong>Prior Elicitation:</strong> Natural interpretation for domain experts</li>
+<li><strong>Computational Speed:</strong> No numerical integration required</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="practical-applications">🚀 Practical Applications in ML</h2>
+<p>Bayesian methods provide powerful tools for various machine learning applications, offering principled uncertainty quantification and robust inference.</p>
+<p><strong>Key Application Areas:</strong></p>
+<h3 id="1-bayesian-neural-networks">1. Bayesian Neural Networks</h3>
+<p><strong>Concept:</strong></p>
+<ul>
+<li><strong>Parameter Uncertainty:</strong> Treat weights as random variables</li>
+<li><strong>Epistemic Uncertainty:</strong> Model uncertainty about parameters</li>
+<li><strong>Aleatoric Uncertainty:</strong> Data-dependent noise modeling</li>
+</ul>
+<p><strong>Implementation:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Variational inference for BNN</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">variational_loss</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="c1"># KL divergence between variational and prior</span>
+    <span class="n">kl_div</span> <span class="o">=</span> <span class="n">kl_divergence</span><span class="p">(</span><span class="n">q_theta</span><span class="p">(</span><span class="n">params</span><span class="p">),</span> <span class="n">p_theta</span><span class="p">)</span>
+
+    <span class="c1"># Expected log-likelihood</span>
+    <span class="n">expected_ll</span> <span class="o">=</span> <span class="n">E_q</span><span class="p">[</span><span class="n">log_likelihood</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">theta</span><span class="p">)]</span>
+
+    <span class="c1"># ELBO objective</span>
+    <span class="k">return</span> <span class="n">kl_div</span> <span class="o">-</span> <span class="n">expected_ll</span>
+</code></pre></div>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li><strong>Calibrated Predictions:</strong> Uncertainty-aware outputs</li>
+<li><strong>Active Learning:</strong> Query points with high uncertainty</li>
+<li><strong>Robust Decision Making:</strong> Account for model uncertainty</li>
+</ul>
+<h3 id="2-gaussian-processes">2. Gaussian Processes</h3>
+<p><strong>Bayesian Treatment:</strong></p>
+<ul>
+<li><strong>Prior over Functions:</strong> GP prior captures function smoothness</li>
+<li><strong>Posterior Inference:</strong> Exact posterior for regression</li>
+<li><strong>Uncertainty Quantification:</strong> Predictive variance</li>
+</ul>
+<p><strong>Applications:</strong></p>
+<ul>
+<li><strong>Hyperparameter Optimization:</strong> Bayesian optimization</li>
+<li><strong>Time Series Forecasting:</strong> Uncertainty-aware predictions</li>
+<li><strong>Experimental Design:</strong> Optimal point selection</li>
+</ul>
+<h3 id="3-bayesian-optimization">3. Bayesian Optimization</h3>
+<p><strong>Framework:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">bayesian_optimization</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iterations</span><span class="p">):</span>
+        <span class="c1"># Fit GP to observed data</span>
+        <span class="n">gp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_observed</span><span class="p">,</span> <span class="n">y_observed</span><span class="p">)</span>
+
+        <span class="c1"># Acquisition function optimization</span>
+        <span class="n">x_next</span> <span class="o">=</span> <span class="n">optimize_acquisition</span><span class="p">(</span><span class="n">gp</span><span class="p">,</span> <span class="n">acquisition</span><span class="o">=</span><span class="s1">&#39;EI&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Evaluate objective</span>
+        <span class="n">y_next</span> <span class="o">=</span> <span class="n">objective_function</span><span class="p">(</span><span class="n">x_next</span><span class="p">)</span>
+
+        <span class="c1"># Update observations</span>
+        <span class="n">X_observed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_next</span><span class="p">)</span>
+        <span class="n">y_observed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_next</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Acquisition Functions:</strong></p>
+<ul>
+<li><strong>Expected Improvement (EI):</strong> Balance exploration/exploitation</li>
+<li><strong>Upper Confidence Bound (UCB):</strong> Optimistic exploration</li>
+<li><strong>Knowledge Gradient:</strong> Information-theoretic approach</li>
+</ul>
+<h3 id="4-approximate-inference-methods">4. Approximate Inference Methods</h3>
+<p><strong>Variational Inference:</strong></p>
+<ul>
+<li><strong>Mean Field Approximation:</strong> Factorized posterior</li>
+<li><strong>Normalizing Flows:</strong> Flexible posterior approximations</li>
+<li><strong>Variational Autoencoders:</strong> Deep generative models</li>
+</ul>
+<p><strong>Markov Chain Monte Carlo:</strong></p>
+<ul>
+<li><strong>Metropolis-Hastings:</strong> General-purpose sampling</li>
+<li><strong>Hamiltonian Monte Carlo:</strong> Efficient for continuous spaces</li>
+<li><strong>No-U-Turn Sampler:</strong> Adaptive HMC variant</li>
+</ul>
+<p><strong>Implementation Tools:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Strengths</th>
+<th>Use Cases</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PyMC3/4</strong></td>
+<td>User-friendly, probabilistic programming</td>
+<td>General Bayesian modeling</td>
+</tr>
+<tr>
+<td><strong>Stan</strong></td>
+<td>Efficient HMC, mature ecosystem</td>
+<td>Complex hierarchical models</td>
+</tr>
+<tr>
+<td><strong>Edward/TensorFlow Probability</strong></td>
+<td>Deep learning integration</td>
+<td>Bayesian neural networks</td>
+</tr>
+<tr>
+<td><strong>Pyro</strong></td>
+<td>PyTorch integration, flexible</td>
+<td>Research applications</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="code-examples-resources">💻 Code Examples &amp; Resources</h2>
+<h3 id="google-colab-notebooks">Google Colab Notebooks</h3>
+<p><a href="https://colab.research.google.com/github/example/bayesian-statistics-intro"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
+<strong>Bayesian Statistics Fundamentals</strong> - Interactive introduction with examples</p>
+<p><a href="https://colab.research.google.com/github/example/bayesian-ml-applications"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
+<strong>Bayesian ML Applications</strong> - Practical implementations in PyMC3 and TensorFlow Probability</p>
+<h3 id="relevant-models-libraries">Relevant Models &amp; Libraries</h3>
+<p><strong>Hugging Face Models:</strong></p>
+<ul>
+<li><a href="https://huggingface.co/models?search=bayesian">Bayesian BERT</a> - Uncertainty-aware transformers</li>
+<li><a href="https://huggingface.co/models?search=probabilistic">Probabilistic Embeddings</a> - Bayesian word embeddings</li>
+</ul>
+<p><strong>Key Libraries:</strong></p>
+<ul>
+<li><strong>PyMC3/4:</strong> Probabilistic programming in Python</li>
+<li><strong>TensorFlow Probability:</strong> Bayesian deep learning</li>
+<li><strong>Pyro:</strong> Probabilistic programming on PyTorch</li>
+<li><strong>Stan:</strong> Statistical modeling platform</li>
+</ul>
+<hr />
+<h2 id="references">📚 References &amp; Further Reading</h2>
+<h3 id="essential-papers">Essential Papers</h3>
+<ol>
+<li><strong>"Pattern Recognition and Machine Learning"</strong> - Christopher Bishop (2006)</li>
+<li>Comprehensive treatment of Bayesian methods in ML</li>
+<li>
+<p><a href="https://www.microsoft.com/en-us/research/publication/pattern-recognition-machine-learning/">Cambridge University Press</a></p>
+</li>
+<li>
+<p><strong>"Bayesian Data Analysis"</strong> - Gelman et al. (2013)</p>
+</li>
+<li>Authoritative reference for Bayesian statistics</li>
+<li>
+<p><a href="http://www.stat.columbia.edu/~gelman/book/">CRC Press</a></p>
+</li>
+<li>
+<p><strong>"Weight Uncertainty in Neural Networks"</strong> - Blundell et al. (2015)</p>
+</li>
+<li>Seminal paper on Bayesian neural networks</li>
+<li>
+<p><a href="https://arxiv.org/abs/1505.05424">arXiv:1505.05424</a></p>
+</li>
+<li>
+<p><strong>"Auto-Encoding Variational Bayes"</strong> - Kingma &amp; Welling (2013)</p>
+</li>
+<li>Variational autoencoders and approximate inference</li>
+<li><a href="https://arxiv.org/abs/1312.6114">arXiv:1312.6114</a></li>
+</ol>
+<h3 id="advanced-topics">Advanced Topics</h3>
+<ol>
+<li><strong>"Variational Inference: A Review for Statisticians"</strong> - Blei et al. (2017)</li>
+<li>Comprehensive review of variational methods</li>
+<li>
+<p><a href="https://arxiv.org/abs/1601.00670">arXiv:1601.00670</a></p>
+</li>
+<li>
+<p><strong>"The No-U-Turn Sampler: Adaptively Setting Path Lengths in Hamiltonian Monte Carlo"</strong> - Hoffman &amp; Gelman (2014)</p>
+</li>
+<li>Efficient MCMC sampling algorithm</li>
+<li><a href="https://jmlr.org/papers/v15/hoffman14a.html">Journal of Machine Learning Research</a></li>
+</ol>
+<h3 id="practical-resources">Practical Resources</h3>
+<ol>
+<li><strong>"Bayesian Methods for Hackers"</strong> - Cameron Davidson-Pilon</li>
+<li>Practical introduction with code examples</li>
+<li>
+<p><a href="https://github.com/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers">GitHub Repository</a></p>
+</li>
+<li>
+<p><strong>"Think Bayes"</strong> - Allen B. Downey</p>
+</li>
+<li>Beginner-friendly introduction to Bayesian thinking</li>
+<li><a href="https://greenteapress.com/wp/think-bayes/">Green Tea Press</a></li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<p><strong>📝 Document Information:</strong>
+- <strong>Topic:</strong> Bayesian Statistics for Machine Learning
+- <strong>Target Audience:</strong> AI researchers, ML engineers, data scientists
+- <strong>Difficulty Level:</strong> Intermediate to Advanced
+- <strong>Last Updated:</strong> September 2025
+- <strong>Format:</strong> MkDocs Material Theme Compatible</p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="September 28, 2025 13:45:53 UTC">September 28, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../08-resampling-advanced-inference/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Resampling &amp;amp; Advanced Inference">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Resampling &amp; Advanced Inference
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../10-multivariate-time-series/" class="md-footer__link md-footer__link--next" aria-label="Next: Multivariate &amp;amp; Time Series Statistics">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Multivariate &amp; Time Series Statistics
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>
