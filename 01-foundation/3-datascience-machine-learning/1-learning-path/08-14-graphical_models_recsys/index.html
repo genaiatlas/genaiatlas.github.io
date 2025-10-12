@@ -1,0 +1,4486 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/1-learning-path/08-14-graphical_models_recsys/">
+      
+      
+        <link rel="prev" href="../08-13-comparison_data_personalization/">
+      
+      
+        <link rel="next" href="../08-15-refining-recomendation-model/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Graphical Models in Recommendation Systems - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Graphical Models in Recommendation Systems
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-fast-track/01-ft-python-basics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-probability_distributions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-fast-track/01-statistics-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Introduction of Data Science
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-data-science-lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Life Cycle
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-ai_applications_across_industries/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Application
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-07-principal-component-analysis/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Dimensionality Reduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../05-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../06-hypothesis-testing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../07-deep-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_9" id="__nav_2_4_2_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Systems
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_9">
+            <span class="md-nav__icon md-icon"></span>
+            Recommendation Systems
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-01-recsys-use-cases/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Use Cases
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-02-types-of-recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Types
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-03-objective-recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Object of Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-04-population_averages_doc/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Population Averages
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-05-clustering_recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering - Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-06-collab_filtering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Collaborative Filtering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-07-svd_recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Singular Value Decomposition (SVD)
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-08-pop-comp-ranking-algo/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Population Comparison Ranking Algorithm
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-09-markov_hmm_doc/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Markov Chains & Hidden Markov Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-10-user_user_collab_filtering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    User-User Collaborative Filtering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-11-item_item_cf_doc/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Item-Item Collaborative Filtering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-12-user-item-collaborative_filtering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    User-Item Collaborative Filtering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-13-comparison_data_personalization/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Comparison of Data Personalization Techniques
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_9_15" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_9_15" id="__nav_2_4_2_9_15_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Graphical Models in Recommendation Systems
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_2_9_15_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_9_15">
+            <span class="md-nav__icon md-icon"></span>
+            Graphical Models in Recommendation Systems
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Graphical Models in Recommendation Systems
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Graphical Models in Recommendation Systems
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-of-matrix-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚫 Limitations of Matrix Completion
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probabilistic-graphical-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Probabilistic Graphical Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pairwise-graphical-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎲 Pairwise Graphical Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameter-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Parameter Estimation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-graphical-models-for-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎬 Using Graphical Models for Recommendations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#temporal-relationships-with-hidden-markov-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⏰ Temporal Relationships with Hidden Markov Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hmm-for-sequential-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 HMM for Sequential Recommendations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Practical Implementation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-with-matrix-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Comparison with Matrix Completion
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-15-refining-recomendation-model/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Refining Recommendation Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-16-active_learning_recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Active Learning in Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-17-rec_sys_building/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Building Production-Ready Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../09-networking-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network and Graphical Model
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-datascience-ml-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations-of-matrix-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      🚫 Limitations of Matrix Completion
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probabilistic-graphical-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Probabilistic Graphical Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pairwise-graphical-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎲 Pairwise Graphical Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameter-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Parameter Estimation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-graphical-models-for-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎬 Using Graphical Models for Recommendations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#temporal-relationships-with-hidden-markov-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⏰ Temporal Relationships with Hidden Markov Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hmm-for-sequential-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 HMM for Sequential Recommendations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Practical Implementation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-with-matrix-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Comparison with Matrix Completion
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="graphical-models-in-recommendation-systems">Graphical Models in Recommendation Systems <a id="top"></a></h1>
+<p><strong>Advanced techniques for capturing complex user preferences and temporal dynamics</strong></p>
+<hr />
+<h2 id="quick-navigation">📋 Quick Navigation</h2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#limitations">Limitations of Matrix Completion</a></li>
+<li><a href="#probabilistic-graphical-models">Probabilistic Graphical Models</a></li>
+<li><a href="#pairwise-models">Pairwise Graphical Models</a></li>
+<li><a href="#parameter-estimation">Parameter Estimation</a></li>
+<li><a href="#using-for-recommendations">Using Graphical Models for Recommendations</a></li>
+<li><a href="#hidden-markov-models">Temporal Relationships with Hidden Markov Models</a></li>
+<li><a href="#hmm-recommendations">HMM for Sequential Recommendations</a></li>
+<li><a href="#implementation">Practical Implementation</a></li>
+<li><a href="#comparison">Comparison with Matrix Completion</a></li>
+<li><a href="#references">References &amp; Further Reading</a></li>
+</ul>
+<hr />
+<h2 id="introduction">🎯 Introduction <a id="introduction"></a></h2>
+<p>Graphical models provide a powerful framework for building sophisticated recommendation systems that can capture complex user preference relationships and temporal dynamics. Unlike traditional matrix completion approaches, graphical models offer:</p>
+<p><strong>Key Advantages:</strong></p>
+<ul>
+<li><strong>Complex Relationship Modeling:</strong> Capture intricate dependencies between user preferences across multiple items</li>
+<li><strong>Temporal Awareness:</strong> Account for how preferences evolve over time using Markovian structures</li>
+<li><strong>Computational Efficiency:</strong> Leverage graphical structure for scalable inference algorithms</li>
+<li><strong>Sparse Data Handling:</strong> Learn from incomplete preference data effectively</li>
+</ul>
+<p><strong>Primary Use Cases:</strong></p>
+<ul>
+<li>Movie and video recommendations with sequel awareness</li>
+<li>Music playlist generation with temporal flow</li>
+<li>Product recommendations considering item relationships</li>
+<li>Content discovery with complex preference patterns</li>
+</ul>
+<p><img alt="Graphical Model Basics" src="../../../../svg/graphical_model_basics.svg" /></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="limitations-of-matrix-completion">🚫 Limitations of Matrix Completion <a id="limitations"></a></h2>
+<p>Traditional recommendation systems based on matrix completion have fundamental constraints that limit their effectiveness:</p>
+<p><strong>Core Limitations:</strong></p>
+<ul>
+<li><strong>Simplistic Relationships:</strong> Assumes linear or low-rank relationships between user preferences that don't capture real-world complexity</li>
+<li><strong>Static Assumptions:</strong> Treats user preferences as fixed, ignoring temporal evolution and contextual changes</li>
+<li><strong>Limited Expressiveness:</strong> Cannot model intricate dependencies between multiple items simultaneously</li>
+<li><strong>Sequential Ignorance:</strong> Fails to recognize importance of viewing order (e.g., movie sequels)</li>
+</ul>
+<p><strong>Real-World Example:</strong></p>
+<p>Consider recommending movies from The Godfather trilogy:</p>
+<ul>
+<li><strong>Matrix Completion Approach:</strong> May recommend Part 2 first because it has highest average rating</li>
+<li><strong>Problem:</strong> Ignores that Part 2 should only be watched after Part 1</li>
+<li><strong>Impact:</strong> Poor user experience and dissatisfaction with recommendations</li>
+</ul>
+<p><strong>Why This Matters:</strong></p>
+<p>User preferences are influenced by:</p>
+<ul>
+<li>Complex correlations between items</li>
+<li>Temporal ordering of consumption</li>
+<li>Context-dependent relationships</li>
+<li>Evolution of tastes over time</li>
+</ul>
+<p><img alt="Matrix Completion vs Graphical Models" src="../../../../svg/matrix_completion_vs_graphical.svg" /></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="probabilistic-graphical-models">🔗 Probabilistic Graphical Models <a id="probabilistic-graphical-models"></a></h2>
+<p>Probabilistic graphical models provide a succinct representation for capturing generic dependency relationships between items in a computationally efficient manner.</p>
+<p><strong>Core Concepts:</strong></p>
+<p><strong>Graph Structure:</strong></p>
+<ul>
+<li><strong>Nodes:</strong> Represent individual items (e.g., movies)</li>
+<li><strong>Edges:</strong> Capture relationships between item preferences across users</li>
+<li><strong>Values:</strong> Each node takes binary values (+1 for like, -1 for dislike)</li>
+<li><strong>Distribution:</strong> Models the joint probability distribution over all node assignments</li>
+</ul>
+<p><strong>Example - Netflix Movie Graph:</strong></p>
+<p>Consider four movies: Casablanca, Iron Man, Godfather, and Batman</p>
+<ul>
+<li><strong>Four Nodes:</strong> One per movie</li>
+<li><strong>Six Possible Edges:</strong> One for each pair of movies</li>
+<li><strong>Edge Meaning:</strong> An edge between Casablanca and Godfather indicates preference correlation</li>
+<li><strong>User Data:</strong> Each user provides +1/-1 values for movies they've rated</li>
+</ul>
+<p><strong>How It Captures Relationships:</strong></p>
+<p>The graphical model represents the distribution of user preferences across all movies:</p>
+<ul>
+<li><strong>Strong Positive Edge:</strong> Users who like one movie tend to like the other</li>
+<li><strong>Strong Negative Edge:</strong> Users who like one movie tend to dislike the other</li>
+<li><strong>Weak/No Edge:</strong> Preferences are relatively independent</li>
+</ul>
+<p><strong>Key Advantage:</strong></p>
+<p>Unlike matrix completion, this structure can capture:</p>
+<ul>
+<li>Multi-way dependencies between items</li>
+<li>Complex correlation patterns</li>
+<li>Non-linear relationships in preference space</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="pairwise-graphical-models">🎲 Pairwise Graphical Models <a id="pairwise-models"></a></h2>
+<p>Pairwise graphical models use a specific parameterization with distinct parameters for each node and edge, enabling efficient computation and learning.</p>
+<p><strong>Mathematical Framework:</strong></p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>Node Parameters:</strong> θ₁, θ₂, θ₃, θ₄ (one per node)</li>
+<li><strong>Edge Parameters:</strong> θᵢⱼ (one per edge between nodes i and j)</li>
+</ul>
+<p><strong>Probability Distribution:</strong></p>
+<p>The probability of a specific assignment σ₁, σ₂, σ₃, σ₄ (where each σᵢ ∈ {+1, -1}) is:</p>
+<div class="highlight"><pre><span></span><code>P(σ₁, σ₂, σ₃, σ₄) ∝ exp(Σᵢ θᵢσᵢ + Σᵢⱼ θᵢⱼσᵢσⱼ)
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li><strong>First Term (Σᵢ θᵢσᵢ):</strong> Sum over all nodes, captures individual item popularity</li>
+<li><strong>Second Term (Σᵢⱼ θᵢⱼσᵢσⱼ):</strong> Sum over all edges, captures pairwise correlations</li>
+<li><strong>Exponential Form:</strong> Ensures valid probability distribution</li>
+</ul>
+<p><strong>Parameter Interpretation:</strong></p>
+<p><strong>Node Parameters (θᵢ):</strong></p>
+<ul>
+<li><strong>Large Positive:</strong> Item is generally popular (most users like it)</li>
+<li><strong>Large Negative:</strong> Item is generally unpopular (most users dislike it)</li>
+<li><strong>Near Zero:</strong> Neutral popularity across population</li>
+</ul>
+<p><strong>Edge Parameters (θᵢⱼ):</strong></p>
+<ul>
+<li><strong>Large Positive:</strong> Strong positive correlation (like both or dislike both)</li>
+<li><strong>Large Negative:</strong> Strong negative correlation (like one, dislike other)</li>
+<li><strong>Near Zero:</strong> Preferences are independent</li>
+</ul>
+<p><strong>Example Scenario:</strong></p>
+<p>If all users like all movies:</p>
+<div class="highlight"><pre><span></span><code>Node parameters: θᵢ = ∞ for all i
+Edge parameters: θᵢⱼ = 0 for all pairs
+Result: Graph with no edges needed
+</code></pre></div>
+<p><img alt="Pairwise Graphical Model" src="../../../../svg/pairwise_graphical_model.svg" /></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="parameter-estimation">📊 Parameter Estimation <a id="parameter-estimation"></a></h2>
+<p>Learning graphical model parameters from sparse user preference data is achieved through moment matching and belief propagation algorithms.</p>
+<p><strong>Learning from Sparse Data:</strong></p>
+<p><strong>Key Insight:</strong></p>
+<p>Despite missing many individual user preferences, we can estimate parameters if:</p>
+<ul>
+<li>Across all users combined, we observe preferences for all pairs of movies</li>
+<li>We can compute pairwise moments (co-occurrence statistics)</li>
+</ul>
+<p><strong>Pairwise Moments to Estimate:</strong></p>
+<p>For each pair of movies (i, j), compute:</p>
+<ul>
+<li><strong>Both Liked:</strong> Fraction of users who like both movies</li>
+<li><strong>One Liked, One Disliked:</strong> Fraction who like movie i but dislike movie j (and vice versa)</li>
+<li><strong>Both Disliked:</strong> Fraction of users who dislike both movies</li>
+</ul>
+<p><strong>Moment Matching Approach:</strong></p>
+<p><strong>Algorithm Steps:</strong></p>
+<ol>
+<li><strong>Initialize:</strong> Start with random parameter values for nodes and edges</li>
+<li><strong>Compute Induced Moments:</strong> Calculate what moments the current parameters would produce</li>
+<li><strong>Compare:</strong> Measure mismatch between induced moments and empirically observed moments</li>
+<li><strong>Update:</strong> Adjust node and edge parameters to reduce mismatch</li>
+<li><strong>Iterate:</strong> Repeat steps 2-4 until convergence</li>
+</ol>
+<p><strong>Belief Propagation:</strong></p>
+<p><strong>Purpose:</strong></p>
+<p>Efficiently compute induced moments from graphical model parameters</p>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li><strong>Message Passing:</strong> Nodes exchange probabilistic messages along edges</li>
+<li><strong>Iterative Refinement:</strong> Messages updated until convergence</li>
+<li><strong>Computational Efficiency:</strong> Exploits graph structure, avoids exponential complexity</li>
+<li><strong>Tractability:</strong> Makes moment matching feasible for large graphs</li>
+</ul>
+<p><strong>Why Belief Propagation:</strong></p>
+<p>Direct computation of induced moments requires:</p>
+<ul>
+<li>Summing over all possible assignments (2ⁿ for n movies)</li>
+<li>Computationally intractable for large n</li>
+</ul>
+<p>Belief propagation reduces this to polynomial time by leveraging conditional independence in the graph structure.</p>
+<p><strong>Practical Considerations:</strong></p>
+<ul>
+<li><strong>Convergence:</strong> Usually converges quickly in practice</li>
+<li><strong>Approximations:</strong> May provide approximate solutions for loopy graphs</li>
+<li><strong>Scalability:</strong> Handles thousands of items efficiently</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="using-graphical-models-for-recommendations">🎬 Using Graphical Models for Recommendations <a id="using-for-recommendations"></a></h2>
+<p>Once parameters are learned, graphical models enable personalized recommendations through conditional probability inference.</p>
+<p><strong>Recommendation Process:</strong></p>
+<p><strong>Scenario:</strong></p>
+<p>User has liked only Casablanca; recommend from remaining movies</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li><strong>Condition on Observation:</strong> Fix the Casablanca node to +1 (liked)</li>
+<li><strong>Compute Conditional Probabilities:</strong> For each other movie, calculate P(movie = +1 | Casablanca = +1)</li>
+<li><strong>Score Assignment:</strong> Use conditional probabilities as recommendation scores</li>
+<li><strong>Rank and Recommend:</strong> Order movies by scores, recommend top-ranked items</li>
+</ol>
+<p><strong>Computational Challenge:</strong></p>
+<p>Computing conditional distributions requires:</p>
+<ul>
+<li>Marginalizing over all other unobserved variables</li>
+<li>Considering all possible assignments to unobserved nodes</li>
+<li>Computing partition function (normalization constant)</li>
+</ul>
+<p><strong>Solution: Belief Propagation</strong></p>
+<p>Belief propagation efficiently computes these conditional probabilities by:</p>
+<ul>
+<li><strong>Local Message Passing:</strong> Each node only communicates with neighbors</li>
+<li><strong>Distributed Computation:</strong> Parallel updates possible</li>
+<li><strong>Iterative Refinement:</strong> Messages converge to correct marginals</li>
+<li><strong>Graph Structure Exploitation:</strong> Uses conditional independence properties</li>
+</ul>
+<p><strong>Advantages Over Matrix Completion:</strong></p>
+<ul>
+<li><strong>Richer Context:</strong> Considers relationships with all observed items simultaneously</li>
+<li><strong>Non-Linear Patterns:</strong> Captures complex preference structures</li>
+<li><strong>Explicit Correlations:</strong> Models why items are related, not just that they are</li>
+<li><strong>Interpretability:</strong> Parameters have clear statistical meaning</li>
+</ul>
+<p><strong>Example Workflow:</strong></p>
+<div class="highlight"><pre><span></span><code>User Profile:
+- Liked: Casablanca
+- Unknown: Iron Man, Godfather, Batman
+
+Graphical Model Inference:
+- P(Godfather = +1 | Casablanca = +1) = 0.85
+- P(Batman = +1 | Casablanca = +1) = 0.42
+- P(Iron Man = +1 | Casablanca = +1) = 0.15
+
+Recommendation Order:
+1. Godfather (score: 0.85)
+2. Batman (score: 0.42)
+3. Iron Man (score: 0.15)
+</code></pre></div>
+<p><img alt="Recommendation Workflow" src="../../../../svg/recommendation_workflow.svg" /></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="temporal-relationships-with-hidden-markov-models">⏰ Temporal Relationships with Hidden Markov Models <a id="hidden-markov-models"></a></h2>
+<p>Hidden Markov Models (HMMs) extend graphical models to capture temporal aspects of user preferences, crucial for sequential content like movie series.</p>
+<p><strong>The Sequential Recommendation Problem:</strong></p>
+<p><strong>Example Issue:</strong></p>
+<ul>
+<li>User likes Goodfellas</li>
+<li>System recommends: Godfather Part 2, Part 1, Part 3</li>
+<li><strong>Problem:</strong> Part 2 recommended first due to highest rating</li>
+<li><strong>Solution Needed:</strong> Understand viewing order matters</li>
+</ul>
+<p><strong>Hidden Markov Model Structure:</strong></p>
+<p><strong>Components:</strong></p>
+<ul>
+<li><strong>Time Steps:</strong> Each preference expression represents a time point</li>
+<li><strong>Hidden States:</strong> Unobserved user preference state at each time (finite set of values)</li>
+<li><strong>Observed States:</strong> Actual movie preferences expressed by user</li>
+<li><strong>State Transitions:</strong> Hidden state at time t+1 depends on state at time t</li>
+</ul>
+<p><strong>Mathematical Framework:</strong></p>
+<p><strong>Markov Property:</strong></p>
+<div class="highlight"><pre><span></span><code>P(Hₜ₊₁ | H₁, H₂, ..., Hₜ) = P(Hₜ₊₁ | Hₜ)
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li><strong>Hₜ:</strong> Hidden state at time t</li>
+<li><strong>Markov Assumption:</strong> Future depends only on present, not entire history</li>
+<li><strong>Homogeneity:</strong> Transition probabilities constant across time</li>
+</ul>
+<p><strong>Observation Model:</strong></p>
+<div class="highlight"><pre><span></span><code>P(Oₜ | Hₜ)
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li><strong>Oₜ:</strong> Observed preference at time t (e.g., "liked Goodfellas")</li>
+<li><strong>Conditional Independence:</strong> Observation depends only on current hidden state</li>
+</ul>
+<p><strong>Why "Hidden"?</strong></p>
+<p>The underlying user preference state is not directly observable:</p>
+<ul>
+<li>We only see expressed preferences (observations)</li>
+<li>Hidden state captures latent factors influencing preferences</li>
+<li>Multiple observation sequences can come from same hidden state trajectory</li>
+</ul>
+<p><strong>Temporal Dynamics Captured:</strong></p>
+<ul>
+<li><strong>Sequential Patterns:</strong> Users who like movie A first often like movie B next</li>
+<li><strong>Order Dependencies:</strong> Probability of liking item depends on previous items liked</li>
+<li><strong>Evolution:</strong> User tastes can transition between preference states over time</li>
+</ul>
+<p><img alt="Hidden Markov Model" src="../../../../svg/hidden_markov_model.svg" /></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="hmm-for-sequential-recommendations">🎯 HMM for Sequential Recommendations <a id="hmm-recommendations"></a></h2>
+<p>Using learned HMMs, we can provide temporally-aware recommendations that respect viewing order and sequence dependencies.</p>
+<p><strong>Learning HMM Parameters:</strong></p>
+<p><strong>Baum-Welch Algorithm:</strong></p>
+<p><strong>Purpose:</strong></p>
+<p>Learn transition and observation probabilities from user preference sequences</p>
+<p><strong>Input Data:</strong></p>
+<ul>
+<li>Multiple user preference sequences of varying lengths</li>
+<li>Each sequence: ordered list of movie preferences over time</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>User A: [Goodfellas: +1] → [Iron Man: -1] → [Godfather Part 1: +1]
+User B: [Casablanca: +1] → [Godfather Part 1: +1] → [Godfather Part 2: +1]
+</code></pre></div>
+<p><strong>Parameters to Learn:</strong></p>
+<ul>
+<li><strong>Transition Probabilities:</strong> P(Hₜ₊₁ = j | Hₜ = i) for all hidden state pairs (i, j)</li>
+<li><strong>Emission Probabilities:</strong> P(Oₜ = movie | Hₜ = i) for all hidden states i and movies</li>
+<li><strong>Initial State Distribution:</strong> P(H₁ = i) for all hidden states i</li>
+</ul>
+<p><strong>Making Recommendations:</strong></p>
+<p><strong>Scenario:</strong></p>
+<p>User expressed preferences:</p>
+<ul>
+<li>Time 1: Liked Goodfellas</li>
+<li>Time 2: Disliked Iron Man</li>
+<li>Time 3: Want recommendation</li>
+</ul>
+<p><strong>Inference Process:</strong></p>
+<ol>
+<li><strong>Filter:</strong> Compute P(H₂ | O₁, O₂) using forward algorithm</li>
+<li><strong>Predict:</strong> For each movie m, compute P(O₃ = m liked | O₁, O₂)</li>
+<li><strong>Score:</strong> Use these probabilities as recommendation scores</li>
+<li><strong>Rank:</strong> Order movies by scores, recommend highest</li>
+</ol>
+<p><strong>Key Advantage - Temporal Awareness:</strong></p>
+<p><strong>Example Result:</strong></p>
+<div class="highlight"><pre><span></span><code>P(Godfather Part 1 liked | Goodfellas liked, Iron Man disliked) = 0.78
+P(Godfather Part 2 liked | Goodfellas liked, Iron Man disliked) = 0.65
+</code></pre></div>
+<p>Even though Godfather Part 2 has higher population-level rating:</p>
+<ul>
+<li><strong>Part 1 scores higher</strong> due to sequential pattern learned from data</li>
+<li>Users who like Goodfellas typically watch Part 1 before Part 2</li>
+<li>System respects natural viewing order</li>
+</ul>
+<p><strong>Computational Approach:</strong></p>
+<p><strong>Forward Algorithm:</strong></p>
+<p>Efficiently computes likelihood of observation sequence:</p>
+<div class="highlight"><pre><span></span><code>αₜ(i) = P(O₁, O₂, ..., Oₜ, Hₜ = i)
+</code></pre></div>
+<p><strong>Forward Recursion:</strong></p>
+<div class="highlight"><pre><span></span><code>αₜ₊₁(j) = [Σᵢ αₜ(i) × P(Hₜ₊₁ = j | Hₜ = i)] × P(Oₜ₊₁ | Hₜ₊₁ = j)
+</code></pre></div>
+<p><strong>Backward Algorithm:</strong></p>
+<p>Computes probability of future observations:</p>
+<div class="highlight"><pre><span></span><code>βₜ(i) = P(Oₜ₊₁, ..., Oₜ | Hₜ = i)
+</code></pre></div>
+<p><strong>Combined Inference:</strong></p>
+<p>Using both forward and backward probabilities enables efficient computation of:</p>
+<ul>
+<li>Conditional probabilities for recommendations</li>
+<li>Expected state occupancies for learning</li>
+<li>Most likely state sequences (Viterbi algorithm)</li>
+</ul>
+<p><strong>Practical Considerations:</strong></p>
+<ul>
+<li><strong>Variable Length Sequences:</strong> Different users have different numbers of preferences</li>
+<li><strong>Cold Start:</strong> Initialize with population-level priors for new users</li>
+<li><strong>Model Size:</strong> Number of hidden states is hyperparameter (typically 5-50)</li>
+<li><strong>Convergence:</strong> Baum-Welch usually converges in 10-100 iterations</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="practical-implementation">💻 Practical Implementation <a id="implementation"></a></h2>
+<p><strong>Python Libraries and Tools:</strong></p>
+<p><strong>Core Libraries:</strong></p>
+<ul>
+<li><strong>pgmpy:</strong> Probabilistic graphical models in Python</li>
+<li><strong>hmmlearn:</strong> Hidden Markov Models implementation</li>
+<li><strong>NetworkX:</strong> Graph structure manipulation</li>
+<li><strong>NumPy/SciPy:</strong> Numerical computations</li>
+</ul>
+<p><strong>Basic Implementation Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pgmpy.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarkovNetwork</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pgmpy.factors.discrete</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscreteFactor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pgmpy.inference</span><span class="w"> </span><span class="kn">import</span> <span class="n">BeliefPropagation</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Define pairwise graphical model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">MarkovNetwork</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">([</span><span class="s1">&#39;Casablanca&#39;</span><span class="p">,</span> <span class="s1">&#39;Godfather&#39;</span><span class="p">,</span> <span class="s1">&#39;IronMan&#39;</span><span class="p">,</span> <span class="s1">&#39;Batman&#39;</span><span class="p">])</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">([</span>
+    <span class="p">(</span><span class="s1">&#39;Casablanca&#39;</span><span class="p">,</span> <span class="s1">&#39;Godfather&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;Godfather&#39;</span><span class="p">,</span> <span class="s1">&#39;Batman&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;IronMan&#39;</span><span class="p">,</span> <span class="s1">&#39;Batman&#39;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="c1"># Add factors (parameters)</span>
+<span class="n">factor_cg</span> <span class="o">=</span> <span class="n">DiscreteFactor</span><span class="p">(</span>
+    <span class="p">[</span><span class="s1">&#39;Casablanca&#39;</span><span class="p">,</span> <span class="s1">&#39;Godfather&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]])</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add_factors</span><span class="p">(</span><span class="n">factor_cg</span><span class="p">)</span>
+
+<span class="c1"># Perform inference</span>
+<span class="n">bp</span> <span class="o">=</span> <span class="n">BeliefPropagation</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+    <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Godfather&#39;</span><span class="p">],</span>
+    <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Casablanca&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>HMM Implementation:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">hmmlearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">hmm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Initialize HMM</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">hmm</span><span class="o">.</span><span class="n">GaussianHMM</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">)</span>
+
+<span class="c1"># Training data: sequences of user preferences</span>
+<span class="c1"># X shape: (n_samples, n_features)</span>
+<span class="c1"># lengths: list of sequence lengths</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">user_preference_sequences</span><span class="p">)</span>
+<span class="n">lengths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span> <span class="k">for</span> <span class="n">seq</span> <span class="ow">in</span> <span class="n">user_preference_sequences</span><span class="p">]</span>
+
+<span class="c1"># Train model</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">lengths</span><span class="p">)</span>
+
+<span class="c1"># Predict next preference</span>
+<span class="n">user_history</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>  <span class="c1"># Recent preferences</span>
+<span class="n">log_prob</span><span class="p">,</span> <span class="n">state_sequence</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">user_history</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s2">&quot;viterbi&quot;</span><span class="p">)</span>
+
+<span class="c1"># Score potential recommendations</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">user_history</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Deployment Considerations:</strong></p>
+<p><strong>Model Serving:</strong></p>
+<ul>
+<li><strong>Precompute:</strong> Calculate common conditional probabilities offline</li>
+<li><strong>Caching:</strong> Store frequent query results</li>
+<li><strong>Batching:</strong> Process multiple users simultaneously</li>
+<li><strong>Approximations:</strong> Use sampling for very large graphs</li>
+</ul>
+<p><strong>Scaling Strategies:</strong></p>
+<ul>
+<li><strong>Distributed Belief Propagation:</strong> Partition graph across machines</li>
+<li><strong>Mini-Batch Learning:</strong> Update parameters on data subsets</li>
+<li><strong>Feature Hashing:</strong> Reduce parameter space for very large item catalogs</li>
+<li><strong>Hierarchical Models:</strong> Multi-level graphs for different item granularities</li>
+</ul>
+<p><strong>Performance Metrics:</strong></p>
+<ul>
+<li><strong>Precision@K:</strong> Fraction of top-K recommendations that are relevant</li>
+<li><strong>Recall@K:</strong> Fraction of relevant items in top-K recommendations</li>
+<li><strong>NDCG:</strong> Normalized Discounted Cumulative Gain for ranking quality</li>
+<li><strong>Temporal Coherence:</strong> Measure of sequential appropriateness</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="comparison-with-matrix-completion">📊 Comparison with Matrix Completion <a id="comparison"></a></h2>
+<p><strong>Comprehensive Comparison Table:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Matrix Completion</th>
+<th>Graphical Models</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Relationship Modeling</strong></td>
+<td>Linear/low-rank assumptions</td>
+<td>Complex non-linear dependencies</td>
+</tr>
+<tr>
+<td><strong>Temporal Awareness</strong></td>
+<td>None (static preferences)</td>
+<td>Explicit temporal dynamics via HMM</td>
+</tr>
+<tr>
+<td><strong>Computational Complexity</strong></td>
+<td>O(nmk) for n users, m items, k factors</td>
+<td>O(d²n) for n items, d degree</td>
+</tr>
+<tr>
+<td><strong>Interpretability</strong></td>
+<td>Latent factors hard to interpret</td>
+<td>Parameters have clear statistical meaning</td>
+</tr>
+<tr>
+<td><strong>Data Requirements</strong></td>
+<td>Needs moderate data density</td>
+<td>Works with sparse pairwise observations</td>
+</tr>
+<tr>
+<td><strong>Scalability</strong></td>
+<td>Excellent for large matrices</td>
+<td>Good with belief propagation</td>
+</tr>
+<tr>
+<td><strong>Sequential Understanding</strong></td>
+<td>No order awareness</td>
+<td>Captures viewing/consumption order</td>
+</tr>
+<tr>
+<td><strong>Cold Start</strong></td>
+<td>Difficult for new items</td>
+<td>Can leverage item relationships</td>
+</tr>
+</tbody>
+</table>
+<p><strong>When to Use Each Approach:</strong></p>
+<p><strong>Matrix Completion Best For:</strong></p>
+<ul>
+<li>Large-scale systems with dense interaction data</li>
+<li>Scenarios where temporal order is unimportant</li>
+<li>Real-time systems requiring very fast inference</li>
+<li>Simple preference patterns without complex correlations</li>
+</ul>
+<p><strong>Graphical Models Best For:</strong></p>
+<ul>
+<li>Complex correlation patterns between items</li>
+<li>Sequential content (series, episodes, courses)</li>
+<li>Sparse data with pairwise observations available</li>
+<li>Interpretable recommendation explanations</li>
+<li>Temporal dynamics are important</li>
+</ul>
+<p><strong>Hybrid Approaches:</strong></p>
+<p><strong>Combined Strategy:</strong></p>
+<ul>
+<li><strong>First Stage:</strong> Matrix completion for initial broad recommendations</li>
+<li><strong>Second Stage:</strong> Graphical model refinement for sequential ordering</li>
+<li><strong>Result:</strong> Scalability of matrix methods + sophistication of graphical models</li>
+</ul>
+<p><strong>Neural Network Connection:</strong></p>
+<p>Modern deep learning approaches (RNNs, Transformers) for recommendations:</p>
+<ul>
+<li><strong>Similarity to HMMs:</strong> Both model sequential dependencies</li>
+<li><strong>Advantages of Neural Nets:</strong> Learn representations automatically, handle longer sequences</li>
+<li><strong>Used By:</strong> Spotify (RNNs for playlist generation), Netflix (sequence-aware models)</li>
+</ul>
+<p><strong>Industry Examples:</strong></p>
+<ul>
+<li><strong>Spotify:</strong> Uses recurrent neural networks for sequential playlist recommendations</li>
+<li><strong>YouTube:</strong> Combines collaborative filtering with sequential neural models</li>
+<li><strong>Netflix:</strong> Hybrid approach with temporal dynamics</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="references-further-reading">📚 References &amp; Further Reading <a id="references"></a></h2>
+<p><strong>Foundational Papers:</strong></p>
+<ol>
+<li><strong>"Probabilistic Graphical Models: Principles and Techniques"</strong> by Koller &amp; Friedman (2009)</li>
+<li>Comprehensive textbook on graphical models</li>
+<li>
+<p><a href="https://mitpress.mit.edu/books/probabilistic-graphical-models">MIT Press</a></p>
+</li>
+<li>
+<p><strong>"Hidden Markov Models for Collaborative Filtering"</strong> by Rendle et al. (2010)</p>
+</li>
+<li>Application of HMMs to recommendation systems</li>
+<li>
+<p><a href="https://dl.acm.org/doi/10.1145/1772690.1772773">ACM Digital Library</a></p>
+</li>
+<li>
+<p><strong>"Collaborative Filtering for Implicit Feedback Datasets"</strong> by Hu et al. (2008)</p>
+</li>
+<li>Foundational work on implicit preference modeling</li>
+<li><a href="https://ieeexplore.ieee.org/document/4781121">IEEE Xplore</a></li>
+</ol>
+<p><strong>Advanced Topics:</strong></p>
+<ol>
+<li><strong>"Deep Learning for Sequential Recommendation: Algorithms, Influential Factors, and Evaluations"</strong> - ACM TOIS (2020)</li>
+<li>Modern neural approaches to sequential recommendations</li>
+<li>
+<p><a href="https://arxiv.org/abs/1905.01997">arXiv:1905.01997</a></p>
+</li>
+<li>
+<p><strong>"Session-based Recommendations with Recurrent Neural Networks"</strong> by Hidasi et al. (2016)</p>
+</li>
+<li>RNN application to session-based recommendations</li>
+<li><a href="https://arxiv.org/abs/1511.06939">arXiv:1511.06939</a></li>
+</ol>
+<p><strong>Practical Resources:</strong></p>
+<ol>
+<li><strong>pgmpy Documentation</strong></li>
+<li>Python library for probabilistic graphical models</li>
+<li>
+<p><a href="https://pgmpy.org/">https://pgmpy.org/</a></p>
+</li>
+<li>
+<p><strong>hmmlearn Documentation</strong></p>
+</li>
+<li>Hidden Markov Models in Python</li>
+<li>
+<p><a href="https://hmmlearn.readthedocs.io/">https://hmmlearn.readthedocs.io/</a></p>
+</li>
+<li>
+<p><strong>"Recommendation Systems Handbook"</strong> edited by Ricci, Rokach, Shapira (2015)</p>
+</li>
+<li>Comprehensive guide to recommendation algorithms</li>
+<li><a href="https://www.springer.com/gp/book/9781489976369">Springer</a></li>
+</ol>
+<p><strong>Implementation Examples:</strong></p>
+<ol>
+<li><strong>Google Colab - Graphical Models Tutorial</strong></li>
+<li>Interactive notebook with examples</li>
+<li>
+<p><a href="https://colab.research.google.com/"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+</li>
+<li>
+<p><strong>Hugging Face - Recommendation Models</strong></p>
+<ul>
+<li>Pre-trained models and datasets</li>
+<li><a href="https://huggingface.co/models?pipeline_tag=recommendation">https://huggingface.co/models?pipeline_tag=recommendation</a></li>
+</ul>
+</li>
+</ol>
+<p><strong>Research Papers:</strong></p>
+<ol>
+<li>
+<p><strong>"Factorization Machines"</strong> by Rendle (2010)</p>
+<ul>
+<li>Bridge between matrix factorization and feature-based models</li>
+<li><a href="https://ieeexplore.ieee.org/document/5694074">IEEE ICDM 2010</a></li>
+</ul>
+</li>
+<li>
+<p><strong>"Recurrent Recommender Networks"</strong> by Wu et al. (2017)</p>
+<ul>
+<li>State-of-the-art sequential recommendations with RNNs</li>
+<li><a href="http://alexbeutel.com/papers/rrn_wsdm2017.pdf">WSDM 2017</a></li>
+</ul>
+</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<p><strong>Document Information:</strong></p>
+<ul>
+<li><strong>Version:</strong> 1.0</li>
+<li><strong>Last Updated:</strong> October 2025</li>
+<li><strong>Topic:</strong> Advanced Recommendation Systems</li>
+<li><strong>Audience:</strong> ML Engineers, Data Scientists, Researchers</li>
+<li><strong>Prerequisites:</strong> Probability theory, Linear algebra, Basic machine learning</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 8, 2025 12:36:09 UTC">October 8, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+<!-- Footer navigation (prev/next) - Material default -->
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../08-13-comparison_data_personalization/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Personalization using Comparison Data" rel="prev">
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Previous
+            </span>
+            <div class="md-ellipsis">
+              Personalization using Comparison Data
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../08-15-refining-recomendation-model/" class="md-footer__link md-footer__link--next" aria-label="Next: Refining Recommendation Models using Side Information" rel="next">
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Next
+            </span>
+            <div class="md-ellipsis">
+              Refining Recommendation Models using Side Information
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+
+  <!-- Custom footer content -->
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        <div style="text-align: center; padding: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 1rem;">
+          <p style="margin: 0.5rem 0;">
+            <strong>GenAI Atlas</strong> - Your Comprehensive Guide to AI & Machine Learning
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.9em; opacity: 0.8;">
+            © 2024 GenAI Atlas | Built with ❤️ for the AI Community
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.85em; opacity: 0.7;">
+            <em>Empowering developers, researchers, and practitioners worldwide</em>
+          </p>
+        </div>
+      </div>
+      <div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

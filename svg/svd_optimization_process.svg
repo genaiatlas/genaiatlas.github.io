@@ -1,0 +1,140 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="step1Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B0E0E6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="step2Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFB6C1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFC0CB;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="convergenceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#90EE90;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#98FB98;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="2" stdDeviation="2" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="#FFFFFF"/>
+  
+  <!-- Title -->
+  <text x="400" y="35" font-family="Arial, sans-serif" font-size="22" font-weight="bold" text-anchor="middle" fill="#2C3E50">
+    SVD Optimization: Alternating Minimization
+  </text>
+  
+  <!-- Objective Function Box -->
+  <g transform="translate(400, 85)">
+    <rect x="-180" y="-20" width="360" height="40" fill="white" stroke="#7F8C8D" stroke-width="2" rx="8"/>
+    <text x="0" y="5" font-family="Arial, sans-serif" font-size="13" text-anchor="middle" fill="#2C3E50">
+      minimize Σ(i,j)∈obs (L_ij - Σ_k u_ik v_jk)²
+    </text>
+  </g>
+  
+  <!-- Initialize Box -->
+  <g transform="translate(400, 160)">
+    <rect x="-80" y="-22" width="160" height="44" fill="#F5F5F5" stroke="#95A5A6" stroke-width="2" rx="8"/>
+    <text x="0" y="-2" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#2C3E50">
+      Initialize U, V
+    </text>
+    <text x="0" y="15" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#7F8C8D">
+      Random or SVD-based
+    </text>
+  </g>
+  
+  <!-- Arrow down -->
+  <path d="M 400 204 L 400 245" stroke="#7F8C8D" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Step 1: Fix V, Solve for U (Left Blue Box) -->
+  <g transform="translate(220, 300)">
+    <rect x="-100" y="-35" width="200" height="70" fill="url(#step1Grad)" opacity="0.4" stroke="#4A90E2" stroke-width="2" rx="8"/>
+    <text x="0" y="-10" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#2874A6">
+      Step 1: Fix V, Solve for U
+    </text>
+    <text x="0" y="8" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#34495E">
+      Linear regression for each user
+    </text>
+    <text x="0" y="25" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#7F8C8D">
+      min Σ_i (L_ij - Σ_k u_ik v_jk)²
+    </text>
+  </g>
+  
+  <!-- Bidirectional Arrow with "Alternate" label -->
+  <path d="M 340 300 L 460 300" stroke="#7F8C8D" stroke-width="2"/>
+  <path d="M 335 295 L 340 300 L 335 305" stroke="#7F8C8D" stroke-width="2" fill="none"/>
+  <path d="M 465 295 L 460 300 L 465 305" stroke="#7F8C8D" stroke-width="2" fill="none"/>
+  <text x="400" y="290" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#7F8C8D" font-style="italic">Alternate</text>
+  
+  <!-- Step 2: Fix U, Solve for V (Right Pink Box) -->
+  <g transform="translate(580, 300)">
+    <rect x="-100" y="-35" width="200" height="70" fill="url(#step2Grad)" opacity="0.4" stroke="#E74C3C" stroke-width="2" rx="8"/>
+    <text x="0" y="-10" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#C0392B">
+      Step 2: Fix U, Solve for V
+    </text>
+    <text x="0" y="8" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#34495E">
+      Linear regression for each item
+    </text>
+    <text x="0" y="25" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="#7F8C8D">
+      min Σ_j (L_ij - Σ_k u_ik v_jk)²
+    </text>
+  </g>
+  
+  <!-- Dashed lines from both steps to convergence -->
+  <path d="M 220 335 L 220 390" stroke="#95A5A6" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <path d="M 580 335 L 580 390" stroke="#95A5A6" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <path d="M 220 390 L 580 390" stroke="#95A5A6" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <path d="M 400 390 L 400 420" stroke="#7F8C8D" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Check Convergence Box (Green) -->
+  <g transform="translate(400, 460)">
+    <rect x="-100" y="-25" width="200" height="50" fill="url(#convergenceGrad)" opacity="0.4" stroke="#27AE60" stroke-width="2" rx="8"/>
+    <text x="0" y="-3" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#27AE60">
+      Check Convergence
+    </text>
+    <text x="0" y="14" font-family="Arial, sans-serif" font-size="11" text-anchor="middle" fill="#34495E">
+      |Cost_new - Cost_old| &lt; ε
+    </text>
+  </g>
+  
+  <!-- Not Converged Loop (Orange dashed arrow) -->
+  <path d="M 300 450 Q 140 350 220 255" stroke="#F39C12" stroke-width="2.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrowheadOrange)"/>
+  <text x="145" y="350" font-family="Arial, sans-serif" font-size="11" fill="#F39C12" font-weight="bold">
+    Not converged
+  </text>
+  
+  <!-- Converged arrow to output -->
+  <path d="M 400 485 L 400 520" stroke="#27AE60" stroke-width="2" marker-end="url(#arrowheadGreen)"/>
+  <text x="420" y="505" font-family="Arial, sans-serif" font-size="11" fill="#27AE60">Converged</text>
+  
+  <!-- Output Box (Green) -->
+  <g transform="translate(400, 545)">
+    <rect x="-60" y="-18" width="120" height="36" fill="url(#convergenceGrad)" opacity="0.5" stroke="#27AE60" stroke-width="2" rx="8"/>
+    <text x="0" y="5" font-family="Arial, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#27AE60">
+      Output: U*, V*
+    </text>
+  </g>
+  
+  <!-- Algorithm Properties (Left Side) -->
+  <g transform="translate(50, 400)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#2C3E50">Algorithm Properties:</text>
+    <text x="0" y="22" font-family="Arial, sans-serif" font-size="10" fill="#34495E">• Monotonic cost decrease</text>
+    <text x="0" y="42" font-family="Arial, sans-serif" font-size="10" fill="#34495E">• Local optimum guarantee</text>
+    <text x="0" y="62" font-family="Arial, sans-serif" font-size="10" fill="#34495E">• No imputation needed</text>
+    <text x="0" y="82" font-family="Arial, sans-serif" font-size="10" fill="#34495E">• Scalable to large matrices</text>
+  </g>
+  
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#7F8C8D"/>
+    </marker>
+    <marker id="arrowheadOrange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#F39C12"/>
+    </marker>
+    <marker id="arrowheadGreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#27AE60"/>
+    </marker>
+  </defs>
+</svg>

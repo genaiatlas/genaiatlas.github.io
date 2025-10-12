@@ -1,0 +1,113 @@
+<svg viewBox="0 0 800 650" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title-text { font-family: 'Arial', sans-serif; font-size: 24px; font-weight: bold; fill: #2C3E50; }
+      .subtitle-text { font-family: 'Arial', sans-serif; font-size: 16px; fill: #555; }
+      .node-circle { fill: #4A90E2; stroke: #2E5C8A; stroke-width: 3; }
+      .node-label { font-family: 'Arial', sans-serif; font-size: 14px; fill: white; font-weight: bold; text-anchor: middle; }
+      .edge-line { stroke: #666; stroke-width: 2.5; }
+      .cycle-highlight { stroke: #E74C3C; stroke-width: 4; fill: none; stroke-dasharray: 8,4; }
+      .message-arrow { stroke: #9B59B6; stroke-width: 2; fill: none; }
+      .label-text { font-family: 'Arial', sans-serif; font-size: 13px; fill: #555; }
+      .problem-text { font-family: 'Arial', sans-serif; font-size: 14px; fill: #E74C3C; }
+      .solution-text { font-family: 'Arial', sans-serif; font-size: 14px; fill: #27AE60; }
+    </style>
+    
+    <marker id="purple-arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#9B59B6"/>
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="30" class="title-text" text-anchor="middle">Loopy Belief Propagation</text>
+  <text x="400" y="55" class="subtitle-text" text-anchor="middle">Message Passing on Graphs with Cycles</text>
+  
+  <!-- Graph with Cycle -->
+  <g transform="translate(150, 100)">
+    <text x="150" y="-10" class="subtitle-text" text-anchor="middle" font-weight="bold">Graph with Cycle (Loop)</text>
+    
+    <!-- Main cycle (square) -->
+    <line x1="100" y1="50" x2="200" y2="50" class="edge-line"/>
+    <line x1="200" y1="50" x2="200" y2="150" class="edge-line"/>
+    <line x1="200" y1="150" x2="100" y2="150" class="edge-line"/>
+    <line x1="100" y1="150" x2="100" y2="50" class="edge-line"/>
+    
+    <!-- Additional edges -->
+    <line x1="100" y1="50" x2="50" y2="100" class="edge-line"/>
+    <line x1="200" y1="50" x2="250" y2="100" class="edge-line"/>
+    <line x1="200" y1="150" x2="250" y2="200" class="edge-line"/>
+    
+    <!-- Cycle highlight -->
+    <rect x="95" y="45" width="110" height="110" class="cycle-highlight"/>
+    
+    <!-- Circular message arrows around cycle -->
+    <path d="M 105 55 L 195 55" class="message-arrow" marker-end="url(#purple-arrow)"/>
+    <path d="M 195 60 L 195 145" class="message-arrow" marker-end="url(#purple-arrow)"/>
+    <path d="M 190 145 L 105 145" class="message-arrow" marker-end="url(#purple-arrow)"/>
+    <path d="M 105 140 L 105 60" class="message-arrow" marker-end="url(#purple-arrow)"/>
+    
+    <!-- Nodes -->
+    <circle cx="100" cy="50" r="22" class="node-circle"/>
+    <text x="100" y="57" class="node-label">X₁</text>
+    
+    <circle cx="200" cy="50" r="22" class="node-circle"/>
+    <text x="200" y="57" class="node-label">X₂</text>
+    
+    <circle cx="200" cy="150" r="22" class="node-circle"/>
+    <text x="200" y="157" class="node-label">X₃</text>
+    
+    <circle cx="100" cy="150" r="22" class="node-circle"/>
+    <text x="100" y="157" class="node-label">X₄</text>
+    
+    <circle cx="50" cy="100" r="22" class="node-circle"/>
+    <text x="50" y="107" class="node-label">X₅</text>
+    
+    <circle cx="250" cy="100" r="22" class="node-circle"/>
+    <text x="250" y="107" class="node-label">X₆</text>
+    
+    <circle cx="250" cy="200" r="22" class="node-circle"/>
+    <text x="250" y="207" class="node-label">X₇</text>
+    
+    <text x="150" y="230" class="problem-text" text-anchor="middle" font-weight="bold">⚠ Messages cycle indefinitely!</text>
+  </g>
+  
+  <!-- Problem Description -->
+  <g transform="translate(420, 100)">
+    <rect x="0" y="0" width="330" height="230" fill="#FFF0F0" stroke="#E74C3C" stroke-width="2" rx="5"/>
+    <text x="165" y="30" class="subtitle-text" text-anchor="middle" font-weight="bold" fill="#E74C3C">The Cycle Problem</text>
+    
+    <text x="20" y="60" class="problem-text" font-weight="bold">Challenges:</text>
+    <text x="30" y="85" class="label-text">• No leaf nodes to start</text>
+    <text x="30" y="105" class="label-text">• All nodes have multiple neighbors</text>
+    <text x="30" y="125" class="label-text">• Messages go round and round</text>
+    <text x="30" y="145" class="label-text">• Unclear how to initialize</text>
+    <text x="30" y="165" class="label-text">• No convergence guarantee</text>
+    
+    <line x1="20" y1="178" x2="310" y2="178" stroke="#CCC" stroke-width="1"/>
+    
+    <text x="165" y="200" class="label-text" text-anchor="middle" font-style="italic">Despite challenges, can still</text>
+    <text x="165" y="220" class="label-text" text-anchor="middle" font-style="italic">apply message passing heuristically</text>
+  </g>
+  
+  <!-- Loopy BP Algorithm -->
+  <g transform="translate(50, 360)">
+    <rect x="0" y="0" width="700" height="240" fill="#E8F4F8" stroke="#3498DB" stroke-width="2" rx="5"/>
+    <text x="350" y="30" class="subtitle-text" text-anchor="middle" font-weight="bold">Loopy Belief Propagation Algorithm</text>
+    
+    <text x="30" y="65" class="solution-text" font-weight="bold">Step 1: Random Initialization</text>
+    <text x="40" y="88" class="label-text">Initialize all messages with random values or uniform distributions</text>
+    
+    <text x="30" y="118" class="solution-text" font-weight="bold">Step 2: Iterative Message Updates</text>
+    <text x="40" y="141" class="label-text">Repeatedly update messages using local update rules:</text>
+    <text x="50" y="161" class="label-text" style="font-family: 'Courier New', monospace; font-size: 12px;">m[v→w](x_w) = Σ ψ(x_v, x_w) × ψ(x_v) × ∏ m[u→v](x_v)</text>
+    
+    <text x="30" y="191" class="solution-text" font-weight="bold">Step 3: Check Convergence</text>
+    <text x="40" y="214" class="label-text">Stop when messages stabilize or reach maximum iterations</text>
+  </g>
+  
+  <!-- Practical Improvements -->
+  <g transform="translate(50, 615)">
+    <text x="0" y="0" class="label-text" font-weight="bold">Practical Improvements:</text>
+    <text x="10" y="20" class="label-text">• Damping: m_new = α × m_old + (1-α) × m_update   • Message scheduling: Optimize update order   • Convergence monitoring</text>
+  </g>
+</svg>

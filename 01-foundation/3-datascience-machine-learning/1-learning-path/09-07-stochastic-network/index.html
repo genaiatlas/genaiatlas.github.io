@@ -1,0 +1,4859 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/1-learning-path/09-07-stochastic-network/">
+      
+      
+        <link rel="prev" href="../09-06-network-models/">
+      
+      
+        <link rel="next" href="../09-08-influence-maximization-networks/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Stochastic Network Models: Epidemic and Contagion Processes - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Stochastic Network Models: Epidemic and Contagion Processes
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-fast-track/01-ft-python-basics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-probability_distributions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-fast-track/01-statistics-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Introduction of Data Science
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-data-science-lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Life Cycle
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-ai_applications_across_industries/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Application
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-07-principal-component-analysis/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Dimensionality Reduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../05-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../06-hypothesis-testing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../07-deep-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../08-recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_10" id="__nav_2_4_2_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Network and Graphical Model
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Network and Graphical Model
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-networking-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fundamentals
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-01-network-theory/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Theory
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-02-network-representations/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Netwrok Representations
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-03-network-centrality-measure/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Centrality measures
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-04-spatial-centrality-measures/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Spatial Centrality measures
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-05-global-network-stats/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Global Network Statistics
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-06-network-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_10_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_10_8" id="__nav_2_4_2_10_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Stochastic Network Models
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_2_10_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_10_8">
+            <span class="md-nav__icon md-icon"></span>
+            Stochastic Network Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Stochastic Network Models: Epidemic and Contagion Processes
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stochastic Network Models: Epidemic and Contagion Processes
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-to-stochastic-network-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction to Stochastic Network Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-the-si-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding the SI Model
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding the SI Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Definition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transmission-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Transmission Mechanisms
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#information-diffusion-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Information Diffusion Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#independent-infection-attempts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Independent Infection Attempts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-dynamics-and-branching-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Dynamics and Branching Process
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Dynamics and Branching Process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#branching-number-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      Branching Number Concept
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#epidemic-threshold" class="md-nav__link">
+    <span class="md-ellipsis">
+      Epidemic Threshold
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-exponential-growth-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Exponential Growth Scenario
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-die-out-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Die-Out Scenario
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-structure-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Structure Impact
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extended-models-sir-and-sirs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extended Models: SIR and SIRS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extended Models: SIR and SIRS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sir-model-susceptible-infected-recovered" class="md-nav__link">
+    <span class="md-ellipsis">
+      SIR Model: Susceptible-Infected-Recovered
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sirs-model-temporary-immunity" class="md-nav__link">
+    <span class="md-ellipsis">
+      SIRS Model: Temporary Immunity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparison Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Dynamics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mathematical-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mathematical Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#epidemic-threshold-theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Epidemic Threshold Theory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#branching-process-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Branching Process Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Effects
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temporal-dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Temporal Dynamics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applications-and-real-world-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications and Real-World Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Applications and Real-World Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#disease-epidemiology" class="md-nav__link">
+    <span class="md-ellipsis">
+      🦠 Disease Epidemiology
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#information-diffusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      📱 Information Diffusion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#behavioral-contagion" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏃 Behavioral Contagion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computer-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Computer Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opinion-dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏛️ Opinion Dynamics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-study-covid-19-intervention-modeling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case Study: COVID-19 Intervention Modeling
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-code-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive Code Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive Code Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simulation-and-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Simulation and Visualization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-analysis-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Network Analysis Tools
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foundational-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Foundational Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#books" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Books
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#course-materials" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎓 Course Materials
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software-and-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Software and Tools
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-08-influence-maximization-networks/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Influence Maximization in Networks
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-09-undirected-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Undirected Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-10-ising-gaussian-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Ising and Gaussian Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-11-directed-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Directed Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-12-inference-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Inference in Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-13-hidden-markov-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hidden Markov Models (HMMs)
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-14-kalman-filters/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Kalman Filters
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-datascience-ml-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-to-stochastic-network-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction to Stochastic Network Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-the-si-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding the SI Model
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding the SI Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Definition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transmission-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Transmission Mechanisms
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#information-diffusion-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Information Diffusion Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#independent-infection-attempts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Independent Infection Attempts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-dynamics-and-branching-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Dynamics and Branching Process
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Dynamics and Branching Process">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#branching-number-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      Branching Number Concept
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#epidemic-threshold" class="md-nav__link">
+    <span class="md-ellipsis">
+      Epidemic Threshold
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-exponential-growth-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Exponential Growth Scenario
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-die-out-scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Die-Out Scenario
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-structure-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Structure Impact
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extended-models-sir-and-sirs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extended Models: SIR and SIRS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extended Models: SIR and SIRS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sir-model-susceptible-infected-recovered" class="md-nav__link">
+    <span class="md-ellipsis">
+      SIR Model: Susceptible-Infected-Recovered
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sirs-model-temporary-immunity" class="md-nav__link">
+    <span class="md-ellipsis">
+      SIRS Model: Temporary Immunity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparison Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mathematical-dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Dynamics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mathematical-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Framework
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mathematical Framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#epidemic-threshold-theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Epidemic Threshold Theory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#branching-process-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Branching Process Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Effects
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temporal-dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Temporal Dynamics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applications-and-real-world-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications and Real-World Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Applications and Real-World Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#disease-epidemiology" class="md-nav__link">
+    <span class="md-ellipsis">
+      🦠 Disease Epidemiology
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#information-diffusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      📱 Information Diffusion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#behavioral-contagion" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏃 Behavioral Contagion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computer-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Computer Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opinion-dynamics" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏛️ Opinion Dynamics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-study-covid-19-intervention-modeling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Case Study: COVID-19 Intervention Modeling
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-code-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive Code Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive Code Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simulation-and-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Simulation and Visualization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-analysis-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Network Analysis Tools
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foundational-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Foundational Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#books" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Books
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#course-materials" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎓 Course Materials
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software-and-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Software and Tools
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="stochastic-network-models-epidemic-and-contagion-processes">Stochastic Network Models: Epidemic and Contagion Processes</h1>
+<p><a id="top"></a></p>
+<h2 id="quick-navigation">Quick Navigation</h2>
+<ul>
+<li><a href="#introduction">Introduction to Stochastic Network Models</a></li>
+<li><a href="#si-model">Understanding the SI Model</a></li>
+<li><a href="#branching-process">Network Dynamics and Branching Process</a></li>
+<li><a href="#extended-models">Extended Models: SIR and SIRS</a></li>
+<li><a href="#mathematical-framework">Mathematical Framework</a></li>
+<li><a href="#applications">Applications and Real-World Examples</a></li>
+<li><a href="#code-examples">Interactive Code Examples</a></li>
+<li><a href="#references">References &amp; Further Reading</a></li>
+</ul>
+<hr />
+<h2 id="introduction-to-stochastic-network-models">Introduction to Stochastic Network Models</h2>
+<p><a id="introduction"></a></p>
+<p>Stochastic network models provide a mathematical framework for understanding how information, diseases, behaviors, and opinions propagate through networks. These models, also known as epidemic or contagion models, capture the essential dynamics of spreading processes while remaining tractable for analysis.</p>
+<p><img alt="Stochastic Network Models Overview" src="../../../../svg/stochastic_network_overview.svg" /></p>
+<p><strong>Key Applications:</strong></p>
+<ul>
+<li><strong>Information Diffusion:</strong> Spread of tweets, viral videos, and memes through social networks</li>
+<li><strong>Disease Epidemiology:</strong> Transmission of infectious diseases like influenza or COVID-19</li>
+<li><strong>Behavioral Contagion:</strong> Propagation of exercise habits, eating patterns, and fashion choices</li>
+<li><strong>Opinion Dynamics:</strong> Spread of political views and social movements</li>
+<li><strong>Computer Security:</strong> Propagation of computer viruses and malware</li>
+</ul>
+<p><strong>Fundamental Questions:</strong></p>
+<ul>
+<li><strong>Predictability:</strong> Can we predict how a process will spread through a network?</li>
+<li><strong>Scale:</strong> What determines whether a local outbreak becomes a global epidemic?</li>
+<li><strong>Network Dependence:</strong> How do network properties affect spreading dynamics?</li>
+<li><strong>Threshold Behavior:</strong> What conditions lead to epidemic vs. die-out scenarios?</li>
+</ul>
+<p><strong>Why Simplified Models?</strong></p>
+<p>While the biological details of disease transmission or the psychological factors in behavior adoption are complex, simplified models capture the macroscopic network-level behavior. This abstraction allows us to:</p>
+<ul>
+<li>Identify universal principles of spreading processes</li>
+<li>Make quantitative predictions about epidemic outcomes</li>
+<li>Design intervention strategies for disease control</li>
+<li>Understand information viral dynamics</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="understanding-the-si-model">Understanding the SI Model</h2>
+<p><a id="si-model"></a></p>
+<p>The SI (Susceptible-Infected) model is the most fundamental epidemic model, providing the foundation for understanding contagion on networks.</p>
+<p><img alt="SI Model Dynamics" src="../../../../svg/si_model_dynamics.svg" /></p>
+<h3 id="model-definition">Model Definition</h3>
+<p><strong>State Space:</strong></p>
+<ul>
+<li><strong>S (Susceptible):</strong> Nodes that can be infected but are not currently infected</li>
+<li><strong>I (Infected):</strong> Nodes that have been infected and remain infectious</li>
+</ul>
+<p><strong>Key Characteristics:</strong></p>
+<ul>
+<li><strong>Irreversible Infection:</strong> Once infected, nodes remain infected forever</li>
+<li><strong>No Immunity:</strong> Suitable for diseases like cytomegalovirus (CMV) or herpes</li>
+<li><strong>No Recovery:</strong> Infected nodes continuously attempt to infect neighbors</li>
+</ul>
+<h3 id="transmission-mechanisms">Transmission Mechanisms</h3>
+<p><strong>Deterministic Model:</strong></p>
+<p>In the simplest setting, infected nodes deterministically infect all susceptible neighbors with certainty.</p>
+<p><strong>Probabilistic Model (More Realistic):</strong></p>
+<p>Each infected node infects each susceptible neighbor independently with probability <code>p</code>.</p>
+<div class="highlight"><pre><span></span><code>P(infection across edge) = p
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li><code>p</code> = transmission probability per contact</li>
+<li>High <code>p</code> → highly contagious (e.g., hilarious viral content)</li>
+<li>Low <code>p</code> → weakly contagious (e.g., boring content)</li>
+</ul>
+<h3 id="information-diffusion-example">Information Diffusion Example</h3>
+<p><strong>High Contagion (p ≈ 0.8):</strong></p>
+<ul>
+<li>Truly hilarious presidential candidate parody</li>
+<li>Breaking major news story</li>
+<li>Emotionally resonant content</li>
+</ul>
+<p><strong>Low Contagion (p ≈ 0.2):</strong></p>
+<ul>
+<li>Mundane or uninspiring content</li>
+<li>Niche interest topics</li>
+<li>Low-quality productions</li>
+</ul>
+<h3 id="independent-infection-attempts">Independent Infection Attempts</h3>
+<p><strong>Key Model Assumption:</strong></p>
+<p>Each infected neighbor independently attempts to infect a susceptible node. If a node has multiple infected neighbors, it receives multiple independent infection opportunities.</p>
+<p><strong>Infection Probability with k Infected Neighbors:</strong></p>
+<div class="highlight"><pre><span></span><code>P(remain susceptible) = (1 - p)^k
+P(become infected) = 1 - (1 - p)^k
+</code></pre></div>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="network-dynamics-and-branching-process">Network Dynamics and Branching Process</h2>
+<p><a id="branching-process"></a></p>
+<p>The spreading behavior of the SI model depends critically on the relationship between network structure (average degree) and infection probability.</p>
+<p><img alt="Branching Process Dynamics" src="../../../../svg/branching_process.svg" /></p>
+<h3 id="branching-number-concept">Branching Number Concept</h3>
+<p><strong>Definition:</strong></p>
+<p>The branching number represents the expected number of new infections caused by each infected node.</p>
+<div class="highlight"><pre><span></span><code>Branching Number = (Average Degree) × (Infection Probability)
+R₀ = d̄ × p
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li><code>R₀</code> = basic reproduction number (branching number)</li>
+<li><code>d̄</code> = average degree in the network</li>
+<li><code>p</code> = infection probability per edge</li>
+</ul>
+<h3 id="epidemic-threshold">Epidemic Threshold</h3>
+<p><strong>Critical Condition:</strong></p>
+<div class="highlight"><pre><span></span><code>If R₀ &gt; 1: Epidemic spreads to macroscopic fraction of network
+If R₀ &lt; 1: Epidemic dies out quickly
+If R₀ = 1: Critical threshold (phase transition)
+</code></pre></div>
+<h3 id="example-exponential-growth-scenario">Example: Exponential Growth Scenario</h3>
+<p><strong>Network Configuration:</strong></p>
+<ul>
+<li>Average degree: <code>d̄ = 7</code> (accounting for the infecting neighbor)</li>
+<li>Infection probability: <code>p = 1/3</code></li>
+<li>Initial infected node with 6 susceptible neighbors</li>
+</ul>
+<p><strong>Round-by-Round Analysis:</strong></p>
+<p><strong>Round 0:</strong></p>
+<ul>
+<li>Infected nodes: 1</li>
+<li>Expected new infections: 6 × (1/3) = 2</li>
+</ul>
+<p><strong>Round 1:</strong></p>
+<ul>
+<li>Newly infected: 2</li>
+<li>Each has ~6 additional neighbors</li>
+<li>Expected new infections: 2 × 6 × (1/3) = 4</li>
+</ul>
+<p><strong>Round 2:</strong></p>
+<ul>
+<li>Newly infected: 4</li>
+<li>Expected new infections: 4 × 6 × (1/3) = 8</li>
+</ul>
+<p><strong>Growth Pattern:</strong></p>
+<div class="highlight"><pre><span></span><code>Infected nodes: 1 → 2 → 4 → 8 → 16 → 32 → 64 → ...
+Growth factor: 2ˣ (exponential growth)
+</code></pre></div>
+<p><strong>Interpretation:</strong></p>
+<p>With <code>R₀ = 2</code>, the number of infected nodes doubles with each round, leading to rapid epidemic spread.</p>
+<h3 id="example-die-out-scenario">Example: Die-Out Scenario</h3>
+<p><strong>Network Configuration:</strong></p>
+<ul>
+<li>Average degree: <code>d̄ = 3</code></li>
+<li>Infection probability: <code>p = 1/3</code></li>
+<li>Expected infections per node: 2 × (1/3) = 2/3 &lt; 1</li>
+</ul>
+<p><strong>Round-by-Round Analysis:</strong></p>
+<p><strong>Round 0:</strong></p>
+<ul>
+<li>Infected nodes: 1</li>
+<li>Expected new infections: 2 × (1/3) = 0.67</li>
+</ul>
+<p><strong>Round 1:</strong></p>
+<ul>
+<li>Expected newly infected: 0.67</li>
+<li>Expected new infections: 0.67 × 2 × (1/3) ≈ 0.44</li>
+</ul>
+<p><strong>Round 2:</strong></p>
+<ul>
+<li>Expected newly infected: 0.44</li>
+<li>Expected new infections: 0.44 × 2 × (1/3) ≈ 0.29</li>
+</ul>
+<p><strong>Decay Pattern:</strong></p>
+<div class="highlight"><pre><span></span><code>Infected nodes: 1 → 0.67 → 0.44 → 0.29 → 0.19 → ...
+Growth factor: (2/3)ˣ (exponential decay)
+</code></pre></div>
+<p><strong>Interpretation:</strong></p>
+<p>With <code>R₀ = 2/3 &lt; 1</code>, each generation produces fewer infections than the previous, causing inevitable die-out.</p>
+<h3 id="network-structure-impact">Network Structure Impact</h3>
+<p><strong>Dense Networks (Schools, Offices):</strong></p>
+<ul>
+<li>High average degree</li>
+<li>Facilitates rapid spreading</li>
+<li>Example: Flu in a classroom setting</li>
+</ul>
+<p><strong>Sparse Networks (Rural Communities):</strong></p>
+<ul>
+<li>Low average degree</li>
+<li>Hinders epidemic spread</li>
+<li>Requires higher infection probability for epidemic</li>
+</ul>
+<p><strong>Configuration Model Validity:</strong></p>
+<p>The branching number analysis applies broadly to random networks where:</p>
+<ul>
+<li>Neighbors infect independently</li>
+<li>Degree distribution is known</li>
+<li>Local tree-like structure approximation holds</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="extended-models-sir-and-sirs">Extended Models: SIR and SIRS</h2>
+<p><a id="extended-models"></a></p>
+<p>The SI model can be extended to incorporate recovery and immunity dynamics, creating more realistic epidemic models.</p>
+<p><img alt="SIR and SIRS Models" src="../../../../svg/sir_sirs_models.svg" /></p>
+<h3 id="sir-model-susceptible-infected-recovered">SIR Model: Susceptible-Infected-Recovered</h3>
+<p><strong>State Transitions:</strong></p>
+<div class="highlight"><pre><span></span><code>S → I → R
+</code></pre></div>
+<p><strong>State Definitions:</strong></p>
+<ul>
+<li><strong>S (Susceptible):</strong> Can be infected</li>
+<li><strong>I (Infected):</strong> Currently infectious</li>
+<li><strong>R (Recovered):</strong> Immune and cannot be reinfected</li>
+</ul>
+<p><strong>Biological Interpretation:</strong></p>
+<p>Models diseases where recovery confers permanent immunity:</p>
+<ul>
+<li>Influenza (seasonal strains)</li>
+<li>Measles</li>
+<li>Chickenpox</li>
+<li>COVID-19 (with lasting immunity)</li>
+</ul>
+<p><strong>Key Dynamics:</strong></p>
+<ul>
+<li><strong>Infection:</strong> Susceptible nodes become infected through contact with infected neighbors</li>
+<li><strong>Recovery:</strong> Infected nodes recover at rate <code>γ</code> and gain permanent immunity</li>
+<li><strong>Immunity:</strong> Recovered nodes never return to susceptible state</li>
+</ul>
+<p><strong>Modified Branching Number:</strong></p>
+<div class="highlight"><pre><span></span><code>R₀ = (d̄ × p × τ) / γ
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li><code>τ</code> = average infectious period</li>
+<li><code>γ</code> = recovery rate</li>
+<li>Recovery competes with transmission</li>
+</ul>
+<h3 id="sirs-model-temporary-immunity">SIRS Model: Temporary Immunity</h3>
+<p><strong>State Transitions:</strong></p>
+<div class="highlight"><pre><span></span><code>S → I → R → S (cyclic)
+</code></pre></div>
+<p><strong>Additional Parameter:</strong></p>
+<ul>
+<li><code>δ</code> = rate at which immunity wanes (recovered nodes become susceptible again)</li>
+</ul>
+<p><strong>Applications:</strong></p>
+<p><strong>Fashion Cycles:</strong></p>
+<ul>
+<li>Trends come and go</li>
+<li>Old fashions become "retro" and popular again</li>
+<li>Cyclical adoption patterns</li>
+</ul>
+<p><strong>Seasonal Diseases:</strong></p>
+<ul>
+<li>Common cold</li>
+<li>Some strains of influenza (with mutation)</li>
+<li>Immunity is temporary</li>
+</ul>
+<p><strong>Opinion Dynamics:</strong></p>
+<ul>
+<li>Political views can shift over time</li>
+<li>People may return to previous positions</li>
+<li>Cyclic opinion changes</li>
+</ul>
+<h3 id="comparison-table">Comparison Table</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>SI Model</th>
+<th>SIR Model</th>
+<th>SIRS Model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recovery</td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Immunity</td>
+<td>No</td>
+<td>Permanent</td>
+<td>Temporary</td>
+</tr>
+<tr>
+<td>Endemic State</td>
+<td>Always spreading</td>
+<td>Dies out</td>
+<td>Cyclic</td>
+</tr>
+<tr>
+<td>Applications</td>
+<td>CMV, herpes, information</td>
+<td>Flu, measles</td>
+<td>Fashion, some diseases</td>
+</tr>
+<tr>
+<td>Steady State</td>
+<td>All infected</td>
+<td>Susceptible + Recovered</td>
+<td>All states persist</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mathematical-dynamics">Mathematical Dynamics</h3>
+<p><strong>SIR System (Continuous Time):</strong></p>
+<div class="highlight"><pre><span></span><code>dS/dt = -β × S × I
+dI/dt = β × S × I - γ × I
+dR/dt = γ × I
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li><code>β</code> = transmission rate</li>
+<li><code>γ</code> = recovery rate</li>
+<li><code>R₀ = β / γ</code> = basic reproduction number</li>
+</ul>
+<p><strong>SIRS System (Continuous Time):</strong></p>
+<div class="highlight"><pre><span></span><code>dS/dt = -β × S × I + δ × R
+dI/dt = β × S × I - γ × I
+dR/dt = γ × I - δ × R
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li><code>δ</code> = immunity loss rate</li>
+<li>Enables endemic equilibrium</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="mathematical-framework">Mathematical Framework</h2>
+<p><a id="mathematical-framework"></a></p>
+<h3 id="epidemic-threshold-theory">Epidemic Threshold Theory</h3>
+<p><strong>Fundamental Theorem:</strong></p>
+<p>For random networks with independent edge activations:</p>
+<div class="highlight"><pre><span></span><code>Epidemic Threshold: R₀ = d̄ × p = 1
+</code></pre></div>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li><strong>R₀ &gt; 1:</strong> Epidemic spreads to O(n) nodes (macroscopic fraction)</li>
+<li><strong>R₀ &lt; 1:</strong> Epidemic affects O(log n) nodes (dies out)</li>
+<li><strong>R₀ = 1:</strong> Critical point (phase transition)</li>
+</ul>
+<h3 id="branching-process-analysis">Branching Process Analysis</h3>
+<p><strong>Generation-Based Model:</strong></p>
+<div class="highlight"><pre><span></span><code>E[I_t+1] = R₀ × I_t
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li><code>I_t</code> = number of infected nodes at time t</li>
+<li><code>E[·]</code> = expected value</li>
+<li>Assumes tree-like local structure</li>
+</ul>
+<p><strong>Extinction Probability:</strong></p>
+<p>For <code>R₀ &lt; 1</code>, the probability that the epidemic dies out starting from a single infected node:</p>
+<div class="highlight"><pre><span></span><code>P(extinction) = 1
+</code></pre></div>
+<p>For <code>R₀ &gt; 1</code>:</p>
+<div class="highlight"><pre><span></span><code>P(extinction) &lt; 1
+P(epidemic) = 1 - P(extinction) &gt; 0
+</code></pre></div>
+<h3 id="network-effects">Network Effects</h3>
+<p><strong>Degree Distribution Impact:</strong></p>
+<p>The branching number for heterogeneous networks:</p>
+<div class="highlight"><pre><span></span><code>R₀ = p × E[D(D-1)] / E[D]
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li><code>D</code> = degree random variable</li>
+<li><code>E[D(D-1)]</code> = second moment of degree distribution</li>
+<li>High-degree nodes (hubs) accelerate spreading</li>
+</ul>
+<p><strong>Scale-Free Networks:</strong></p>
+<p>For power-law degree distributions <code>P(k) ~ k^(-γ)</code>:</p>
+<ul>
+<li>If <code>γ ≤ 3</code>: No epidemic threshold (R₀ undefined)</li>
+<li>Hubs ensure epidemic spread even for small <code>p</code></li>
+</ul>
+<h3 id="temporal-dynamics">Temporal Dynamics</h3>
+<p><strong>SI Model Growth (Early Phase):</strong></p>
+<div class="highlight"><pre><span></span><code>I(t) ≈ I₀ × e^((R₀-1)×t)
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li><code>I₀</code> = initial infected population</li>
+<li>Exponential growth when R₀ &gt; 1</li>
+</ul>
+<p><strong>SIR Model Peak:</strong></p>
+<p>Maximum infection occurs when:</p>
+<div class="highlight"><pre><span></span><code>S = 1 / R₀
+</code></pre></div>
+<p><strong>Final Size Equation (SIR):</strong></p>
+<div class="highlight"><pre><span></span><code>R_∞ = 1 - e^(-R₀ × R_∞)
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li><code>R_∞</code> = final proportion of recovered individuals</li>
+<li>Transcendental equation (no closed form)</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="applications-and-real-world-examples">Applications and Real-World Examples</h2>
+<p><a id="applications"></a></p>
+<h3 id="disease-epidemiology">🦠 Disease Epidemiology</h3>
+<p><strong>Influenza in Schools:</strong></p>
+<ul>
+<li><strong>Network:</strong> Dense contact network (classroom, hallways)</li>
+<li><strong>Model:</strong> SIR with R₀ ≈ 1.5-2.0</li>
+<li><strong>Intervention:</strong> Vaccination reduces susceptible population</li>
+<li><strong>Outcome:</strong> High attack rates without intervention</li>
+</ul>
+<p><strong>COVID-19 Pandemic:</strong></p>
+<ul>
+<li><strong>Network:</strong> Global transportation and local contact networks</li>
+<li><strong>Model:</strong> SEIR (with Exposed state) R₀ ≈ 2.5-4.0</li>
+<li><strong>Interventions:</strong> Social distancing, masks, lockdowns reduce R₀</li>
+<li><strong>Superspreading:</strong> Events with high-degree nodes drive outbreaks</li>
+</ul>
+<h3 id="information-diffusion">📱 Information Diffusion</h3>
+<p><strong>Twitter Retweet Cascades:</strong></p>
+<ul>
+<li><strong>Network:</strong> Follower graph (directed)</li>
+<li><strong>Model:</strong> SI with time-decaying infection probability</li>
+<li><strong>Factors:</strong> Content quality, timing, influencer involvement</li>
+<li><strong>Viral Threshold:</strong> Depends on network position and content appeal</li>
+</ul>
+<p><strong>YouTube Videos:</strong></p>
+<ul>
+<li><strong>Network:</strong> Recommendation algorithm + social sharing</li>
+<li><strong>Model:</strong> SI with reinforcement (multiple exposures increase p)</li>
+<li><strong>Prediction:</strong> Early growth rate predicts final view count</li>
+</ul>
+<h3 id="behavioral-contagion">🏃 Behavioral Contagion</h3>
+<p><strong>Exercise Habits:</strong></p>
+<ul>
+<li><strong>Network:</strong> Friendship networks</li>
+<li><strong>Model:</strong> SIS (Susceptible-Infected-Susceptible) with spontaneous adoption</li>
+<li><strong>Findings:</strong> Close friends' behaviors strongly influence adoption</li>
+<li><strong>Threshold:</strong> Multiple adopting friends increase probability</li>
+</ul>
+<p><strong>Obesity Spread:</strong></p>
+<ul>
+<li><strong>Network:</strong> Social ties (friends, family, coworkers)</li>
+<li><strong>Research:</strong> Christakis &amp; Fowler (2007) Framingham Heart Study</li>
+<li><strong>Finding:</strong> Person's obesity risk increases if friends become obese</li>
+<li><strong>Mechanism:</strong> Social norms and behavior modeling</li>
+</ul>
+<h3 id="computer-security">💻 Computer Security</h3>
+<p><strong>Malware Propagation:</strong></p>
+<ul>
+<li><strong>Network:</strong> Internet topology (AS-level or router-level)</li>
+<li><strong>Model:</strong> SI with patching (becomes SIR)</li>
+<li><strong>Defense:</strong> Rapid patching reduces infectious period</li>
+<li><strong>Strategy:</strong> Protect high-degree nodes (servers, routers)</li>
+</ul>
+<h3 id="opinion-dynamics">🏛️ Opinion Dynamics</h3>
+<p><strong>Political Polarization:</strong></p>
+<ul>
+<li><strong>Network:</strong> Social media and real-world interactions</li>
+<li><strong>Model:</strong> Competitive spreading (multiple "diseases")</li>
+<li><strong>Dynamics:</strong> Echo chambers amplify opinions</li>
+<li><strong>Challenge:</strong> Intervention strategies to reduce polarization</li>
+</ul>
+<h3 id="case-study-covid-19-intervention-modeling">Case Study: COVID-19 Intervention Modeling</h3>
+<p><strong>Baseline Scenario:</strong></p>
+<ul>
+<li>R₀ = 3.0 (no intervention)</li>
+<li>Expected final infection: ~75% of population</li>
+</ul>
+<p><strong>Intervention 1: Reduce Contact (Social Distancing):</strong></p>
+<ul>
+<li>Reduces average degree by 50%</li>
+<li>New R₀ = 1.5</li>
+<li>Expected final infection: ~40%</li>
+</ul>
+<p><strong>Intervention 2: Masks + Social Distancing:</strong></p>
+<ul>
+<li>Reduces both average degree and infection probability</li>
+<li>New R₀ = 0.75</li>
+<li>Epidemic dies out (few infections)</li>
+</ul>
+<p><strong>Key Insight:</strong></p>
+<p>Small reductions in R₀ near threshold have dramatic effects on epidemic outcomes.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="interactive-code-examples">Interactive Code Examples</h2>
+<p><a id="code-examples"></a></p>
+<h3 id="simulation-and-visualization">🔬 Simulation and Visualization</h3>
+<p><strong>SI Model Simulation on Networks:</strong></p>
+<p><a href="https://colab.research.google.com/drive/SI_Model_Network_Simulation"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Simulate SI model on various network topologies</li>
+<li>Visualize spreading dynamics over time</li>
+<li>Experiment with different R₀ values</li>
+<li>Compare exponential growth vs. die-out scenarios</li>
+</ul>
+<p><strong>Code Snippet:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">simulate_SI</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">initial_infected</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Simulate SI model on network G</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    - G: NetworkX graph</span>
+<span class="sd">    - p: infection probability</span>
+<span class="sd">    - initial_infected: number of initially infected nodes</span>
+<span class="sd">    - max_steps: maximum simulation steps</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="n">infected</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">initial_infected</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+    <span class="n">infected_counts</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">infected</span><span class="p">)]</span>
+
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_steps</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">infected</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="n">new_infected</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">infected</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">neighbor</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">infected</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">:</span>
+                    <span class="n">new_infected</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span>
+
+        <span class="n">infected</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_infected</span><span class="p">)</span>
+        <span class="n">infected_counts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">infected</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">infected_counts</span>
+
+<span class="c1"># Create network and simulate</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">erdos_renyi_graph</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">avg_degree</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="n">infection_prob</span> <span class="o">=</span> <span class="mf">0.15</span>
+
+<span class="c1"># Compute R0</span>
+<span class="n">R0</span> <span class="o">=</span> <span class="n">avg_degree</span> <span class="o">*</span> <span class="n">infection_prob</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R₀ = </span><span class="si">{</span><span class="n">R0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run simulation</span>
+<span class="n">infected_over_time</span> <span class="o">=</span> <span class="n">simulate_SI</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">infection_prob</span><span class="p">)</span>
+
+<span class="c1"># Plot results</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">infected_over_time</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time Step&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Number of Infected Nodes&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SI Model Simulation (R₀ = </span><span class="si">{</span><span class="n">R0</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>SIR Model with Recovery:</strong></p>
+<p><a href="https://colab.research.google.com/drive/SIR_Model_Simulation"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Implement SIR model with infection and recovery</li>
+<li>Visualize S, I, R populations over time</li>
+<li>Explore impact of recovery rate on epidemic duration</li>
+<li>Compute final epidemic size</li>
+</ul>
+<h3 id="network-analysis-tools">📊 Network Analysis Tools</h3>
+<p><strong>Recommended Libraries:</strong></p>
+<ul>
+<li><strong>NetworkX:</strong> Network creation and analysis</li>
+<li><strong>EoN (Epidemics on Networks):</strong> Specialized epidemic simulation library</li>
+<li><strong>Mesa:</strong> Agent-based modeling framework</li>
+<li><strong>NetLogo:</strong> Visual agent-based modeling (desktop application)</li>
+</ul>
+<p><strong>Useful Resources:</strong></p>
+<ul>
+<li><a href="https://networkx.org/documentation/stable/">NetworkX Documentation</a></li>
+<li><a href="https://github.com/springer-math/Mathematics-of-Epidemics-on-Networks">EoN GitHub Repository</a></li>
+<li><a href="https://mesa.readthedocs.io/">Mesa Documentation</a></li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="references-further-reading">References &amp; Further Reading</h2>
+<p><a id="references"></a></p>
+<h3 id="foundational-papers">📚 Foundational Papers</h3>
+<p><strong>Network Epidemiology:</strong></p>
+<ul>
+<li>Newman, M. E. J. (2002). "Spread of epidemic disease on networks." <em>Physical Review E</em>, 66(1), 016128. <a href="https://arxiv.org/abs/cond-mat/0205009">arXiv:cond-mat/0205009</a></li>
+<li>Pastor-Satorras, R., &amp; Vespignani, A. (2001). "Epidemic spreading in scale-free networks." <em>Physical Review Letters</em>, 86(14), 3200. <a href="https://arxiv.org/abs/cond-mat/0010317">arXiv:cond-mat/0010317</a></li>
+</ul>
+<p><strong>Information Diffusion:</strong></p>
+<ul>
+<li>Centola, D., &amp; Macy, M. (2007). "Complex contagions and the weakness of long ties." <em>American Journal of Sociology</em>, 113(3), 702-734.</li>
+<li>Watts, D. J., &amp; Dodds, P. S. (2007). "Influentials, networks, and public opinion formation." <em>Journal of Consumer Research</em>, 34(4), 441-458.</li>
+</ul>
+<p><strong>Behavioral Contagion:</strong></p>
+<ul>
+<li>Christakis, N. A., &amp; Fowler, J. H. (2007). "The spread of obesity in a large social network over 32 years." <em>New England Journal of Medicine</em>, 357(4), 370-379.</li>
+<li>Fowler, J. H., &amp; Christakis, N. A. (2008). "Dynamic spread of happiness in a large social network." <em>British Medical Journal</em>, 337, a2338.</li>
+</ul>
+<h3 id="books">📖 Books</h3>
+<ul>
+<li>Easley, D., &amp; Kleinberg, J. (2010). <em>Networks, Crowds, and Markets: Reasoning About a Highly Connected World</em>. Cambridge University Press. <a href="http://www.cs.cornell.edu/home/kleinber/networks-book/">Free online</a></li>
+<li>Newman, M. E. J. (2010). <em>Networks: An Introduction</em>. Oxford University Press.</li>
+<li>Kiss, I. Z., Miller, J. C., &amp; Simon, P. L. (2017). <em>Mathematics of Epidemics on Networks: From Exact to Approximate Models</em>. Springer. <a href="https://arxiv.org/abs/1706.03522">arXiv:1706.03522</a></li>
+<li>Anderson, R. M., &amp; May, R. M. (1991). <em>Infectious Diseases of Humans: Dynamics and Control</em>. Oxford University Press.</li>
+</ul>
+<h3 id="course-materials">🎓 Course Materials</h3>
+<ul>
+<li>Stanford CS224W: Machine Learning with Graphs - <a href="http://web.stanford.edu/class/cs224w/">http://web.stanford.edu/class/cs224w/</a></li>
+<li>Cornell INFO 2040: Networks - <a href="https://courses.cit.cornell.edu/info2040_2020fa/">https://courses.cit.cornell.edu/info2040_2020fa/</a></li>
+<li>Santa Fe Institute: Complex Systems Summer School Materials</li>
+</ul>
+<h3 id="software-and-tools">🔬 Software and Tools</h3>
+<ul>
+<li><strong>EoN (Epidemics on Networks):</strong> Python package for simulating epidemics - <a href="https://github.com/springer-math/Mathematics-of-Epidemics-on-Networks">GitHub</a></li>
+<li><strong>NetworkX:</strong> Python package for network analysis - <a href="https://networkx.org/">Website</a></li>
+<li><strong>Graph-tool:</strong> Efficient network analysis library - <a href="https://graph-tool.skewed.de/">Website</a></li>
+<li><strong>NetLogo:</strong> Agent-based modeling environment - <a href="https://ccl.northwestern.edu/netlogo/">Website</a></li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<p><strong>Document Information:</strong></p>
+<ul>
+<li><strong>Topic:</strong> Stochastic Network Models</li>
+<li><strong>Target Audience:</strong> AI/ML engineers, researchers, students in network science</li>
+<li><strong>Prerequisites:</strong> Basic probability, graph theory, Python programming</li>
+<li><strong>Estimated Reading Time:</strong> 25-30 minutes</li>
+<li><strong>Last Updated:</strong> October 2025</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 10, 2025 03:21:14 UTC">October 10, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+<!-- Footer navigation (prev/next) - Material default -->
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../09-06-network-models/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Network Models" rel="prev">
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Previous
+            </span>
+            <div class="md-ellipsis">
+              Network Models
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../09-08-influence-maximization-networks/" class="md-footer__link md-footer__link--next" aria-label="Next: Influence Maximization in Networks" rel="next">
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Next
+            </span>
+            <div class="md-ellipsis">
+              Influence Maximization in Networks
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+
+  <!-- Custom footer content -->
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        <div style="text-align: center; padding: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 1rem;">
+          <p style="margin: 0.5rem 0;">
+            <strong>GenAI Atlas</strong> - Your Comprehensive Guide to AI & Machine Learning
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.9em; opacity: 0.8;">
+            © 2024 GenAI Atlas | Built with ❤️ for the AI Community
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.85em; opacity: 0.7;">
+            <em>Empowering developers, researchers, and practitioners worldwide</em>
+          </p>
+        </div>
+      </div>
+      <div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

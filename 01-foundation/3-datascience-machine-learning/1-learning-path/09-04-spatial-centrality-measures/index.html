@@ -1,0 +1,5156 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/1-learning-path/09-04-spatial-centrality-measures/">
+      
+      
+        <link rel="prev" href="../09-03-network-centrality-measure/">
+      
+      
+        <link rel="next" href="../09-05-global-network-stats/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Spatial Centrality Measures of a Node - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Spatial Centrality Measures of a Node
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-fast-track/01-ft-python-basics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-probability_distributions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-fast-track/01-statistics-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Introduction of Data Science
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-data-science-lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Life Cycle
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-ai_applications_across_industries/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Application
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-07-principal-component-analysis/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Dimensionality Reduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../05-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../06-hypothesis-testing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../07-deep-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../08-recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_10" id="__nav_2_4_2_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Network and Graphical Model
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Network and Graphical Model
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-networking-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fundamentals
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-01-network-theory/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Theory
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-02-network-representations/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Netwrok Representations
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-03-network-centrality-measure/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Centrality measures
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_10_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_10_5" id="__nav_2_4_2_10_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Network Spatial Centrality measures
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_2_10_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_10_5">
+            <span class="md-nav__icon md-icon"></span>
+            Network Spatial Centrality measures
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Spatial Centrality Measures of a Node
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Spatial Centrality Measures of a Node
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#closeness-centrality" class="md-nav__link">
+    <span class="md-ellipsis">
+      📍 Closeness Centrality
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📍 Closeness Centrality">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition-and-motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Definition and Motivation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computing-geodesic-distances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computing Geodesic Distances
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#airport-location-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Airport Location Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications-of-closeness-centrality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications of Closeness Centrality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#betweenness-centrality" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Betweenness Centrality
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔗 Betweenness Centrality">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition-and-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      Definition and Concept
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Assumptions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-bottleneck-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Bottleneck Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications-of-betweenness-centrality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications of Betweenness Centrality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#floyd-warshall-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Floyd-Warshall Algorithm
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Floyd-Warshall Algorithm">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm Overview
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Principle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#algorithm-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm Steps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detailed-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pseudocode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pseudocode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complexity-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complexity Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#edge-centrality" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌉 Edge Centrality
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌉 Edge Centrality">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition-and-motivation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Definition and Motivation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computing-edge-centrality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computing Edge Centrality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edge-vs-node-centrality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Edge vs Node Centrality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applications_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Applications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Applications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comparative-analysis-of-centrality-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparative Analysis of Centrality Measures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-specific-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Domain-Specific Applications
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Implementation Guide
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Implementation Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python-implementation-with-networkx" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python Implementation with NetworkX
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#floyd-warshall-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Floyd-Warshall Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-colab-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Google Colab Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-optimization-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Optimization Tips
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#academic-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Academic Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#books-and-textbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Books and Textbooks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#online-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Online Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#related-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Topics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-repositories" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Repositories
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎓 Summary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-05-global-network-stats/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Global Network Statistics
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-06-network-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-07-stochastic-network/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Stochastic Network Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-08-influence-maximization-networks/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Influence Maximization in Networks
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-09-undirected-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Undirected Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-10-ising-gaussian-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Ising and Gaussian Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-11-directed-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Directed Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-12-inference-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Inference in Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-13-hidden-markov-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hidden Markov Models (HMMs)
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-14-kalman-filters/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Kalman Filters
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-datascience-ml-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#closeness-centrality" class="md-nav__link">
+    <span class="md-ellipsis">
+      📍 Closeness Centrality
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📍 Closeness Centrality">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition-and-motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Definition and Motivation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computing-geodesic-distances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computing Geodesic Distances
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#airport-location-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Airport Location Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications-of-closeness-centrality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications of Closeness Centrality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#betweenness-centrality" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔗 Betweenness Centrality
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔗 Betweenness Centrality">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition-and-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      Definition and Concept
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Assumptions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-bottleneck-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Bottleneck Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications-of-betweenness-centrality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications of Betweenness Centrality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#floyd-warshall-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Floyd-Warshall Algorithm
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔄 Floyd-Warshall Algorithm">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm Overview
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Principle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#algorithm-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Algorithm Steps
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detailed-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detailed Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pseudocode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pseudocode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complexity-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complexity Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#edge-centrality" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌉 Edge Centrality
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌉 Edge Centrality">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition-and-motivation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Definition and Motivation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#computing-edge-centrality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computing Edge Centrality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edge-vs-node-centrality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Edge vs Node Centrality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applications_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Applications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🎯 Applications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#comparative-analysis-of-centrality-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparative Analysis of Centrality Measures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-specific-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Domain-Specific Applications
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Implementation Guide
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Implementation Guide">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python-implementation-with-networkx" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python Implementation with NetworkX
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#floyd-warshall-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Floyd-Warshall Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#google-colab-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Google Colab Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-optimization-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Optimization Tips
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📚 References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#academic-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Academic Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#books-and-textbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Books and Textbooks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#online-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Online Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#related-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Topics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-repositories" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Repositories
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎓 Summary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="spatial-centrality-measures-of-a-node">Spatial Centrality Measures of a Node</h1>
+<p><a id="top"></a></p>
+<h2 id="quick-navigation">📋 Quick Navigation</h2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#closeness-centrality">Closeness Centrality</a></li>
+<li><a href="#betweenness-centrality">Betweenness Centrality</a></li>
+<li><a href="#floyd-warshall-algorithm">Floyd-Warshall Algorithm</a></li>
+<li><a href="#edge-centrality">Edge Centrality</a></li>
+<li><a href="#applications">Applications</a></li>
+<li><a href="#implementation-guide">Implementation Guide</a></li>
+<li><a href="#references-further-reading">References &amp; Further Reading</a></li>
+</ul>
+<hr />
+<h2 id="introduction">🎯 Introduction</h2>
+<p><a id="introduction"></a></p>
+<p>While eigenvector centrality and PageRank are excellent for identifying influential nodes in social networks and ranking web pages, they are less appropriate for spatial and geographic applications. This documentation explores spatial centrality measures that focus on distances and information flow within networks.</p>
+<p><strong>Key Concepts:</strong></p>
+<ul>
+<li><strong>Closeness Centrality:</strong> Measures how central a node is based on its average geodesic distance to all other nodes</li>
+<li><strong>Betweenness Centrality:</strong> Identifies bottlenecks by measuring how many shortest paths pass through a node</li>
+<li><strong>Geodesic Path:</strong> The shortest path between two nodes in a network</li>
+<li><strong>Spatial Networks:</strong> Networks where edge weights represent physical distances or travel times</li>
+</ul>
+<p><img alt="Closeness Centrality" src="../../../../svg/closeness_centrality.svg" /></p>
+<p><strong>Why Spatial Centrality Matters:</strong></p>
+<ul>
+<li><strong>Infrastructure Planning:</strong> Optimal placement of airports, hospitals, or distribution centers</li>
+<li><strong>Network Reliability:</strong> Identifying critical nodes whose failure would disrupt the network</li>
+<li><strong>Information Dissemination:</strong> Finding optimal starting points for spreading accurate information</li>
+<li><strong>Resource Allocation:</strong> Determining where to invest in network improvements</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="closeness-centrality">📍 Closeness Centrality</h2>
+<p><a id="closeness-centrality"></a></p>
+<h3 id="definition-and-motivation">Definition and Motivation</h3>
+<p>Consider the problem of deciding where to build a new airport in a region. The optimal location should minimize average travel time to all cities in the region. This is precisely what closeness centrality measures.</p>
+<p><strong>Mathematical Definition:</strong></p>
+<p>For a node <span class="arithmatex">\(i\)</span> in a network with <span class="arithmatex">\(n\)</span> nodes, the closeness centrality is:</p>
+<div class="highlight"><pre><span></span><code>C_closeness(i) = 1 / [(1/(n-1)) × Σ d_ij]
+                = (n-1) / Σ d_ij
+</code></pre></div>
+<p>Where:</p>
+<ul>
+<li><span class="arithmatex">\(C_{closeness}(i)\)</span> = closeness centrality of node <span class="arithmatex">\(i\)</span></li>
+<li><span class="arithmatex">\(d_{ij}\)</span> = geodesic distance from node <span class="arithmatex">\(i\)</span> to node <span class="arithmatex">\(j\)</span></li>
+<li><span class="arithmatex">\(n\)</span> = total number of nodes in the network</li>
+<li>The sum is taken over all nodes <span class="arithmatex">\(j ≠ i\)</span></li>
+</ul>
+<p><strong>Alternative Formulation (Average Geodesic Distance):</strong></p>
+<div class="highlight"><pre><span></span><code>Average Geodesic Distance = (1/(n-1)) × Σ d_ij
+</code></pre></div>
+<p>The node with the smallest average geodesic distance has the highest closeness centrality.</p>
+<h3 id="computing-geodesic-distances">Computing Geodesic Distances</h3>
+<p><strong>Using the Adjacency Matrix:</strong></p>
+<p>Given an adjacency matrix <span class="arithmatex">\(A\)</span> where entries represent travel times (or distances):</p>
+<ul>
+<li><strong><span class="arithmatex">\(A^1\)</span>:</strong> Contains direct connections (1-hop paths)</li>
+<li><strong><span class="arithmatex">\(A^2\)</span>:</strong> Contains 2-hop paths (through one intermediate city)</li>
+<li><strong><span class="arithmatex">\(A^k\)</span>:</strong> Contains <span class="arithmatex">\(k\)</span>-hop paths (through <span class="arithmatex">\(k-1\)</span> intermediate cities)</li>
+</ul>
+<p><strong>Geodesic Distance Formula:</strong></p>
+<div class="highlight"><pre><span></span><code>d_ij = min{nonzero entries of A^k_ij for all k}
+</code></pre></div>
+<p>The geodesic distance is the minimum nonzero value across all powers of the adjacency matrix.</p>
+<h3 id="airport-location-example">Airport Location Example</h3>
+<p><strong>Problem Setup:</strong></p>
+<ul>
+<li><strong>Vertices:</strong> Cities in the region</li>
+<li><strong>Edges:</strong> Direct routes with weights representing travel times</li>
+<li><strong>Goal:</strong> Find the city with minimum average travel time to all other cities</li>
+</ul>
+<p><strong>Steps:</strong></p>
+<ol>
+<li><strong>Construct Adjacency Matrix:</strong> Create symmetric matrix with travel times as edge weights</li>
+<li><strong>Compute Powers of A:</strong> Calculate <span class="arithmatex">\(A^2, A^3, ..., A^{n-1}\)</span> to find all path lengths</li>
+<li><strong>Extract Geodesic Distances:</strong> For each pair <span class="arithmatex">\((i,j)\)</span>, find minimum nonzero entry</li>
+<li><strong>Calculate Average Distances:</strong> For each city, compute average geodesic distance</li>
+<li><strong>Select Optimal Location:</strong> Choose city with smallest average</li>
+</ol>
+<p><strong>Example Calculation:</strong></p>
+<div class="highlight"><pre><span></span><code>For city i with N=5 cities:
+
+Geodesic distances: d_i1=20, d_i2=15, d_i3=30, d_i4=25
+
+Average = (1/(5-1)) × (20+15+30+25) = 90/4 = 22.5
+</code></pre></div>
+<h3 id="applications-of-closeness-centrality">Applications of Closeness Centrality</h3>
+<p><strong>Information Dissemination:</strong></p>
+<ul>
+<li><strong>Problem:</strong> Spreading accurate information before rumors distort the message</li>
+<li><strong>Solution:</strong> Start from a person with high closeness centrality</li>
+<li><strong>Benefit:</strong> Reaches all community members with minimum message distortion</li>
+</ul>
+<p><strong>Emergency Services:</strong></p>
+<ul>
+<li>Optimal placement of hospitals or fire stations</li>
+<li>Minimizes average response time to all locations</li>
+</ul>
+<p><strong>Logistics and Distribution:</strong></p>
+<ul>
+<li>Warehouse location selection</li>
+<li>Minimizes average delivery time or cost</li>
+</ul>
+<p><strong>Urban Planning:</strong></p>
+<ul>
+<li>Public transit hub placement</li>
+<li>Accessibility optimization for public services</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="betweenness-centrality">🔗 Betweenness Centrality</h2>
+<p><a id="betweenness-centrality"></a></p>
+<h3 id="definition-and-concept">Definition and Concept</h3>
+<p>While closeness centrality identifies central nodes, betweenness centrality identifies bottlenecks—nodes whose removal would most disrupt information flow.</p>
+<p><img alt="Betweenness Centrality" src="../../../../svg/betweenness_centrality.svg" /></p>
+<p><strong>Bottleneck Definition:</strong></p>
+<p>A bottleneck is a node through which the largest quantity of information flows, or equivalently, whose removal would most disrupt the network.</p>
+<p><strong>Mathematical Definition:</strong></p>
+<div class="highlight"><pre><span></span><code>C_betweenness(v) = Σ (σ_st(v) / σ_st)
+</code></pre></div>
+<p>Where:</p>
+<ul>
+<li><span class="arithmatex">\(C_{betweenness}(v)\)</span> = betweenness centrality of node <span class="arithmatex">\(v\)</span></li>
+<li><span class="arithmatex">\(σ_{st}\)</span> = total number of shortest paths from node <span class="arithmatex">\(s\)</span> to node <span class="arithmatex">\(t\)</span></li>
+<li><span class="arithmatex">\(σ_{st}(v)\)</span> = number of those paths that pass through node <span class="arithmatex">\(v\)</span></li>
+<li>Sum is taken over all pairs <span class="arithmatex">\(s ≠ v ≠ t\)</span></li>
+</ul>
+<h3 id="key-assumptions">Key Assumptions</h3>
+<p><strong>Information Flow Model:</strong></p>
+<ul>
+<li><strong>Constant Speed:</strong> Information flows at constant speed along edges</li>
+<li><strong>Shortest Paths:</strong> Information always takes geodesic paths</li>
+<li><strong>Proportionality:</strong> Amount of information through a node is proportional to the number of geodesic paths</li>
+</ul>
+<p><strong>Implications:</strong></p>
+<ul>
+<li>Nodes on many shortest paths have high betweenness centrality</li>
+<li>Removing high-betweenness nodes fragments the network</li>
+<li>Useful for identifying critical infrastructure</li>
+</ul>
+<h3 id="network-bottleneck-example">Network Bottleneck Example</h3>
+<p><strong>Simple Network Analysis:</strong></p>
+<p>Consider a network where:</p>
+<ul>
+<li>Node A connects two otherwise disconnected clusters</li>
+<li>All shortest paths between clusters pass through A</li>
+<li>Node A has very high betweenness centrality</li>
+</ul>
+<p><strong>Quantitative Example:</strong></p>
+<div class="highlight"><pre><span></span><code>Network with 6 nodes arranged in two groups of 3:
+- Left group: {1, 2, 3}
+- Right group: {4, 5, 6}
+- Bridge node: B
+
+Paths through B:
+- 1→4, 1→5, 1→6 (3 paths)
+- 2→4, 2→5, 2→6 (3 paths)
+- 3→4, 3→5, 3→6 (3 paths)
+
+Total paths through B = 9
+If each path is unique: C_betweenness(B) = 9
+</code></pre></div>
+<h3 id="applications-of-betweenness-centrality">Applications of Betweenness Centrality</h3>
+<p><strong>Social Networks:</strong></p>
+<ul>
+<li><strong>Influencers:</strong> People with power to change messages being passed</li>
+<li><strong>Information Gatekeepers:</strong> Individuals who control information flow between groups</li>
+<li><strong>Bridge Personalities:</strong> Connectors between different social clusters</li>
+</ul>
+<p><strong>Transportation Networks:</strong></p>
+<ul>
+<li><strong>Critical Airports:</strong> Hubs whose closure would severely impact flight connectivity</li>
+<li><strong>Bridge Infrastructure:</strong> Roads or bridges that are essential for traffic flow</li>
+<li><strong>Vulnerable Nodes:</strong> Locations requiring enhanced security or redundancy</li>
+</ul>
+<p><strong>Communication Networks:</strong></p>
+<ul>
+<li><strong>Router Criticality:</strong> Network devices handling the most traffic</li>
+<li><strong>Backbone Identification:</strong> Core infrastructure elements</li>
+<li><strong>Failure Impact:</strong> Nodes whose failure would cause widespread disruption</li>
+</ul>
+<p><strong>Cybersecurity:</strong></p>
+<ul>
+<li><strong>Attack Surface:</strong> Nodes most attractive for adversarial targeting</li>
+<li><strong>Defense Priority:</strong> Infrastructure requiring highest protection</li>
+<li><strong>Network Resilience:</strong> Understanding system vulnerabilities</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="floyd-warshall-algorithm">🔄 Floyd-Warshall Algorithm</h2>
+<p><a id="floyd-warshall-algorithm"></a></p>
+<h3 id="algorithm-overview">Algorithm Overview</h3>
+<p>The Floyd-Warshall algorithm efficiently computes shortest paths between all pairs of nodes using dynamic programming. It builds solutions for larger graphs from solutions of smaller subgraphs.</p>
+<p><img alt="Floyd-Warshall Algorithm" src="../../../../svg/floyd_warshall_algorithm.svg" /></p>
+<h3 id="core-principle">Core Principle</h3>
+<p><strong>Dynamic Programming Idea:</strong></p>
+<p>Start with shortest paths in small subgraphs and incrementally add nodes, updating shortest paths as needed.</p>
+<p><strong>Recursive Relationship:</strong></p>
+<p>For each pair of nodes <span class="arithmatex">\((i, j)\)</span> and intermediate node <span class="arithmatex">\(k\)</span>:</p>
+<div class="highlight"><pre><span></span><code>d_ij^(k) = min(d_ij^(k-1), d_ik^(k-1) + d_kj^(k-1))
+</code></pre></div>
+<p>Where:</p>
+<ul>
+<li><span class="arithmatex">\(d_{ij}^{(k)}\)</span> = shortest distance from <span class="arithmatex">\(i\)</span> to <span class="arithmatex">\(j\)</span> using nodes <span class="arithmatex">\({1, 2, ..., k}\)</span> as intermediates</li>
+<li><span class="arithmatex">\(d_{ij}^{(k-1)}\)</span> = shortest path not using node <span class="arithmatex">\(k\)</span></li>
+<li><span class="arithmatex">\(d_{ik}^{(k-1)} + d_{kj}^{(k-1)}\)</span> = path through node <span class="arithmatex">\(k\)</span></li>
+</ul>
+<h3 id="algorithm-steps">Algorithm Steps</h3>
+<p><strong>Step-by-Step Process:</strong></p>
+<ol>
+<li><strong>Initialization:</strong></li>
+<li>Create distance matrix <span class="arithmatex">\(D^{(0)}\)</span> from adjacency matrix</li>
+<li>Set <span class="arithmatex">\(d_{ii} = 0\)</span> for all nodes <span class="arithmatex">\(i\)</span></li>
+<li>
+<p>Set <span class="arithmatex">\(d_{ij} = w_{ij}\)</span> if edge exists, else <span class="arithmatex">\(∞\)</span></p>
+</li>
+<li>
+<p><strong>Iterative Updates:</strong></p>
+</li>
+<li>
+<p>For <span class="arithmatex">\(k = 1\)</span> to <span class="arithmatex">\(n\)</span>:</p>
+<ul>
+<li>For all pairs <span class="arithmatex">\((i, j)\)</span>:</li>
+<li>Update: <span class="arithmatex">\(d_{ij}^{(k)} = \min(d_{ij}^{(k-1)}, d_{ik}^{(k-1)} + d_{kj}^{(k-1)})\)</span></li>
+</ul>
+</li>
+<li>
+<p><strong>Result:</strong></p>
+</li>
+<li>Final matrix <span class="arithmatex">\(D^{(n)}\)</span> contains all shortest path distances</li>
+</ol>
+<h3 id="detailed-example">Detailed Example</h3>
+<p><strong>Three-Node Network:</strong></p>
+<p>Initial setup with nodes {1, 2, 3}:</p>
+<div class="highlight"><pre><span></span><code>Direct distances:
+d_12 = 30, d_13 = 15, d_23 = 20
+
+Iteration k=0 (direct paths):
+  1→2: 30
+  1→3: 15
+  2→3: 20
+</code></pre></div>
+<p><strong>Adding Fourth Node:</strong></p>
+<p>When adding node 4 with distances: <span class="arithmatex">\(d_{14} = 20\)</span>, <span class="arithmatex">\(d_{24} = 16\)</span>, <span class="arithmatex">\(d_{34} = 10\)</span>, <span class="arithmatex">\(d_{42} = 5\)</span></p>
+<div class="highlight"><pre><span></span><code>Path 1→2:
+- Direct: d_12^(3) = 30
+- Via node 4: d_14 + d_42 = 20 + 5 = 25
+- Update: d_12^(4) = min(30, 25) = 25
+
+Path 1→4→2 is shorter!
+</code></pre></div>
+<p><strong>Iteration Table:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Distance</th>
+<th>Iteration</th>
+<th>Using Node</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1→2</td>
+<td>30</td>
+<td>0</td>
+<td>Direct</td>
+</tr>
+<tr>
+<td>1→4→2</td>
+<td>25</td>
+<td>1</td>
+<td>Node 4</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pseudocode">Pseudocode</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">floyd_warshall</span><span class="p">(</span><span class="n">adjacency_matrix</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute all-pairs shortest paths</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    - adjacency_matrix: n×n matrix with edge weights</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    - distance_matrix: n×n matrix with shortest path distances</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">adjacency_matrix</span><span class="p">)</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">adjacency_matrix</span><span class="p">)</span>
+
+    <span class="c1"># Initialize diagonal to 0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Main algorithm</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]:</span>
+                    <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">dist</span>
+</code></pre></div>
+<h3 id="complexity-analysis">Complexity Analysis</h3>
+<p><strong>Time Complexity:</strong></p>
+<div class="highlight"><pre><span></span><code>O(n³)
+</code></pre></div>
+<p>Three nested loops, each iterating over <span class="arithmatex">\(n\)</span> nodes.</p>
+<p><strong>Space Complexity:</strong></p>
+<div class="highlight"><pre><span></span><code>O(n²)
+</code></pre></div>
+<p>Storage for the <span class="arithmatex">\(n \times n\)</span> distance matrix.</p>
+<p><strong>Comparison with Other Algorithms:</strong></p>
+<ul>
+<li><strong>Dijkstra (single-source):</strong> <span class="arithmatex">\(O(n^2)\)</span> or <span class="arithmatex">\(O((n+m)\log n)\)</span> with heap</li>
+<li><strong>Bellman-Ford (single-source):</strong> <span class="arithmatex">\(O(nm)\)</span></li>
+<li><strong>Floyd-Warshall (all-pairs):</strong> <span class="arithmatex">\(O(n^3)\)</span></li>
+</ul>
+<p>For dense graphs where you need all-pairs shortest paths, Floyd-Warshall is often the most efficient choice.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="edge-centrality">🌉 Edge Centrality</h2>
+<p><a id="edge-centrality"></a></p>
+<h3 id="definition-and-motivation_1">Definition and Motivation</h3>
+<p>Just as nodes can have centrality measures, edges can also be evaluated for their importance in the network. Edge centrality identifies critical connections whose removal would most impact network connectivity.</p>
+<p><strong>Edge Betweenness Centrality:</strong></p>
+<div class="highlight"><pre><span></span><code>C_edge(e) = Σ (σ_st(e) / σ_st)
+</code></pre></div>
+<p>Where:</p>
+<ul>
+<li><span class="arithmatex">\(C_{edge}(e)\)</span> = betweenness centrality of edge <span class="arithmatex">\(e\)</span></li>
+<li><span class="arithmatex">\(σ_{st}(e)\)</span> = number of shortest paths from <span class="arithmatex">\(s\)</span> to <span class="arithmatex">\(t\)</span> passing through edge <span class="arithmatex">\(e\)</span></li>
+<li><span class="arithmatex">\(σ_{st}\)</span> = total number of shortest paths from <span class="arithmatex">\(s\)</span> to <span class="arithmatex">\(t\)</span></li>
+</ul>
+<h3 id="applications">Applications</h3>
+<p><strong>Road Networks:</strong></p>
+<ul>
+<li><strong>Critical Bridges:</strong> Bridges whose closure would severely impact traffic flow</li>
+<li><strong>Bottleneck Roads:</strong> Streets handling disproportionate traffic volume</li>
+<li><strong>Detour Planning:</strong> Understanding alternative routes when roads are closed</li>
+</ul>
+<p><strong>Power Grids:</strong></p>
+<ul>
+<li><strong>Transmission Lines:</strong> Critical connections in electrical distribution</li>
+<li><strong>Failure Analysis:</strong> Identifying vulnerable power transmission paths</li>
+<li><strong>Redundancy Planning:</strong> Where to add backup connections</li>
+</ul>
+<p><strong>Communication Networks:</strong></p>
+<ul>
+<li><strong>Cable Routes:</strong> Critical fiber optic or network cable paths</li>
+<li><strong>Bandwidth Bottlenecks:</strong> Connections requiring capacity upgrades</li>
+<li><strong>Network Segmentation:</strong> Understanding how network failure propagates</li>
+</ul>
+<h3 id="computing-edge-centrality">Computing Edge Centrality</h3>
+<p><strong>Method 1: Direct Computation</strong></p>
+<p>For each edge <span class="arithmatex">\((u, v)\)</span>:</p>
+<ol>
+<li>Find all shortest paths in the network</li>
+<li>Count how many pass through edge <span class="arithmatex">\((u, v)\)</span></li>
+<li>Normalize by total number of shortest paths</li>
+</ol>
+<p><strong>Method 2: Node-Based Approximation</strong></p>
+<p>Use node betweenness of endpoints as proxy for edge importance:</p>
+<div class="highlight"><pre><span></span><code>C_edge(u,v) ≈ f(C_betweenness(u), C_betweenness(v))
+</code></pre></div>
+<p><strong>Method 3: Removal Testing</strong></p>
+<ol>
+<li>Remove edge <span class="arithmatex">\((u, v)\)</span></li>
+<li>Measure network disruption (increased path lengths, disconnected components)</li>
+<li>Rank edges by disruption impact</li>
+</ol>
+<h3 id="edge-vs-node-centrality">Edge vs Node Centrality</h3>
+<p><img alt="Centrality Comparison" src="../../../../svg/centrality_comparison.svg" /></p>
+<p><strong>Key Differences:</strong></p>
+<ul>
+<li><strong>Node Centrality:</strong> Focuses on vertex importance</li>
+<li>Closeness: How quickly information reaches all nodes</li>
+<li>
+<p>Betweenness: Control over information flow</p>
+</li>
+<li>
+<p><strong>Edge Centrality:</strong> Focuses on connection importance</p>
+</li>
+<li>Critical links between communities</li>
+<li>Physical infrastructure (roads, cables)</li>
+<li>More relevant for infrastructure planning</li>
+</ul>
+<p><strong>When to Use Each:</strong></p>
+<ul>
+<li><strong>Use Node Centrality:</strong> Social networks, influence analysis, resource allocation</li>
+<li><strong>Use Edge Centrality:</strong> Infrastructure planning, reliability analysis, physical networks</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="applications_1">🎯 Applications</h2>
+<p><a id="applications"></a></p>
+<h3 id="comparative-analysis-of-centrality-measures">Comparative Analysis of Centrality Measures</h3>
+<p><strong>Summary Table:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Centrality Type</th>
+<th>Measures</th>
+<th>Best For</th>
+<th>Example Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Closeness</td>
+<td>Average distance</td>
+<td>Central location</td>
+<td>Airport placement</td>
+</tr>
+<tr>
+<td>Betweenness</td>
+<td>Path dependency</td>
+<td>Bottleneck identification</td>
+<td>Network security</td>
+</tr>
+<tr>
+<td>Eigenvector</td>
+<td>Neighbor importance</td>
+<td>Influence</td>
+<td>Social media marketing</td>
+</tr>
+<tr>
+<td>PageRank</td>
+<td>Link authority</td>
+<td>Ranking</td>
+<td>Web search</td>
+</tr>
+</tbody>
+</table>
+<h3 id="domain-specific-applications">Domain-Specific Applications</h3>
+<p><strong>1. Urban Planning and Transportation:</strong></p>
+<ul>
+<li><strong>Airport Location Selection:</strong></li>
+<li>Use closeness centrality to minimize average travel time</li>
+<li>Consider betweenness for hub importance</li>
+<li>
+<p>Balance with operational constraints (land availability, costs)</p>
+</li>
+<li>
+<p><strong>Public Transit Design:</strong></p>
+</li>
+<li>Closeness centrality for station placement</li>
+<li>Edge centrality for critical routes</li>
+<li>Betweenness for transfer point identification</li>
+</ul>
+<p><strong>2. Emergency Response:</strong></p>
+<ul>
+<li><strong>Hospital Placement:</strong></li>
+<li>Closeness centrality for average response time</li>
+<li>Consider population density weighting</li>
+<li>
+<p>Account for road network characteristics</p>
+</li>
+<li>
+<p><strong>Emergency Shelter Location:</strong></p>
+</li>
+<li>Maximize accessibility during disasters</li>
+<li>Identify locations with shortest average evacuation distance</li>
+</ul>
+<p><strong>3. Social Networks:</strong></p>
+<ul>
+<li><strong>Information Dissemination:</strong></li>
+<li>Start campaigns from high closeness centrality individuals</li>
+<li>Use betweenness centrality to identify influencers who bridge communities</li>
+<li>
+<p>Monitor for message distortion at high-betweenness nodes</p>
+</li>
+<li>
+<p><strong>Community Detection:</strong></p>
+</li>
+<li>Low edge betweenness within communities</li>
+<li>High edge betweenness between communities</li>
+<li>Helps identify natural social clusters</li>
+</ul>
+<p><strong>4. Infrastructure Security:</strong></p>
+<ul>
+<li><strong>Critical Node Protection:</strong></li>
+<li>High betweenness centrality nodes are vulnerable</li>
+<li>Prioritize security for bottleneck locations</li>
+<li>
+<p>Develop redundancy for critical nodes</p>
+</li>
+<li>
+<p><strong>Network Resilience:</strong></p>
+</li>
+<li>Model failure scenarios for high-centrality nodes</li>
+<li>Design backup routes around bottlenecks</li>
+<li>Assess cascading failure risks</li>
+</ul>
+<p><strong>5. Supply Chain Optimization:</strong></p>
+<ul>
+<li><strong>Distribution Center Location:</strong></li>
+<li>Closeness centrality for average delivery time</li>
+<li>Consider demand patterns and inventory costs</li>
+<li>
+<p>Balance centrality with operational efficiency</p>
+</li>
+<li>
+<p><strong>Route Optimization:</strong></p>
+</li>
+<li>Edge centrality identifies critical shipping routes</li>
+<li>Plan backup routes for high-centrality edges</li>
+<li>Optimize for both cost and reliability</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="implementation-guide">💻 Implementation Guide</h2>
+<p><a id="implementation-guide"></a></p>
+<h3 id="python-implementation-with-networkx">Python Implementation with NetworkX</h3>
+<p><strong>Installation:</strong></p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>networkx<span class="w"> </span>matplotlib<span class="w"> </span>numpy
+</code></pre></div>
+<p><strong>Complete Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create a sample network</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}),</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">}),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">}),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="mi">16</span><span class="p">}),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}),</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">})</span>
+<span class="p">]</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+
+<span class="c1"># Compute closeness centrality</span>
+<span class="n">closeness</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">closeness_centrality</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Closeness Centrality:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">closeness</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Node </span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">score</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Compute betweenness centrality</span>
+<span class="n">betweenness</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">betweenness_centrality</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Betweenness Centrality:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">node</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">betweenness</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Node </span><span class="si">{</span><span class="n">node</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">score</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Compute edge betweenness</span>
+<span class="n">edge_betweenness</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">edge_betweenness_centrality</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Edge Betweenness Centrality:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">edge</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">edge_betweenness</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Edge </span><span class="si">{</span><span class="n">edge</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">score</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Visualize the network</span>
+<span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># Plot with closeness centrality</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">node_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="o">*</span> <span class="mi">3000</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">closeness</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="n">node_sizes</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;lightblue&#39;</span><span class="p">,</span>
+        <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">font_weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Network with Closeness Centrality</span><span class="se">\n</span><span class="s2">(node size ~ centrality)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Plot with betweenness centrality</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+<span class="n">node_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="o">*</span> <span class="mi">3000</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">betweenness</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="n">node_sizes</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;lightcoral&#39;</span><span class="p">,</span>
+        <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">font_weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Network with Betweenness Centrality</span><span class="se">\n</span><span class="s2">(node size ~ centrality)&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="floyd-warshall-implementation">Floyd-Warshall Implementation</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">floyd_warshall</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute all-pairs shortest paths using Floyd-Warshall algorithm</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    - graph: Dictionary of dictionaries representing weighted graph</span>
+<span class="sd">             graph[i][j] = weight of edge from i to j</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    - dist: Dictionary of dictionaries with shortest path distances</span>
+<span class="sd">    - next_node: Dictionary for path reconstruction</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize distance matrix</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="p">{</span><span class="n">j</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">}</span>
+    <span class="n">next_node</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="p">{</span><span class="n">j</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">}</span>
+
+    <span class="c1"># Set direct edges and self-loops</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+        <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">graph</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">next_node</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span>
+
+    <span class="c1"># Floyd-Warshall algorithm</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]:</span>
+                    <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dist</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+                    <span class="n">next_node</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">next_node</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">dist</span><span class="p">,</span> <span class="n">next_node</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">reconstruct_path</span><span class="p">(</span><span class="n">next_node</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reconstruct shortest path from start to end&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">next_node</span><span class="p">[</span><span class="n">start</span><span class="p">][</span><span class="n">end</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">start</span><span class="p">]</span>
+    <span class="k">while</span> <span class="n">start</span> <span class="o">!=</span> <span class="n">end</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">next_node</span><span class="p">[</span><span class="n">start</span><span class="p">][</span><span class="n">end</span><span class="p">]</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">path</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="mi">2</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="mi">20</span><span class="p">},</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="mi">16</span><span class="p">},</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span>
+    <span class="mi">4</span><span class="p">:</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">distances</span><span class="p">,</span> <span class="n">next_nodes</span> <span class="o">=</span> <span class="n">floyd_warshall</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All-Pairs Shortest Distances:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">distances</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">distances</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">reconstruct_path</span><span class="p">(</span><span class="n">next_nodes</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">: distance = </span><span class="si">{</span><span class="n">distances</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="si">}</span><span class="s2">, path = </span><span class="si">{</span><span class="s1">&#39; → &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="google-colab-integration">Google Colab Integration</h3>
+<p><strong>Interactive Centrality Analysis:</strong></p>
+<p><a href="https://colab.research.google.com/drive/example_centrality_analysis"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Colab-ready code for interactive analysis</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">networkx</span> <span class="n">matplotlib</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">HTML</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">analyze_network</span><span class="p">(</span><span class="n">edges_with_weights</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Comprehensive network centrality analysis</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    - edges_with_weights: List of (node1, node2, weight) tuples</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_weighted_edges_from</span><span class="p">(</span><span class="n">edges_with_weights</span><span class="p">)</span>
+
+    <span class="c1"># Compute all centrality measures</span>
+    <span class="n">closeness</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">closeness_centrality</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+    <span class="n">betweenness</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">betweenness_centrality</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+    <span class="n">degree</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">weight</span><span class="o">=</span><span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Create comprehensive report</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">():</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;Node&#39;</span><span class="p">:</span> <span class="n">node</span><span class="p">,</span>
+            <span class="s1">&#39;Closeness&#39;</span><span class="p">:</span> <span class="n">closeness</span><span class="p">[</span><span class="n">node</span><span class="p">],</span>
+            <span class="s1">&#39;Betweenness&#39;</span><span class="p">:</span> <span class="n">betweenness</span><span class="p">[</span><span class="n">node</span><span class="p">],</span>
+            <span class="s1">&#39;Degree&#39;</span><span class="p">:</span> <span class="n">degree</span><span class="p">[</span><span class="n">node</span><span class="p">]</span>
+        <span class="p">})</span>
+
+    <span class="c1"># Display as formatted table</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;Betweenness&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="s2">&quot;&lt;h3&gt;Network Centrality Analysis&lt;/h3&gt;&quot;</span><span class="p">))</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="c1"># Visualization</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+    <span class="c1"># Closeness visualization</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+    <span class="n">node_colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">closeness</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">()]</span>
+    <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="n">node_colors</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;YlOrRd&#39;</span><span class="p">,</span>
+            <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Closeness Centrality&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;YlOrRd&#39;</span><span class="p">),</span> <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">())</span>
+
+    <span class="c1"># Betweenness visualization</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+    <span class="n">node_colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">betweenness</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">()]</span>
+    <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="n">node_colors</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;YlGnBu&#39;</span><span class="p">,</span>
+            <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Betweenness Centrality&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;YlGnBu&#39;</span><span class="p">),</span> <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">())</span>
+
+    <span class="c1"># Degree visualization</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+    <span class="n">node_colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">degree</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">()]</span>
+    <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="n">node_colors</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greens&#39;</span><span class="p">,</span>
+            <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Weighted Degree&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greens&#39;</span><span class="p">),</span> <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">())</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+
+<span class="c1"># Example: Analyze airport network</span>
+<span class="n">airport_edges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;NYC&#39;</span><span class="p">,</span> <span class="s1">&#39;CHI&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;NYC&#39;</span><span class="p">,</span> <span class="s1">&#39;ATL&#39;</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;CHI&#39;</span><span class="p">,</span> <span class="s1">&#39;DEN&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;ATL&#39;</span><span class="p">,</span> <span class="s1">&#39;DEN&#39;</span><span class="p">,</span> <span class="mi">35</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;DEN&#39;</span><span class="p">,</span> <span class="s1">&#39;LAX&#39;</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;ATL&#39;</span><span class="p">,</span> <span class="s1">&#39;MIA&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">analyze_network</span><span class="p">(</span><span class="n">airport_edges</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="performance-optimization-tips">Performance Optimization Tips</h3>
+<p><strong>For Large Networks:</strong></p>
+<ul>
+<li><strong>Use sparse matrix representations</strong> for memory efficiency</li>
+<li><strong>Parallelize computations</strong> for betweenness centrality</li>
+<li><strong>Sample geodesic paths</strong> for approximate betweenness in very large graphs</li>
+<li><strong>Use specialized algorithms</strong> like Brandes' algorithm for betweenness</li>
+</ul>
+<p><strong>Memory-Efficient Floyd-Warshall:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">floyd_warshall_memory_efficient</span><span class="p">(</span><span class="n">adjacency_matrix</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    In-place Floyd-Warshall to save memory</span>
+<span class="sd">    Modifies adjacency_matrix directly</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">adjacency_matrix</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+                <span class="n">adjacency_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+                    <span class="n">adjacency_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span>
+                    <span class="n">adjacency_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">adjacency_matrix</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+                <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">adjacency_matrix</span>
+</code></pre></div>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="references-further-reading">📚 References &amp; Further Reading</h2>
+<p><a id="references-further-reading"></a></p>
+<h3 id="academic-papers">Academic Papers</h3>
+<p><strong>Foundational Papers:</strong></p>
+<ul>
+<li><strong>Freeman, L. C.</strong> (1977). "A Set of Measures of Centrality Based on Betweenness." <em>Sociometry</em>, 40(1), 35-41.</li>
+<li>Original formulation of betweenness centrality</li>
+<li>
+<p><a href="https://doi.org/10.2307/3033543">DOI: 10.2307/3033543</a></p>
+</li>
+<li>
+<p><strong>Brandes, U.</strong> (2001). "A Faster Algorithm for Betweenness Centrality." <em>Journal of Mathematical Sociology</em>, 25(2), 163-177.</p>
+</li>
+<li>Efficient O(nm + n²) algorithm for betweenness centrality</li>
+<li>
+<p><a href="https://doi.org/10.1080/0022250X.2001.9990249">DOI: 10.1080/0022250X.2001.9990249</a></p>
+</li>
+<li>
+<p><strong>Bavelas, A.</strong> (1950). "Communication Patterns in Task-Oriented Groups." <em>Journal of the Acoustical Society of America</em>, 22(6), 725-730.</p>
+</li>
+<li>Early work on centrality in communication networks</li>
+</ul>
+<p><strong>Recent Advances:</strong></p>
+<ul>
+<li><strong>Borgatti, S. P., &amp; Everett, M. G.</strong> (2006). "A Graph-Theoretic Perspective on Centrality." <em>Social Networks</em>, 28(4), 466-484.</li>
+<li>Unified framework for understanding different centrality measures</li>
+<li>
+<p><a href="https://doi.org/10.1016/j.socnet.2005.11.005">DOI: 10.1016/j.socnet.2005.11.005</a></p>
+</li>
+<li>
+<p><strong>Newman, M. E. J.</strong> (2005). "A Measure of Betweenness Centrality Based on Random Walks." <em>Social Networks</em>, 27(1), 39-54.</p>
+</li>
+<li>Alternative formulation using random walks</li>
+<li><a href="https://doi.org/10.1016/j.socnet.2004.11.009">DOI: 10.1016/j.socnet.2004.11.009</a></li>
+</ul>
+<h3 id="books-and-textbooks">Books and Textbooks</h3>
+<p><strong>Comprehensive Treatments:</strong></p>
+<ul>
+<li><strong>Newman, M. E. J.</strong> (2018). <em>Networks: An Introduction</em> (2nd ed.). Oxford University Press.</li>
+<li>Chapter 7 covers centrality measures comprehensively</li>
+<li>
+<p>Excellent balance of theory and applications</p>
+</li>
+<li>
+<p><strong>Easley, D., &amp; Kleinberg, J.</strong> (2010). <em>Networks, Crowds, and Markets: Reasoning About a Highly Connected World</em>. Cambridge University Press.</p>
+</li>
+<li>Chapter 3 on strong and weak ties</li>
+<li>
+<p>Free online: <a href="http://www.cs.cornell.edu/home/kleinber/networks-book/">www.cs.cornell.edu/home/kleinber/networks-book/</a></p>
+</li>
+<li>
+<p><strong>Barabási, A.-L.</strong> (2016). <em>Network Science</em>. Cambridge University Press.</p>
+</li>
+<li>Chapter 4 on the scale-free property</li>
+<li>Interactive online version available</li>
+</ul>
+<h3 id="online-resources">Online Resources</h3>
+<p><strong>Tutorial and Tools:</strong></p>
+<ul>
+<li><strong>NetworkX Documentation:</strong> <a href="https://networkx.org/documentation/stable/reference/algorithms/centrality.html">networkx.org/documentation/stable/reference/algorithms/centrality.html</a></li>
+<li>
+<p>Complete API reference for centrality algorithms</p>
+</li>
+<li>
+<p><strong>Graph-Tool Library:</strong> <a href="https://graph-tool.skewed.de/">graph-tool.skewed.de</a></p>
+</li>
+<li>
+<p>High-performance graph analysis in Python</p>
+</li>
+<li>
+<p><strong>igraph:</strong> <a href="https://igraph.org/">igraph.org</a></p>
+</li>
+<li>Fast network analysis library for R, Python, and C</li>
+</ul>
+<p><strong>Interactive Visualizations:</strong></p>
+<ul>
+<li><strong>D3.js Force-Directed Graphs:</strong> <a href="https://observablehq.com/@d3/force-directed-graph">observablehq.com/@d3/force-directed-graph</a></li>
+<li>
+<p>Interactive network visualization examples</p>
+</li>
+<li>
+<p><strong>Gephi:</strong> <a href="https://gephi.org/">gephi.org</a></p>
+</li>
+<li>Open-source network visualization platform</li>
+</ul>
+<h3 id="related-topics">Related Topics</h3>
+<p><strong>Extensions and Variations:</strong></p>
+<ul>
+<li><strong>Weighted Centrality Measures:</strong> Accounting for edge weights in various ways</li>
+<li><strong>Dynamic Centrality:</strong> Centrality in time-evolving networks</li>
+<li><strong>Spatial Networks:</strong> Networks embedded in geographic space</li>
+<li><strong>Multilayer Networks:</strong> Centrality across multiple relationship types</li>
+</ul>
+<p><strong>Applications:</strong></p>
+<ul>
+<li><strong>Epidemic Modeling:</strong> Using centrality to model disease spread</li>
+<li><strong>Traffic Engineering:</strong> Optimizing transportation networks</li>
+<li><strong>Brain Networks:</strong> Analyzing neural connectivity</li>
+<li><strong>Economic Networks:</strong> Supply chains and financial systems</li>
+</ul>
+<h3 id="code-repositories">Code Repositories</h3>
+<p><strong>GitHub Resources:</strong></p>
+<ul>
+<li><strong>NetworkX Examples:</strong> <a href="https://github.com/networkx/networkx/tree/main/examples">github.com/networkx/networkx/tree/main/examples</a></li>
+<li><strong>Graph Analysis Tutorials:</strong> <a href="https://github.com/topics/graph-analysis">github.com/topics/graph-analysis</a></li>
+</ul>
+<hr />
+<h2 id="summary">🎓 Summary</h2>
+<p><strong>Key Takeaways:</strong></p>
+<ul>
+<li><strong>Closeness Centrality</strong> measures how central a node is based on its average distance to all other nodes</li>
+<li>Ideal for facility location problems</li>
+<li>
+<p>Identifies nodes that can quickly reach all others</p>
+</li>
+<li>
+<p><strong>Betweenness Centrality</strong> identifies bottlenecks and nodes critical for information flow</p>
+</li>
+<li>Essential for understanding network vulnerability</li>
+<li>
+<p>High-betweenness nodes are powerful but vulnerable</p>
+</li>
+<li>
+<p><strong>Floyd-Warshall Algorithm</strong> efficiently computes all-pairs shortest paths in O(n³) time</p>
+</li>
+<li>Uses dynamic programming principles</li>
+<li>
+<p>Essential for computing distance-based centrality measures</p>
+</li>
+<li>
+<p><strong>Edge Centrality</strong> extends these concepts to connections between nodes</p>
+</li>
+<li>Critical for infrastructure planning</li>
+<li>Identifies vulnerable links in networks</li>
+</ul>
+<p><strong>Choosing the Right Measure:</strong></p>
+<ul>
+<li><strong>Closeness:</strong> When average distance matters (logistics, emergency services)</li>
+<li><strong>Betweenness:</strong> When control over flow matters (influence, vulnerability)</li>
+<li><strong>Eigenvector/PageRank:</strong> When neighbor importance matters (social influence)</li>
+<li><strong>Edge Centrality:</strong> When connection infrastructure matters (roads, cables)</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<p><em>Documentation created for MkDocs Material theme. For questions or contributions, please refer to the project repository.</em></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 10, 2025 03:21:14 UTC">October 10, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+<!-- Footer navigation (prev/next) - Material default -->
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../09-03-network-centrality-measure/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Network Centrality Measures" rel="prev">
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Previous
+            </span>
+            <div class="md-ellipsis">
+              Network Centrality Measures
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../09-05-global-network-stats/" class="md-footer__link md-footer__link--next" aria-label="Next: Global Network Statistics" rel="next">
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Next
+            </span>
+            <div class="md-ellipsis">
+              Global Network Statistics
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+
+  <!-- Custom footer content -->
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        <div style="text-align: center; padding: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 1rem;">
+          <p style="margin: 0.5rem 0;">
+            <strong>GenAI Atlas</strong> - Your Comprehensive Guide to AI & Machine Learning
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.9em; opacity: 0.8;">
+            © 2024 GenAI Atlas | Built with ❤️ for the AI Community
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.85em; opacity: 0.7;">
+            <em>Empowering developers, researchers, and practitioners worldwide</em>
+          </p>
+        </div>
+      </div>
+      <div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

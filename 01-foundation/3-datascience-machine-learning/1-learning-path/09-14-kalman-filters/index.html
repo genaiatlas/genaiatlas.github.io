@@ -1,0 +1,4173 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/1-learning-path/09-14-kalman-filters/">
+      
+      
+        <link rel="prev" href="../09-13-hidden-markov-models/">
+      
+      
+        <link rel="next" href="../../2-additional-reference/01-hands-on-PCA-clust-genom/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Kalman Filter - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Kalman Filter
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-fast-track/01-ft-python-basics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-probability_distributions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-fast-track/01-statistics-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Introduction of Data Science
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-data-science-lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Life Cycle
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-ai_applications_across_industries/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Application
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-07-principal-component-analysis/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Dimensionality Reduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../05-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../06-hypothesis-testing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../07-deep-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../08-recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_10" id="__nav_2_4_2_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Network and Graphical Model
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Network and Graphical Model
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-networking-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fundamentals
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-01-network-theory/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Theory
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-02-network-representations/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Netwrok Representations
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-03-network-centrality-measure/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Centrality measures
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-04-spatial-centrality-measures/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Spatial Centrality measures
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-05-global-network-stats/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Global Network Statistics
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-06-network-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-07-stochastic-network/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Stochastic Network Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-08-influence-maximization-networks/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Influence Maximization in Networks
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-09-undirected-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Undirected Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-10-ising-gaussian-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Ising and Gaussian Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-11-directed-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Directed Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-12-inference-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Inference in Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-13-hidden-markov-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hidden Markov Models (HMMs)
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_10_15" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_10_15" id="__nav_2_4_2_10_15_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Kalman Filters
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_2_10_15_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_10_15">
+            <span class="md-nav__icon md-icon"></span>
+            Kalman Filters
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Kalman Filter
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kalman Filter
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linear-dynamical-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linear Dynamical Systems
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#observation-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Observation Model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kalman-filter-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman Filter Algorithm
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prediction-and-update-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prediction and Update Steps
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filter-gain" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filter Gain
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mathematical-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Framework
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimality-and-robustness" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimality and Robustness
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Resources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-datascience-ml-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linear-dynamical-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linear Dynamical Systems
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#observation-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Observation Model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kalman-filter-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman Filter Algorithm
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prediction-and-update-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prediction and Update Steps
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filter-gain" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filter Gain
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mathematical-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mathematical Framework
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimality-and-robustness" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimality and Robustness
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Resources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="kalman-filter">Kalman Filter <a id="top"></a></h1>
+<h2 id="quick-navigation">Quick Navigation</h2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#linear-dynamical-systems">Linear Dynamical Systems</a></li>
+<li><a href="#observation-model">Observation Model</a></li>
+<li><a href="#kalman-filter-algorithm">Kalman Filter Algorithm</a></li>
+<li><a href="#prediction-and-update-steps">Prediction and Update Steps</a></li>
+<li><a href="#filter-gain">Filter Gain</a></li>
+<li><a href="#mathematical-framework">Mathematical Framework</a></li>
+<li><a href="#optimality-and-robustness">Optimality and Robustness</a></li>
+<li><a href="#applications">Applications</a></li>
+<li><a href="#implementation-resources">Implementation Resources</a></li>
+<li><a href="#references-further-reading">References &amp; Further Reading</a></li>
+</ul>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<p>The Kalman filter is an algorithm for estimating a process seen only through noisy observations. It provides an elegant solution to one of the most fundamental problems in signal processing and control theory: how to combine multiple noisy measurements to produce accurate estimates of hidden states.</p>
+<p><img alt="Kalman Filter Overview" src="../../../../svg/kalman_filter_overview.svg" /></p>
+<p><strong>Key Characteristics:</strong></p>
+<ul>
+<li><strong>Simple and Efficient:</strong> Computationally lightweight recursive algorithm</li>
+<li><strong>Optimal Estimator:</strong> Provides minimum variance estimates under Gaussian assumptions</li>
+<li><strong>Real-Time Capable:</strong> Works iteratively without storing complete observation history</li>
+<li><strong>Widely Applicable:</strong> Used in navigation, control systems, econometrics, and more</li>
+</ul>
+<p><strong>Relationship to Hidden Markov Models:</strong></p>
+<p>The Kalman filter is closely related to Hidden Markov Models (HMMs) but operates in continuous state spaces rather than discrete states. Both frameworks model:</p>
+<ul>
+<li>A hidden state Xₜ that evolves over time</li>
+<li>Noisy observations Yₜ of the hidden state</li>
+<li>A Markov process governing state transitions</li>
+</ul>
+<p><strong>Example Application:</strong></p>
+<p>Consider designing a heart rate monitor:</p>
+<ul>
+<li><strong>State Xₜ:</strong> True heart rate at time t</li>
+<li><strong>Observation Yₜ:</strong> Noisy electrical signal from sensor</li>
+<li><strong>Goal:</strong> Estimate true heart rate given observations Y₁ through Yₜ</li>
+<li><strong>Challenge:</strong> Individual observations are too noisy for reliable estimates</li>
+</ul>
+<p>The Kalman filter combines information from multiple observations to produce smooth, accurate estimates that balance responsiveness with noise reduction.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="linear-dynamical-systems">Linear Dynamical Systems</h2>
+<p>The Kalman filter operates on a <strong>linear dynamical system</strong> that describes how the hidden state evolves over time.</p>
+<p><strong>State Evolution Model:</strong></p>
+<div class="highlight"><pre><span></span><code>Xₜ = A·Xₜ₋₁ + Wₜ
+</code></pre></div>
+<p><strong>Components:</strong></p>
+<ul>
+<li><strong>Xₜ:</strong> State vector at time t (e.g., position, velocity, heart rate)</li>
+<li><strong>A:</strong> State transition matrix (encodes system dynamics)</li>
+<li><strong>Wₜ:</strong> Process noise (Gaussian random vector)</li>
+<li><strong>Xₜ₋₁:</strong> Previous state</li>
+</ul>
+<p><strong>Key Assumptions:</strong></p>
+<ul>
+<li><strong>Linearity:</strong> Next state is a linear function of previous state</li>
+<li><strong>Gaussian Noise:</strong> Process noise Wₜ ~ N(0, Q) with known covariance Q</li>
+<li><strong>Known Dynamics:</strong> Transition matrix A is known or estimated</li>
+<li><strong>Markov Property:</strong> Xₜ depends only on Xₜ₋₁, not earlier states</li>
+</ul>
+<p><strong>Vector-Valued States:</strong></p>
+<p>The state can be multidimensional. For example, tracking a moving object:</p>
+<div class="highlight"><pre><span></span><code>Xₜ = [position, velocity, acceleration]ᵀ
+</code></pre></div>
+<p>The transition matrix A encodes physical laws (e.g., position updates based on velocity).</p>
+<p><strong>Process Noise Interpretation:</strong></p>
+<ul>
+<li>Captures uncertainty in system dynamics</li>
+<li>Represents unmodeled forces or disturbances</li>
+<li>Larger noise means less confidence in state predictions</li>
+<li>Covariance matrix Q determines noise characteristics</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="observation-model">Observation Model</h2>
+<p>We don't observe the true state Xₜ directly. Instead, we receive noisy measurements through a linear observation model.</p>
+<p><strong>Observation Equation:</strong></p>
+<div class="highlight"><pre><span></span><code>Yₜ = B·Xₜ + Zₜ
+</code></pre></div>
+<p><strong>Components:</strong></p>
+<ul>
+<li><strong>Yₜ:</strong> Observation vector at time t</li>
+<li><strong>B:</strong> Observation matrix (maps state to measurement space)</li>
+<li><strong>Xₜ:</strong> True hidden state</li>
+<li><strong>Zₜ:</strong> Measurement noise (Gaussian random vector)</li>
+</ul>
+<p><strong>Measurement Noise:</strong></p>
+<ul>
+<li><strong>Distribution:</strong> Zₜ ~ N(0, R) with known covariance R</li>
+<li><strong>Independence:</strong> Measurement noise is independent of process noise</li>
+<li><strong>Characteristics:</strong> Captures sensor accuracy and environmental interference</li>
+</ul>
+<p><strong>Example - Heart Rate Monitor:</strong></p>
+<div class="highlight"><pre><span></span><code>True heart rate: Xₜ = 75 bpm
+Observation: Yₜ = 73 bpm (with measurement noise)
+</code></pre></div>
+<p>The observation matrix B might scale the true heart rate to match sensor output units, and Zₜ represents electrical interference.</p>
+<p><strong>Joint Gaussian Assumption:</strong></p>
+<p>Under the assumption that X₁, W₁, W₂, ..., Z₁, Z₂, ... are jointly Gaussian, all conditional distributions remain Gaussian. This property enables closed-form solutions for the Kalman filter equations.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="kalman-filter-algorithm">Kalman Filter Algorithm</h2>
+<p>The Kalman filter operates through a <strong>predict-update cycle</strong> that recursively estimates the state at each time step.</p>
+<p><img alt="Kalman Filter Steps" src="../../../../svg/kalman_filter_steps.svg" /></p>
+<p><strong>High-Level Operation:</strong></p>
+<p>The filter combines two sources of information:</p>
+<ul>
+<li><strong>Prediction:</strong> Estimate of Xₜ based on previous observations Y₁, ..., Yₜ₋₁</li>
+<li><strong>Correction:</strong> Adjustment based on new observation Yₜ</li>
+</ul>
+<p>The result is an optimal weighted average that balances these two estimates.</p>
+<p><strong>Advantages of Recursive Processing:</strong></p>
+<ul>
+<li><strong>Memory Efficient:</strong> Only stores current state estimate and covariance</li>
+<li><strong>Real-Time Capable:</strong> Processes observations as they arrive</li>
+<li><strong>No Batch Requirement:</strong> Doesn't need all observations upfront</li>
+<li><strong>Online Learning:</strong> Continuously updates estimates with new data</li>
+</ul>
+<p><strong>Contrast with Batch Methods:</strong></p>
+<ul>
+<li><strong>Batch algorithms:</strong> Require all observations Y₁, ..., Yₙ before processing</li>
+<li><strong>Kalman filter:</strong> Processes each observation sequentially</li>
+<li><strong>Storage:</strong> Batch methods store entire history; Kalman filter stores only summary statistics</li>
+</ul>
+<p><strong>State Representation:</strong></p>
+<p>At each time t, the filter maintains:</p>
+<ul>
+<li><strong>Mean estimate:</strong> μₜ = E[Xₜ | Y₁, ..., Yₜ]</li>
+<li><strong>Covariance:</strong> Σₜ = Cov(Xₜ | Y₁, ..., Yₜ)</li>
+</ul>
+<p>These fully characterize the posterior distribution P(Xₜ | Y₁, ..., Yₜ) under Gaussian assumptions.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="prediction-and-update-steps">Prediction and Update Steps</h2>
+<p>The Kalman filter algorithm consists of two alternating steps performed at each time t.</p>
+<p><strong>Step 1: Prediction (Time Update)</strong></p>
+<p>Project the current state estimate forward to the next time step using the system dynamics.</p>
+<p><strong>Prediction Equations:</strong></p>
+<div class="highlight"><pre><span></span><code>μₜ₊₁|ₜ = A·μₜ
+Σₜ₊₁|ₜ = A·Σₜ·Aᵀ + Q
+</code></pre></div>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li><strong>μₜ₊₁|ₜ:</strong> Predicted state mean at t+1 given observations through t</li>
+<li><strong>Σₜ₊₁|ₜ:</strong> Predicted state covariance (uncertainty increases due to process noise Q)</li>
+<li>Uses system model Xₜ₊₁ = A·Xₜ + Wₜ₊₁</li>
+</ul>
+<p><strong>Mathematical Justification:</strong></p>
+<p>Using the law of total probability:</p>
+<div class="highlight"><pre><span></span><code>P(Xₜ₊₁ | Y₁:ₜ) = ∫ P(Xₜ₊₁ | Xₜ) · P(Xₜ | Y₁:ₜ) dXₜ
+</code></pre></div>
+<p>This integral has a closed form for Gaussian distributions, yielding the prediction equations.</p>
+<p><strong>Step 2: Update (Measurement Update)</strong></p>
+<p>Incorporate the new observation Yₜ₊₁ to refine the predicted state estimate.</p>
+<p><strong>Update Equations:</strong></p>
+<div class="highlight"><pre><span></span><code>Kₜ₊₁ = Σₜ₊₁|ₜ·Bᵀ·(B·Σₜ₊₁|ₜ·Bᵀ + R)⁻¹
+μₜ₊₁ = μₜ₊₁|ₜ + Kₜ₊₁·(Yₜ₊₁ - B·μₜ₊₁|ₜ)
+Σₜ₊₁ = (I - Kₜ₊₁·B)·Σₜ₊₁|ₜ
+</code></pre></div>
+<p><strong>Components:</strong></p>
+<ul>
+<li><strong>Kₜ₊₁:</strong> Kalman gain (weighting factor)</li>
+<li><strong>Yₜ₊₁ - B·μₜ₊₁|ₜ:</strong> Innovation (measurement residual)</li>
+<li><strong>Innovation:</strong> Difference between actual observation and predicted observation</li>
+</ul>
+<p><strong>Bayesian Update:</strong></p>
+<p>Using Bayes' rule:</p>
+<div class="highlight"><pre><span></span><code>P(Xₜ₊₁ | Y₁:ₜ₊₁) ∝ P(Yₜ₊₁ | Xₜ₊₁) · P(Xₜ₊₁ | Y₁:ₜ)
+</code></pre></div>
+<p>The update equations implement this Bayesian update in closed form for Gaussian distributions.</p>
+<p><strong>Initialization (t=1):</strong></p>
+<p>For the first time step, the prediction step uses the prior distribution:</p>
+<div class="highlight"><pre><span></span><code>μ₁|₀ = E[X₁]
+Σ₁|₀ = Cov(X₁)
+</code></pre></div>
+<p>These are specified by the initial state distribution in the model.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="filter-gain">Filter Gain</h2>
+<p>The <strong>Kalman gain</strong> Kₜ is a crucial parameter that determines how much weight to place on new observations versus predictions.</p>
+<p><img alt="Kalman Filter Gain" src="../../../../svg/kalman_filter_gain.svg" /></p>
+<p><strong>Gain Equation:</strong></p>
+<div class="highlight"><pre><span></span><code>Kₜ = Σₜ|ₜ₋₁·Bᵀ·(B·Σₜ|ₜ₋₁·Bᵀ + R)⁻¹
+</code></pre></div>
+<p><strong>Interpretation:</strong></p>
+<p>The gain represents the optimal weighting that minimizes the posterior covariance. It balances:</p>
+<ul>
+<li><strong>Prediction uncertainty:</strong> Σₜ|ₜ₋₁ (how uncertain is the prediction?)</li>
+<li><strong>Measurement noise:</strong> R (how noisy are observations?)</li>
+</ul>
+<p><strong>Gain Behavior:</strong></p>
+<p><strong>Low Gain (Kₜ → 0):</strong></p>
+<ul>
+<li>Less weight on new observations</li>
+<li>More weight on predictions</li>
+<li>Smoother output (less responsive to changes)</li>
+<li>Occurs when: Measurement noise R is large or prediction uncertainty Σₜ|ₜ₋₁ is small</li>
+</ul>
+<p><strong>High Gain (Kₜ → I):</strong></p>
+<ul>
+<li>More weight on new observations</li>
+<li>Less weight on predictions</li>
+<li>More responsive (but potentially erratic)</li>
+<li>Occurs when: Measurement noise R is small or prediction uncertainty Σₜ|ₜ₋₁ is large</li>
+</ul>
+<p><strong>Trade-offs:</strong></p>
+<ul>
+<li><strong>Smoothing vs Responsiveness:</strong> Low gain smooths noise but delays response to real changes</li>
+<li><strong>Tracking vs Stability:</strong> High gain tracks changes quickly but amplifies measurement noise</li>
+<li><strong>Optimal Balance:</strong> Kalman gain automatically finds the optimal trade-off</li>
+</ul>
+<p><strong>Manual Gain Tuning:</strong></p>
+<p>If model parameters are unknown:</p>
+<ul>
+<li>Start with moderate gain values</li>
+<li>Increase gain if filter is too slow to respond</li>
+<li>Decrease gain if output is too noisy</li>
+<li>Monitor innovation sequence for whiteness (diagnostic check)</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="mathematical-framework">Mathematical Framework</h2>
+<p>The complete Kalman filter algorithm with all equations and notation.</p>
+<p><strong>System Model:</strong></p>
+<div class="highlight"><pre><span></span><code>Xₜ = A·Xₜ₋₁ + Wₜ    (State equation)
+Yₜ = B·Xₜ + Zₜ       (Observation equation)
+</code></pre></div>
+<p><strong>Noise Assumptions:</strong></p>
+<div class="highlight"><pre><span></span><code>Wₜ ~ N(0, Q)    (Process noise)
+Zₜ ~ N(0, R)    (Measurement noise)
+X₀ ~ N(μ₀, Σ₀)  (Initial state)
+</code></pre></div>
+<p><strong>Algorithm:</strong></p>
+<p><strong>Initialization:</strong></p>
+<div class="highlight"><pre><span></span><code>μ₀|₀ = μ₀
+Σ₀|₀ = Σ₀
+</code></pre></div>
+<p><strong>For t = 1, 2, 3, ...:</strong></p>
+<p><strong>Predict:</strong></p>
+<div class="highlight"><pre><span></span><code>μₜ|ₜ₋₁ = A·μₜ₋₁|ₜ₋₁
+Σₜ|ₜ₋₁ = A·Σₜ₋₁|ₜ₋₁·Aᵀ + Q
+</code></pre></div>
+<p><strong>Update:</strong></p>
+<div class="highlight"><pre><span></span><code>Kₜ = Σₜ|ₜ₋₁·Bᵀ·(B·Σₜ|ₜ₋₁·Bᵀ + R)⁻¹
+μₜ|ₜ = μₜ|ₜ₋₁ + Kₜ·(Yₜ - B·μₜ|ₜ₋₁)
+Σₜ|ₜ = (I - Kₜ·B)·Σₜ|ₜ₋₁
+</code></pre></div>
+<p><strong>Variable Definitions:</strong></p>
+<ul>
+<li><strong>μₜ|ₜ:</strong> Posterior mean of Xₜ given Y₁:ₜ</li>
+<li><strong>Σₜ|ₜ:</strong> Posterior covariance of Xₜ given Y₁:ₜ</li>
+<li><strong>μₜ|ₜ₋₁:</strong> Predicted mean of Xₜ given Y₁:ₜ₋₁</li>
+<li><strong>Σₜ|ₜ₋₁:</strong> Predicted covariance of Xₜ given Y₁:ₜ₋₁</li>
+<li><strong>Kₜ:</strong> Kalman gain matrix</li>
+<li><strong>I:</strong> Identity matrix</li>
+</ul>
+<p><strong>Computational Complexity:</strong></p>
+<p>For state dimension n and observation dimension m:</p>
+<ul>
+<li><strong>Predict step:</strong> O(n³) for covariance update</li>
+<li><strong>Update step:</strong> O(m³ + n·m²) for gain computation</li>
+<li><strong>Total per iteration:</strong> O(n³ + m³)</li>
+</ul>
+<p><strong>Numerical Stability:</strong></p>
+<p>The standard Kalman filter equations can suffer from numerical issues. Stable implementations use:</p>
+<ul>
+<li><strong>Joseph form:</strong> Alternative covariance update that guarantees positive definiteness</li>
+<li><strong>Square-root filters:</strong> Propagate Cholesky factors instead of covariances</li>
+<li><strong>UD factorization:</strong> Separate treatment of uncertainty magnitude and direction</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="optimality-and-robustness">Optimality and Robustness</h2>
+<p>The Kalman filter has strong theoretical guarantees under certain conditions.</p>
+<p><strong>Optimality Properties:</strong></p>
+<p>The Kalman filter is optimal when:</p>
+<ul>
+<li>System is truly linear: Xₜ = A·Xₜ₋₁ + Wₜ</li>
+<li>Observations are truly linear: Yₜ = B·Xₜ + Zₜ</li>
+<li>All noise is Gaussian with known covariances</li>
+<li>Model parameters (A, B, Q, R) are exactly known</li>
+</ul>
+<p><strong>Types of Optimality:</strong></p>
+<ul>
+<li><strong>Minimum Variance:</strong> Minimizes trace(Σₜ|ₜ) among all linear estimators</li>
+<li><strong>Maximum Likelihood:</strong> Provides maximum likelihood estimate of state</li>
+<li><strong>Bayesian Optimal:</strong> Computes exact posterior P(Xₜ | Y₁:ₜ) under Gaussian assumptions</li>
+<li><strong>MMSE:</strong> Minimizes mean squared error E[||Xₜ - X̂ₜ||²]</li>
+</ul>
+<p><strong>Robustness in Practice:</strong></p>
+<p>The optimality conditions are rarely met in real systems, yet the Kalman filter works remarkably well because:</p>
+<ul>
+<li><strong>Robust to model mismatch:</strong> Performance degrades gracefully with modeling errors</li>
+<li><strong>Approximate linearity sufficient:</strong> Works if system is approximately linear in operating range</li>
+<li><strong>Non-Gaussian noise:</strong> Still performs well if noise is not exactly Gaussian</li>
+<li><strong>Parameter uncertainty:</strong> Reasonable estimates of Q and R often sufficient</li>
+</ul>
+<p><strong>When the Kalman Filter Fails:</strong></p>
+<p>The filter may perform poorly when:</p>
+<ul>
+<li><strong>Strong nonlinearities:</strong> System dynamics are highly nonlinear</li>
+<li><strong>Non-Gaussian noise:</strong> Heavy-tailed or multimodal noise distributions</li>
+<li><strong>Model errors:</strong> Large discrepancies between assumed and actual dynamics</li>
+<li><strong>Outliers:</strong> Observations contaminated by occasional large errors</li>
+</ul>
+<p><strong>Solutions for Challenging Cases:</strong></p>
+<ul>
+<li><strong>Extended Kalman Filter (EKF):</strong> Linearizes nonlinear systems around current estimate</li>
+<li><strong>Unscented Kalman Filter (UKF):</strong> Uses sigma points for better nonlinear approximation</li>
+<li><strong>Particle Filter:</strong> Represents posterior with samples (no linearity assumption)</li>
+<li><strong>Adaptive Kalman Filter:</strong> Estimates Q and R online from data</li>
+<li><strong>Robust Kalman Filter:</strong> Modifies update to reduce sensitivity to outliers</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="applications">Applications</h2>
+<p>The Kalman filter is used across numerous domains for state estimation and prediction.</p>
+<p><strong>Navigation and Positioning:</strong></p>
+<ul>
+<li><strong>GPS Systems:</strong> Combines satellite signals with inertial measurements</li>
+<li><strong>Autonomous Vehicles:</strong> Fuses data from cameras, lidar, radar, and IMU</li>
+<li><strong>Spacecraft Navigation:</strong> Estimates position and velocity from ground tracking</li>
+<li><strong>Marine Navigation:</strong> Integrates GPS, compass, and velocity sensors</li>
+</ul>
+<p><strong>Robotics and Control:</strong></p>
+<ul>
+<li><strong>Robot Localization:</strong> Estimates robot position from noisy wheel encoders and sensors</li>
+<li><strong>Manipulator Control:</strong> Tracks end-effector position despite joint sensor noise</li>
+<li><strong>Drone Stabilization:</strong> Estimates attitude from accelerometers and gyroscopes</li>
+<li><strong>SLAM:</strong> Simultaneous localization and mapping in unknown environments</li>
+</ul>
+<p><strong>Signal Processing:</strong></p>
+<ul>
+<li><strong>Speech Enhancement:</strong> Removes noise from speech signals</li>
+<li><strong>Audio Processing:</strong> Estimates clean audio from noisy recordings</li>
+<li><strong>Radar Tracking:</strong> Tracks aircraft positions from radar returns</li>
+<li><strong>Sonar Processing:</strong> Estimates underwater object locations</li>
+</ul>
+<p><strong>Biomedical Engineering:</strong></p>
+<ul>
+<li><strong>Heart Rate Monitoring:</strong> Filters noisy ECG signals to estimate true heart rate</li>
+<li><strong>Blood Pressure Estimation:</strong> Combines multiple sensor measurements</li>
+<li><strong>Brain-Computer Interfaces:</strong> Decodes neural signals from EEG/ECoG</li>
+<li><strong>Medical Imaging:</strong> Reduces noise in MRI and CT reconstructions</li>
+</ul>
+<p><strong>Finance and Economics:</strong></p>
+<ul>
+<li><strong>Time Series Forecasting:</strong> Estimates trends in economic indicators</li>
+<li><strong>Portfolio Optimization:</strong> Tracks asset returns and covariances</li>
+<li><strong>High-Frequency Trading:</strong> Estimates true prices from noisy tick data</li>
+<li><strong>Macroeconomic Modeling:</strong> Estimates unobserved economic states</li>
+</ul>
+<p><strong>Computer Vision:</strong></p>
+<ul>
+<li><strong>Object Tracking:</strong> Follows moving objects in video streams</li>
+<li><strong>Visual Odometry:</strong> Estimates camera motion from image sequences</li>
+<li><strong>3D Reconstruction:</strong> Combines multiple views to estimate 3D structure</li>
+<li><strong>Motion Capture:</strong> Tracks body pose from marker positions</li>
+</ul>
+<p><strong>Weather and Climate:</strong></p>
+<ul>
+<li><strong>Data Assimilation:</strong> Combines weather observations with numerical models</li>
+<li><strong>Storm Tracking:</strong> Predicts hurricane paths from satellite and radar data</li>
+<li><strong>Climate Prediction:</strong> Estimates climate variables from sparse measurements</li>
+<li><strong>Oceanography:</strong> Tracks ocean currents and temperatures</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="implementation-resources">Implementation Resources</h2>
+<p><strong>Python Libraries:</strong></p>
+<p><strong>FilterPy:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">filterpy.kalman</span><span class="w"> </span><span class="kn">import</span> <span class="n">KalmanFilter</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Create Kalman filter</span>
+<span class="n">kf</span> <span class="o">=</span> <span class="n">KalmanFilter</span><span class="p">(</span><span class="n">dim_x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim_z</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># State transition matrix</span>
+<span class="n">kf</span><span class="o">.</span><span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+
+<span class="c1"># Measurement matrix  </span>
+<span class="n">kf</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+
+<span class="c1"># Covariance matrices</span>
+<span class="n">kf</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>  <span class="c1"># Process noise</span>
+<span class="n">kf</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">]])</span>   <span class="c1"># Measurement noise</span>
+
+<span class="c1"># Initial state</span>
+<span class="n">kf</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+<span class="n">kf</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span>
+
+<span class="c1"># Process measurement</span>
+<span class="n">kf</span><span class="o">.</span><span class="n">predict</span><span class="p">()</span>
+<span class="n">kf</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">measurement</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>PyKalman:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pykalman</span><span class="w"> </span><span class="kn">import</span> <span class="n">KalmanFilter</span>
+
+<span class="n">kf</span> <span class="o">=</span> <span class="n">KalmanFilter</span><span class="p">(</span>
+    <span class="n">transition_matrices</span><span class="o">=</span><span class="n">A</span><span class="p">,</span>
+    <span class="n">observation_matrices</span><span class="o">=</span><span class="n">B</span><span class="p">,</span>
+    <span class="n">transition_covariance</span><span class="o">=</span><span class="n">Q</span><span class="p">,</span>
+    <span class="n">observation_covariance</span><span class="o">=</span><span class="n">R</span><span class="p">,</span>
+    <span class="n">initial_state_mean</span><span class="o">=</span><span class="n">mu0</span><span class="p">,</span>
+    <span class="n">initial_state_covariance</span><span class="o">=</span><span class="n">Sigma0</span>
+<span class="p">)</span>
+
+<span class="c1"># Offline smoothing</span>
+<span class="n">filtered_state_means</span><span class="p">,</span> <span class="n">filtered_state_covariances</span> <span class="o">=</span> <span class="n">kf</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">observations</span><span class="p">)</span>
+
+<span class="c1"># Online filtering</span>
+<span class="n">state_mean</span><span class="p">,</span> <span class="n">state_covariance</span> <span class="o">=</span> <span class="n">kf</span><span class="o">.</span><span class="n">filter_update</span><span class="p">(</span>
+    <span class="n">filtered_state_mean</span><span class="p">,</span> <span class="n">filtered_state_covariance</span><span class="p">,</span> <span class="n">observation</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>MATLAB:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c">% Create state-space model</span>
+<span class="n">sys</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">ss</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">G</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">);</span><span class="w">  </span><span class="c">% Discrete-time system</span>
+
+<span class="c">% Design Kalman filter</span>
+<span class="p">[</span><span class="n">kalmf</span><span class="p">,</span><span class="w"> </span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">P</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">kalman</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span><span class="w"> </span><span class="n">Q</span><span class="p">,</span><span class="w"> </span><span class="n">R</span><span class="p">);</span>
+
+<span class="c">% Apply filter</span>
+<span class="p">[</span><span class="n">y_filtered</span><span class="p">,</span><span class="w"> </span><span class="n">x_filtered</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">lsim</span><span class="p">(</span><span class="n">kalmf</span><span class="p">,</span><span class="w"> </span><span class="n">measurements</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>OpenCV (C++):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;opencv2/video/tracking.hpp&gt;</span>
+
+<span class="n">cv</span><span class="o">::</span><span class="n">KalmanFilter</span><span class="w"> </span><span class="nf">kf</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">  </span><span class="c1">// state_dim, measurement_dim, control_dim</span>
+
+<span class="c1">// Set matrices</span>
+<span class="n">kf</span><span class="p">.</span><span class="n">transitionMatrix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">cv</span><span class="o">::</span><span class="n">Mat_</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span>
+<span class="w">    </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+
+<span class="c1">// Prediction and correction</span>
+<span class="n">cv</span><span class="o">::</span><span class="n">Mat</span><span class="w"> </span><span class="n">prediction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kf</span><span class="p">.</span><span class="n">predict</span><span class="p">();</span>
+<span class="n">cv</span><span class="o">::</span><span class="n">Mat</span><span class="w"> </span><span class="n">estimated</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kf</span><span class="p">.</span><span class="n">correct</span><span class="p">(</span><span class="n">measurement</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Interactive Demonstrations:</strong></p>
+<p><strong>Kalman Filter Visualization:</strong></p>
+<p><a href="https://colab.research.google.com/github/rlabbe/Kalman-and-Bayesian-Filters-in-Python/blob/master/04-One-Dimensional-Kalman-Filters.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p><strong>Tutorial Notebooks:</strong></p>
+<ul>
+<li><a href="https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python">Kalman and Bayesian Filters in Python</a> - Comprehensive tutorial with interactive examples</li>
+<li><a href="https://filterpy.readthedocs.io/en/latest/">FilterPy Examples</a> - Documentation with code samples</li>
+</ul>
+<p><strong>Online Simulators:</strong></p>
+<ul>
+<li><a href="https://www.kalmanfilter.net/default.aspx">Kalman Filter Demo</a> - Interactive web-based demonstrations</li>
+<li><a href="https://en.wikipedia.org/wiki/Kalman_filter#Example_application,_technical">Wikipedia Interactive Example</a> - Simple tracking example</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="references-further-reading">References &amp; Further Reading</h2>
+<p><strong>Foundational Papers:</strong></p>
+<ul>
+<li>Kalman, R. E. (1960). "A New Approach to Linear Filtering and Prediction Problems." <em>Journal of Basic Engineering</em>, 82(1), 35-45. <a href="https://www.cs.unc.edu/~welch/kalman/kalmanPaper.html">Link</a></li>
+<li>Kalman, R. E., &amp; Bucy, R. S. (1961). "New Results in Linear Filtering and Prediction Theory." <em>Journal of Basic Engineering</em>, 83(1), 95-108.</li>
+</ul>
+<p><strong>Comprehensive Textbooks:</strong></p>
+<ul>
+<li>Bar-Shalom, Y., Li, X. R., &amp; Kirubarajan, T. (2001). <em>Estimation with Applications to Tracking and Navigation</em>. Wiley-Interscience.</li>
+<li>Anderson, B. D., &amp; Moore, J. B. (2005). <em>Optimal Filtering</em>. Dover Publications.</li>
+<li>Simon, D. (2006). <em>Optimal State Estimation: Kalman, H∞, and Nonlinear Approaches</em>. Wiley-Interscience.</li>
+</ul>
+<p><strong>Tutorial Resources:</strong></p>
+<ul>
+<li>Welch, G., &amp; Bishop, G. (2006). "An Introduction to the Kalman Filter." Technical Report TR 95-041, University of North Carolina. <a href="https://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf">PDF</a></li>
+<li>Labbe, R. (2024). "Kalman and Bayesian Filters in Python." <a href="https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python">GitHub Book</a></li>
+</ul>
+<p><strong>Extensions and Variants:</strong></p>
+<ul>
+<li>Julier, S. J., &amp; Uhlmann, J. K. (2004). "Unscented Filtering and Nonlinear Estimation." <em>Proceedings of the IEEE</em>, 92(3), 401-422.</li>
+<li>Wan, E. A., &amp; Van Der Merwe, R. (2000). "The Unscented Kalman Filter for Nonlinear Estimation." <em>Adaptive Systems for Signal Processing, Communications, and Control Symposium</em>.</li>
+</ul>
+<p><strong>Online Resources:</strong></p>
+<ul>
+<li><a href="https://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/">Kalman Filter Explained</a> - Visual explanations with intuitive diagrams</li>
+<li><a href="https://filterpy.readthedocs.io/">FilterPy Documentation</a> - Python implementation guide</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 10, 2025 03:21:14 UTC">October 10, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+<!-- Footer navigation (prev/next) - Material default -->
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../09-13-hidden-markov-models/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Hidden Markov Models (HMM)" rel="prev">
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Previous
+            </span>
+            <div class="md-ellipsis">
+              Hidden Markov Models (HMM)
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-footer__link md-footer__link--next" aria-label="Next: 🧠 Genomic Data Clustering Case Study" rel="next">
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Next
+            </span>
+            <div class="md-ellipsis">
+              🧠 Genomic Data Clustering Case Study
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+
+  <!-- Custom footer content -->
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        <div style="text-align: center; padding: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 1rem;">
+          <p style="margin: 0.5rem 0;">
+            <strong>GenAI Atlas</strong> - Your Comprehensive Guide to AI & Machine Learning
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.9em; opacity: 0.8;">
+            © 2024 GenAI Atlas | Built with ❤️ for the AI Community
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.85em; opacity: 0.7;">
+            <em>Empowering developers, researchers, and practitioners worldwide</em>
+          </p>
+        </div>
+      </div>
+      <div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

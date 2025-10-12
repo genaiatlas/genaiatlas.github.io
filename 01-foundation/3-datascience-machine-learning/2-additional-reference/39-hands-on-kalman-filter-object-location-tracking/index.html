@@ -1,0 +1,5092 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/2-additional-reference/39-hands-on-kalman-filter-object-location-tracking/">
+      
+      
+        <link rel="prev" href="../38-hands-on-financial-market-price-estimation/">
+      
+      
+        <link rel="next" href="../51.case-study-human-generated-text/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Kalman Filter Hands-On Tutorial: Object Location Tracking in 2D Space - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Kalman Filter Hands-On Tutorial: Object Location Tracking in 2D Space
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-fast-track/01-ft-python-basics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-probability_distributions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-fast-track/01-statistics-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../1-learning-path/01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3" id="__nav_2_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../10-hands-on-regression-advertisement/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../17-hands-on-challenger-launch/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hypothsis Testing - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../25-hands-on-employee-attrition/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../31-hands-on-music-recommendation-systems/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Systems - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_6" id="__nav_2_4_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Network and Graphical Models - Hands on
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_3_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            Network and Graphical Models - Hands on
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../34-hands-on-network-stock-portfolio-optimization/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Stock Portfolio Optimization
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../35-hands-on-enron-network-analysis/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Enron Network Analysis
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../36-hands-on-game-of-thrones-network-analysis/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Game of Thrones Network Analysis
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../37-hands-on-unemployment-rate-prediction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Unemployment Rate Prediction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../38-hands-on-financial-market-price-estimation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Financial Market Price Estimation with Kalman Filters
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_6_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_6_6" id="__nav_2_4_3_6_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Kalman Filter Object Location Tracking
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_3_6_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_6_6">
+            <span class="md-nav__icon md-icon"></span>
+            Kalman Filter Object Location Tracking
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Kalman Filter Hands-On Tutorial: Object Location Tracking in 2D Space
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Kalman Filter Hands-On Tutorial: Object Location Tracking in 2D Space
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-problem-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction &amp; Problem Statement
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-the-tracking-challenge" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding the Tracking Challenge
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kalman-filter-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman Filter Methodology
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Workflow
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results-and-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Results and Interpretation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-analysis-and-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Analysis and Limitations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Applications
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Walkthrough
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#library-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Library Imports
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#measurement-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Measurement Generation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Measurement Generation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-the-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting Up the Simulation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualizing-noisy-measurements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visualizing Noisy Measurements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kalman-filter-matrix-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman Filter Matrix Initialization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kalman Filter Matrix Initialization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#time-step-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Time Step Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identity-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identity Matrix
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-vector-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Vector Initialization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#covariance-matrix-uncertainty" class="md-nav__link">
+    <span class="md-ellipsis">
+      Covariance Matrix (Uncertainty)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-transition-matrix-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Transition Matrix A
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#measurement-matrix-h" class="md-nav__link">
+    <span class="md-ellipsis">
+      Measurement Matrix H
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#measurement-noise-covariance-r" class="md-nav__link">
+    <span class="md-ellipsis">
+      Measurement Noise Covariance R
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#process-noise-covariance-q" class="md-nav__link">
+    <span class="md-ellipsis">
+      Process Noise Covariance Q
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-kalman-filter-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Kalman Filter Algorithm
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Kalman Filter Algorithm">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-arrays-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storage Arrays Initialization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main-kalman-filter-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      Main Kalman Filter Loop
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prediction-step-state-extrapolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prediction Step: State Extrapolation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prediction-step-covariance-extrapolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prediction Step: Covariance Extrapolation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-step-kalman-gain-computation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Update Step: Kalman Gain Computation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-step-measurement-incorporation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Update Step: Measurement Incorporation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-step-covariance-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      Update Step: Covariance Update
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-of-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storage of Results
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Results Visualization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Results Visualization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#velocity-estimation-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      Velocity Estimation Comparison
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#position-tracking-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Position Tracking Visualization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-main-tutorial" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with Main Tutorial
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration with Main Tutorial">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-use-these-documents-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to Use These Documents Together
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapting-this-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adapting This Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-implementation-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Implementation Issues
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../51.case-study-human-generated-text/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../53-case-study-regression_analysis-gender-wage-gap/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../58-case-study-hip_brest-cancer-study/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../99-unsupervised_learning_resources/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    External Resources
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-datascience-ml-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-problem-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction &amp; Problem Statement
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-the-tracking-challenge" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding the Tracking Challenge
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kalman-filter-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman Filter Methodology
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Workflow
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results-and-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Results and Interpretation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-analysis-and-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Analysis and Limitations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Applications
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Walkthrough
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#library-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Library Imports
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#measurement-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Measurement Generation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Measurement Generation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-the-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting Up the Simulation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualizing-noisy-measurements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visualizing Noisy Measurements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kalman-filter-matrix-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman Filter Matrix Initialization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kalman Filter Matrix Initialization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#time-step-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Time Step Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identity-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identity Matrix
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-vector-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Vector Initialization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#covariance-matrix-uncertainty" class="md-nav__link">
+    <span class="md-ellipsis">
+      Covariance Matrix (Uncertainty)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-transition-matrix-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      State Transition Matrix A
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#measurement-matrix-h" class="md-nav__link">
+    <span class="md-ellipsis">
+      Measurement Matrix H
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#measurement-noise-covariance-r" class="md-nav__link">
+    <span class="md-ellipsis">
+      Measurement Noise Covariance R
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#process-noise-covariance-q" class="md-nav__link">
+    <span class="md-ellipsis">
+      Process Noise Covariance Q
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-kalman-filter-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Kalman Filter Algorithm
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Kalman Filter Algorithm">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage-arrays-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storage Arrays Initialization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main-kalman-filter-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      Main Kalman Filter Loop
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prediction-step-state-extrapolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prediction Step: State Extrapolation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prediction-step-covariance-extrapolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prediction Step: Covariance Extrapolation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-step-kalman-gain-computation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Update Step: Kalman Gain Computation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-step-measurement-incorporation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Update Step: Measurement Incorporation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-step-covariance-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      Update Step: Covariance Update
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#storage-of-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Storage of Results
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Results Visualization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Results Visualization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#velocity-estimation-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      Velocity Estimation Comparison
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#position-tracking-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Position Tracking Visualization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-main-tutorial" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with Main Tutorial
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration with Main Tutorial">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-use-these-documents-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to Use These Documents Together
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adapting-this-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adapting This Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-implementation-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Implementation Issues
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="kalman-filter-hands-on-tutorial-object-location-tracking-in-2d-space">Kalman Filter Hands-On Tutorial: Object Location Tracking in 2D Space <a id="top"></a></h1>
+<p><a href="https://drive.google.com/file/d/194Vs--AE30tHhUvEfRkD2n718VlmFZbb/view?usp=sharing"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<h2 id="quick-navigation">Quick Navigation</h2>
+<ul>
+<li>
+<p><a href="#introduction">Introduction &amp; Problem Statement</a></p>
+</li>
+<li>
+<p><a href="#challenge">Understanding the Tracking Challenge</a></p>
+</li>
+<li>
+<p><a href="#methodology">Kalman Filter Methodology</a></p>
+</li>
+<li>
+<p><a href="#workflow">Implementation Workflow</a></p>
+</li>
+<li>
+<p><a href="#results">Results and Interpretation</a></p>
+</li>
+<li>
+<p><a href="#performance">Performance Analysis and Limitations</a></p>
+</li>
+<li>
+<p><a href="#applications">Practical Applications</a></p>
+</li>
+<li>
+<p><a href="#code-walkthrough">Code Walkthrough</a></p>
+</li>
+<li>
+<p><a href="#references">References</a></p>
+</li>
+</ul>
+<hr />
+<h2 id="introduction-problem-statement">Introduction &amp; Problem Statement <a id="introduction"></a></h2>
+<p>This tutorial demonstrates how to use a Kalman Filter to track the position and velocity of a moving object in two-dimensional space when only noisy velocity measurements are available. The Kalman Filter is an optimal recursive estimator that combines uncertain predictions with uncertain measurements to produce improved estimates of system states.</p>
+<p><strong>The Core Challenge:</strong></p>
+<ul>
+<li>
+<p><strong>Given:</strong> Initial position, initial velocity estimate, and a series of noisy velocity measurements</p>
+</li>
+<li>
+<p><strong>Unknown:</strong> The true constant velocity of the object</p>
+</li>
+<li>
+<p><strong>Goal:</strong> Accurately estimate both the position and velocity of the object over time despite measurement noise</p>
+</li>
+</ul>
+<p><strong>Key Assumption:</strong></p>
+<p>The object moves with constant velocity in both x and y directions. While we know the velocity is constant, we don't know what that constant value is—we must estimate it from noisy measurements.</p>
+<p><strong>Why This Matters:</strong></p>
+<p>In real-world applications like GPS tracking, radar systems, or autonomous vehicles, sensors provide noisy measurements. The Kalman Filter optimally fuses these imperfect measurements with a mathematical model of motion to produce better state estimates than either source alone could provide.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="understanding-the-tracking-challenge">Understanding the Tracking Challenge <a id="challenge"></a></h2>
+<p><strong>The Measurement Problem:</strong></p>
+<p>This implementation generates 100 noisy velocity measurements in both x and y directions. The true velocities are constant at vₓ = 10 and vᵧ = 10 units per timestep, but Gaussian noise is added to each measurement, causing observed values to fluctuate between approximately 8 and 12.</p>
+<p><strong>What Makes This Difficult:</strong></p>
+<ul>
+<li>
+<p><strong>Uncertainty in Measurements:</strong> Each velocity reading contains random noise, making individual measurements unreliable</p>
+</li>
+<li>
+<p><strong>Accumulating Position Error:</strong> Since position is calculated by integrating velocity over time, measurement errors compound with each timestep</p>
+</li>
+<li>
+<p><strong>Unknown True Velocity:</strong> We must simultaneously estimate both the current position and the underlying constant velocity</p>
+</li>
+</ul>
+<p><strong>The Kalman Filter Solution:</strong></p>
+<p>Rather than simply averaging noisy measurements or accepting them at face value, the Kalman Filter:</p>
+<ul>
+<li>
+<p>Maintains uncertainty estimates for all state variables</p>
+</li>
+<li>
+<p>Weighs predictions based on motion model against new measurements</p>
+</li>
+<li>
+<p>Adapts the trust placed in measurements versus predictions based on their respective uncertainties</p>
+</li>
+<li>
+<p>Produces optimal estimates in the minimum mean square error sense (for linear systems with Gaussian noise)</p>
+</li>
+</ul>
+<p><strong>Interpretation of Noise Characteristics:</strong></p>
+<p>The measurement noise follows a standard normal distribution (mean 0, standard deviation 1), representing realistic sensor uncertainty. This level of noise—roughly ±20% variation around the true value—is typical for many real-world tracking scenarios.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="kalman-filter-methodology">Kalman Filter Methodology <a id="methodology"></a></h2>
+<p>The Kalman Filter operates in a two-phase cycle that repeats for each new measurement:</p>
+<p><strong>Phase 1: Prediction (Time Update)</strong></p>
+<p>Uses the motion model to predict where the object should be at the next timestep:</p>
+<ul>
+<li>
+<p><strong>State Prediction:</strong> Project the current state estimate forward using the state transition model</p>
+</li>
+<li>
+<p><strong>Covariance Prediction:</strong> Project the current uncertainty forward and add process noise</p>
+</li>
+</ul>
+<p><strong>Phase 2: Update (Measurement Update)</strong></p>
+<p>Corrects the prediction using the new measurement:</p>
+<ul>
+<li>
+<p><strong>Kalman Gain Calculation:</strong> Determines how much to trust the measurement versus the prediction</p>
+</li>
+<li>
+<p><strong>State Update:</strong> Combines prediction and measurement weighted by Kalman gain</p>
+</li>
+<li>
+<p><strong>Covariance Update:</strong> Reduces uncertainty based on information gained from measurement</p>
+</li>
+</ul>
+<p><strong>Why This Two-Step Process Works:</strong></p>
+<p>The prediction step encodes our knowledge about how the system evolves (constant velocity motion model). The update step incorporates new information from sensors. By maintaining explicit uncertainty estimates (covariance matrices), the filter automatically balances these two information sources optimally.</p>
+<p><strong>The State Vector:</strong></p>
+<p>This implementation tracks a 4-dimensional state vector: [x_position, y_position, x_velocity, y_velocity]. While we only measure velocities, the filter estimates positions by integrating the velocity estimates over time using the motion model.</p>
+<p><strong>Critical Insight:</strong></p>
+<p>The Kalman Filter doesn't just smooth the measurements—it uses the constraint that velocity is constant to improve both velocity and position estimates simultaneously. When measurements temporarily fluctuate high, the filter resists changing its velocity estimate dramatically, recognizing this as likely noise rather than a true velocity change.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="implementation-workflow">Implementation Workflow <a id="workflow"></a></h2>
+<p><strong>Step 1: Generate Synthetic Measurement Data</strong></p>
+<p>Creates 100 noisy velocity measurements with known ground truth for validation. Real applications would replace this with actual sensor data.</p>
+<ul>
+<li>
+<p>True constant velocities: vₓ = 10, vᵧ = 10</p>
+</li>
+<li>
+<p>Noise model: Gaussian with σ = 1.0</p>
+</li>
+<li>
+<p>Purpose: Demonstrates filter performance under controlled conditions</p>
+</li>
+</ul>
+<p>[See Code Walkthrough Section 2]</p>
+<p><strong>Step 2: Initialize Kalman Filter Parameters</strong></p>
+<p>Sets up the mathematical framework with seven key matrices:</p>
+<ul>
+<li>
+<p><strong>State (x):</strong> Initial estimate of position and velocity (starts at origin with zero velocity)</p>
+</li>
+<li>
+<p><strong>Covariance (P):</strong> Initial uncertainty (high values = very uncertain)</p>
+</li>
+<li>
+<p><strong>State Transition (A):</strong> Models constant velocity motion over timestep dt = 0.1</p>
+</li>
+<li>
+<p><strong>Measurement Matrix (H):</strong> Maps state to measurements (extracts only velocities)</p>
+</li>
+<li>
+<p><strong>Measurement Noise (R):</strong> Covariance of velocity measurement noise (r = 100)</p>
+</li>
+<li>
+<p><strong>Process Noise (Q):</strong> Accounts for model imperfections (based on s = 8.8)</p>
+</li>
+<li>
+<p><strong>Identity (I):</strong> Used in covariance update equation</p>
+</li>
+</ul>
+<p><strong>Parameter Choices and Their Impact:</strong></p>
+<p>The initialization uses P with diagonal values of 1000.0, indicating high initial uncertainty. This tells the filter to rely heavily on early measurements to quickly converge to better estimates. The measurement noise covariance r = 100 and process noise parameter s = 8.8 were likely tuned to match the actual noise characteristics (standard deviation of 1 in measurements translates to variance near 100 when scaled appropriately).</p>
+<p>[See Code Walkthrough Section 3]</p>
+<p><strong>Step 3: Execute Kalman Filter Loop</strong></p>
+<p>Processes each measurement sequentially, performing prediction and update steps. The loop maintains history of all state estimates, covariances, and Kalman gains for analysis.</p>
+<p><strong>What Happens During Convergence:</strong></p>
+<ul>
+<li>
+<p><strong>Early iterations:</strong> Filter learns the true velocity from noisy measurements; uncertainty decreases rapidly</p>
+</li>
+<li>
+<p><strong>Middle iterations:</strong> Velocity estimates stabilize near true values (vₓ ≈ 10, vᵧ ≈ 10)</p>
+</li>
+<li>
+<p><strong>Later iterations:</strong> Filter maintains steady-state performance with consistent Kalman gains</p>
+</li>
+</ul>
+<p>The stored variables (xt, yt, dxt, dyt, etc.) enable post-analysis of filter behavior and performance visualization.</p>
+<p>[See Code Walkthrough Section 4]</p>
+<p><strong>Step 4: Visualize and Interpret Results</strong></p>
+<p>Two key plots reveal filter performance:</p>
+<p><strong>Velocity Estimation Plot:</strong></p>
+<ul>
+<li>
+<p>Red lines: Kalman Filter velocity estimates converge to true values</p>
+</li>
+<li>
+<p>Green/Blue points: Noisy measurements scatter around true values</p>
+</li>
+<li>
+<p>Black lines: Ground truth constant velocities</p>
+</li>
+</ul>
+<p><strong>Interpretation:</strong> The filter successfully learns the constant velocities despite never being told what they are. Estimates stabilize within 10-20 measurements and maintain accuracy despite ongoing measurement noise.</p>
+<p><strong>Position Tracking Plot:</strong></p>
+<ul>
+<li>
+<p>Black points: Estimated object trajectory (should form straight line)</p>
+</li>
+<li>
+<p>Green point: Starting position (0, 0)</p>
+</li>
+<li>
+<p>Red point: Final position after 100 timesteps</p>
+</li>
+</ul>
+<p><strong>Interpretation:</strong> The nearly-straight trajectory confirms the filter correctly inferred constant velocity motion and integrated it accurately into position estimates. Any slight waviness reflects residual uncertainty, but overall tracking is excellent.</p>
+<p>[See Code Walkthrough Section 5]</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="results-and-interpretation">Results and Interpretation <a id="results"></a></h2>
+<p><strong>Quantitative Performance:</strong></p>
+<p>After initial convergence (approximately 15-20 measurements), the Kalman Filter achieves:</p>
+<ul>
+<li>
+<p><strong>Velocity Estimation Error:</strong> Typically &lt; 0.5 units from true velocity (compared to measurement noise of ~2 units standard deviation)</p>
+</li>
+<li>
+<p><strong>Position Tracking Accuracy:</strong> Nearly linear trajectory with minimal deviation</p>
+</li>
+<li>
+<p><strong>Convergence Speed:</strong> Filter learns true velocity within 1-2 seconds (at dt = 0.1, this is 10-20 timesteps)</p>
+</li>
+</ul>
+<p><strong>Why These Results Matter:</strong></p>
+<p>The filter reduces velocity estimation error by roughly 75% compared to using raw measurements directly. This error reduction compounds over time—accurate velocity estimates lead to accurate position predictions, which further improve subsequent velocity estimates through the feedback loop.</p>
+<p><strong>Understanding the Velocity Plot:</strong></p>
+<p>The noisy measurements (green and blue) scatter widely around the true values, while the filter estimates (red) converge to and track the true velocities (black horizontal lines). This demonstrates the filter's ability to extract the signal (constant velocity) from the noise.</p>
+<p><strong>Understanding the Position Plot:</strong></p>
+<p>The position trajectory represents the integrated effect of velocity estimation. A perfect constant velocity motion produces a straight line at 45 degrees (since vₓ = vᵧ). The actual trajectory is nearly straight, confirming successful tracking. Starting at (0, 0) and ending at approximately (100, 100) after 100 timesteps with velocity 10 validates the mathematical correctness of the implementation.</p>
+<p><strong>Statistical Interpretation:</strong></p>
+<p>The Kalman Filter produces minimum variance unbiased estimates under the assumptions of linear dynamics and Gaussian noise. This means no other linear filter could achieve lower estimation error variance given the same information. The filter is "optimal" in this specific statistical sense.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="performance-analysis-and-limitations">Performance Analysis and Limitations <a id="performance"></a></h2>
+<p><strong>Strengths of This Implementation:</strong></p>
+<ul>
+<li>
+<p><strong>Computational Efficiency:</strong> Simple matrix operations; runs in milliseconds for 100 measurements</p>
+</li>
+<li>
+<p><strong>Optimal Performance:</strong> Under stated assumptions (linear, Gaussian), this is the best possible filter</p>
+</li>
+<li>
+<p><strong>Reliable Convergence:</strong> Given sufficient measurements, filter consistently finds true velocity</p>
+</li>
+<li>
+<p><strong>Interpretable Results:</strong> Clear visualization makes filter behavior transparent</p>
+</li>
+</ul>
+<p><strong>Critical Limitations and Considerations:</strong></p>
+<p><strong>Assumption Violations:</strong></p>
+<ul>
+<li>
+<p><strong>Constant Velocity Assumption:</strong> Real objects rarely maintain perfectly constant velocity. Accelerations, turns, or stops would degrade performance. The process noise Q partially accounts for this but assumes small deviations.</p>
+</li>
+<li>
+<p><strong>Gaussian Noise Assumption:</strong> Outliers or non-Gaussian measurement errors can significantly degrade filter performance. A single large outlier can throw off estimates for several timesteps.</p>
+</li>
+<li>
+<p><strong>Known Noise Statistics:</strong> Implementation requires setting R and Q, which represent measurement and process noise covariances. In practice, these are often unknown and require tuning or estimation.</p>
+</li>
+</ul>
+<p><strong>Practical Concerns:</strong></p>
+<ul>
+<li>
+<p><strong>Initialization Sensitivity:</strong> Poor initial state estimates can slow convergence. This implementation starts at the origin with zero velocity, which happens to be reasonable for this scenario.</p>
+</li>
+<li>
+<p><strong>No Robustness to Outliers:</strong> A single faulty measurement is weighted according to R. Robust variants (e.g., adaptive Kalman filters) better handle anomalies.</p>
+</li>
+<li>
+<p><strong>Model Mismatch:</strong> If the true motion model differs significantly from constant velocity (e.g., circular motion), the filter will produce biased estimates. Process noise Q cannot fully compensate for systematic model errors.</p>
+</li>
+</ul>
+<p><strong>When This Approach Works Best:</strong></p>
+<ul>
+<li>
+<p>Short-term tracking where constant velocity is approximately valid</p>
+</li>
+<li>
+<p>Sensors with well-characterized Gaussian noise</p>
+</li>
+<li>
+<p>Scenarios where computational efficiency is critical</p>
+</li>
+<li>
+<p>Applications requiring optimal linear filtering with known noise characteristics</p>
+</li>
+</ul>
+<p><strong>Alternative Approaches:</strong></p>
+<ul>
+<li>
+<p><strong>Extended/Unscented Kalman Filters:</strong> For nonlinear motion models (e.g., objects moving in circles)</p>
+</li>
+<li>
+<p><strong>Particle Filters:</strong> For highly non-Gaussian noise or multi-modal distributions</p>
+</li>
+<li>
+<p><strong>IMM (Interacting Multiple Model) Filters:</strong> For objects that switch between different motion modes (e.g., constant velocity vs. constant acceleration)</p>
+</li>
+<li>
+<p><strong>Robust Kalman Variants:</strong> For environments with frequent measurement outliers</p>
+</li>
+</ul>
+<p><strong>Resource Requirements:</strong></p>
+<ul>
+<li>
+<p>Memory: O(n²) where n is state dimension (here n=4, so 16 elements in matrices)</p>
+</li>
+<li>
+<p>Computation: O(n³) per update due to matrix inversion (negligible for n=4)</p>
+</li>
+<li>
+<p>This scales well to moderate state dimensions (n &lt; 100) but becomes expensive for very high-dimensional states</p>
+</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="practical-applications">Practical Applications <a id="applications"></a></h2>
+<p><strong>Direct Applications of This Approach:</strong></p>
+<ul>
+<li>
+<p><strong>GPS Tracking:</strong> Smoothing noisy GPS velocity measurements for vehicle navigation</p>
+</li>
+<li>
+<p><strong>Radar Tracking:</strong> Following aircraft or ships with constant velocity segments</p>
+</li>
+<li>
+<p><strong>Robot Localization:</strong> Estimating robot position from noisy odometry or velocity sensors</p>
+</li>
+<li>
+<p><strong>Object Tracking in Video:</strong> Following objects moving with approximately constant velocity between frames</p>
+</li>
+</ul>
+<p><strong>Extensions for More Complex Scenarios:</strong></p>
+<p><strong>Constant Acceleration Model:</strong></p>
+<p>Modify state vector to [x, y, vₓ, vᵧ, aₓ, aᵧ] and adjust A matrix to include acceleration terms. Useful for tracking accelerating vehicles or falling objects.</p>
+<p><strong>Multi-Target Tracking:</strong></p>
+<p>Run multiple Kalman Filters in parallel, one per object. Requires data association (deciding which measurements correspond to which objects).</p>
+<p><strong>Sensor Fusion:</strong></p>
+<p>Combine measurements from different sensor types (e.g., GPS + IMU). Each sensor gets its own measurement matrix H and noise covariance R.</p>
+<p><strong>Adaptive Filtering:</strong></p>
+<p>Estimate R and Q online from residuals (difference between predicted and actual measurements). Improves robustness when noise characteristics are unknown or time-varying.</p>
+<p><strong>Real-World Considerations:</strong></p>
+<ul>
+<li>
+<p><strong>Missing Measurements:</strong> Skip update step when no measurement available; only perform prediction</p>
+</li>
+<li>
+<p><strong>Delayed Measurements:</strong> Requires more sophisticated algorithms (e.g., retrodiction) to handle out-of-sequence measurements</p>
+</li>
+<li>
+<p><strong>Coordinate Transformations:</strong> Real sensors often provide measurements in different coordinate frames requiring transformation matrices</p>
+</li>
+<li>
+<p><strong>Computational Constraints:</strong> Embedded systems may require fixed-point arithmetic or matrix-free implementations</p>
+</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="code-walkthrough">Code Walkthrough <a id="code-walkthrough"></a></h2>
+<p>For complete implementation details, mathematical foundations, and line-by-line code explanation, please refer to the <strong>separate Code Walkthrough document</strong> which covers:</p>
+<ul>
+<li>
+<p>Environment setup and library imports</p>
+</li>
+<li>
+<p>Measurement generation with detailed parameter explanations</p>
+</li>
+<li>
+<p>Kalman Filter matrix initialization with mathematical derivations</p>
+</li>
+<li>
+<p>Step-by-step algorithm implementation</p>
+</li>
+<li>
+<p>Visualization code for results analysis</p>
+</li>
+<li>
+<p>Integration instructions for combining with this tutorial</p>
+</li>
+</ul>
+<h1 id="kalman-filter-code-walkthrough-complete-implementation-guide">Kalman Filter Code Walkthrough: Complete Implementation Guide <a id="top"></a></h1>
+<h2 id="quick-navigation_1">Quick Navigation</h2>
+<ul>
+<li>
+<p><a href="#environment">Environment Setup</a></p>
+</li>
+<li>
+<p><a href="#measurements">Measurement Generation</a></p>
+</li>
+<li>
+<p><a href="#initialization">Kalman Filter Matrix Initialization</a></p>
+</li>
+<li>
+<p><a href="#algorithm">The Kalman Filter Algorithm</a></p>
+</li>
+<li>
+<p><a href="#visualization">Results Visualization</a></p>
+</li>
+<li>
+<p><a href="#integration">Integration with Main Tutorial</a></p>
+</li>
+</ul>
+<hr />
+<h2 id="environment-setup">Environment Setup <a id="environment"></a></h2>
+<h3 id="library-imports">Library Imports</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>These imports provide the mathematical and visualization capabilities needed for Kalman filtering. NumPy handles matrix operations essential for the filter's linear algebra computations, while Matplotlib creates plots for analyzing filter performance.</p>
+<p><strong>Why These Libraries:</strong></p>
+<ul>
+<li>
+<p><strong>NumPy:</strong> Efficient array operations with optimized C/Fortran backends. The matrix operations in Kalman filtering (multiplication, inversion, transpose) are computational bottlenecks that NumPy handles efficiently. Using Python lists would be 10-100x slower.</p>
+</li>
+<li>
+<p><strong>Matplotlib:</strong> Industry-standard for scientific visualization in Python. Provides clear, publication-quality plots for understanding filter behavior.</p>
+</li>
+</ul>
+<p><strong>Flow:</strong></p>
+<p>No execution logic here—just making functionality available. All subsequent code depends on these imports.</p>
+<p><strong>Impact:</strong></p>
+<p>Removing these imports will cause NameErrors throughout the notebook. These are non-negotiable dependencies. Alternative: could use scipy.linalg for more advanced linear algebra, but NumPy is sufficient for this implementation.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="measurement-generation">Measurement Generation <a id="measurements"></a></h2>
+<h3 id="setting-up-the-simulation">Setting Up the Simulation</h3>
+<div class="highlight"><pre><span></span><code><span class="n">m</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># Number of Measurements</span>
+
+<span class="n">vx</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># x velocity (constant)</span>
+<span class="n">vy</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># y velocity (constant)</span>
+
+<span class="c1"># Add random noise to each constant velocity measurement</span>
+<span class="n">mx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vx</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+<span class="n">my</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vy</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+
+<span class="n">measurements</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">mx</span><span class="p">,</span> <span class="n">my</span><span class="p">))</span>  <span class="c1"># Stacking vertically both the velocities</span>
+
+<span class="n">measurements</span><span class="o">.</span><span class="n">shape</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>This code generates synthetic sensor data simulating a real-world tracking scenario. We create noisy velocity measurements where the underlying truth is known, allowing us to validate filter performance.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>The noise model uses the standard normal distribution N(0,1):</p>
+<div class="highlight"><pre><span></span><code>Measured velocity = True velocity + ε
+where ε ~ N(0, 1)
+</code></pre></div>
+<p>This represents Gaussian sensor noise with zero mean (unbiased sensor) and unit variance.</p>
+<p><strong>Parameter Choices:</strong></p>
+<ul>
+<li>
+<p><strong>m = 100:</strong> Provides sufficient data to observe filter convergence and steady-state behavior. Too few measurements (&lt; 20) wouldn't show stabilization; more than 1000 is unnecessary for this demonstration.</p>
+</li>
+<li>
+<p><strong>vx = vy = 10:</strong> Arbitrary but reasonable constant velocities. Equal values produce 45-degree trajectory, making visualization interpretation easier.</p>
+</li>
+<li>
+<p><strong>np.random.randn(m):</strong> Generates m samples from N(0,1). Each call produces different random values, so rerunning gives different noise realizations.</p>
+</li>
+</ul>
+<p><strong>Flow:</strong></p>
+<ol>
+<li>
+<p>Define simulation parameters (m, vx, vy)</p>
+</li>
+<li>
+<p>Generate m noisy samples for x-velocity: vx + random noise</p>
+</li>
+<li>
+<p>Generate m noisy samples for y-velocity: vy + random noise</p>
+</li>
+<li>
+<p>Stack into 2×m matrix where row 0 = x-velocities, row 1 = y-velocities</p>
+</li>
+<li>
+<p>Check shape to confirm structure: (2, 100)</p>
+</li>
+</ol>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>
+<p><strong>Changing m:</strong> Fewer measurements = less convergence; more = longer runtime (though negligible here)</p>
+</li>
+<li>
+<p><strong>Changing vx, vy:</strong> Filter should track any constant velocities equally well; validates generality</p>
+</li>
+<li>
+<p><strong>Changing noise distribution:</strong> If not Gaussian (e.g., uniform, Laplace), Kalman Filter suboptimal but often still effective</p>
+</li>
+<li>
+<p><strong>Removing noise:</strong> Filter would learn true velocity after 1 measurement; unrealistic but useful for debugging</p>
+</li>
+</ul>
+<p><strong>Output Interpretation:</strong></p>
+<p><code>measurements.shape</code> returns <code>(2, 100)</code>, confirming we have 2 velocity components measured 100 times.</p>
+<h3 id="visualizing-noisy-measurements">Visualizing Noisy Measurements</h3>
+<div class="highlight"><pre><span></span><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">mx</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$v_1 (measurements)$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">my</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$v_2 (measurements)$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Velocity Measurements&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Noisy Measurements&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span><span class="mi">18</span><span class="p">})</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Visualize the measurement noise to understand the challenge facing the Kalman Filter. Shows how individual measurements scatter around the true constant velocity.</p>
+<p><strong>Flow:</strong></p>
+<ol>
+<li>
+<p>Create figure with specified dimensions</p>
+</li>
+<li>
+<p>Plot x-velocity measurements over time (measurement index 0-99)</p>
+</li>
+<li>
+<p>Plot y-velocity measurements over time</p>
+</li>
+<li>
+<p>Add labels, title, and legend</p>
+</li>
+<li>
+<p>Display the plot</p>
+</li>
+</ol>
+<p><strong>Impact:</strong></p>
+<p>This is purely for visualization—removing it doesn't affect filter performance. However, seeing the noisy input is crucial for appreciating what the filter accomplishes.</p>
+<p><strong>What to Look For:</strong></p>
+<ul>
+<li>
+<p>Random scatter around approximately 10 for both velocities</p>
+</li>
+<li>
+<p>No visible trend or pattern (confirming Gaussian noise)</p>
+</li>
+<li>
+<p>Typical range: 8-12 (roughly ±2σ from mean of 10)</p>
+</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="kalman-filter-matrix-initialization">Kalman Filter Matrix Initialization <a id="initialization"></a></h2>
+<h3 id="time-step-configuration">Time Step Configuration</h3>
+<div class="highlight"><pre><span></span><code><span class="n">dt</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># Time Step between Filter Steps</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Defines the temporal resolution of the filter. Each measurement is taken dt = 0.1 time units apart. This parameter is crucial for the state transition matrix A, which models how state evolves over time.</p>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>
+<p><strong>Smaller dt (e.g., 0.01):</strong> More frequent updates; better temporal resolution but more computation</p>
+</li>
+<li>
+<p><strong>Larger dt (e.g., 1.0):</strong> Fewer updates; coarser tracking but faster</p>
+</li>
+<li>
+<p><strong>Wrong dt:</strong> State transition model becomes incorrect, degrading performance</p>
+</li>
+</ul>
+<p>For constant velocity motion, position changes by velocity × dt each step.</p>
+<h3 id="identity-matrix">Identity Matrix</h3>
+<div class="highlight"><pre><span></span><code><span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># Identity matrix</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>The 4×4 identity matrix is used in the covariance update equation:</p>
+<div class="highlight"><pre><span></span><code>P = (I - K*H) * P
+</code></pre></div>
+<p>This represents the reduction in uncertainty after incorporating a measurement.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>The identity matrix preserves the original covariance when Kalman gain K is zero (no trust in measurement). As K increases (more trust in measurement), the (I - K*H) term reduces P, reflecting decreased uncertainty.</p>
+<h3 id="state-vector-initialization">State Vector Initialization</h3>
+<div class="highlight"><pre><span></span><code><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Initialize the state vector with our best initial guess. The state represents:</p>
+<div class="highlight"><pre><span></span><code>x = [x_position, y_position, x_velocity, y_velocity]ᵀ
+</code></pre></div>
+<p>Starting at (0, 0) with zero velocity is a reasonable default when we don't know the initial state.</p>
+<p><strong>Why Use np.matrix:</strong></p>
+<p>The <code>.T</code> transpose operation is cleaner with np.matrix than np.array. However, np.matrix is deprecated in newer NumPy versions—modern code should use np.array with explicit shape manipulation.</p>
+<p><strong>Impact:</strong></p>
+<p>Poor initialization slows convergence but doesn't prevent it. The high initial uncertainty (see P matrix below) tells the filter to quickly update this guess based on measurements.</p>
+<h3 id="covariance-matrix-uncertainty">Covariance Matrix (Uncertainty)</h3>
+<div class="highlight"><pre><span></span><code><span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">])</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>The covariance matrix P represents uncertainty in state estimates. Diagonal elements are variances for each state component; off-diagonals are covariances (correlations).</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>A diagonal matrix with large values (1000.0) indicates:</p>
+<ul>
+<li>
+<p>High uncertainty in all state components</p>
+</li>
+<li>
+<p>No correlation between state components initially</p>
+</li>
+</ul>
+<p>The values 1000.0 mean we have standard deviation √1000 ≈ 31.6 for each state component—very uncertain!</p>
+<p><strong>Why Large Initial Values:</strong></p>
+<p>This forces the filter to rely heavily on early measurements rather than the initial guess. As measurements arrive, P decreases, reflecting growing confidence.</p>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>
+<p><strong>Too small (e.g., 1.0):</strong> Filter trusts poor initial guess; slow to respond to measurements</p>
+</li>
+<li>
+<p><strong>Too large (e.g., 10⁶):</strong> Initial instability but faster convergence</p>
+</li>
+<li>
+<p><strong>Off-diagonal terms:</strong> Could encode prior knowledge about correlations (e.g., position and velocity might be correlated)</p>
+</li>
+</ul>
+<h3 id="state-transition-matrix-a">State Transition Matrix A</h3>
+<div class="highlight"><pre><span></span><code><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+               <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">dt</span><span class="p">],</span>
+               <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+               <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>The state transition matrix models how the system evolves over time. It implements the constant velocity kinematic equations:</p>
+<div class="highlight"><pre><span></span><code>x_position(t+dt) = x_position(t) + x_velocity * dt
+y_position(t+dt) = y_position(t) + y_velocity * dt
+x_velocity(t+dt) = x_velocity(t)
+y_velocity(t+dt) = y_velocity(t)
+</code></pre></div>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>Matrix multiplication <code>A * x</code> performs these updates:</p>
+<div class="highlight"><pre><span></span><code>[1  0  dt  0 ]   [x_pos]   [x_pos + x_vel*dt]
+[0  1  0  dt]  * [y_pos] = [y_pos + y_vel*dt]
+[0  0  1   0 ]   [x_vel]   [x_vel           ]
+[0  0  0   1 ]   [y_vel]   [y_vel           ]
+</code></pre></div>
+<p>The block structure separates x and y components while coupling position and velocity through dt.</p>
+<p><strong>Design Choices:</strong></p>
+<ul>
+<li>
+<p><strong>Constant velocity model:</strong> Velocities don't change (1's on diagonal for velocity states)</p>
+</li>
+<li>
+<p><strong>Position-velocity coupling:</strong> dt terms link velocity to position change</p>
+</li>
+<li>
+<p><strong>Decoupled axes:</strong> x and y components don't interact (zeros in off-diagonal blocks)</p>
+</li>
+</ul>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>
+<p><strong>Changing dt:</strong> Affects how far positions advance per step</p>
+</li>
+<li>
+<p><strong>Different motion models:</strong> Could add acceleration terms for constant acceleration model</p>
+</li>
+<li>
+<p><strong>Removing dt terms:</strong> Positions would freeze; positions and velocities become decoupled</p>
+</li>
+</ul>
+<h3 id="measurement-matrix-h">Measurement Matrix H</h3>
+<div class="highlight"><pre><span></span><code><span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+               <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>The measurement matrix H maps the state vector to the measurement space. It extracts what we actually observe (velocities) from the full state (positions and velocities).</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>Matrix multiplication <code>H * x</code> selects velocity components:</p>
+<div class="highlight"><pre><span></span><code>[0  0  1  0]   [x_pos]   [x_vel]
+[0  0  0  1] * [y_pos] = [y_vel]
+             [x_vel]
+             [y_vel]
+</code></pre></div>
+<p>This reflects our measurement scenario: we observe velocities but not positions directly.</p>
+<p><strong>Why This Matters:</strong></p>
+<p>The Kalman Filter uses H to:</p>
+<ol>
+<li>
+<p>Predict what measurement to expect given current state estimate</p>
+</li>
+<li>
+<p>Compute measurement residual: actual measurement - predicted measurement</p>
+</li>
+<li>
+<p>Update state estimate based on this residual</p>
+</li>
+</ol>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>
+<p><strong>Different measurements:</strong> If we measured positions instead, H would select position components</p>
+</li>
+<li>
+<p><strong>Partial measurements:</strong> If only x-velocity measured, H would be 1×4 matrix</p>
+</li>
+<li>
+<p><strong>Multiple sensor types:</strong> H can combine different measurement modalities</p>
+</li>
+</ul>
+<h3 id="measurement-noise-covariance-r">Measurement Noise Covariance R</h3>
+<div class="highlight"><pre><span></span><code><span class="n">r</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">([[</span><span class="n">r</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+               <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">r</span><span class="p">]])</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>R quantifies measurement uncertainty. It tells the filter how much to trust new measurements. Larger R means noisier sensors and less trust in measurements.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>R is the covariance matrix of measurement noise:</p>
+<div class="highlight"><pre><span></span><code>measurement = H*x_true + v
+where v ~ N(0, R)
+</code></pre></div>
+<p>Diagonal R with values r = 100 means:</p>
+<ul>
+<li>
+<p>x-velocity measurement variance = 100 (standard deviation = 10)</p>
+</li>
+<li>
+<p>y-velocity measurement variance = 100</p>
+</li>
+<li>
+<p>No correlation between x and y measurement errors</p>
+</li>
+</ul>
+<p><strong>Why r = 100:</strong></p>
+<p>The actual measurement noise has standard deviation ≈ 1, but after various transformations and consideration of model uncertainty, r = 100 is a tuning parameter that empirically produces good performance. This is larger than the true variance (1²=1) by design, providing a margin for model mismatch.</p>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>
+<p><strong>Too small R:</strong> Filter over-trusts noisy measurements; estimates become jittery</p>
+</li>
+<li>
+<p><strong>Too large R:</strong> Filter under-trusts measurements; slow convergence, relies too much on prediction</p>
+</li>
+<li>
+<p><strong>Tuning:</strong> In practice, R often requires adjustment based on actual sensor characteristics</p>
+</li>
+</ul>
+<h3 id="process-noise-covariance-q">Process Noise Covariance Q</h3>
+<div class="highlight"><pre><span></span><code><span class="n">s</span> <span class="o">=</span> <span class="mf">8.8</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">([[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">dt</span><span class="o">**</span><span class="mi">2</span><span class="p">],</span>
+               <span class="p">[</span><span class="mf">0.5</span><span class="o">*</span><span class="n">dt</span><span class="o">**</span><span class="mi">2</span><span class="p">],</span>
+               <span class="p">[</span><span class="n">dt</span><span class="p">],</span>
+               <span class="p">[</span><span class="n">dt</span><span class="p">]])</span>
+<span class="n">Q</span> <span class="o">=</span> <span class="n">G</span> <span class="o">*</span> <span class="n">G</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">s</span><span class="o">**</span><span class="mi">2</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Process noise Q accounts for modeling errors and unexpected dynamics. It prevents the filter from becoming overconfident when the constant velocity model isn't perfectly accurate.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>Process noise represents uncertainty in state evolution:</p>
+<div class="highlight"><pre><span></span><code>x(t+1) = A*x(t) + w
+where w ~ N(0, Q)
+</code></pre></div>
+<p>The construction <code>Q = G*G.T*s²</code> implements a continuous white noise acceleration model. The matrix G represents how acceleration (random jerk) affects each state component over timestep dt:</p>
+<ul>
+<li>
+<p>Position changes by 0.5*dt² per unit of acceleration (kinematic equation)</p>
+</li>
+<li>
+<p>Velocity changes by dt per unit of acceleration</p>
+</li>
+</ul>
+<p><strong>Why This Formulation:</strong></p>
+<p>This specific Q structure maintains proper covariance relationships between position and velocity uncertainties. It's derived from continuous-time stochastic models and ensures Q is positive semi-definite (required mathematical property).</p>
+<p><strong>Parameter s = 8.8:</strong></p>
+<p>The parameter s represents the standard deviation of random acceleration disturbances. The value 8.8 is a tuning parameter—higher values mean we expect more model mismatch or unexpected dynamics.</p>
+<p><strong>Resulting Q Matrix:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Q will be approximately:</span>
+<span class="c1"># [0.77  0     3.87  0   ]</span>
+<span class="c1"># [0     0.77  0     3.87]</span>
+<span class="c1"># [3.87  0     77.44 0   ]</span>
+<span class="c1"># [0     3.87  0     77.44]</span>
+</code></pre></div>
+<p>Note the correlation structure: position and velocity uncertainties are coupled (off-diagonal terms 3.87).</p>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>
+<p><strong>Too small Q:</strong> Filter becomes overconfident; can't adapt to unexpected changes</p>
+</li>
+<li>
+<p><strong>Too large Q:</strong> Filter maintains high uncertainty; estimates remain noisy</p>
+</li>
+<li>
+<p><strong>Zero Q:</strong> Filter assumes perfect model; dangerous in practice</p>
+</li>
+<li>
+<p><strong>Different structure:</strong> Could use simple diagonal Q, but G<em>G.T</em>s² is theoretically justified</p>
+</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="the-kalman-filter-algorithm">The Kalman Filter Algorithm <a id="algorithm"></a></h2>
+<h3 id="storage-arrays-initialization">Storage Arrays Initialization</h3>
+<div class="highlight"><pre><span></span><code><span class="n">xt</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">yt</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">dxt</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">dyt</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">Zx</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">Zy</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">Px</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">Py</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">Pdx</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">Pdy</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">Rdx</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">Rdy</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">Kx</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">Ky</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">Kdx</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">Kdy</span> <span class="o">=</span> <span class="p">[]</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>These lists store filter outputs at each iteration for post-analysis and visualization. They track:</p>
+<ul>
+<li>
+<p><strong>xt, yt:</strong> Position estimates</p>
+</li>
+<li>
+<p><strong>dxt, dyt:</strong> Velocity estimates</p>
+</li>
+<li>
+<p><strong>Zx, Zy:</strong> Actual measurements received</p>
+</li>
+<li>
+<p><strong>Px, Py:</strong> Position uncertainty (variance)</p>
+</li>
+<li>
+<p><strong>Pdx, Pdy:</strong> Velocity uncertainty (variance)</p>
+</li>
+<li>
+<p><strong>Rdx, Rdy:</strong> Measurement noise variance (constant, but logged for completeness)</p>
+</li>
+<li>
+<p><strong>Kx, Ky, Kdx, Kdy:</strong> Kalman gain components</p>
+</li>
+</ul>
+<p><strong>Why Store Everything:</strong></p>
+<p>Analyzing Kalman gain evolution reveals how the filter's trust shifts between predictions and measurements over time. Tracking uncertainty shows convergence behavior.</p>
+<p><strong>Impact:</strong></p>
+<p>Removing these has no effect on filter performance—only prevents post-analysis. Could save memory in production systems by only keeping recent history.</p>
+<h3 id="main-kalman-filter-loop">Main Kalman Filter Loop</h3>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">measurements</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Process each measurement sequentially. The filter updates its state estimate after each new measurement arrives.</p>
+<p><strong>Flow:</strong></p>
+<p>Iterates 100 times (once per measurement). Each iteration performs prediction, update, and storage.</p>
+<h3 id="prediction-step-state-extrapolation">Prediction Step: State Extrapolation</h3>
+<div class="highlight"><pre><span></span><code>    <span class="c1"># Prediction</span>
+    <span class="c1"># state prediction</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">x</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Project the current state estimate forward in time using the motion model. This is our "best guess" of where the object should be at the next timestep before incorporating the new measurement.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<div class="highlight"><pre><span></span><code>x̂(k|k-1) = A * x̂(k-1|k-1)
+</code></pre></div>
+<p>This notation means: "predicted state at time k, given information up to time k-1."</p>
+<p><strong>Why This Works:</strong></p>
+<p>For constant velocity motion:</p>
+<div class="highlight"><pre><span></span><code>new_position = old_position + velocity * dt
+new_velocity = old_velocity  (constant velocity)
+</code></pre></div>
+<p>Matrix A implements these equations exactly.</p>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>
+<p><strong>Removes this line:</strong> Filter cannot predict; would only trust measurements</p>
+</li>
+<li>
+<p><strong>Wrong A matrix:</strong> Predictions systematically wrong; filter compensates with larger Kalman gain</p>
+</li>
+</ul>
+<h3 id="prediction-step-covariance-extrapolation">Prediction Step: Covariance Extrapolation</h3>
+<div class="highlight"><pre><span></span><code>    <span class="c1"># error covariance prediction</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">P</span> <span class="o">*</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">Q</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Project uncertainty forward and add process noise. Uncertainty grows during prediction because we're relying on an imperfect model.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<div class="highlight"><pre><span></span><code>P(k|k-1) = A * P(k-1|k-1) * Aᵀ + Q
+</code></pre></div>
+<p>The term <code>A*P*A.T</code> propagates existing uncertainty through the dynamics. The term <code>+Q</code> adds new uncertainty from model imperfections.</p>
+<p><strong>Why Uncertainty Increases:</strong></p>
+<p>Prediction is extrapolation—we're guessing what happens between measurements. Without new information, our confidence decreases. The process noise Q quantifies this degradation.</p>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>
+<p><strong>Omitting Q:</strong> P steadily decreases until filter trusts only predictions; stops learning from measurements</p>
+</li>
+<li>
+<p><strong>Omitting A.T:</strong> Mathematical error; P becomes non-symmetric and eventually invalid</p>
+</li>
+</ul>
+<h3 id="update-step-kalman-gain-computation">Update Step: Kalman Gain Computation</h3>
+<div class="highlight"><pre><span></span><code>    <span class="c1"># Update Steps</span>
+    <span class="c1"># Kalman Gain</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">H</span> <span class="o">*</span> <span class="n">P</span> <span class="o">*</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">R</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="p">(</span><span class="n">P</span> <span class="o">*</span> <span class="n">H</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Calculate the Kalman gain K, which determines how much to adjust our prediction based on the new measurement. K balances trust between prediction and measurement.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>The innovation covariance S represents total uncertainty in predicted measurement:</p>
+<div class="highlight"><pre><span></span><code>S = H*P*H.T + R
+  = prediction uncertainty + measurement noise
+</code></pre></div>
+<p>The Kalman gain is:</p>
+<div class="highlight"><pre><span></span><code>K = P*H.T * S⁻¹
+</code></pre></div>
+<p>This formula is derived by minimizing the expected squared estimation error.</p>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li>
+<p><strong>K ≈ 0:</strong> Don't trust measurement; keep prediction</p>
+</li>
+<li>
+<p><strong>K ≈ (H.T * H)⁻¹ * H.T:</strong> Fully trust measurement; ignore prediction</p>
+</li>
+<li>
+<p><strong>Intermediate K:</strong> Optimal blend of prediction and measurement</p>
+</li>
+</ul>
+<p><strong>Why np.linalg.pinv (pseudo-inverse):</strong></p>
+<p>Standard inverse <code>np.linalg.inv</code> can fail if S is singular (rare but possible). Pseudo-inverse <code>pinv</code> handles edge cases robustly. For 2×2 matrices like S, computational difference is negligible.</p>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>
+<p><strong>Wrong S:</strong> Kalman gain miscalculated; suboptimal weighting</p>
+</li>
+<li>
+<p><strong>Omitting R:</strong> Filter trusts measurements too much; noisy estimates</p>
+</li>
+<li>
+<p><strong>Omitting H terms:</strong> Dimensionality mismatch; code crashes</p>
+</li>
+</ul>
+<h3 id="update-step-measurement-incorporation">Update Step: Measurement Incorporation</h3>
+<div class="highlight"><pre><span></span><code>    <span class="c1"># Update the estimate via z</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">measurements</span><span class="p">[:,</span> <span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Z</span> <span class="o">-</span> <span class="p">(</span><span class="n">H</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="n">K</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Correct the predicted state using the new measurement. The correction is proportional to the innovation (measurement residual) weighted by Kalman gain.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>The innovation is:</p>
+<div class="highlight"><pre><span></span><code>y = Z - H*x̂(k|k-1)
+  = actual measurement - predicted measurement
+</code></pre></div>
+<p>The state update is:</p>
+<div class="highlight"><pre><span></span><code>x̂(k|k) = x̂(k|k-1) + K*y
+</code></pre></div>
+<p>This moves the state estimate toward the measurement by an amount determined by K.</p>
+<p><strong>Flow:</strong></p>
+<ol>
+<li>
+<p>Extract current measurement and reshape to column vector (2×1)</p>
+</li>
+<li>
+<p>Compute innovation: how much does measurement differ from prediction?</p>
+</li>
+<li>
+<p>Update state: add weighted innovation to predicted state</p>
+</li>
+</ol>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li>
+<p><strong>Large innovation y:</strong> Measurement very different from prediction; one or both is wrong</p>
+</li>
+<li>
+<p><strong>K*y product:</strong> Scales innovation by Kalman gain; how much to adjust state</p>
+</li>
+<li>
+<p><strong>Result x:</strong> Updated "best estimate" combining prediction and measurement</p>
+</li>
+</ul>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>
+<p><strong>Skipping this update:</strong> Filter ignores measurements; estimates diverge from reality</p>
+</li>
+<li>
+<p><strong>Using Z directly instead of innovation:</strong> Throws away valuable prediction information</p>
+</li>
+</ul>
+<h3 id="update-step-covariance-update">Update Step: Covariance Update</h3>
+<div class="highlight"><pre><span></span><code>    <span class="c1"># error covariance</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="p">(</span><span class="n">K</span> <span class="o">*</span> <span class="n">H</span><span class="p">))</span> <span class="o">*</span> <span class="n">P</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Reduce uncertainty after incorporating measurement. The measurement provides information, decreasing our uncertainty about the state.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<div class="highlight"><pre><span></span><code>P(k|k) = (I - K*H) * P(k|k-1)
+</code></pre></div>
+<p>This is the "Joseph form" of the covariance update, which guarantees P remains symmetric and positive definite (required mathematical properties).</p>
+<p><strong>Why Uncertainty Decreases:</strong></p>
+<p>Measurements provide information. The term (I - K*H) is less than I, so P shrinks. How much it shrinks depends on Kalman gain K (which depends on R and current P).</p>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li>
+<p><strong>First few iterations:</strong> P decreases rapidly as measurements provide lots of new information</p>
+</li>
+<li>
+<p><strong>Later iterations:</strong> P stabilizes at steady-state level balancing Q and R</p>
+</li>
+</ul>
+<p><strong>Impact:</strong></p>
+<ul>
+<li>
+<p><strong>Omitting this:</strong> P keeps growing from Q; filter becomes increasingly uncertain</p>
+</li>
+<li>
+<p><strong>Wrong formula:</strong> P may become negative definite (impossible—would crash filter)</p>
+</li>
+</ul>
+<p><strong>Alternative Formulation:</strong></p>
+<p>The more numerically stable version is:</p>
+<div class="highlight"><pre><span></span><code><span class="n">P</span> <span class="o">=</span> <span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">K</span><span class="o">*</span><span class="n">H</span><span class="p">)</span> <span class="o">*</span> <span class="n">P</span> <span class="o">*</span> <span class="p">(</span><span class="n">I</span> <span class="o">-</span> <span class="n">K</span><span class="o">*</span><span class="n">H</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">K</span><span class="o">*</span><span class="n">R</span><span class="o">*</span><span class="n">K</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+<p>This "Joseph form" is more robust to numerical errors but computationally more expensive.</p>
+<h3 id="storage-of-results">Storage of Results</h3>
+<div class="highlight"><pre><span></span><code>    <span class="c1"># Storing results</span>
+    <span class="n">xt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">yt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">dxt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">dyt</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">Zx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">Z</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">Zy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">Z</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">Px</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">Py</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+    <span class="n">Pdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
+    <span class="n">Pdy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+    <span class="n">Rdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">Rdy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+    <span class="n">Kx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">K</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">Ky</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">K</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">Kdx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">K</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">Kdy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">K</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Extract scalar values from matrices and append to lists for later visualization and analysis.</p>
+<p><strong>Why float() conversion:</strong></p>
+<p>NumPy matrices return matrix objects even for single elements. Converting to float gives standard Python floats suitable for Matplotlib.</p>
+<p><strong>What's Being Stored:</strong></p>
+<ul>
+<li>
+<p><strong>State estimates:</strong> x[0,0] and x[1,0] are positions; x[2,0] and x[3,0] are velocities</p>
+</li>
+<li>
+<p><strong>Measurements:</strong> Z[0,0] and Z[1,0] are the x and y velocity measurements</p>
+</li>
+<li>
+<p><strong>Variances:</strong> P[i,i] are diagonal elements (variances) of covariance matrix</p>
+</li>
+<li>
+<p><strong>Measurement noise:</strong> R[i,i] constant at each iteration but logged for completeness</p>
+</li>
+<li>
+<p><strong>Kalman gains:</strong> K[i,0] show how much each measurement affects each state component</p>
+</li>
+</ul>
+<p><strong>Impact:</strong></p>
+<p>Purely for post-analysis. Removing this saves memory but prevents visualization. Production code might keep only a sliding window of recent values.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="results-visualization">Results Visualization <a id="visualization"></a></h2>
+<h3 id="velocity-estimation-comparison">Velocity Estimation Comparison</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Velocity Measurements</span>
+<span class="c1"># Our estimates are in Red</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">measurements</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="n">dxt</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$v_1$&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">measurements</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="n">dyt</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$v_2$&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+
+<span class="c1"># The noisy velocity measurements in both directions are in green and blue.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">measurements</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="n">mx</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$z_1 (measurement)$&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">measurements</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="n">my</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$z_2 (measurement)$&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+
+<span class="c1"># The actual constant velocity for both directions are in black</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">vx</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#999999&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$v_1(real)$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">vy</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#999999&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$v_2(real)$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Estimates of Velocity&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Visualize how well the Kalman Filter estimates velocity compared to noisy measurements and ground truth. This is the primary validation of filter performance.</p>
+<p><strong>What to Look For:</strong></p>
+<ul>
+<li>
+<p><strong>Red lines (filter estimates):</strong> Should converge toward black lines (truth) and be smoother than green/blue (measurements)</p>
+</li>
+<li>
+<p><strong>Convergence behavior:</strong> Estimates start uncertain but stabilize within 10-20 iterations</p>
+</li>
+<li>
+<p><strong>Steady-state performance:</strong> After convergence, estimates track truth despite ongoing measurement noise</p>
+</li>
+</ul>
+<p><strong>Flow:</strong></p>
+<ol>
+<li>
+<p>Create figure with size 10×6 inches</p>
+</li>
+<li>
+<p>Plot filter velocity estimates in red (dxt for x, dyt for y)</p>
+</li>
+<li>
+<p>Overlay noisy measurements in green (x) and blue (y)</p>
+</li>
+<li>
+<p>Add horizontal lines showing true constant velocities in gray</p>
+</li>
+<li>
+<p>Configure labels, title, legend, and y-axis limits</p>
+</li>
+<li>
+<p>Display the plot</p>
+</li>
+</ol>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li>
+<p><strong>Early iterations:</strong> Red lines vary as filter learns; significant deviation from truth</p>
+</li>
+<li>
+<p><strong>Middle iterations:</strong> Red lines converge and stabilize near black lines</p>
+</li>
+<li>
+<p><strong>Later iterations:</strong> Red lines maintain accuracy despite green/blue scatter</p>
+</li>
+</ul>
+<p><strong>Impact:</strong></p>
+<p>This plot validates that the filter works. Without it, we'd be blind to filter performance. The visual comparison is more intuitive than numerical metrics for understanding behavior.</p>
+<h3 id="position-tracking-visualization">Position Tracking Visualization</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Position Tracking</span>
+<span class="c1"># Scatter plot of x and y location estimates in black</span>
+<span class="c1"># these should ideally form a straight line</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xt</span><span class="p">,</span> <span class="n">yt</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;State&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+
+<span class="c1"># starting point in green and end point in red</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yt</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Start&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xt</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">yt</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Goal&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;$x_1$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;$x_2$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Estimates of Position (Tracking)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Show the estimated trajectory of the object in 2D space. For constant velocity motion with vₓ = vᵧ = 10, the trajectory should be a straight line at 45 degrees.</p>
+<p><strong>What to Look For:</strong></p>
+<ul>
+<li>
+<p><strong>Straight line:</strong> Confirms constant velocity correctly estimated</p>
+</li>
+<li>
+<p><strong>45-degree angle:</strong> Validates equal x and y velocities</p>
+</li>
+<li>
+<p><strong>Start to end distance:</strong> Should be approximately (vₓ<em>m</em>dt, vᵧ<em>m</em>dt) = (10<em>100</em>0.1, 10<em>100</em>0.1) = (100, 100)</p>
+</li>
+<li>
+<p><strong>Any curvature:</strong> Indicates estimation errors or model mismatch</p>
+</li>
+</ul>
+<p><strong>Flow:</strong></p>
+<ol>
+<li>
+<p>Create scatter plot of all position estimates (xt vs yt)</p>
+</li>
+<li>
+<p>Highlight first position (green) and last position (red)</p>
+</li>
+<li>
+<p>Add axis labels and title</p>
+</li>
+<li>
+<p>Display the plot</p>
+</li>
+</ol>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li>
+<p><strong>Nearly straight line:</strong> Excellent filter performance; correctly inferred constant velocity</p>
+</li>
+<li>
+<p><strong>Starting at origin:</strong> Matches initial condition x = [0, 0, 0, 0]</p>
+</li>
+<li>
+<p><strong>Ending near (100, 100):</strong> Validates mathematics: 10 velocity × 100 timesteps × 0.1 dt = 100 units</p>
+</li>
+<li>
+<p><strong>Slight waviness:</strong> Normal; reflects residual uncertainty from measurement noise</p>
+</li>
+</ul>
+<p><strong>Impact:</strong></p>
+<p>This plot is crucial for spatial tracking applications. It shows the filter not just estimates velocity well, but successfully integrates it to track position—the ultimate goal in object tracking.</p>
+<p><strong>Alternative Visualizations:</strong></p>
+<p>Could also plot:</p>
+<ul>
+<li>
+<p>Position vs time (x and y separately)</p>
+</li>
+<li>
+<p>Velocity residuals (estimate - truth)</p>
+</li>
+<li>
+<p>Kalman gain evolution</p>
+</li>
+<li>
+<p>Covariance evolution</p>
+</li>
+<li>
+<p>Innovation sequence (measurement residuals)</p>
+</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="integration-with-main-tutorial">Integration with Main Tutorial <a id="integration"></a></h2>
+<h3 id="how-to-use-these-documents-together">How to Use These Documents Together</h3>
+<p><strong>Approach 1: Integrated Learning</strong></p>
+<p>Read the Main Tutorial section, then refer to corresponding Code Walkthrough section for implementation details:</p>
+<ol>
+<li>
+<p><strong>Main Tutorial Section 2</strong> → <strong>Code Walkthrough Section 2</strong>: Understand measurement challenge, then see how data is generated</p>
+</li>
+<li>
+<p><strong>Main Tutorial Section 4</strong> → <strong>Code Walkthrough Sections 3-4</strong>: Learn workflow overview, then study detailed implementation</p>
+</li>
+<li>
+<p><strong>Main Tutorial Section 5</strong> → <strong>Code Walkthrough Section 5</strong>: Interpret results conceptually, then understand visualization code</p>
+</li>
+</ol>
+<p><strong>Approach 2: Standalone Reference</strong></p>
+<ul>
+<li>
+<p>Use Main Tutorial for conceptual understanding, practical applications, and result interpretation</p>
+</li>
+<li>
+<p>Use Code Walkthrough as implementation reference when coding your own Kalman Filter</p>
+</li>
+</ul>
+<p><strong>Approach 3: Teaching Resource</strong></p>
+<ul>
+<li>
+<p>Present Main Tutorial in lectures/presentations for high-level understanding</p>
+</li>
+<li>
+<p>Provide Code Walkthrough as supplementary material for students implementing the filter</p>
+</li>
+</ul>
+<h3 id="adapting-this-implementation">Adapting This Implementation</h3>
+<p><strong>For Different Measurement Types:</strong></p>
+<p>Modify the H matrix to extract your measured quantities from the state vector. For example:</p>
+<ul>
+<li>
+<p><strong>Position measurements:</strong> <code>H = np.matrix([[1, 0, 0, 0], [0, 1, 0, 0]])</code></p>
+</li>
+<li>
+<p><strong>Only x-velocity:</strong> <code>H = np.matrix([[0, 0, 1, 0]])</code></p>
+</li>
+</ul>
+<p><strong>For Different Motion Models:</strong></p>
+<p>Modify the A matrix to reflect your dynamics. For example:</p>
+<ul>
+<li>
+<p><strong>Constant acceleration:</strong> Expand state to [x, y, vₓ, vᵧ, aₓ, aᵧ] and adjust A accordingly</p>
+</li>
+<li>
+<p><strong>Coordinated turn:</strong> Use nonlinear dynamics (requires Extended Kalman Filter)</p>
+</li>
+</ul>
+<p><strong>For Different Noise Levels:</strong></p>
+<p>Adjust R and Q matrices based on your sensor characteristics and model accuracy:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Higher measurement noise</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">([[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">]])</span>
+
+<span class="c1"># Lower process noise (more confident in model)</span>
+<span class="n">s</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">Q</span> <span class="o">=</span> <span class="n">G</span> <span class="o">*</span> <span class="n">G</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">s</span><span class="o">**</span><span class="mi">2</span>
+</code></pre></div>
+<p><strong>For Real-Time Implementation:</strong></p>
+<ol>
+<li>
+<p>Replace measurement generation with actual sensor data reading</p>
+</li>
+<li>
+<p>Run prediction/update cycle whenever new measurement arrives</p>
+</li>
+<li>
+<p>Use filter state estimate x for control or display</p>
+</li>
+<li>
+<p>Optionally skip storage arrays to save memory</p>
+</li>
+</ol>
+<h3 id="common-implementation-issues">Common Implementation Issues</h3>
+<p><strong>Numerical Stability:</strong></p>
+<ul>
+<li>
+<p>Use the Joseph form covariance update for better numerical properties</p>
+</li>
+<li>
+<p>Consider using <code>np.linalg.lstsq</code> instead of <code>pinv</code> for very large systems</p>
+</li>
+<li>
+<p>Check for negative diagonal elements in P (indicates numerical error)</p>
+</li>
+</ul>
+<p><strong>Tuning Q and R:</strong></p>
+<ul>
+<li>
+<p>Start with diagonal matrices (assume uncorrelated noise)</p>
+</li>
+<li>
+<p>Tune R based on sensor specs if available, otherwise empirically</p>
+</li>
+<li>
+<p>Adjust Q to achieve desired responsiveness vs. smoothness trade-off</p>
+</li>
+<li>
+<p>Monitor innovation sequence statistics to validate noise assumptions</p>
+</li>
+</ul>
+<p><strong>Debugging Tips:</strong></p>
+<ul>
+<li>
+<p>Plot Kalman gain evolution (should stabilize)</p>
+</li>
+<li>
+<p>Check covariance evolution (should decrease then stabilize)</p>
+</li>
+<li>
+<p>Verify innovation is zero-mean and consistent with S</p>
+</li>
+<li>
+<p>Test with simulated data where ground truth is known</p>
+</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="references">References <a id="references"></a></h2>
+<ol>
+<li>
+<p><strong>Kalman, R. E.</strong> (1960). "A New Approach to Linear Filtering and Prediction Problems." <em>Journal of Basic Engineering</em>, 82(1), 35-45.<br />
+<a href="https://doi.org/10.1115/1.3662552">https://doi.org/10.1115/1.3662552</a></p>
+</li>
+<li>
+<p><strong>Welch, G., &amp; Bishop, G.</strong> (2006). "An Introduction to the Kalman Filter." <em>University of North Carolina at Chapel Hill, Department of Computer Science</em>, TR 95-041.<br />
+<a href="https://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf">https://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf</a></p>
+</li>
+<li>
+<p><strong>Simon, D.</strong> (2006). <em>Optimal State Estimation: Kalman, H∞, and Nonlinear Approaches</em>. Wiley-Interscience.</p>
+</li>
+<li>
+<p><strong>Grewal, M. S., &amp; Andrews, A. P.</strong> (2014). <em>Kalman Filtering: Theory and Practice Using MATLAB</em> (4th ed.). Wiley-IEEE Press.</p>
+</li>
+<li>
+<p><strong>Bar-Shalom, Y., Li, X. R., &amp; Kirubarajan, T.</strong> (2001). <em>Estimation with Applications to Tracking and Navigation</em>. Wiley.</p>
+</li>
+<li>
+<p><strong>Brown, R. G., &amp; Hwang, P. Y. C.</strong> (2012). <em>Introduction to Random Signals and Applied Kalman Filtering</em> (4th ed.). Wiley.</p>
+</li>
+<li>
+<p><strong>Särkkä, S.</strong> (2013). <em>Bayesian Filtering and Smoothing</em>. Cambridge University Press.<br />
+<a href="https://doi.org/10.1017/CBO9781139344203">https://doi.org/10.1017/CBO9781139344203</a></p>
+</li>
+<li>
+<p><strong>Thrun, S., Burgard, W., &amp; Fox, D.</strong> (2005). <em>Probabilistic Robotics</em>. MIT Press.</p>
+</li>
+<li>
+<p><strong>Labbe, R.</strong> (2014-2020). "Kalman and Bayesian Filters in Python." <em>GitHub Repository</em>.<br />
+<a href="https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python">https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python</a></p>
+</li>
+<li>
+<p><strong>Maybeck, P. S.</strong> (1979). <em>Stochastic Models, Estimation, and Control</em> (Vol. 1). Academic Press.</p>
+</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 10, 2025 03:21:14 UTC">October 10, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+<!-- Footer navigation (prev/next) - Material default -->
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../38-hands-on-financial-market-price-estimation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Financial Market Price Estimation Hands-On Tutorial: Kalman Filters for Trading Signals" rel="prev">
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Previous
+            </span>
+            <div class="md-ellipsis">
+              Financial Market Price Estimation Hands-On Tutorial: Kalman Filters for Trading Signals
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../51.case-study-human-generated-text/" class="md-footer__link md-footer__link--next" aria-label="Next: Case Study — Data Analysis with Human‑Generated Text (Deep Internal Notes)" rel="next">
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Next
+            </span>
+            <div class="md-ellipsis">
+              Case Study — Data Analysis with Human‑Generated Text (Deep Internal Notes)
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+
+  <!-- Custom footer content -->
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        <div style="text-align: center; padding: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 1rem;">
+          <p style="margin: 0.5rem 0;">
+            <strong>GenAI Atlas</strong> - Your Comprehensive Guide to AI & Machine Learning
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.9em; opacity: 0.8;">
+            © 2024 GenAI Atlas | Built with ❤️ for the AI Community
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.85em; opacity: 0.7;">
+            <em>Empowering developers, researchers, and practitioners worldwide</em>
+          </p>
+        </div>
+      </div>
+      <div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

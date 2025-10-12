@@ -1,0 +1,6832 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/2-additional-reference/38-hands-on-financial-market-price-estimation/">
+      
+      
+        <link rel="prev" href="../37-hands-on-unemployment-rate-prediction/">
+      
+      
+        <link rel="next" href="../39-hands-on-kalman-filter-object-location-tracking/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Financial Market Price Estimation Hands-On Tutorial: Kalman Filters for Trading Signals - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Financial Market Price Estimation Hands-On Tutorial: Kalman Filters for Trading Signals
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-fast-track/01-ft-python-basics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-probability_distributions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-fast-track/01-statistics-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../1-learning-path/01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3" id="__nav_2_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../10-hands-on-regression-advertisement/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../17-hands-on-challenger-launch/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hypothsis Testing - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../25-hands-on-employee-attrition/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../31-hands-on-music-recommendation-systems/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Systems - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_6" id="__nav_2_4_3_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Network and Graphical Models - Hands on
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_3_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            Network and Graphical Models - Hands on
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../34-hands-on-network-stock-portfolio-optimization/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Stock Portfolio Optimization
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../35-hands-on-enron-network-analysis/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Enron Network Analysis
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../36-hands-on-game-of-thrones-network-analysis/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Game of Thrones Network Analysis
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../37-hands-on-unemployment-rate-prediction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Unemployment Rate Prediction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_6_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_6_5" id="__nav_2_4_3_6_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Financial Market Price Estimation with Kalman Filters
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_3_6_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_6_5">
+            <span class="md-nav__icon md-icon"></span>
+            Financial Market Price Estimation with Kalman Filters
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Financial Market Price Estimation Hands-On Tutorial: Kalman Filters for Trading Signals
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Financial Market Price Estimation Hands-On Tutorial: Kalman Filters for Trading Signals
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-to-kalman-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction to Kalman Filters
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction to Kalman Filters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-value-proposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Value Proposition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-two-step-kalman-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Two-Step Kalman Process
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#types-of-kalman-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Types of Kalman Filters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-the-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding the Methodology
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding the Methodology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-kalman-filters-for-trading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Kalman Filters for Trading?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workflow Logic
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kalman-filter-as-moving-average-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman Filter as Moving Average Signal
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kalman Filter as Moving Average Signal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Purpose
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methodology-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methodology Rationale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-results-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Results Interpretation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-trading-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Trading Implications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#honest-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Honest Limitations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-linear-regression-for-beta-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dynamic Linear Regression for Beta Estimation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dynamic Linear Regression for Beta Estimation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation-purpose_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Purpose
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-dynamic-coefficient-estimation-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Dynamic Coefficient Estimation Matters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kalman-state-space-formulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman State Space Formulation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results-interpretation-price-based-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      Results Interpretation: Price-Based Regression
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Applications
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#returns-based-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns-Based Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Returns-Based Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#transitioning-to-returns-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Transitioning to Returns Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Approach
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Results Interpretation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-both-analyses-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Both Analyses Matter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-insights-for-trading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Insights for Trading
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#critical-assessment-and-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical Assessment and Limitations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Critical Assessment and Limitations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-works-well" class="md-nav__link">
+    <span class="md-ellipsis">
+      What Works Well
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#significant-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Significant Limitations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-this-method-works-best" class="md-nav__link">
+    <span class="md-ellipsis">
+      When This Method Works Best
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative Approaches
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replication-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Replication Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Walkthrough
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installing-pykalman-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installing PyKalman Library
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#library-imports-and-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Library Imports and Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Library Imports and Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-scientific-computing-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Scientific Computing Libraries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualization-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visualization Library
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kalman-filter-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman Filter Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#financial-data-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      Financial Data Access
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warning-suppression" class="md-nav__link">
+    <span class="md-ellipsis">
+      Warning Suppression
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-loading-and-preparation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Loading and Preparation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Loading and Preparation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fetching-msft-price-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fetching MSFT Price Data
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kalman-filter-construction-for-moving-average" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman Filter Construction for Moving Average
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kalman Filter Construction for Moving Average">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defining-the-kalman-filter-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defining the Kalman Filter Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running the Filter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-processing-state-estimates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Post-Processing State Estimates
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visualization-kalman-vs-moving-averages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visualization: Kalman vs Moving Averages
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Visualization: Kalman vs Moving Averages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#computing-traditional-moving-averages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computing Traditional Moving Averages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-period-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Full Period Visualization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zoomed-period-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zoomed Period Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-preparation-for-linear-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Preparation for Linear Regression
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Preparation for Linear Regression">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fetching-dual-asset-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fetching Dual Asset Data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#joining-datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Joining Datasets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-quality-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Quality Check
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kalman-filter-for-price-based-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman Filter for Price-Based Regression
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kalman Filter for Price-Based Regression">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scatter-plot-with-time-coloring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scatter Plot with Time Coloring
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-kalman-filter-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting Up Kalman Filter Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constructing-the-kalman-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Constructing the Kalman Filter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-filter-and-extracting-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running the Filter and Extracting Results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualizing-parameter-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visualizing Parameter Evolution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comprehensive-regression-line-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprehensive Regression Line Visualization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#returns-based-regression-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns-Based Regression Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Returns-Based Regression Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#computing-returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computing Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-returns-based-kalman-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuring Returns-Based Kalman Filter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-returns-based-kalman-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Building Returns-Based Kalman Filter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#executing-filter-and-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Executing Filter and Visualization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-main-tutorial" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with Main Tutorial
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration with Main Tutorial">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-combine-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to Combine Documents
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standalone-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Standalone Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-content-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Missing Content Validation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../39-hands-on-kalman-filter-object-location-tracking/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Kalman Filter Object Location Tracking
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../51.case-study-human-generated-text/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../53-case-study-regression_analysis-gender-wage-gap/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../58-case-study-hip_brest-cancer-study/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../99-unsupervised_learning_resources/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    External Resources
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-datascience-ml-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-to-kalman-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction to Kalman Filters
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction to Kalman Filters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-value-proposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Value Proposition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-two-step-kalman-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Two-Step Kalman Process
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#types-of-kalman-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Types of Kalman Filters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-the-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding the Methodology
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding the Methodology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-kalman-filters-for-trading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Kalman Filters for Trading?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workflow Logic
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kalman-filter-as-moving-average-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman Filter as Moving Average Signal
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kalman Filter as Moving Average Signal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Purpose
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#methodology-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Methodology Rationale
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-results-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Results Interpretation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-trading-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Trading Implications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#honest-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Honest Limitations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-linear-regression-for-beta-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dynamic Linear Regression for Beta Estimation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dynamic Linear Regression for Beta Estimation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#implementation-purpose_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Purpose
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-dynamic-coefficient-estimation-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Dynamic Coefficient Estimation Matters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kalman-state-space-formulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman State Space Formulation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results-interpretation-price-based-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      Results Interpretation: Price-Based Regression
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Applications
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#returns-based-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns-Based Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Returns-Based Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#transitioning-to-returns-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Transitioning to Returns Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Approach
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Results Interpretation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-both-analyses-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Both Analyses Matter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#practical-insights-for-trading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Insights for Trading
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#critical-assessment-and-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical Assessment and Limitations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Critical Assessment and Limitations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-works-well" class="md-nav__link">
+    <span class="md-ellipsis">
+      What Works Well
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#significant-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Significant Limitations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-this-method-works-best" class="md-nav__link">
+    <span class="md-ellipsis">
+      When This Method Works Best
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      Alternative Approaches
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replication-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Replication Considerations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Walkthrough
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installing-pykalman-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installing PyKalman Library
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#library-imports-and-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Library Imports and Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Library Imports and Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-scientific-computing-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Scientific Computing Libraries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualization-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visualization Library
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kalman-filter-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman Filter Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#financial-data-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      Financial Data Access
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warning-suppression" class="md-nav__link">
+    <span class="md-ellipsis">
+      Warning Suppression
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-loading-and-preparation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Loading and Preparation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Loading and Preparation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fetching-msft-price-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fetching MSFT Price Data
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kalman-filter-construction-for-moving-average" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman Filter Construction for Moving Average
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kalman Filter Construction for Moving Average">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defining-the-kalman-filter-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defining the Kalman Filter Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running the Filter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-processing-state-estimates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Post-Processing State Estimates
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visualization-kalman-vs-moving-averages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visualization: Kalman vs Moving Averages
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Visualization: Kalman vs Moving Averages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#computing-traditional-moving-averages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computing Traditional Moving Averages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-period-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Full Period Visualization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zoomed-period-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Zoomed Period Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-preparation-for-linear-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Preparation for Linear Regression
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Preparation for Linear Regression">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fetching-dual-asset-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fetching Dual Asset Data
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#joining-datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Joining Datasets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-quality-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Quality Check
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kalman-filter-for-price-based-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kalman Filter for Price-Based Regression
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kalman Filter for Price-Based Regression">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scatter-plot-with-time-coloring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scatter Plot with Time Coloring
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-kalman-filter-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting Up Kalman Filter Parameters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constructing-the-kalman-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Constructing the Kalman Filter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-filter-and-extracting-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Running the Filter and Extracting Results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualizing-parameter-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visualizing Parameter Evolution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comprehensive-regression-line-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprehensive Regression Line Visualization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#returns-based-regression-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returns-Based Regression Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Returns-Based Regression Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#computing-returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Computing Returns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-returns-based-kalman-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuring Returns-Based Kalman Filter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-returns-based-kalman-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Building Returns-Based Kalman Filter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#executing-filter-and-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Executing Filter and Visualization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-main-tutorial" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with Main Tutorial
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration with Main Tutorial">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-combine-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to Combine Documents
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standalone-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Standalone Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#missing-content-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Missing Content Validation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="financial-market-price-estimation-hands-on-tutorial-kalman-filters-for-trading-signals">Financial Market Price Estimation Hands-On Tutorial: Kalman Filters for Trading Signals <a id="top"></a></h1>
+<p><a href="https://drive.google.com/file/d/1r-_HOQGsjAAGTPc9hLMzjFgKe3ilt3iz/view?usp=sharing"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
+<a href="https://drive.google.com/file/d/1foqu-aRJvgkhjavIa_EXOJmjSw-sxDus/view?usp=drive_link"><img alt="Dataset 1" src="https://img.shields.io/badge/Dataset-MSFT%20Price%20Data-blue" /></a>
+<a href="https://drive.google.com/file/d/1lLxp3PwreNSLN078UnWQ81d-c-TQQoLt/view?usp=drive_link"><img alt="Dataset 2" src="https://img.shields.io/badge/Dataset-S%26P%20500%20Data-green" /></a></p>
+<h2 id="quick-navigation">Quick Navigation</h2>
+<ul>
+<li>
+<p><a href="#introduction">Introduction to Kalman Filters</a></p>
+</li>
+<li>
+<p><a href="#methodology">Understanding the Methodology</a></p>
+</li>
+<li>
+<p><a href="#moving-average">Kalman Filter as Moving Average Signal</a></p>
+</li>
+<li>
+<p><a href="#linear-regression">Dynamic Linear Regression for Beta Estimation</a></p>
+</li>
+<li>
+<p><a href="#returns-analysis">Returns-Based Analysis</a></p>
+</li>
+<li>
+<p><a href="#critical-assessment">Critical Assessment and Limitations</a></p>
+</li>
+<li>
+<p><a href="#code-walkthrough">Code Walkthrough</a></p>
+</li>
+<li>
+<p><a href="#references">References</a></p>
+</li>
+</ul>
+<h2 id="introduction-to-kalman-filters">Introduction to Kalman Filters <a id="introduction"></a></h2>
+<p>Kalman Filters represent a powerful state estimation technique developed by Rudolf Kalman in the 1960s. Originally designed for aerospace applications including the Apollo Program and NASA space shuttles, these filters have found extensive application in financial markets for price estimation and signal generation.</p>
+<h3 id="core-value-proposition">Core Value Proposition</h3>
+<p><strong>The fundamental advantage of Kalman Filters is their ability to estimate the state of a process efficiently, supporting estimation of past, present, and future states even when the precise system model is unknown.</strong></p>
+<p>This capability makes them particularly valuable in financial markets where:</p>
+<ul>
+<li>
+<p><strong>Direct measurement is impossible:</strong> True underlying prices or trends cannot be observed directly</p>
+</li>
+<li>
+<p><strong>Noisy measurements:</strong> Market prices contain significant noise from various sources</p>
+</li>
+<li>
+<p><strong>Dynamic systems:</strong> Market relationships change over time and require adaptive estimation</p>
+</li>
+</ul>
+<h3 id="the-two-step-kalman-process">The Two-Step Kalman Process</h3>
+<p>Kalman Filters operate through an iterative two-step cycle:</p>
+<ul>
+<li>
+<p><strong>Prediction Step:</strong> Forecasts the current state based on the previous state and system model</p>
+</li>
+<li>
+<p><strong>Update Step:</strong> Adjusts the prediction using new measurement data to produce an optimal estimate</p>
+</li>
+</ul>
+<p>This predict-update cycle continues indefinitely, continuously refining state estimates as new data arrives.</p>
+<h3 id="types-of-kalman-filters">Types of Kalman Filters</h3>
+<p>Different variants handle various model complexities:</p>
+<table>
+<thead>
+<tr>
+<th>State Estimator</th>
+<th>Model Type</th>
+<th>Assumed Distribution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kalman Filter</td>
+<td>Linear</td>
+<td>Gaussian</td>
+</tr>
+<tr>
+<td>Extended Kalman Filter</td>
+<td>Locally Linear</td>
+<td>Gaussian</td>
+</tr>
+<tr>
+<td>Unscented Kalman Filter</td>
+<td>Nonlinear</td>
+<td>Gaussian</td>
+</tr>
+<tr>
+<td>Particle Filter</td>
+<td>Nonlinear</td>
+<td>Non-Gaussian</td>
+</tr>
+</tbody>
+</table>
+<p>This tutorial focuses on the standard Kalman Filter suitable for linear systems with Gaussian noise.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="understanding-the-methodology">Understanding the Methodology <a id="methodology"></a></h2>
+<h3 id="why-kalman-filters-for-trading">Why Kalman Filters for Trading?</h3>
+<p>In quantitative trading, Kalman Filters address two critical challenges:</p>
+<ul>
+<li>
+<p><strong>Moving Average Replacement:</strong> Traditional moving averages require arbitrary window length selection, risking overfitting. Kalman Filters adapt automatically without fixed windows.</p>
+</li>
+<li>
+<p><strong>Dynamic Hedge Ratio Estimation:</strong> Mean-reverting strategies require continuously updated hedge ratios. Kalman Filters provide real-time coefficient estimates that adapt to structural market changes.</p>
+</li>
+</ul>
+<h3 id="workflow-logic">Workflow Logic</h3>
+<p>This tutorial follows a progressive learning path:</p>
+<p><strong>Stage 1: Moving Average Application</strong></p>
+<ul>
+<li>
+<p>Establishes baseline understanding using price smoothing</p>
+</li>
+<li>
+<p>Compares Kalman estimates against traditional 30/60/90-day moving averages</p>
+</li>
+<li>
+<p>Demonstrates automatic adaptation without window tuning</p>
+</li>
+</ul>
+<p><strong>Stage 2: Linear Regression</strong></p>
+<ul>
+<li>
+<p>Extends methodology to estimate alpha and beta coefficients</p>
+</li>
+<li>
+<p>Applies to MSFT stock versus S&amp;P 500 index</p>
+</li>
+<li>
+<p>Shows how relationships evolve over time</p>
+</li>
+</ul>
+<p><strong>Stage 3: Returns Analysis</strong></p>
+<ul>
+<li>
+<p>Converts price-based analysis to returns framework</p>
+</li>
+<li>
+<p>Demonstrates robustness across different data representations</p>
+</li>
+<li>
+<p>Provides practical beta hedging insights</p>
+</li>
+</ul>
+<p>[See Code Walkthrough Section 1-3]</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="kalman-filter-as-moving-average-signal">Kalman Filter as Moving Average Signal <a id="moving-average"></a></h2>
+<h3 id="implementation-purpose">Implementation Purpose</h3>
+<p>This section implements a Kalman Filter to estimate the rolling mean of MSFT stock prices from January 2021 to January 2022. The goal is to demonstrate how Kalman Filters can replace traditional moving averages for trend estimation without requiring window length specification.</p>
+<h3 id="methodology-rationale">Methodology Rationale</h3>
+<p>Traditional moving averages require selecting a lookback window (e.g., 30, 60, 90 days). This choice is arbitrary and risks overfitting to historical data. The Kalman Filter approach:</p>
+<ul>
+<li>
+<p><strong>Assumes mean evolves as random walk:</strong> The true mean changes slowly over time with small random variations</p>
+</li>
+<li>
+<p><strong>No window length needed:</strong> The filter weighs all past observations, automatically giving more weight to recent data</p>
+</li>
+<li>
+<p><strong>Adaptive uncertainty:</strong> The filter tracks its own confidence and adjusts accordingly</p>
+</li>
+</ul>
+<h3 id="key-results-interpretation">Key Results Interpretation</h3>
+<p>The comparison reveals important performance characteristics:</p>
+<p><strong>Responsiveness:</strong></p>
+<ul>
+<li>
+<p>Kalman estimate reacts more quickly to price changes than 60 or 90-day moving averages</p>
+</li>
+<li>
+<p>Maintains smoother trajectory than the 30-day moving average</p>
+</li>
+<li>
+<p>Balances lag reduction with noise filtering</p>
+</li>
+</ul>
+<p><strong>Tracking Performance:</strong></p>
+<ul>
+<li>
+<p>The Kalman estimate follows actual price movements closely while filtering short-term noise</p>
+</li>
+<li>
+<p>During the zoomed 200-day window, the Kalman line provides superior tracking compared to fixed-window averages</p>
+</li>
+<li>
+<p>Particularly effective during trending markets where rapid adaptation is valuable</p>
+</li>
+</ul>
+<h3 id="practical-trading-implications">Practical Trading Implications</h3>
+<p>For momentum trading strategies using moving average crossovers:</p>
+<ul>
+<li>
+<p><strong>Signal Generation:</strong> The Kalman estimate can serve as a single adaptive trend indicator</p>
+</li>
+<li>
+<p><strong>Reduced Lag:</strong> Faster response to genuine trend changes improves entry and exit timing</p>
+</li>
+<li>
+<p><strong>Parameter Risk:</strong> Eliminates the need to optimize and backtest multiple window lengths</p>
+</li>
+</ul>
+<h3 id="honest-limitations">Honest Limitations</h3>
+<p><strong>Overfitting Risk:</strong></p>
+<ul>
+<li>
+<p>While eliminating window length selection, Kalman Filters introduce other parameters (transition covariance, observation covariance, initial state)</p>
+</li>
+<li>
+<p>These parameters still require careful selection and can be overfit to historical data</p>
+</li>
+</ul>
+<p><strong>Computational Complexity:</strong></p>
+<ul>
+<li>
+<p>More computationally intensive than simple moving averages</p>
+</li>
+<li>
+<p>Requires matrix operations that scale with state dimensionality</p>
+</li>
+</ul>
+<p><strong>Assumptions:</strong></p>
+<ul>
+<li>
+<p>Assumes Gaussian noise and linear state evolution</p>
+</li>
+<li>
+<p>May underperform in markets with regime changes or non-Gaussian behavior</p>
+</li>
+</ul>
+<p>[See Code Walkthrough Section 4-5]</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="dynamic-linear-regression-for-beta-estimation">Dynamic Linear Regression for Beta Estimation <a id="linear-regression"></a></h2>
+<h3 id="implementation-purpose_1">Implementation Purpose</h3>
+<p>This section extends Kalman Filters to estimate time-varying regression coefficients. Specifically, we model the relationship between MSFT returns and S&amp;P 500 returns as:</p>
+<div class="highlight"><pre><span></span><code>MSFT_price ≈ α + β × SPY_price
+</code></pre></div>
+<p>where α (alpha) and β (beta) evolve over time rather than remaining constant.</p>
+<h3 id="why-dynamic-coefficient-estimation-matters">Why Dynamic Coefficient Estimation Matters</h3>
+<p>Static ordinary least squares (OLS) regression assumes parameters remain constant over the entire dataset. This assumption fails in financial markets where:</p>
+<ul>
+<li>
+<p><strong>Structural changes occur:</strong> Company fundamentals, market conditions, and correlations shift</p>
+</li>
+<li>
+<p><strong>Risk relationships evolve:</strong> Beta (systematic risk) changes with business operations and market regimes</p>
+</li>
+<li>
+<p><strong>Hedge ratios decay:</strong> Mean-reversion strategies need current, not historical, hedge ratios</p>
+</li>
+</ul>
+<h3 id="kalman-state-space-formulation">Kalman State Space Formulation</h3>
+<p>The Kalman Filter treats (β, α) as the hidden state:</p>
+<ul>
+<li>
+<p><strong>State evolution:</strong> Parameters follow random walk with small variations (transition covariance = 0.001)</p>
+</li>
+<li>
+<p><strong>Observation model:</strong> Observed MSFT price = β × SPY_price + α + noise</p>
+</li>
+<li>
+<p><strong>Measurement uncertainty:</strong> Observation covariance set to 2 (arbitrary units based on price scale)</p>
+</li>
+</ul>
+<h3 id="results-interpretation-price-based-regression">Results Interpretation: Price-Based Regression</h3>
+<p><strong>Slope (Beta) Evolution:</strong></p>
+<p>The beta coefficient shows notable time variation, generally ranging between 0.8 and 1.4. Key observations:</p>
+<ul>
+<li>
+<p><strong>Gradual trends:</strong> Beta doesn't jump erratically but shows smooth evolution</p>
+</li>
+<li>
+<p><strong>Market regime sensitivity:</strong> Beta increases during certain periods, indicating heightened systematic risk</p>
+</li>
+<li>
+<p><strong>Divergence from OLS:</strong> The black OLS line represents the average relationship, but individual Kalman estimates (colored lines) adapt to local data better</p>
+</li>
+</ul>
+<p><strong>Intercept (Alpha) Evolution:</strong></p>
+<p>The alpha coefficient exhibits larger magnitude variations, reflecting:</p>
+<ul>
+<li>
+<p><strong>Non-systematic returns:</strong> Idiosyncratic performance not explained by market movements</p>
+</li>
+<li>
+<p><strong>Measurement units:</strong> Alpha is in price units (dollars) rather than percentage returns</p>
+</li>
+</ul>
+<p><strong>Visual Analysis:</strong></p>
+<p>The scatter plot with colored lines shows how each state estimate fits recent data better than older data. The color gradient (blue to red representing time progression) demonstrates:</p>
+<ul>
+<li>
+<p>Recent estimates track recent price relationships more accurately</p>
+</li>
+<li>
+<p>The filter adapts to structural changes rather than forcing one relationship across all periods</p>
+</li>
+</ul>
+<h3 id="practical-applications">Practical Applications</h3>
+<p><strong>Beta Hedging:</strong></p>
+<p>For a market-neutral strategy holding $100,000 in MSFT:</p>
+<ul>
+<li>
+<p>Current beta of 1.2 suggests shorting $120,000 in SPY</p>
+</li>
+<li>
+<p>As beta evolves, hedge ratio adjusts automatically</p>
+</li>
+<li>
+<p>Eliminates the need for periodic reestimation windows</p>
+</li>
+</ul>
+<p><strong>Risk Management:</strong></p>
+<ul>
+<li>
+<p>Real-time beta tracking improves Value-at-Risk (VaR) calculations</p>
+</li>
+<li>
+<p>Portfolio risk attribution becomes more accurate with time-varying betas</p>
+</li>
+<li>
+<p>Stress testing benefits from understanding how betas change under different conditions</p>
+</li>
+</ul>
+<p>[See Code Walkthrough Section 6-7]</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="returns-based-analysis">Returns-Based Analysis <a id="returns-analysis"></a></h2>
+<h3 id="transitioning-to-returns-framework">Transitioning to Returns Framework</h3>
+<p>Financial analysis typically uses returns rather than prices because returns are:</p>
+<ul>
+<li>
+<p><strong>Stationary:</strong> More suitable for statistical modeling</p>
+</li>
+<li>
+<p><strong>Scale-free:</strong> Enables comparison across assets and time periods</p>
+</li>
+<li>
+<p><strong>Additive:</strong> Portfolio returns aggregate linearly</p>
+</li>
+</ul>
+<h3 id="implementation-approach">Implementation Approach</h3>
+<p>The Kalman Filter is reapplied to percentage returns:</p>
+<div class="highlight"><pre><span></span><code>MSFT_return ≈ α + β × SPY_return
+</code></pre></div>
+<p>Key parameter adjustment:</p>
+<ul>
+<li>
+<p><strong>Higher transition covariance:</strong> Returns exhibit more volatility, requiring delta = 0.01 (vs 0.001 for prices)</p>
+</li>
+<li>
+<p><strong>Lower observation covariance:</strong> Returns have tighter typical ranges, so observation_covariance = 0.01</p>
+</li>
+</ul>
+<h3 id="results-interpretation">Results Interpretation</h3>
+<p><strong>Beta Evolution in Returns Space:</strong></p>
+<p>The returns-based beta estimate shows:</p>
+<ul>
+<li>
+<p><strong>Starting near zero:</strong> Initial estimate begins conservative</p>
+</li>
+<li>
+<p><strong>Gradual convergence:</strong> Beta increases toward ~0.7-0.9, converging with the OLS estimate</p>
+</li>
+<li>
+<p><strong>Tighter clustering:</strong> Returns data shows less dispersion than prices, leading to more stable estimates</p>
+</li>
+</ul>
+<p><strong>Visual Differences from Price Analysis:</strong></p>
+<p>The scatter plot reveals:</p>
+<ul>
+<li>
+<p><strong>More concentrated data:</strong> Returns cluster more tightly than price relationships</p>
+</li>
+<li>
+<p><strong>Adaptive tracking:</strong> Despite noisier data, the Kalman Filter successfully tracks evolving relationships</p>
+</li>
+<li>
+<p><strong>Comparison with OLS:</strong> The black OLS line again shows the average relationship, while colored lines demonstrate time-varying adaptation</p>
+</li>
+</ul>
+<h3 id="why-both-analyses-matter">Why Both Analyses Matter</h3>
+<p><strong>Price-Based Analysis:</strong></p>
+<ul>
+<li>
+<p>Useful for actual position sizing and hedge construction</p>
+</li>
+<li>
+<p>Directly applicable to portfolio value calculations</p>
+</li>
+<li>
+<p>Easier to interpret in dollar terms</p>
+</li>
+</ul>
+<p><strong>Returns-Based Analysis:</strong></p>
+<ul>
+<li>
+<p>Statistically more appropriate for inference</p>
+</li>
+<li>
+<p>Standard approach in academic literature and risk models</p>
+</li>
+<li>
+<p>Enables comparison across different price scales</p>
+</li>
+</ul>
+<h3 id="practical-insights-for-trading">Practical Insights for Trading</h3>
+<p><strong>Beta Hedging Application:</strong></p>
+<p>Using returns-based beta of 0.8:</p>
+<ul>
+<li>
+<p>Long position in MSFT requires 0.8× short position in SPY (by dollar value)</p>
+</li>
+<li>
+<p>More stable than price-based beta for short-term hedging</p>
+</li>
+<li>
+<p>Adjusts for volatility differences between assets</p>
+</li>
+</ul>
+<p><strong>Signal Quality:</strong></p>
+<ul>
+<li>
+<p>Returns-based signals often produce cleaner entry/exit points</p>
+</li>
+<li>
+<p>Less susceptible to non-stationary price drift</p>
+</li>
+<li>
+<p>Better suited for mean-reversion strategies</p>
+</li>
+</ul>
+<p>[See Code Walkthrough Section 8]</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="critical-assessment-and-limitations">Critical Assessment and Limitations <a id="critical-assessment"></a></h2>
+<h3 id="what-works-well">What Works Well</h3>
+<p><strong>Adaptive Estimation:</strong></p>
+<ul>
+<li>
+<p>Successfully tracks time-varying parameters without respecification</p>
+</li>
+<li>
+<p>Balances responsiveness and stability through Bayesian updating</p>
+</li>
+<li>
+<p>Eliminates arbitrary window length selection</p>
+</li>
+</ul>
+<p><strong>Real-Time Capability:</strong></p>
+<ul>
+<li>
+<p>Online algorithm processes data sequentially as it arrives</p>
+</li>
+<li>
+<p>No need to rerun entire dataset when new data arrives</p>
+</li>
+<li>
+<p>Suitable for live trading systems with millisecond latency requirements</p>
+</li>
+</ul>
+<p><strong>Theoretical Foundation:</strong></p>
+<ul>
+<li>
+<p>Optimal estimator under Gaussian assumptions (Gauss-Markov theorem)</p>
+</li>
+<li>
+<p>Provides uncertainty quantification through state covariance</p>
+</li>
+<li>
+<p>Rigorous mathematical framework for parameter selection</p>
+</li>
+</ul>
+<h3 id="significant-limitations">Significant Limitations</h3>
+<p><strong>Parameter Sensitivity:</strong></p>
+<p>The transition covariance parameter critically affects results:</p>
+<ul>
+<li>
+<p><strong>Too small:</strong> Filter responds too slowly, missing structural changes</p>
+</li>
+<li>
+<p><strong>Too large:</strong> Filter tracks noise, producing unstable estimates</p>
+</li>
+<li>
+<p><strong>Optimal selection:</strong> Requires careful tuning, similar to moving average window length</p>
+</li>
+</ul>
+<p><strong>Computational Requirements:</strong></p>
+<ul>
+<li>
+<p>Matrix inversions scale as O(n³) with state dimension</p>
+</li>
+<li>
+<p>Memory requirements grow with state covariance matrices</p>
+</li>
+<li>
+<p>Approximately 10-50× slower than simple moving averages for single-state problems</p>
+</li>
+</ul>
+<p><strong>Assumption Violations:</strong></p>
+<p>Markets frequently violate Kalman Filter assumptions:</p>
+<ul>
+<li>
+<p><strong>Non-Gaussian returns:</strong> Fat tails and skewness common in financial data</p>
+</li>
+<li>
+<p><strong>Non-linear relationships:</strong> Regime-switching behavior not captured</p>
+</li>
+<li>
+<p><strong>Structural breaks:</strong> Sudden parameter jumps poorly handled</p>
+</li>
+</ul>
+<h3 id="when-this-method-works-best">When This Method Works Best</h3>
+<p><strong>Ideal Conditions:</strong></p>
+<ul>
+<li>
+<p>Smoothly varying parameters with small changes</p>
+</li>
+<li>
+<p>Reasonably linear relationships between variables</p>
+</li>
+<li>
+<p>Sufficient data for parameter convergence (minimum 100 observations recommended)</p>
+</li>
+<li>
+<p>Gaussian or near-Gaussian noise distributions</p>
+</li>
+</ul>
+<p><strong>Suboptimal Conditions:</strong></p>
+<ul>
+<li>
+<p>Regime-switching markets with abrupt changes</p>
+</li>
+<li>
+<p>Very low frequency data (monthly or quarterly)</p>
+</li>
+<li>
+<p>Highly non-linear asset relationships</p>
+</li>
+<li>
+<p>Assets with extreme price spikes or gaps</p>
+</li>
+</ul>
+<h3 id="alternative-approaches">Alternative Approaches</h3>
+<p><strong>Exponentially Weighted Moving Average (EWMA):</strong></p>
+<ul>
+<li>
+<p>Simpler to implement and faster to compute</p>
+</li>
+<li>
+<p>Single decay parameter easier to interpret</p>
+</li>
+<li>
+<p>Consider when computational efficiency is critical</p>
+</li>
+</ul>
+<p><strong>Rolling Window Regression:</strong></p>
+<ul>
+<li>
+<p>More robust to non-Gaussian errors</p>
+</li>
+<li>
+<p>Easier to understand and debug</p>
+</li>
+<li>
+<p>Better for discrete regime changes</p>
+</li>
+</ul>
+<p><strong>Recursive Least Squares (RLS):</strong></p>
+<ul>
+<li>
+<p>Similar adaptive properties to Kalman Filter</p>
+</li>
+<li>
+<p>Less assumption-heavy for linear regression problems</p>
+</li>
+<li>
+<p>Consider for purely linear systems</p>
+</li>
+</ul>
+<p><strong>Extended/Unscented Kalman Filters:</strong></p>
+<ul>
+<li>
+<p>Better for non-linear relationships</p>
+</li>
+<li>
+<p>More complex implementation</p>
+</li>
+<li>
+<p>Required when state evolution is non-linear</p>
+</li>
+</ul>
+<h3 id="replication-considerations">Replication Considerations</h3>
+<p><strong>Data Requirements:</strong></p>
+<ul>
+<li>
+<p>Minimum 250 observations recommended for convergence</p>
+</li>
+<li>
+<p>Daily data preferred; hourly data may be too noisy</p>
+</li>
+<li>
+<p>Ensure proper handling of weekends, holidays, and market closures</p>
+</li>
+</ul>
+<p><strong>Parameter Selection:</strong></p>
+<p>Initial values used in this tutorial:</p>
+<ul>
+<li>
+<p>Transition covariance: 0.001 (prices), 0.01 (returns)</p>
+</li>
+<li>
+<p>Observation covariance: 1-2 (prices), 0.01 (returns)</p>
+</li>
+</ul>
+<p>These values are <strong>not universal</strong> and should be validated for different assets and time periods.</p>
+<p><strong>Implementation Risks:</strong></p>
+<ul>
+<li>
+<p>Numerical instability with poorly conditioned covariance matrices</p>
+</li>
+<li>
+<p>Divergence if observation covariance set too low</p>
+</li>
+<li>
+<p>Requirement for positive definite covariance matrices</p>
+</li>
+</ul>
+<p>[See Code Walkthrough Section 9]</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="code-walkthrough">Code Walkthrough <a id="code-walkthrough"></a></h2>
+<p>For complete implementation details, including:</p>
+<ul>
+<li>
+<p>Environment setup and library installation</p>
+</li>
+<li>
+<p>Data loading and preprocessing steps</p>
+</li>
+<li>
+<p>Detailed parameter selection rationale</p>
+</li>
+<li>
+<p>Function-by-function code explanation</p>
+</li>
+<li>
+<p>Mathematical foundations of each implementation</p>
+</li>
+<li>
+<p>Troubleshooting common issues</p>
+</li>
+</ul>
+<h1 id="financial-market-price-estimation-complete-code-walkthrough">Financial Market Price Estimation - Complete Code Walkthrough <a id="top"></a></h1>
+<h2 id="quick-navigation_1">Quick Navigation</h2>
+<ul>
+<li>
+<p><a href="#environment-setup">Environment Setup</a></p>
+</li>
+<li>
+<p><a href="#imports">Library Imports and Configuration</a></p>
+</li>
+<li>
+<p><a href="#data-loading">Data Loading and Preparation</a></p>
+</li>
+<li>
+<p><a href="#kalman-ma-construction">Kalman Filter Construction for Moving Average</a></p>
+</li>
+<li>
+<p><a href="#visualization-ma">Visualization: Kalman vs Moving Averages</a></p>
+</li>
+<li>
+<p><a href="#regression-prep">Data Preparation for Linear Regression</a></p>
+</li>
+<li>
+<p><a href="#price-regression">Kalman Filter for Price-Based Regression</a></p>
+</li>
+<li>
+<p><a href="#returns-regression">Returns-Based Regression Analysis</a></p>
+</li>
+<li>
+<p><a href="#integration">Integration with Main Tutorial</a></p>
+</li>
+</ul>
+<h2 id="environment-setup">Environment Setup <a id="environment-setup"></a></h2>
+<h3 id="installing-pykalman-library">Installing PyKalman Library</h3>
+<div class="highlight"><pre><span></span><code><span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">pykalman</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>This installs the PyKalman library, which provides optimized Kalman Filter implementations. The library is not included in standard Python distributions or Google Colab by default.</p>
+<p><strong>Why PyKalman:</strong></p>
+<ul>
+<li>
+<p>Implements both standard and extended Kalman Filters</p>
+</li>
+<li>
+<p>Handles missing data automatically</p>
+</li>
+<li>
+<p>Provides both filter() and smooth() methods for different use cases</p>
+</li>
+<li>
+<p>Optimized NumPy/SciPy backend for performance</p>
+</li>
+</ul>
+<p><strong>Flow:</strong></p>
+<ul>
+<li>
+<p>The <code>!</code> prefix runs shell commands in Jupyter/Colab</p>
+</li>
+<li>
+<p>pip downloads and installs the package from PyPI</p>
+</li>
+<li>
+<p>Installation is required only once per session</p>
+</li>
+</ul>
+<p><strong>Impact:</strong></p>
+<p>Without this installation, all subsequent imports of <code>from pykalman import KalmanFilter</code> will fail. This is a critical dependency for the entire notebook.</p>
+<p><strong>Alternative:</strong></p>
+<p>For local development, use: <code>pip install pykalman</code> in your terminal or <code>conda install -c conda-forge pykalman</code> for Anaconda environments.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="library-imports-and-configuration">Library Imports and Configuration <a id="imports"></a></h2>
+<h3 id="core-scientific-computing-libraries">Core Scientific Computing Libraries</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">poly1d</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<ul>
+<li>
+<p><strong>NumPy:</strong> Provides array operations and mathematical functions essential for matrix operations in Kalman Filters</p>
+</li>
+<li>
+<p><strong>Pandas:</strong> Handles time series data manipulation and provides DataFrame structure for financial data</p>
+</li>
+<li>
+<p><strong>SciPy poly1d:</strong> Creates polynomial functions, used specifically for plotting OLS regression lines</p>
+</li>
+</ul>
+<p><strong>Why These Libraries:</strong></p>
+<ul>
+<li>
+<p>NumPy arrays are required by PyKalman for state means and covariances</p>
+</li>
+<li>
+<p>Pandas preserves time indices critical for financial data analysis</p>
+</li>
+<li>
+<p>poly1d simplifies polynomial evaluation for visualization</p>
+</li>
+</ul>
+<p><strong>Flow:</strong></p>
+<p>These imports execute first, loading libraries into the namespace. All subsequent code depends on these foundations.</p>
+<p><strong>Impact:</strong></p>
+<p>Missing any import will cause NameError exceptions when attempting to use the library. These are foundational dependencies with no substitutes in this implementation.</p>
+<h3 id="visualization-library">Visualization Library</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Creates all plots and visualizations throughout the notebook. Matplotlib is the standard Python visualization library.</p>
+<p><strong>Design Choice:</strong></p>
+<p>Using pyplot interface (<code>plt</code>) rather than object-oriented interface for simplicity and conciseness in exploratory analysis.</p>
+<h3 id="kalman-filter-implementation">Kalman Filter Implementation</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pykalman</span><span class="w"> </span><span class="kn">import</span> <span class="n">KalmanFilter</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Imports the KalmanFilter class, which provides the core filtering functionality.</p>
+<p><strong>Key Methods Used:</strong></p>
+<ul>
+<li>
+<p><code>filter()</code>: Runs forward Kalman filter pass, returning state means and covariances</p>
+</li>
+<li>
+<p>Constructor parameters: Define the state space model structure</p>
+</li>
+</ul>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>The KalmanFilter class implements the standard Kalman equations:</p>
+<p><strong>Prediction:</strong></p>
+<div class="highlight"><pre><span></span><code>x̂ₖ|ₖ₋₁ = Fₖ x̂ₖ₋₁|ₖ₋₁
+Pₖ|ₖ₋₁ = Fₖ Pₖ₋₁|ₖ₋₁ Fₖᵀ + Qₖ
+</code></pre></div>
+<p><strong>Update:</strong></p>
+<div class="highlight"><pre><span></span><code>Kₖ = Pₖ|ₖ₋₁ Hₖᵀ(Hₖ Pₖ|ₖ₋₁ Hₖᵀ + Rₖ)⁻¹
+x̂ₖ|ₖ = x̂ₖ|ₖ₋₁ + Kₖ(zₖ - Hₖ x̂ₖ|ₖ₋₁)
+Pₖ|ₖ = (I - Kₖ Hₖ) Pₖ|ₖ₋₁
+</code></pre></div>
+<p><strong>Variable Definitions:</strong></p>
+<ul>
+<li>
+<p>x̂ₖ|ₖ = state estimate at time k given observations up to k</p>
+</li>
+<li>
+<p>Pₖ|ₖ = state covariance at time k</p>
+</li>
+<li>
+<p>Fₖ = transition matrix (how state evolves)</p>
+</li>
+<li>
+<p>Hₖ = observation matrix (how state relates to observations)</p>
+</li>
+<li>
+<p>Qₖ = process noise covariance</p>
+</li>
+<li>
+<p>Rₖ = observation noise covariance</p>
+</li>
+<li>
+<p>Kₖ = Kalman gain (optimal weight for new observation)</p>
+</li>
+</ul>
+<h3 id="financial-data-access">Financial Data Access</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">yfinance</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">yf</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Provides API access to Yahoo Finance for downloading historical stock price data.</p>
+<p><strong>Why yfinance:</strong></p>
+<ul>
+<li>
+<p>Free, no API key required</p>
+</li>
+<li>
+<p>Reliable historical data for most publicly traded securities</p>
+</li>
+<li>
+<p>Returns data in Pandas DataFrame format</p>
+</li>
+<li>
+<p>Handles adjusted prices (accounts for splits and dividends)</p>
+</li>
+</ul>
+<p><strong>Key Method:</strong></p>
+<p><code>yf.download()</code> fetches OHLCV (Open, High, Low, Close, Volume) data plus adjusted close.</p>
+<h3 id="warning-suppression">Warning Suppression</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Suppresses warning messages that would clutter notebook output.</p>
+<p><strong>Warnings Typically Suppressed:</strong></p>
+<ul>
+<li>
+<p>Deprecation warnings from libraries</p>
+</li>
+<li>
+<p>Convergence warnings from numerical algorithms</p>
+</li>
+<li>
+<p>Data-related warnings (e.g., missing values)</p>
+</li>
+</ul>
+<p><strong>Impact:</strong></p>
+<p>Improves readability of output but may hide important information. In production code, warnings should be addressed rather than suppressed.</p>
+<p><strong>Best Practice:</strong></p>
+<p>For production systems, use specific warning filters:</p>
+<div class="highlight"><pre><span></span><code><span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">DeprecationWarning</span><span class="p">)</span>
+</code></pre></div>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="data-loading-and-preparation">Data Loading and Preparation <a id="data-loading"></a></h2>
+<h3 id="fetching-msft-price-data">Fetching MSFT Price Data</h3>
+<div class="highlight"><pre><span></span><code><span class="n">msft_price</span> <span class="o">=</span> <span class="n">yf</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;MSFT&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2021-01-01&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;2022-01-01&#39;</span><span class="p">)</span>
+<span class="n">msft_price</span> <span class="o">=</span> <span class="n">msft_price</span><span class="p">[</span><span class="s1">&#39;Adj Close&#39;</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Downloads one year of Microsoft stock price data and extracts adjusted close prices for analysis.</p>
+<p><strong>Parameter Explanation:</strong></p>
+<ul>
+<li>
+<p><code>'MSFT'</code>: Yahoo Finance ticker symbol for Microsoft</p>
+</li>
+<li>
+<p><code>start='2021-01-01'</code>: Begin date for historical data</p>
+</li>
+<li>
+<p><code>end='2022-01-01'</code>: End date (exclusive - data through 2021-12-31)</p>
+</li>
+</ul>
+<p><strong>Why Adjusted Close:</strong></p>
+<p>Adjusted close prices account for:</p>
+<ul>
+<li>
+<p>Stock splits: Retroactively adjusts historical prices</p>
+</li>
+<li>
+<p>Dividends: Adjusts for dividend distributions</p>
+</li>
+<li>
+<p>Corporate actions: Mergers, spin-offs, etc.</p>
+</li>
+</ul>
+<p>This ensures price continuity and accurate return calculations.</p>
+<p><strong>Flow:</strong></p>
+<ol>
+<li>
+<p><code>yf.download()</code> returns DataFrame with columns: Open, High, Low, Close, Adj Close, Volume</p>
+</li>
+<li>
+<p>Extract only 'Adj Close' column for analysis</p>
+</li>
+<li>
+<p>Result is Pandas Series with DatetimeIndex and price values</p>
+</li>
+</ol>
+<p><strong>Data Structure:</strong></p>
+<div class="highlight"><pre><span></span><code>Date
+2021-01-04    217.690002
+2021-01-05    217.899994
+2021-01-06    212.250000
+...
+Name: Adj Close, dtype: float64
+</code></pre></div>
+<p><strong>Impact:</strong></p>
+<p>This series becomes the observation vector for the Kalman Filter. Length is approximately 252 trading days (one year of market data excluding weekends and holidays).</p>
+<p><strong>Potential Issues:</strong></p>
+<ul>
+<li>
+<p>Missing data: Market holidays create gaps</p>
+</li>
+<li>
+<p>API limits: yfinance may throttle requests</p>
+</li>
+<li>
+<p>Timezone handling: Default is UTC</p>
+</li>
+</ul>
+<p><strong>Error Handling:</strong></p>
+<p>Production code should include:</p>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
+    <span class="n">msft_price</span> <span class="o">=</span> <span class="n">yf</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;MSFT&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2021-01-01&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;2022-01-01&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">msft_price</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No data retrieved&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error downloading data: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="kalman-filter-construction-for-moving-average">Kalman Filter Construction for Moving Average <a id="kalman-ma-construction"></a></h2>
+<h3 id="defining-the-kalman-filter-model">Defining the Kalman Filter Model</h3>
+<div class="highlight"><pre><span></span><code><span class="n">kf</span> <span class="o">=</span> <span class="n">KalmanFilter</span><span class="p">(</span><span class="n">transition_matrices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                  <span class="n">observation_matrices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                  <span class="n">initial_state_mean</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                  <span class="n">initial_state_covariance</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                  <span class="n">observation_covariance</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                  <span class="n">transition_covariance</span><span class="o">=</span><span class="mf">.01</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Constructs a one-dimensional Kalman Filter to estimate the rolling mean of stock prices.</p>
+<p><strong>Mathematical Model:</strong></p>
+<p>This implements the state space representation:</p>
+<p><strong>State Equation:</strong></p>
+<div class="highlight"><pre><span></span><code>μₜ = μₜ₋₁ + wₜ
+</code></pre></div>
+<p><strong>Observation Equation:</strong></p>
+<div class="highlight"><pre><span></span><code>yₜ = μₜ + vₜ
+</code></pre></div>
+<p><strong>Variable Definitions:</strong></p>
+<ul>
+<li>
+<p>μₜ = hidden state (true rolling mean at time t)</p>
+</li>
+<li>
+<p>yₜ = observation (actual price at time t)</p>
+</li>
+<li>
+<p>wₜ ~ N(0, Q) = process noise with covariance Q = 0.01</p>
+</li>
+<li>
+<p>vₜ ~ N(0, R) = observation noise with covariance R = 1</p>
+</li>
+</ul>
+<p><strong>Parameter Analysis:</strong></p>
+<p><strong><code>transition_matrices = [1]</code>:</strong></p>
+<ul>
+<li>
+<p>Defines how state evolves from t-1 to t</p>
+</li>
+<li>
+<p>Value of 1 means: μₜ = 1 × μₜ₋₁ + noise</p>
+</li>
+<li>
+<p>Implements random walk model for the mean</p>
+</li>
+</ul>
+<p><strong><code>observation_matrices = [1]</code>:</strong></p>
+<ul>
+<li>
+<p>Defines relationship between state and observation</p>
+</li>
+<li>
+<p>Value of 1 means: price = 1 × mean + noise</p>
+</li>
+<li>
+<p>Direct observation model (state equals expected observation)</p>
+</li>
+</ul>
+<p><strong><code>initial_state_mean = 0</code>:</strong></p>
+<ul>
+<li>
+<p>Starting guess for the mean</p>
+</li>
+<li>
+<p>Value of 0 is arbitrary; filter corrects this quickly</p>
+</li>
+<li>
+<p>Actual starting price around $217, so this is far off</p>
+</li>
+</ul>
+<p><strong><code>initial_state_covariance = 1</code>:</strong></p>
+<ul>
+<li>
+<p>Uncertainty in initial guess</p>
+</li>
+<li>
+<p>Low value (1) indicates some confidence despite being wrong</p>
+</li>
+<li>
+<p>Filter increases this internally during early iterations</p>
+</li>
+</ul>
+<p><strong><code>observation_covariance = 1</code>:</strong></p>
+<ul>
+<li>
+<p>Expected variance of price observations around true mean</p>
+</li>
+<li>
+<p>Set to 1 (arbitrary units)</p>
+</li>
+<li>
+<p>Ratio to transition_covariance matters more than absolute value</p>
+</li>
+</ul>
+<p><strong><code>transition_covariance = 0.01</code>:</strong></p>
+<ul>
+<li>
+<p>Expected variance of changes in true mean</p>
+</li>
+<li>
+<p>Small value (0.01) means mean changes slowly</p>
+</li>
+<li>
+<p>Ratio Q/R = 0.01/1 = 0.01 determines filter responsiveness</p>
+</li>
+</ul>
+<p><strong>Design Rationale:</strong></p>
+<p>The ratio of transition_covariance to observation_covariance (0.01) determines how much the filter trusts the model versus observations:</p>
+<ul>
+<li>
+<p><strong>Small ratio (0.001):</strong> Trust model more, smoother estimate, slower adaptation</p>
+</li>
+<li>
+<p><strong>Large ratio (0.1):</strong> Trust observations more, noisier estimate, faster adaptation</p>
+</li>
+<li>
+<p><strong>Chosen ratio (0.01):</strong> Balanced approach</p>
+</li>
+</ul>
+<p><strong>Impact of Parameter Changes:</strong></p>
+<p>Increasing transition_covariance to 0.1:</p>
+<ul>
+<li>
+<p>Filter tracks price more closely</p>
+</li>
+<li>
+<p>Estimate becomes noisier</p>
+</li>
+<li>
+<p>Similar to shorter moving average window</p>
+</li>
+</ul>
+<p>Decreasing transition_covariance to 0.001:</p>
+<ul>
+<li>
+<p>Filter produces smoother estimate</p>
+</li>
+<li>
+<p>Slower response to trend changes</p>
+</li>
+<li>
+<p>Similar to longer moving average window</p>
+</li>
+</ul>
+<h3 id="running-the-filter">Running the Filter</h3>
+<div class="highlight"><pre><span></span><code><span class="n">state_means</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kf</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">msft_price</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Applies the Kalman Filter to the price series, computing optimal state estimates at each time step.</p>
+<p><strong>Method Details:</strong></p>
+<p><code>filter()</code> performs forward pass only (real-time filtering):</p>
+<ul>
+<li>
+<p>Processes observations sequentially from t=1 to t=T</p>
+</li>
+<li>
+<p>At each step, updates state estimate based on new observation</p>
+</li>
+<li>
+<p>Returns both state means and state covariances</p>
+</li>
+</ul>
+<p><strong>Return Values:</strong></p>
+<ul>
+<li>
+<p><code>state_means</code>: Array of state estimates at each time point</p>
+</li>
+<li>
+<p><code>_</code> : State covariances (discarded here using underscore)</p>
+</li>
+</ul>
+<p><strong>Flow:</strong></p>
+<ol>
+<li>
+<p>Initialize state with initial_state_mean = 0</p>
+</li>
+<li>
+<p>For each observation in msft_price.values:</p>
+</li>
+<li>
+<p>Predict next state: μₜ|ₜ₋₁ = μₜ₋₁|ₜ₋₁</p>
+</li>
+<li>
+<p>Calculate Kalman gain: Kₜ = Pₜ|ₜ₋₁ / (Pₜ|ₜ₋₁ + R)</p>
+</li>
+<li>
+<p>Update estimate: μₜ|ₜ = μₜ|ₜ₋₁ + Kₜ(yₜ - μₜ|ₜ₋₁)</p>
+</li>
+<li>
+<p>Update covariance: Pₜ|ₜ = (1 - Kₜ) Pₜ|ₜ₋₁</p>
+</li>
+<li>
+<p>Return array of all μₜ|ₜ estimates</p>
+</li>
+</ol>
+<p><strong>Mathematical Simplification:</strong></p>
+<p>For this one-dimensional case with F=H=1, the Kalman gain simplifies to:</p>
+<div class="highlight"><pre><span></span><code>Kₜ = Pₜ|ₜ₋₁ / (Pₜ|ₜ₋₁ + R)
+</code></pre></div>
+<p>This represents the weight given to new observations versus the prediction.</p>
+<p><strong>Alternative Method:</strong></p>
+<p><code>smooth()</code> performs forward-backward pass (batch processing):</p>
+<div class="highlight"><pre><span></span><code><span class="n">state_means</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kf</span><span class="o">.</span><span class="n">smooth</span><span class="p">(</span><span class="n">msft_price</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</code></pre></div>
+<p>Smoothing uses future observations to improve past estimates. Not applicable for real-time trading but provides better historical estimates.</p>
+<h3 id="post-processing-state-estimates">Post-Processing State Estimates</h3>
+<div class="highlight"><pre><span></span><code><span class="n">state_means</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;index&#39;</span><span class="p">:</span><span class="n">msft_price</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> 
+                            <span class="s1">&#39;states&#39;</span><span class="p">:</span><span class="n">state_means</span><span class="o">.</span><span class="n">flatten</span><span class="p">()})</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">)[</span><span class="s1">&#39;states&#39;</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Converts NumPy array output from Kalman Filter into Pandas Series with proper time indexing.</p>
+<p><strong>Step-by-Step Breakdown:</strong></p>
+<p><strong><code>state_means.flatten()</code>:</strong></p>
+<ul>
+<li>
+<p>Converts 2D array shape (n, 1) to 1D array shape (n,)</p>
+</li>
+<li>
+<p>Required because KalmanFilter returns column vector</p>
+</li>
+</ul>
+<p><strong><code>pd.DataFrame({'index':..., 'states':...})</code>:</strong></p>
+<ul>
+<li>
+<p>Creates DataFrame with two columns</p>
+</li>
+<li>
+<p>'index' column: Original datetime index from msft_price</p>
+</li>
+<li>
+<p>'states' column: Flattened Kalman estimates</p>
+</li>
+</ul>
+<p><strong><code>.set_index('index')</code>:</strong></p>
+<ul>
+<li>
+<p>Promotes 'index' column to be the DataFrame index</p>
+</li>
+<li>
+<p>Aligns with original time series structure</p>
+</li>
+</ul>
+<p><strong><code>['states']</code>:</strong></p>
+<ul>
+<li>
+<p>Extracts 'states' column as Series</p>
+</li>
+<li>
+<p>Final result is Pandas Series with DatetimeIndex</p>
+</li>
+</ul>
+<p><strong>Why This Matters:</strong></p>
+<p>Preserving the datetime index enables:</p>
+<ul>
+<li>
+<p>Time-aligned plotting with original price series</p>
+</li>
+<li>
+<p>Easy slicing by date ranges</p>
+</li>
+<li>
+<p>Proper handling in further analysis</p>
+</li>
+</ul>
+<p><strong>Resulting Structure:</strong></p>
+<div class="highlight"><pre><span></span><code>index
+2021-01-04    109.125000
+2021-01-05    163.512500
+2021-01-06    187.881250
+...
+Name: states, dtype: float64
+</code></pre></div>
+<p>Notice the first estimate (109.125) is between initial guess (0) and actual price (217.69), showing the filter's rapid initial adjustment.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="visualization-kalman-vs-moving-averages">Visualization: Kalman vs Moving Averages <a id="visualization-ma"></a></h2>
+<h3 id="computing-traditional-moving-averages">Computing Traditional Moving Averages</h3>
+<div class="highlight"><pre><span></span><code><span class="n">mean30</span> <span class="o">=</span> <span class="n">msft_price</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">mean60</span> <span class="o">=</span> <span class="n">msft_price</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">mean90</span> <span class="o">=</span> <span class="n">msft_price</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Computes simple moving averages with 30, 60, and 90-day windows for comparison with Kalman estimate.</p>
+<p><strong>Method Explanation:</strong></p>
+<p><code>rolling(window).mean()</code> computes:</p>
+<div class="highlight"><pre><span></span><code>MAₜ(w) = (1/w) Σᵢ₌₀^(w-1) priceₜ₋ᵢ
+</code></pre></div>
+<p><strong>Window Selection Rationale:</strong></p>
+<ul>
+<li>
+<p><strong>30 days:</strong> Approximately 1.5 months, captures short-term trends</p>
+</li>
+<li>
+<p><strong>60 days:</strong> Approximately 3 months (1 quarter), medium-term trends</p>
+</li>
+<li>
+<p><strong>90 days:</strong> Approximately 4.5 months, long-term trends</p>
+</li>
+</ul>
+<p><strong>Impact of Window Length:</strong></p>
+<ul>
+<li>
+<p><strong>Smaller windows:</strong> More responsive but noisier</p>
+</li>
+<li>
+<p><strong>Larger windows:</strong> Smoother but lagging</p>
+</li>
+</ul>
+<p><strong>Data Loss:</strong></p>
+<ul>
+<li>
+<p>mean30 has first 29 values as NaN</p>
+</li>
+<li>
+<p>mean60 has first 59 values as NaN</p>
+</li>
+<li>
+<p>mean90 has first 89 values as NaN</p>
+</li>
+</ul>
+<p>This is because insufficient data exists to compute the full window average.</p>
+<h3 id="full-period-visualization">Full Period Visualization</h3>
+<div class="highlight"><pre><span></span><code><span class="n">figure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">state_means</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">msft_price</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mean30</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mean60</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mean90</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Kalman filter estimate of average&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Kalman Estimate&#39;</span><span class="p">,</span> <span class="s1">&#39;MSFT observed price&#39;</span><span class="p">,</span> <span class="s1">&#39;30-day Moving Average&#39;</span><span class="p">,</span> 
+            <span class="s1">&#39;60-day Moving Average&#39;</span><span class="p">,</span><span class="s1">&#39;90-day Moving Average&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Day&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Price&#39;</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Creates comprehensive comparison plot showing all estimation methods over the full time period.</p>
+<p><strong>Plot Element Analysis:</strong></p>
+<p><strong><code>figsize=(16, 8)</code>:</strong></p>
+<ul>
+<li>
+<p>Large size for clarity with multiple overlapping lines</p>
+</li>
+<li>
+<p>16:8 aspect ratio suitable for wide time series</p>
+</li>
+</ul>
+<p><strong>Plot Order:</strong></p>
+<p>Lines are plotted in order:</p>
+<ol>
+<li>
+<p>Kalman estimate (blue)</p>
+</li>
+<li>
+<p>Actual price (orange)</p>
+</li>
+<li>
+<p>30-day MA (green)</p>
+</li>
+<li>
+<p>60-day MA (red)</p>
+</li>
+<li>
+<p>90-day MA (purple)</p>
+</li>
+</ol>
+<p><strong>Visual Insights:</strong></p>
+<p>From this plot, observers can see:</p>
+<ul>
+<li>
+<p>Kalman estimate closely tracks price while filtering noise</p>
+</li>
+<li>
+<p>30-day MA responds quickly but shows more variation</p>
+</li>
+<li>
+<p>90-day MA is smoothest but most lagged</p>
+</li>
+<li>
+<p>Initial period shows dramatic differences due to initialization</p>
+</li>
+</ul>
+<p><strong>Interpretation Guidelines:</strong></p>
+<ul>
+<li>
+<p>Convergence: All estimates converge over time</p>
+</li>
+<li>
+<p>Responsiveness: Kalman matches 30-day MA response speed</p>
+</li>
+<li>
+<p>Smoothness: Kalman matches 60-day MA smoothness</p>
+</li>
+<li>
+<p>Adaptability: Kalman requires no window specification</p>
+</li>
+</ul>
+<h3 id="zoomed-period-analysis">Zoomed Period Analysis</h3>
+<div class="highlight"><pre><span></span><code><span class="n">figure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">state_means</span><span class="p">[</span><span class="o">-</span><span class="mi">200</span><span class="p">:])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">msft_price</span><span class="p">[</span><span class="o">-</span><span class="mi">200</span><span class="p">:])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mean30</span><span class="p">[</span><span class="o">-</span><span class="mi">200</span><span class="p">:])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mean60</span><span class="p">[</span><span class="o">-</span><span class="mi">200</span><span class="p">:])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mean90</span><span class="p">[</span><span class="o">-</span><span class="mi">200</span><span class="p">:])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Kalman filter estimate of average&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Kalman Estimate&#39;</span><span class="p">,</span> <span class="s1">&#39;MSFT observed price&#39;</span><span class="p">,</span> <span class="s1">&#39;30-day Moving Average&#39;</span><span class="p">,</span> 
+            <span class="s1">&#39;60-day Moving Average&#39;</span><span class="p">,</span><span class="s1">&#39;90-day Moving Average&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Day&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Price&#39;</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Focuses on final 200 trading days to examine fine-grained behavior after filter convergence.</p>
+<p><strong>Slicing Syntax:</strong></p>
+<p><code>[-200:]</code> selects last 200 elements from each series:</p>
+<ul>
+<li>
+<p>Equivalent to <code>.tail(200)</code> for Pandas objects</p>
+</li>
+<li>
+<p>Maintains datetime index</p>
+</li>
+<li>
+<p>All series automatically align by date</p>
+</li>
+</ul>
+<p><strong>Why Zoom In:</strong></p>
+<ul>
+<li>
+<p>Eliminates initialization period artifacts</p>
+</li>
+<li>
+<p>Shows steady-state filter behavior</p>
+</li>
+<li>
+<p>Reveals responsiveness differences more clearly</p>
+</li>
+<li>
+<p>Enables detailed tracking comparison</p>
+</li>
+</ul>
+<p><strong>Observable Patterns:</strong></p>
+<p>In the zoomed view:</p>
+<ul>
+<li>
+<p>Kalman estimate shows balanced tracking</p>
+</li>
+<li>
+<p>30-day MA more volatile, crossing actual price frequently</p>
+</li>
+<li>
+<p>90-day MA very smooth but often far from current price</p>
+</li>
+<li>
+<p>Kalman estimate maintains optimal middle ground</p>
+</li>
+</ul>
+<p><strong>Trading Signal Implications:</strong></p>
+<p>For crossover strategies:</p>
+<ul>
+<li>
+<p>Kalman provides cleaner signals than 30-day MA</p>
+</li>
+<li>
+<p>Faster response than 60/90-day MAs</p>
+</li>
+<li>
+<p>Fewer false signals due to optimal filtering</p>
+</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="data-preparation-for-linear-regression">Data Preparation for Linear Regression <a id="regression-prep"></a></h2>
+<h3 id="fetching-dual-asset-data">Fetching Dual Asset Data</h3>
+<div class="highlight"><pre><span></span><code><span class="n">msft_price</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">yf</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;MSFT&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2021-01-01&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;2022-01-01&#39;</span><span class="p">)[[</span><span class="s1">&#39;Adj Close&#39;</span><span class="p">]])</span>
+<span class="n">snp_price</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">yf</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;^GSPC&#39;</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="s1">&#39;2021-01-01&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;2022-01-01&#39;</span><span class="p">)[[</span><span class="s1">&#39;Adj Close&#39;</span><span class="p">]])</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Downloads price data for both Microsoft stock and S&amp;P 500 index for regression analysis.</p>
+<p><strong>Ticker Symbols:</strong></p>
+<ul>
+<li>
+<p><code>'MSFT'</code>: Microsoft Corporation stock</p>
+</li>
+<li>
+<p><code>'^GSPC'</code>: S&amp;P 500 Index (^ prefix indicates index)</p>
+</li>
+</ul>
+<p><strong>DataFrame Construction:</strong></p>
+<ul>
+<li>
+<p><code>[['Adj Close']]</code>: Double brackets create DataFrame rather than Series</p>
+</li>
+<li>
+<p>Preserves DataFrame structure with column name</p>
+</li>
+<li>
+<p>Enables easier joining operations</p>
+</li>
+</ul>
+<p><strong>Why S&amp;P 500:</strong></p>
+<ul>
+<li>
+<p>Represents broad market performance</p>
+</li>
+<li>
+<p>Standard benchmark for U.S. equity market</p>
+</li>
+<li>
+<p>Provides systematic risk measure (beta) for individual stocks</p>
+</li>
+</ul>
+<h3 id="joining-datasets">Joining Datasets</h3>
+<div class="highlight"><pre><span></span><code><span class="n">joined_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">msft_price</span><span class="p">,</span> <span class="n">snp_price</span><span class="p">[</span><span class="s2">&quot;Adj Close&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;sp500&quot;</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">joined_data</span> <span class="o">=</span> <span class="n">joined_data</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Combines MSFT and S&amp;P 500 data into single DataFrame, aligning by date and removing missing values.</p>
+<p><strong>Concatenation Details:</strong></p>
+<p><strong><code>pd.concat([...], axis=1)</code>:</strong></p>
+<ul>
+<li>
+<p><code>axis=1</code>: Concatenate column-wise (side-by-side)</p>
+</li>
+<li>
+<p>Automatically aligns by index (dates)</p>
+</li>
+<li>
+<p>Performs outer join by default</p>
+</li>
+</ul>
+<p><strong><code>snp_price["Adj Close"].rename("sp500")</code>:</strong></p>
+<ul>
+<li>
+<p>Extracts 'Adj Close' column</p>
+</li>
+<li>
+<p>Renames to 'sp500' for clarity</p>
+</li>
+<li>
+<p>Avoids duplicate column names</p>
+</li>
+</ul>
+<p><strong>Missing Data Handling:</strong></p>
+<p><strong><code>dropna()</code>:</strong></p>
+<ul>
+<li>
+<p>Removes rows with any NaN values</p>
+</li>
+<li>
+<p>Required because trading days may differ slightly</p>
+</li>
+<li>
+<p>S&amp;P 500 and MSFT may have different holiday schedules</p>
+</li>
+</ul>
+<p><strong>Resulting Structure:</strong></p>
+<div class="highlight"><pre><span></span><code>            Adj Close      sp500
+Date                            
+2021-01-04  217.690002  3700.649902
+2021-01-05  217.899994  3726.860107
+2021-01-06  212.250000  3748.139893
+...
+</code></pre></div>
+<p>Two columns:</p>
+<ul>
+<li>
+<p>'Adj Close': MSFT prices</p>
+</li>
+<li>
+<p>'sp500': S&amp;P 500 index values</p>
+</li>
+</ul>
+<p><strong>Impact:</strong></p>
+<p>Creates aligned time series suitable for regression analysis. Any date with missing data from either series is excluded to ensure valid observations.</p>
+<h3 id="data-quality-check">Data Quality Check</h3>
+<div class="highlight"><pre><span></span><code><span class="n">joined_data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Displays first five rows to verify proper data alignment and structure.</p>
+<p><strong>Expected Output:</strong></p>
+<p>Should show:</p>
+<ul>
+<li>
+<p>Valid dates in index</p>
+</li>
+<li>
+<p>No NaN values</p>
+</li>
+<li>
+<p>Reasonable price ranges</p>
+</li>
+<li>
+<p>Proper column names</p>
+</li>
+</ul>
+<p><strong>Quality Checks:</strong></p>
+<ol>
+<li>
+<p>Date alignment: Both columns should have same index</p>
+</li>
+<li>
+<p>No missing values: All entries should be numeric</p>
+</li>
+<li>
+<p>Scale differences: Note that S&amp;P 500 values (~3700) much larger than MSFT (~217)</p>
+</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="kalman-filter-for-price-based-regression">Kalman Filter for Price-Based Regression <a id="price-regression"></a></h2>
+<h3 id="scatter-plot-with-time-coloring">Scatter Plot with Time Coloring</h3>
+<div class="highlight"><pre><span></span><code><span class="n">figure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;jet&#39;</span><span class="p">)</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">]))</span>
+<span class="n">sc</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">],</span> <span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;Adj Close&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> 
+                 <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
+<span class="n">cb</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">date</span><span class="p">())</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">][::</span><span class="nb">len</span><span class="p">(</span><span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">])</span><span class="o">//</span><span class="mi">9</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;SPY&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;MSFT&#39;</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Creates scatter plot showing MSFT vs S&amp;P 500 relationship with color representing time progression.</p>
+<p><strong>Colormap Implementation:</strong></p>
+<p><strong><code>cm = plt.get_cmap('jet')</code>:</strong></p>
+<ul>
+<li>
+<p>Loads 'jet' colormap (blue → cyan → yellow → red)</p>
+</li>
+<li>
+<p>Provides visual time progression</p>
+</li>
+</ul>
+<p><strong><code>colors = np.linspace(0.1, 1, len(joined_data['sp500']))</code>:</strong></p>
+<ul>
+<li>
+<p>Creates array of values from 0.1 to 1.0</p>
+</li>
+<li>
+<p>Length matches number of data points</p>
+</li>
+<li>
+<p>Maps each point to position in colormap</p>
+</li>
+</ul>
+<p><strong>Scatter Plot Parameters:</strong></p>
+<ul>
+<li>
+<p><code>s=30</code>: Marker size</p>
+</li>
+<li>
+<p><code>c=colors</code>: Color array for each point</p>
+</li>
+<li>
+<p><code>cmap=cm</code>: Colormap to use</p>
+</li>
+<li>
+<p><code>edgecolor='k'</code>: Black edge around markers</p>
+</li>
+<li>
+<p><code>alpha=0.7</code>: 70% opacity for overlapping points</p>
+</li>
+</ul>
+<p><strong>Colorbar Configuration:</strong></p>
+<p><strong><code>cb = plt.colorbar(sc)</code>:</strong></p>
+<ul>
+<li>Adds colorbar showing time progression</li>
+</ul>
+<p><strong><code>cb.ax.set_yticklabels([...])</code>:</strong></p>
+<ul>
+<li>
+<p>Sets colorbar labels to actual dates</p>
+</li>
+<li>
+<p><code>[::len(joined_data['sp500'])//9]</code>: Selects ~9 evenly spaced dates</p>
+</li>
+<li>
+<p><code>.date()</code>: Formats as date only (no time)</p>
+</li>
+</ul>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li>
+<p>Blue points: Early 2021</p>
+</li>
+<li>
+<p>Red points: Late 2021</p>
+</li>
+<li>
+<p>Clustering patterns reveal relationship stability/changes over time</p>
+</li>
+<li>
+<p>Spread indicates relationship strength</p>
+</li>
+</ul>
+<h3 id="setting-up-kalman-filter-parameters">Setting Up Kalman Filter Parameters</h3>
+<div class="highlight"><pre><span></span><code><span class="n">delta</span> <span class="o">=</span> <span class="mf">1e-3</span>
+<span class="n">trans_cov</span> <span class="o">=</span> <span class="n">delta</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">delta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">obs_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([[</span><span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">]],</span> 
+                                     <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">]))]])</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Constructs parameter matrices for two-dimensional Kalman Filter estimating [β, α] coefficients.</p>
+<p><strong>Delta Parameter:</strong></p>
+<p><strong><code>delta = 1e-3</code>:</strong></p>
+<ul>
+<li>
+<p>Controls how much parameters (β, α) change per time step</p>
+</li>
+<li>
+<p>Small value (0.001) assumes parameters change slowly</p>
+</li>
+<li>
+<p>Translated to transition covariance through formula</p>
+</li>
+</ul>
+<p><strong>Transition Covariance Calculation:</strong></p>
+<p><strong><code>trans_cov = delta / (1 - delta) * np.eye(2)</code>:</strong></p>
+<p><strong>Mathematical Derivation:</strong></p>
+<p>For random walk with persistence, the steady-state variance is:</p>
+<div class="highlight"><pre><span></span><code>σ² = δ/(1-δ)
+</code></pre></div>
+<p>where δ represents the innovation variance.</p>
+<p><strong>Result:</strong></p>
+<div class="highlight"><pre><span></span><code>trans_cov = [[0.001001, 0       ],
+             [0,        0.001001]]
+</code></pre></div>
+<p>Diagonal matrix indicating:</p>
+<ul>
+<li>
+<p>β and α evolve independently</p>
+</li>
+<li>
+<p>Both have same evolution variance</p>
+</li>
+<li>
+<p>Small values maintain smoothness</p>
+</li>
+</ul>
+<p><strong>Observation Matrix Construction:</strong></p>
+<p><strong><code>np.vstack([[joined_data['sp500']], [np.ones(len(joined_data['sp500']))]])</code>:</strong></p>
+<p>Creates 2 × n matrix:</p>
+<div class="highlight"><pre><span></span><code>[[sp500₁, sp500₂, ..., sp500ₙ],
+ [1,      1,      ..., 1     ]]
+</code></pre></div>
+<p><strong><code>.T</code>:</strong></p>
+<p>Transposes to n × 2:</p>
+<div class="highlight"><pre><span></span><code>[[sp500₁, 1],
+ [sp500₂, 1],
+ ...,
+ [sp500ₙ, 1]]
+</code></pre></div>
+<p><strong><code>np.expand_dims(..., axis=1)</code>:</strong></p>
+<p>Adds dimension for n × 1 × 2 array required by PyKalman.</p>
+<p><strong>Purpose of Observation Matrix:</strong></p>
+<p>Implements the observation equation:</p>
+<div class="highlight"><pre><span></span><code>MSFTₜ = [sp500ₜ, 1] × [β, α]ᵀ + noise
+      = β × sp500ₜ + α + noise
+</code></pre></div>
+<p>Each row defines how the hidden state [β, α] maps to an observation.</p>
+<h3 id="constructing-the-kalman-filter">Constructing the Kalman Filter</h3>
+<div class="highlight"><pre><span></span><code><span class="n">kf</span> <span class="o">=</span> <span class="n">KalmanFilter</span><span class="p">(</span><span class="n">n_dim_obs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_dim_state</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                  <span class="n">initial_state_mean</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                  <span class="n">initial_state_covariance</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+                  <span class="n">transition_matrices</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+                  <span class="n">observation_matrices</span><span class="o">=</span><span class="n">obs_mat</span><span class="p">,</span>
+                  <span class="n">observation_covariance</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                  <span class="n">transition_covariance</span><span class="o">=</span><span class="n">trans_cov</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Configures Kalman Filter for estimating time-varying regression coefficients.</p>
+<p><strong>Dimension Specification:</strong></p>
+<p><strong><code>n_dim_obs=1</code>:</strong></p>
+<ul>
+<li>One observation per time step (MSFT price)</li>
+</ul>
+<p><strong><code>n_dim_state=2</code>:</strong></p>
+<ul>
+<li>Two state variables [β, α]</li>
+</ul>
+<p><strong>Initial State:</strong></p>
+<p><strong><code>initial_state_mean=[0,0]</code>:</strong></p>
+<ul>
+<li>
+<p>Starting guess: β=0, α=0</p>
+</li>
+<li>
+<p>Arbitrary initialization; filter corrects quickly</p>
+</li>
+</ul>
+<p><strong><code>initial_state_covariance=np.ones((2, 2))</code>:</strong></p>
+<div class="highlight"><pre><span></span><code>[[1, 1],
+ [1, 1]]
+</code></pre></div>
+<ul>
+<li>
+<p>High uncertainty in initial estimate</p>
+</li>
+<li>
+<p>Non-diagonal indicates potential correlation</p>
+</li>
+<li>
+<p>Filter refines this during iterations</p>
+</li>
+</ul>
+<p><strong>State Evolution:</strong></p>
+<p><strong><code>transition_matrices=np.eye(2)</code>:</strong></p>
+<div class="highlight"><pre><span></span><code>[[1, 0],
+ [0, 1]]
+</code></pre></div>
+<ul>
+<li>
+<p>Identity matrix implements random walk</p>
+</li>
+<li>
+<p>βₜ = βₜ₋₁ + noise</p>
+</li>
+<li>
+<p>αₜ = αₜ₋₁ + noise</p>
+</li>
+</ul>
+<p><strong>Observation Model:</strong></p>
+<p><strong><code>observation_matrices=obs_mat</code>:</strong></p>
+<ul>
+<li>
+<p>Time-varying matrix (different for each observation)</p>
+</li>
+<li>
+<p>Shape: (n, 1, 2) for n observations</p>
+</li>
+<li>
+<p>Defines how state produces observations</p>
+</li>
+</ul>
+<p><strong>Noise Covariances:</strong></p>
+<p><strong><code>observation_covariance=2</code>:</strong></p>
+<ul>
+<li>
+<p>Variance of MSFT prices around regression line</p>
+</li>
+<li>
+<p>Scalar value (1D observations)</p>
+</li>
+<li>
+<p>Arbitrary units; ratio to transition_covariance matters</p>
+</li>
+</ul>
+<p><strong><code>transition_covariance=trans_cov</code>:</strong></p>
+<ul>
+<li>
+<p>Already computed as delta/(1-delta) × I</p>
+</li>
+<li>
+<p>Controls parameter smoothness</p>
+</li>
+</ul>
+<p><strong>Design Trade-offs:</strong></p>
+<p><strong>If observation_covariance too small:</strong></p>
+<ul>
+<li>
+<p>Filter trusts observations too much</p>
+</li>
+<li>
+<p>Tracks noise rather than true parameters</p>
+</li>
+<li>
+<p>Potential numerical instability</p>
+</li>
+</ul>
+<p><strong>If observation_covariance too large:</strong></p>
+<ul>
+<li>
+<p>Filter ignores observations</p>
+</li>
+<li>
+<p>Relies too heavily on predictions</p>
+</li>
+<li>
+<p>Slow adaptation to changes</p>
+</li>
+</ul>
+<p><strong>If transition_covariance too small:</strong></p>
+<ul>
+<li>
+<p>Parameters change very slowly</p>
+</li>
+<li>
+<p>Misses structural changes</p>
+</li>
+<li>
+<p>Over-smoothed estimates</p>
+</li>
+</ul>
+<p><strong>If transition_covariance too large:</strong></p>
+<ul>
+<li>
+<p>Parameters fluctuate excessively</p>
+</li>
+<li>
+<p>Noise in parameter estimates</p>
+</li>
+<li>
+<p>Under-smoothed estimates</p>
+</li>
+</ul>
+<h3 id="running-the-filter-and-extracting-results">Running the Filter and Extracting Results</h3>
+<div class="highlight"><pre><span></span><code><span class="n">state_means</span><span class="p">,</span> <span class="n">state_covs</span> <span class="o">=</span> <span class="n">kf</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;Adj Close&#39;</span><span class="p">])</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Executes Kalman filtering to obtain [β, α] estimates at each time step.</p>
+<p><strong>Return Values:</strong></p>
+<p><strong><code>state_means</code>:</strong></p>
+<ul>
+<li>
+<p>Shape: (n, 2) array</p>
+</li>
+<li>
+<p>Column 0: β estimates (slopes)</p>
+</li>
+<li>
+<p>Column 1: α estimates (intercepts)</p>
+</li>
+</ul>
+<p><strong><code>state_covs</code>:</strong></p>
+<ul>
+<li>
+<p>Shape: (n, 2, 2) array</p>
+</li>
+<li>
+<p>Covariance matrices at each time step</p>
+</li>
+<li>
+<p>Diagonal elements: Variances of β and α</p>
+</li>
+<li>
+<p>Off-diagonal: Covariances between β and α</p>
+</li>
+</ul>
+<p><strong>Processing Flow:</strong></p>
+<p>For each time step t=1 to n:</p>
+<ol>
+<li>
+<p><strong>Prediction:</strong> Forecast [βₜ, αₜ] from [βₜ₋₁, αₜ₋₁]</p>
+</li>
+<li>
+<p><strong>Innovation:</strong> Compute prediction error: MSFTₜ - (βₜ|ₜ₋₁ × sp500ₜ + αₜ|ₜ₋₁)</p>
+</li>
+<li>
+<p><strong>Update:</strong> Adjust [βₜ, αₜ] using Kalman gain</p>
+</li>
+<li>
+<p><strong>Store:</strong> Save estimates and covariances</p>
+</li>
+</ol>
+<p><strong>Kalman Gain Interpretation:</strong></p>
+<p>At each step, the gain determines how much to trust:</p>
+<ul>
+<li>
+<p><strong>High gain:</strong> Large weight on new observation</p>
+</li>
+<li>
+<p><strong>Low gain:</strong> Large weight on prediction</p>
+</li>
+</ul>
+<p>Gain depends on relative uncertainties (state covariance vs observation covariance).</p>
+<h3 id="visualizing-parameter-evolution">Visualizing Parameter Evolution</h3>
+<div class="highlight"><pre><span></span><code><span class="n">_</span><span class="p">,</span> <span class="n">axarr</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">state_means</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;slope&#39;</span><span class="p">)</span>
+<span class="n">axarr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">axarr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">state_means</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;intercept&#39;</span><span class="p">)</span>
+<span class="n">axarr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Creates stacked time series plots showing evolution of β (slope) and α (intercept) separately.</p>
+<p><strong>Subplot Configuration:</strong></p>
+<p><strong><code>plt.subplots(2, sharex=True, figsize=(16, 8))</code>:</strong></p>
+<ul>
+<li>
+<p>Creates 2 vertically stacked plots</p>
+</li>
+<li>
+<p><code>sharex=True</code>: Both plots share x-axis (time)</p>
+</li>
+<li>
+<p>Enables zooming/panning in sync</p>
+</li>
+</ul>
+<p><strong>Plot Details:</strong></p>
+<p><strong>Top plot (<code>axarr[0]</code>):</strong></p>
+<ul>
+<li>
+<p>Shows β (slope) over time</p>
+</li>
+<li>
+<p><code>state_means[:,0]</code>: Extracts first column (all β values)</p>
+</li>
+<li>
+<p>Represents sensitivity of MSFT to S&amp;P 500 movements</p>
+</li>
+</ul>
+<p><strong>Bottom plot (<code>axarr[1]</code>):</strong></p>
+<ul>
+<li>
+<p>Shows α (intercept) over time</p>
+</li>
+<li>
+<p><code>state_means[:,1]</code>: Extracts second column (all α values)</p>
+</li>
+<li>
+<p>Represents MSFT returns independent of market</p>
+</li>
+</ul>
+<p><strong>Interpretation of β Evolution:</strong></p>
+<ul>
+<li>
+<p><strong>Increasing β:</strong> MSFT becoming more sensitive to market</p>
+</li>
+<li>
+<p><strong>Decreasing β:</strong> MSFT becoming less sensitive to market</p>
+</li>
+<li>
+<p><strong>Fluctuations:</strong> Indicate changing relationship over time</p>
+</li>
+</ul>
+<p><strong>Interpretation of α Evolution:</strong></p>
+<ul>
+<li>
+<p><strong>Positive α:</strong> MSFT outperforming expectations</p>
+</li>
+<li>
+<p><strong>Negative α:</strong> MSFT underperforming</p>
+</li>
+<li>
+<p><strong>Magnitude:</strong> Shows excess return in price units</p>
+</li>
+</ul>
+<h3 id="comprehensive-regression-line-visualization">Comprehensive Regression Line Visualization</h3>
+<div class="highlight"><pre><span></span><code><span class="n">figure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="c1"># Plotting data points</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;jet&#39;</span><span class="p">)</span>
+<span class="n">colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">]))</span>
+<span class="n">sc</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">],</span> <span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;Adj Close&#39;</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> 
+                 <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
+<span class="n">cb</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">date</span><span class="p">())</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">][::</span><span class="nb">len</span><span class="p">(</span><span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">])</span><span class="o">//</span><span class="mi">9</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">])</span>
+
+<span class="c1"># Plotting every fifth Kalman estimate</span>
+<span class="n">step</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">+</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">colors_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">state_means</span><span class="p">[::</span><span class="n">step</span><span class="p">]))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">beta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">state_means</span><span class="p">[::</span><span class="n">step</span><span class="p">]):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">beta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">xi</span> <span class="o">+</span> <span class="n">beta</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">cm</span><span class="p">(</span><span class="n">colors_l</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+<span class="c1"># Plotting OLS line</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">poly1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">],</span> <span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;Adj Close&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">))(</span><span class="n">xi</span><span class="p">),</span> <span class="s1">&#39;0.4&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;SPY&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;MSFT&#39;</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Overlays time-varying Kalman regression lines on scatter plot, showing how relationship evolves.</p>
+<p><strong>Line Range Setup:</strong></p>
+<p><strong><code>xi = np.linspace(joined_data['sp500'].min()-5, joined_data['sp500'].max()+5, 2)</code>:</strong></p>
+<ul>
+<li>
+<p>Creates two x-values spanning data range plus margin</p>
+</li>
+<li>
+<p>Only 2 points needed (line defined by 2 points)</p>
+</li>
+<li>
+<p>Margin (-5, +5) extends lines beyond data for visibility</p>
+</li>
+</ul>
+<p><strong>Kalman Line Plotting:</strong></p>
+<p><strong><code>for i, beta in enumerate(state_means[::step]):</code>:</strong></p>
+<ul>
+<li>
+<p><code>[::step]</code>: Every 5th estimate to reduce clutter</p>
+</li>
+<li>
+<p><code>beta</code>: Current [β, α] estimate</p>
+</li>
+</ul>
+<p><strong><code>plt.plot(xi, beta[0] * xi + beta[1], ...)</code>:</strong></p>
+<ul>
+<li>
+<p>Plots line: y = β × x + α</p>
+</li>
+<li>
+<p><code>alpha=.2</code>: Transparent (20% opacity)</p>
+</li>
+<li>
+<p><code>lw=1</code>: Line width 1</p>
+</li>
+<li>
+<p><code>c=cm(colors_l[i])</code>: Color from colormap matching time</p>
+</li>
+</ul>
+<p><strong>OLS Comparison Line:</strong></p>
+<p><strong><code>poly1d(np.polyfit(joined_data['sp500'], joined_data['Adj Close'], 1))(xi)</code>:</strong></p>
+<p><strong>Step breakdown:</strong></p>
+<ol>
+<li>
+<p><code>np.polyfit(..., 1)</code>: Fits linear polynomial (degree 1) using OLS</p>
+</li>
+<li>
+<p>Returns [slope, intercept]</p>
+</li>
+<li>
+<p><code>poly1d(...)</code>: Converts to polynomial function</p>
+</li>
+<li>
+<p><code>(...)(xi)</code>: Evaluates polynomial at xi points</p>
+</li>
+</ol>
+<p><strong><code>'0.4'</code>:</strong> Dark gray color for OLS line</p>
+<p><strong>Visual Interpretation:</strong></p>
+<ul>
+<li>
+<p><strong>Blue lines:</strong> Early relationship estimates</p>
+</li>
+<li>
+<p><strong>Red lines:</strong> Recent relationship estimates</p>
+</li>
+<li>
+<p><strong>Black line:</strong> Overall OLS relationship</p>
+</li>
+<li>
+<p><strong>Spread of lines:</strong> Shows how relationship changes over time</p>
+</li>
+<li>
+<p><strong>Lines closer to points:</strong> Better fit for that time period</p>
+</li>
+</ul>
+<p><strong>Key Insights:</strong></p>
+<ul>
+<li>
+<p>Kalman lines adapt to local data better than global OLS</p>
+</li>
+<li>
+<p>Color progression shows temporal evolution</p>
+</li>
+<li>
+<p>Divergence from OLS indicates non-stationary relationship</p>
+</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="returns-based-regression-analysis">Returns-Based Regression Analysis <a id="returns-regression"></a></h2>
+<h3 id="computing-returns">Computing Returns</h3>
+<div class="highlight"><pre><span></span><code><span class="n">x_r</span> <span class="o">=</span> <span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;sp500&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="n">y_r</span> <span class="o">=</span> <span class="n">joined_data</span><span class="p">[</span><span class="s1">&#39;Adj Close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Converts price series to percentage return series for statistically appropriate regression analysis.</p>
+<p><strong>Return Calculation:</strong></p>
+<p><strong><code>pct_change()</code>:</strong></p>
+<p>Computes:</p>
+<div class="highlight"><pre><span></span><code>returnₜ = (priceₜ - priceₜ₋₁) / priceₜ₋₁
+</code></pre></div>
+<p><strong><code>[1:]</code>:</strong></p>
+<ul>
+<li>
+<p>Removes first element (NaN from pct_change)</p>
+</li>
+<li>
+<p>Ensures both series have same length</p>
+</li>
+<li>
+<p>First return is from day 1 to day 2</p>
+</li>
+</ul>
+<p><strong>Why Returns Instead of Prices:</strong></p>
+<ul>
+<li>
+<p><strong>Stationarity:</strong> Returns more stationary than prices</p>
+</li>
+<li>
+<p><strong>Comparability:</strong> Returns are scale-free</p>
+</li>
+<li>
+<p><strong>Statistical properties:</strong> Returns closer to normal distribution</p>
+</li>
+<li>
+<p><strong>Economic interpretation:</strong> Returns represent investment performance</p>
+</li>
+</ul>
+<p><strong>Resulting Data:</strong></p>
+<ul>
+<li>
+<p><code>x_r</code>: S&amp;P 500 daily returns</p>
+</li>
+<li>
+<p><code>y_r</code>: MSFT daily returns</p>
+</li>
+<li>
+<p>Length: n-1 (one less than price series)</p>
+</li>
+<li>
+<p>Typical values: -0.05 to +0.05 (-5% to +5%)</p>
+</li>
+</ul>
+<h3 id="configuring-returns-based-kalman-filter">Configuring Returns-Based Kalman Filter</h3>
+<div class="highlight"><pre><span></span><code><span class="n">delta_r</span> <span class="o">=</span> <span class="mf">1e-2</span>
+<span class="n">trans_cov_r</span> <span class="o">=</span> <span class="n">delta_r</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">delta_r</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">obs_mat_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([[</span><span class="n">x_r</span><span class="p">],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_r</span><span class="p">))]])</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Sets up Kalman Filter parameters specifically tuned for returns data.</p>
+<p><strong>Delta Adjustment:</strong></p>
+<p><strong><code>delta_r = 1e-2</code>:</strong></p>
+<ul>
+<li>
+<p>Larger than price-based delta (1e-3)</p>
+</li>
+<li>
+<p>Returns exhibit more volatility than prices</p>
+</li>
+<li>
+<p>Allows faster parameter adaptation</p>
+</li>
+</ul>
+<p><strong>Why Larger Delta:</strong></p>
+<ul>
+<li>
+<p>Returns change more rapidly day-to-day</p>
+</li>
+<li>
+<p>Requires less smoothing than prices</p>
+</li>
+<li>
+<p>Higher frequency of structural changes in return space</p>
+</li>
+</ul>
+<p><strong>Observation Matrix:</strong></p>
+<p>Same structure as price-based, but using returns:</p>
+<div class="highlight"><pre><span></span><code>[[return₁ˢᵖ⁵⁰⁰, 1],
+ [return₂ˢᵖ⁵⁰⁰, 1],
+ ...,
+ [returnₙˢᵖ⁵⁰⁰, 1]]
+</code></pre></div>
+<h3 id="building-returns-based-kalman-filter">Building Returns-Based Kalman Filter</h3>
+<div class="highlight"><pre><span></span><code><span class="n">kf_r</span> <span class="o">=</span> <span class="n">KalmanFilter</span><span class="p">(</span><span class="n">n_dim_obs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_dim_state</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">initial_state_mean</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">initial_state_covariance</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+                    <span class="n">transition_matrices</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+                    <span class="n">observation_matrices</span><span class="o">=</span><span class="n">obs_mat_r</span><span class="p">,</span>
+                    <span class="n">observation_covariance</span><span class="o">=</span><span class="mf">.01</span><span class="p">,</span>
+                    <span class="n">transition_covariance</span><span class="o">=</span><span class="n">trans_cov_r</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Constructs Kalman Filter for returns-based beta estimation.</p>
+<p><strong>Parameter Differences from Price-Based:</strong></p>
+<p><strong><code>observation_covariance=.01</code>:</strong></p>
+<ul>
+<li>
+<p>Much smaller than price-based (2)</p>
+</li>
+<li>
+<p>Returns have smaller absolute values (-0.05 to +0.05)</p>
+</li>
+<li>
+<p>Variance of returns typically 0.0001 to 0.01</p>
+</li>
+</ul>
+<p><strong><code>transition_covariance=trans_cov_r</code>:</strong></p>
+<ul>
+<li>
+<p>Higher delta (0.01 vs 0.001)</p>
+</li>
+<li>
+<p>Parameters can change more rapidly</p>
+</li>
+<li>
+<p>Adapts to volatility clustering in returns</p>
+</li>
+</ul>
+<p><strong>Model Interpretation:</strong></p>
+<p>Estimates:</p>
+<div class="highlight"><pre><span></span><code>MSFT_returnₜ = β × SP500_returnₜ + α + noise
+</code></pre></div>
+<p>where:</p>
+<ul>
+<li>
+<p>β = systematic risk (sensitivity to market)</p>
+</li>
+<li>
+<p>α = expected excess return (alpha)</p>
+</li>
+<li>
+<p>Both evolve over time</p>
+</li>
+</ul>
+<h3 id="executing-filter-and-visualization">Executing Filter and Visualization</h3>
+<div class="highlight"><pre><span></span><code><span class="n">state_means_r</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">kf_r</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">y_r</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+<span class="n">figure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">colors_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_r</span><span class="p">))</span>
+<span class="n">sc</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_r</span><span class="p">,</span> <span class="n">y_r</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">colors_r</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">sc</span><span class="p">)</span>
+<span class="n">cb</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">date</span><span class="p">())</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">x_r</span><span class="p">[::</span><span class="nb">len</span><span class="p">(</span><span class="n">x_r</span><span class="p">)</span><span class="o">//</span><span class="mi">9</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">])</span>
+
+<span class="n">step</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_r</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="n">x_r</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">+</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">colors_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">state_means_r</span><span class="p">[::</span><span class="n">step</span><span class="p">]))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">beta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">state_means_r</span><span class="p">[::</span><span class="n">step</span><span class="p">]):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">beta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">xi</span> <span class="o">+</span> <span class="n">beta</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.2</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">cm</span><span class="p">(</span><span class="n">colors_l</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">poly1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">x_r</span><span class="p">,</span> <span class="n">y_r</span><span class="p">,</span> <span class="mi">1</span><span class="p">))(</span><span class="n">xi</span><span class="p">),</span> <span class="s1">&#39;0.4&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mf">0.03</span><span class="p">,</span><span class="mf">0.03</span><span class="p">,</span><span class="o">-</span><span class="mf">0.11</span><span class="p">,</span> <span class="mf">0.11</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;SPY returns&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;MSFT returns&#39;</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Purpose:</strong></p>
+<p>Creates comprehensive visualization showing returns relationship and evolving regression lines.</p>
+<p><strong>Filtering:</strong></p>
+<p><code>kf_r.filter(y_r.values)</code> processes MSFT returns using S&amp;P 500 returns as predictors.</p>
+<p><strong>Axis Limiting:</strong></p>
+<p><strong><code>plt.axis([-0.03,0.03,-0.11, 0.11])</code>:</strong></p>
+<ul>
+<li>
+<p>x-axis: -3% to +3% (S&amp;P 500 returns)</p>
+</li>
+<li>
+<p>y-axis: -11% to +11% (MSFT returns)</p>
+</li>
+<li>
+<p>Focuses on typical return range</p>
+</li>
+<li>
+<p>Excludes extreme outliers for clarity</p>
+</li>
+</ul>
+<p><strong>Interpretation Differences:</strong></p>
+<p><strong>vs Price-Based:</strong></p>
+<ul>
+<li>
+<p>More scattered data (returns more volatile)</p>
+</li>
+<li>
+<p>Tighter clustering around origin</p>
+</li>
+<li>
+<p>Beta appears more stable</p>
+</li>
+<li>
+<p>Alpha closer to zero (no drift in returns)</p>
+</li>
+</ul>
+<p><strong>Beta Evolution:</strong></p>
+<ul>
+<li>
+<p>Starts near 0 (conservative initialization)</p>
+</li>
+<li>
+<p>Gradually increases to 0.7-0.9</p>
+</li>
+<li>
+<p>Converges toward OLS estimate</p>
+</li>
+<li>
+<p>Shows MSFT has below-market systematic risk</p>
+</li>
+</ul>
+<p><strong>Trading Applications:</strong></p>
+<p><strong>Hedging:</strong></p>
+<p>With β = 0.8:</p>
+<ul>
+<li>
+<p>Long $100,000 MSFT → Short $80,000 SPY</p>
+</li>
+<li>
+<p>Neutralizes ~80% of market risk</p>
+</li>
+<li>
+<p>Residual represents idiosyncratic MSFT risk</p>
+</li>
+</ul>
+<p><strong>Risk Decomposition:</strong></p>
+<div class="highlight"><pre><span></span><code>MSFT Variance = β² × Market Variance + Idiosyncratic Variance
+</code></pre></div>
+<p>Allows quantifying diversifiable vs non-diversifiable risk.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="integration-with-main-tutorial">Integration with Main Tutorial <a id="integration"></a></h2>
+<h3 id="how-to-combine-documents">How to Combine Documents</h3>
+<p>This code walkthrough is designed to complement the main tutorial. Integration approaches:</p>
+<p><strong>Approach 1: Inline Integration</strong></p>
+<p>Insert code walkthrough sections into main tutorial at marked integration points:</p>
+<ul>
+<li>
+<p>After "Kalman Filter as Moving Average Signal" → Insert Sections 4-5</p>
+</li>
+<li>
+<p>After "Dynamic Linear Regression for Beta Estimation" → Insert Sections 6-7</p>
+</li>
+<li>
+<p>After "Returns-Based Analysis" → Insert Section 8</p>
+</li>
+</ul>
+<p><strong>Approach 2: Side-by-Side Reference</strong></p>
+<ul>
+<li>
+<p>Keep documents separate</p>
+</li>
+<li>
+<p>Use hyperlinks to jump between methodology and implementation</p>
+</li>
+<li>
+<p>Main tutorial for conceptual understanding</p>
+</li>
+<li>
+<p>Code walkthrough for implementation details</p>
+</li>
+</ul>
+<p><strong>Approach 3: Audience-Specific</strong></p>
+<ul>
+<li>
+<p><strong>Business analysts:</strong> Main tutorial only</p>
+</li>
+<li>
+<p><strong>Quantitative developers:</strong> Code walkthrough only</p>
+</li>
+<li>
+<p><strong>Data scientists:</strong> Both documents</p>
+</li>
+</ul>
+<h3 id="standalone-usage">Standalone Usage</h3>
+<p>This document is fully functional as a standalone resource:</p>
+<ul>
+<li>
+<p>Complete code coverage from notebook</p>
+</li>
+<li>
+<p>Self-contained explanations</p>
+</li>
+<li>
+<p>Reproducible implementations</p>
+</li>
+<li>
+<p>No dependency on main tutorial</p>
+</li>
+</ul>
+<h3 id="missing-content-validation">Missing Content Validation</h3>
+<p><strong>Comprehensive Coverage Achieved:</strong></p>
+<ul>
+<li>
+<p>✓ Environment setup</p>
+</li>
+<li>
+<p>✓ All library imports</p>
+</li>
+<li>
+<p>✓ Data loading procedures</p>
+</li>
+<li>
+<p>✓ Kalman Filter configurations</p>
+</li>
+<li>
+<p>✓ Visualization code</p>
+</li>
+<li>
+<p>✓ Both price and returns analyses</p>
+</li>
+<li>
+<p>✓ Parameter explanations</p>
+</li>
+<li>
+<p>✓ Mathematical foundations</p>
+</li>
+</ul>
+<p><strong>No Omissions:</strong></p>
+<p>All major code blocks from the original notebook have been documented with purpose, flow, and impact analysis.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="references">References <a id="references"></a></h2>
+<ol>
+<li>
+<p>Kalman, R. E. (1960). "A New Approach to Linear Filtering and Prediction Problems." <em>Journal of Basic Engineering</em>, 82(1), 35-45.</p>
+</li>
+<li>
+<p>Welch, G., &amp; Bishop, G. (2006). "An Introduction to the Kalman Filter." University of North Carolina at Chapel Hill, Department of Computer Science, TR 95-041.</p>
+</li>
+<li>
+<p>Durbin, J., &amp; Koopman, S. J. (2012). <em>Time Series Analysis by State Space Methods</em> (2nd ed.). Oxford University Press.</p>
+</li>
+<li>
+<p>Tsay, R. S. (2010). <em>Analysis of Financial Time Series</em> (3rd ed.). Wiley.</p>
+</li>
+<li>
+<p>Hamilton, J. D. (1994). <em>Time Series Analysis</em>. Princeton University Press.</p>
+</li>
+<li>
+<p>Chan, E. P. (2013). <em>Algorithmic Trading: Winning Strategies and Their Rationale</em>. Wiley.</p>
+</li>
+<li>
+<p>Pole, A., West, M., &amp; Harrison, J. (1994). <em>Applied Bayesian Forecasting and Time Series Analysis</em>. Chapman and Hall/CRC.</p>
+</li>
+<li>
+<p>Murphy, K. P. (2012). <em>Machine Learning: A Probabilistic Perspective</em>. MIT Press.</p>
+</li>
+<li>
+<p>PyKalman Documentation: https://pykalman.github.io/</p>
+</li>
+<li>
+<p>Haikulabs Tutorial: "Predicting Market Data with a Kalman Filter" - https://haikulabs.com/pmdwkf26.htm</p>
+</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 10, 2025 03:21:14 UTC">October 10, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+<!-- Footer navigation (prev/next) - Material default -->
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../37-hands-on-unemployment-rate-prediction/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Hidden Markov Models Hands-On Tutorial: Unemployment Rate Prediction" rel="prev">
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Previous
+            </span>
+            <div class="md-ellipsis">
+              Hidden Markov Models Hands-On Tutorial: Unemployment Rate Prediction
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../39-hands-on-kalman-filter-object-location-tracking/" class="md-footer__link md-footer__link--next" aria-label="Next: Kalman Filter Hands-On Tutorial: Object Location Tracking in 2D Space" rel="next">
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Next
+            </span>
+            <div class="md-ellipsis">
+              Kalman Filter Hands-On Tutorial: Object Location Tracking in 2D Space
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+
+  <!-- Custom footer content -->
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        <div style="text-align: center; padding: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 1rem;">
+          <p style="margin: 0.5rem 0;">
+            <strong>GenAI Atlas</strong> - Your Comprehensive Guide to AI & Machine Learning
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.9em; opacity: 0.8;">
+            © 2024 GenAI Atlas | Built with ❤️ for the AI Community
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.85em; opacity: 0.7;">
+            <em>Empowering developers, researchers, and practitioners worldwide</em>
+          </p>
+        </div>
+      </div>
+      <div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

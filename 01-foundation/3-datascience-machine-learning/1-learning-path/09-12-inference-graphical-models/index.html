@@ -1,0 +1,4154 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/1-learning-path/09-12-inference-graphical-models/">
+      
+      
+        <link rel="prev" href="../09-11-directed-graphical-models/">
+      
+      
+        <link rel="next" href="../09-13-hidden-markov-models/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Inference in Graphical Models - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Inference in Graphical Models
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-fast-track/01-ft-python-basics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-probability_distributions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-fast-track/01-statistics-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Introduction of Data Science
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-data-science-lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Life Cycle
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-ai_applications_across_industries/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Application
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-07-principal-component-analysis/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Dimensionality Reduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../05-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../06-hypothesis-testing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../07-deep-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../08-recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_10" id="__nav_2_4_2_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Network and Graphical Model
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Network and Graphical Model
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-networking-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fundamentals
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-01-network-theory/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Theory
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-02-network-representations/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Netwrok Representations
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-03-network-centrality-measure/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Centrality measures
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-04-spatial-centrality-measures/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Spatial Centrality measures
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-05-global-network-stats/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Global Network Statistics
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-06-network-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-07-stochastic-network/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Stochastic Network Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-08-influence-maximization-networks/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Influence Maximization in Networks
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-09-undirected-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Undirected Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-10-ising-gaussian-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Ising and Gaussian Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-11-directed-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Directed Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_10_13" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_10_13" id="__nav_2_4_2_10_13_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Inference in Graphical Models
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_2_10_13_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_10_13">
+            <span class="md-nav__icon md-icon"></span>
+            Inference in Graphical Models
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Inference in Graphical Models
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Inference in Graphical Models
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-to-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Introduction to Inference
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#computing-marginals" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Computing Marginals
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-passing-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Message Passing Algorithms
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#belief-propagation-on-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌲 Belief Propagation on Trees
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loopy-belief-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔁 Loopy Belief Propagation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcmc-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎲 MCMC Methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variational-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      📐 Variational Methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Practical Implementation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-13-hidden-markov-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hidden Markov Models (HMMs)
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-14-kalman-filters/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Kalman Filters
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-datascience-ml-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📋 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-to-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Introduction to Inference
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#computing-marginals" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Computing Marginals
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-passing-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔄 Message Passing Algorithms
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#belief-propagation-on-trees" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌲 Belief Propagation on Trees
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loopy-belief-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔁 Loopy Belief Propagation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcmc-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎲 MCMC Methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variational-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      📐 Variational Methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Practical Implementation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="inference-in-graphical-models">Inference in Graphical Models <a id="top"></a></h1>
+<h2 id="quick-navigation">📋 Quick Navigation</h2>
+<ul>
+<li><a href="#introduction">Introduction to Inference</a></li>
+<li><a href="#marginals">Computing Marginals</a></li>
+<li><a href="#message-passing">Message Passing Algorithms</a></li>
+<li><a href="#belief-propagation-trees">Belief Propagation on Trees</a></li>
+<li><a href="#loopy-belief-propagation">Loopy Belief Propagation</a></li>
+<li><a href="#mcmc-methods">MCMC Methods</a></li>
+<li><a href="#variational-methods">Variational Methods</a></li>
+<li><a href="#implementation">Practical Implementation</a></li>
+<li><a href="#references">References &amp; Further Reading</a></li>
+</ul>
+<h2 id="introduction-to-inference">🎯 Introduction to Inference <a id="introduction"></a></h2>
+<p>Graphical models provide flexible and powerful frameworks for modeling complex systems and networks. Once we have learned a model from data or specified it using domain knowledge, we can use various fast algorithms to make predictions and compute statistical quantities of interest.</p>
+<p><img alt="Graphical Model Network" src="../../../../svg/graphical_model_network.svg" /></p>
+<p><strong>Key Applications:</strong></p>
+<ul>
+<li><strong>Prediction:</strong> Estimating unobserved node values based on observed data</li>
+<li><strong>Recommendation Systems:</strong> Predicting user preferences in social networks</li>
+<li><strong>Network Analysis:</strong> Understanding propagation effects and dependencies</li>
+<li><strong>Statistical Inference:</strong> Computing posterior distributions and marginals</li>
+</ul>
+<p><strong>Example Use Case:</strong></p>
+<p>Consider a university social network where we model YouTube video ratings (like/dislike) using an Ising model. When a new video is released and 15 people have rated it, we want to predict ratings for users who haven't seen it yet. The graphical model captures statistical interactions between variables and tells us how to combine observed information for prediction.</p>
+<p><strong>Core Problem:</strong></p>
+<p>The fundamental computational task in graphical models is computing the <strong>marginal distribution</strong> at individual nodes. This involves:</p>
+<ul>
+<li>Computing probability distributions at specific nodes</li>
+<li>Incorporating observed evidence from other nodes</li>
+<li>Handling network effects and dependencies</li>
+<li>Scaling efficiently to large networks</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="computing-marginals">📊 Computing Marginals <a id="marginals"></a></h2>
+<p>The marginal at a node V represents the probability distribution of variable X_v, essentially describing what we observe when focusing on node V while ignoring all other nodes in the network.</p>
+<p><img alt="Marginal Computation" src="../../../../svg/marginal_computation.svg" /></p>
+<p><strong>Mathematical Definition:</strong></p>
+<div class="highlight"><pre><span></span><code>P(X_v = x_v)
+</code></pre></div>
+<p>This represents the probability distribution at node v, where:</p>
+<ul>
+<li>X_v is the random variable at node v</li>
+<li>x_v represents possible values (e.g., +1 or -1 in Ising models)</li>
+</ul>
+<p><strong>Computing Marginals via Summation:</strong></p>
+<p>For a network with p nodes, the marginal at node 1 is:</p>
+<div class="highlight"><pre><span></span><code>P(X_1 = 1) = Σ P(X_1 = 1, X_2 = x_2, ..., X_p = x_p)
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li>The summation is over all possible values of X_2 through X_p</li>
+<li>Each variable takes values +1 or -1</li>
+<li>This results in 2^(p-1) terms in the summation</li>
+</ul>
+<p><strong>Computational Challenge:</strong></p>
+<p>The exponential dependence on p makes direct computation infeasible for most practical situations. For example:</p>
+<ul>
+<li><strong>20 nodes:</strong> 2^19 ≈ 524,000 terms</li>
+<li><strong>50 nodes:</strong> 2^49 ≈ 562 trillion terms</li>
+<li><strong>100 nodes:</strong> 2^99 ≈ 6.3 × 10^29 terms</li>
+</ul>
+<p><strong>Computational Complexity:</strong></p>
+<p>Unfortunately, computing marginals in general Ising models is computationally hard in a strong theoretical sense. However, restricted classes of models admit efficient algorithms that work well in practice.</p>
+<p><strong>Incorporating Observations:</strong></p>
+<p>To compute posterior distributions given observations:</p>
+<ol>
+<li><strong>Fix observed variables</strong> in the model to their observed values</li>
+<li><strong>Create a new Ising model</strong> on the remaining unobserved nodes</li>
+<li><strong>Compute marginals</strong> in this modified model</li>
+<li>The resulting marginals represent the <strong>posterior probabilities</strong> we seek</li>
+</ol>
+<p><strong>Key Insight:</strong></p>
+<p>Computing the posterior distribution at a node given observations reduces to computing the marginal in a modified graphical model. This unification allows us to focus on efficient marginal computation algorithms.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="message-passing-algorithms">🔄 Message Passing Algorithms <a id="message-passing"></a></h2>
+<p>For graphical models with special structures (chains, trees), we can compute marginals efficiently using message passing algorithms based on dynamic programming principles.</p>
+<p><img alt="Chain Message Passing" src="../../../../svg/chain_message_passing.svg" /></p>
+<p><strong>Chain Structure (Markov Chain):</strong></p>
+<p>Consider a graphical model with a path or chain structure. This special case allows for efficient computation through the <strong>Global Markov Property</strong>: when we condition on an arbitrary node, variables to the right are conditionally independent of variables to the left.</p>
+<p><strong>Message Passing Protocol:</strong></p>
+<p>Each node passes messages to its neighbors containing conditional probability information:</p>
+<div class="highlight"><pre><span></span><code>Message from node 2 to node 1:
+- P(X_2 = +1 | X_1 = +1) = 0.7
+- P(X_2 = -1 | X_1 = +1) = 0.3
+- P(X_2 = +1 | X_1 = -1) = 0.4
+- P(X_2 = -1 | X_1 = -1) = 0.6
+</code></pre></div>
+<p><strong>Computing Marginals from Messages:</strong></p>
+<p>Let q = P(X_1 = +1). Using the law of total probability:</p>
+<div class="highlight"><pre><span></span><code>P(X_2 = +1) = P(X_2 = +1 | X_1 = +1) × P(X_1 = +1) + P(X_2 = +1 | X_1 = -1) × P(X_1 = -1)
+            = 0.7q + 0.4(1-q)
+            = 0.4 + 0.3q
+</code></pre></div>
+<p><strong>Applying Bayes' Rule:</strong></p>
+<p>To find q, we use:</p>
+<div class="highlight"><pre><span></span><code>P(X_1 = +1 | X_2 = +1) = P(X_2 = +1 | X_1 = +1) × P(X_1 = +1) / P(X_2 = +1)
+                        = 0.7q / (0.4 + 0.3q)
+</code></pre></div>
+<p><strong>Message Computation Rule:</strong></p>
+<p>A node v can compute its outgoing message along an edge once it has received incoming messages from all other edges. This process:</p>
+<ol>
+<li><strong>Starts at leaf nodes</strong> (degree one) that have only one adjacent edge</li>
+<li><strong>Propagates across the chain</strong> as each node receives necessary messages</li>
+<li><strong>Completes when all nodes</strong> have received messages from neighbors</li>
+</ol>
+<p><strong>Computational Efficiency:</strong></p>
+<ul>
+<li><strong>Total messages:</strong> 2 × (number of edges)</li>
+<li><strong>Computation time:</strong> Linear in the number of nodes</li>
+<li><strong>Each message:</strong> Contains conditional probabilities for all variable states</li>
+</ul>
+<p><strong>Computing Node Marginals:</strong></p>
+<p>Each node can compute its marginal once it receives messages from both neighbors using Bayes' rule to combine the information.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="belief-propagation-on-trees">🌲 Belief Propagation on Trees <a id="belief-propagation-trees"></a></h2>
+<p>The belief propagation algorithm naturally extends from chains to tree-structured graphical models, providing exact marginal computation for any tree topology.</p>
+<p><img alt="Tree Structure" src="../../../../svg/tree_structure.svg" /></p>
+<p><strong>Tree Definition:</strong></p>
+<p>A tree is a connected graph with no cycles. Key properties:</p>
+<ul>
+<li><strong>Leaf nodes:</strong> Nodes of degree one (analogous to chain endpoints)</li>
+<li><strong>Hierarchical structure:</strong> Natural parent-child relationships</li>
+<li><strong>Unique paths:</strong> Exactly one path between any two nodes</li>
+<li><strong>No loops:</strong> Eliminates circular dependencies</li>
+</ul>
+<p><strong>Belief Propagation Algorithm:</strong></p>
+<p>The same message passing algorithm from chains works on trees:</p>
+<ol>
+<li><strong>Initialization:</strong> Start at leaf nodes (degree one)</li>
+<li><strong>Message computation:</strong> Each node computes outgoing messages once all incoming messages (except from the target neighbor) are received</li>
+<li><strong>Propagation:</strong> Messages flow from leaves toward the center and back</li>
+<li><strong>Marginal computation:</strong> Each node computes its marginal using messages from all neighbors</li>
+</ol>
+<p><strong>Message Structure:</strong></p>
+<p>Messages take the form of conditional probabilities:</p>
+<div class="highlight"><pre><span></span><code>Message from node u to node v:
+- P(X_u = +1 | X_v = +1)
+- P(X_u = -1 | X_v = +1)
+- P(X_u = +1 | X_v = -1)
+- P(X_u = -1 | X_v = -1)
+</code></pre></div>
+<p><strong>Max-Product Algorithm:</strong></p>
+<p>For finding the maximum probability assignment (MAP), use a variant called max-product:</p>
+<div class="highlight"><pre><span></span><code>Message structure:
+&quot;If you are +1, then in the maximum probability assignment, I&#39;m -1&quot;
+&quot;If you are -1, then in the maximum probability assignment, I&#39;m +1&quot;
+</code></pre></div>
+<p><strong>Algorithm Properties:</strong></p>
+<ul>
+<li><strong>Correctness:</strong> Produces exact marginals for tree-structured models</li>
+<li><strong>Efficiency:</strong> Linear time complexity in number of nodes</li>
+<li><strong>Distributed:</strong> Can be implemented in parallel/distributed systems</li>
+<li><strong>Historical:</strong> Appeared in statistical physics, ML, and AI under various names</li>
+</ul>
+<p><strong>Handling Observations:</strong></p>
+<p>To incorporate observed node values:</p>
+<ol>
+<li>Create a modified graphical model with observed nodes fixed</li>
+<li>Run belief propagation on the modified model</li>
+<li>Resulting marginals represent posterior probabilities</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="loopy-belief-propagation">🔁 Loopy Belief Propagation <a id="loopy-belief-propagation"></a></h2>
+<p>When the graphical model contains cycles (loops), belief propagation becomes more complex but can still be applied heuristically with good practical performance.</p>
+<p><img alt="Loopy Belief Propagation" src="../../../../svg/loopy_belief_propagation.svg" /></p>
+<p><strong>The Challenge of Cycles:</strong></p>
+<p>Cycles create problems for belief propagation:</p>
+<ul>
+<li><strong>No natural starting point:</strong> All nodes have multiple neighbors (no leaves)</li>
+<li><strong>Circular dependencies:</strong> Messages can cycle indefinitely</li>
+<li><strong>Convergence issues:</strong> No guarantee of reaching correct answer</li>
+<li><strong>Initialization ambiguity:</strong> Unclear how to start the algorithm</li>
+</ul>
+<p><strong>Loopy Belief Propagation (LBP):</strong></p>
+<p>Despite theoretical challenges, we can run belief propagation on graphs with cycles:</p>
+<p><strong>Algorithm:</strong></p>
+<ol>
+<li><strong>Random initialization:</strong> Start with random messages at all edges</li>
+<li><strong>Iterative updates:</strong> Apply local update rules repeatedly</li>
+<li><strong>Convergence check:</strong> Run until messages stabilize or max iterations reached</li>
+<li><strong>Extract marginals:</strong> Use converged messages to estimate node marginals</li>
+</ol>
+<p><strong>Local Update Rule:</strong></p>
+<p>Each node v computes a message to neighbor w once messages from all other neighbors have arrived (or been initialized):</p>
+<div class="highlight"><pre><span></span><code>m_v→w(x_w) = Σ_x_v ψ(x_v, x_w) ψ(x_v) ∏_{u ∈ N(v)\{w}} m_u→v(x_v)
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li>m_v→w is the message from v to w</li>
+<li>ψ(x_v, x_w) is the edge potential</li>
+<li>ψ(x_v) is the node potential</li>
+<li>N(v){w} represents neighbors of v excluding w</li>
+</ul>
+<p><strong>Practical Improvements:</strong></p>
+<p>Several heuristics improve LBP stability and performance:</p>
+<ul>
+<li><strong>Damping factors:</strong> Smooth message updates to prevent oscillation</li>
+<li><strong>Message scheduling:</strong> Careful ordering of message updates</li>
+<li><strong>Convergence criteria:</strong> Monitoring message changes and setting thresholds</li>
+<li><strong>Initialization strategies:</strong> Using problem-specific knowledge</li>
+</ul>
+<p><strong>Performance Characteristics:</strong></p>
+<ul>
+<li><strong>Often works well:</strong> Despite lack of guarantees, frequently produces good approximations</li>
+<li><strong>Fast execution:</strong> Scales to large networks</li>
+<li><strong>Distributed implementation:</strong> Naturally parallelizable</li>
+<li><strong>No guarantees:</strong> May not converge or converge to incorrect values</li>
+</ul>
+<p><strong>When to Use LBP:</strong></p>
+<ul>
+<li>Dense graphs where exact inference is intractable</li>
+<li>Large-scale networks requiring fast approximate inference</li>
+<li>Applications where approximate marginals are sufficient</li>
+<li>Problems where empirical performance is good despite theory</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="mcmc-methods">🎲 MCMC Methods <a id="mcmc-methods"></a></h2>
+<p>Markov Chain Monte Carlo (MCMC) methods provide an alternative approach to inference by generating samples from the joint distribution, which can then be used to estimate marginals and other statistical quantities.</p>
+<p><img alt="Gibbs Sampler MCMC" src="../../../../svg/gibbs_sampler_mcmc.svg" /></p>
+<p><strong>Core Idea:</strong></p>
+<p>If we can generate independent samples from the joint distribution described by the graphical model, we can easily estimate marginals and other statistical quantities by empirical averaging.</p>
+<p><strong>Example: Estimating Marginals</strong></p>
+<p>For a node v with marginal probability q = P(X_v = +1):</p>
+<div class="highlight"><pre><span></span><code>Estimate q ≈ (1/N) × (number of times X_v = 1 in N samples)
+</code></pre></div>
+<p>This is analogous to estimating coin bias by flipping it many times and averaging the results.</p>
+<p><strong>Gibbs Sampler:</strong></p>
+<p>A simple Markov chain for generating samples:</p>
+<p><strong>Algorithm:</strong></p>
+<ol>
+<li><strong>Initialize:</strong> Start with arbitrary configuration (e.g., all +1 or random)</li>
+<li><strong>Sequential updates:</strong> Pick a node v randomly or systematically</li>
+<li><strong>Conditional sampling:</strong> Update X_v based on its neighbors' current states</li>
+<li><strong>Iteration:</strong> Repeat step 2-3 many times</li>
+<li><strong>Sampling:</strong> Periodically record the current state as a sample</li>
+</ol>
+<p><strong>Update Rule for Node v:</strong></p>
+<div class="highlight"><pre><span></span><code>P(X_v = +1 | X_neighbors) = f(current neighbor states, model parameters)
+</code></pre></div>
+<p>Sample X_v from this conditional distribution.</p>
+<p><strong>Social Network Analogy:</strong></p>
+<p>Think of people randomly logging into Facebook:</p>
+<ul>
+<li>People decide to post based on friends' posting behavior</li>
+<li>There's randomness: might not post even if many friends did</li>
+<li>Conversely, might post regardless with something important to share</li>
+<li>Each person's decision depends on neighbors' states plus randomness</li>
+</ul>
+<p><strong>Convergence and Mixing Time:</strong></p>
+<p>The key question is: <strong>How many iterations before samples approximate the target distribution?</strong></p>
+<p><strong>Mixing time depends on:</strong></p>
+<ul>
+<li><strong>Network structure:</strong> Dense vs. sparse connections</li>
+<li><strong>Interaction strength:</strong> Strong vs. weak edge weights</li>
+<li><strong>Temperature:</strong> High vs. low temperature in the model</li>
+<li><strong>Starting configuration:</strong> Random vs. structured initialization</li>
+</ul>
+<p><strong>Mathematical Property:</strong></p>
+<p>After sufficiently many updates (mixing time), taking a snapshot of the configuration produces a sample from the desired joint distribution.</p>
+<p><strong>Practical Considerations:</strong></p>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Easy to implement</li>
+<li>Works for any graphical model structure</li>
+<li>Guaranteed to give accurate answers given sufficient time</li>
+<li>Good first method to try for complex models</li>
+</ul>
+<p><strong>Disadvantages:</strong></p>
+<ul>
+<li>Can be very slow (long mixing time)</li>
+<li>Requires many samples for accurate estimates</li>
+<li>Difficult to diagnose convergence</li>
+<li>May get stuck in local modes</li>
+</ul>
+<p><strong>Estimation Process:</strong></p>
+<ol>
+<li><strong>Burn-in:</strong> Run chain for mixing time, discard early samples</li>
+<li><strong>Sampling:</strong> Continue running and periodically save states</li>
+<li><strong>Estimation:</strong> Compute empirical statistics from saved samples</li>
+<li><strong>Verification:</strong> Check convergence using multiple runs</li>
+</ol>
+<p><strong>Advanced MCMC Methods:</strong></p>
+<ul>
+<li><strong>Metropolis-Hastings:</strong> More general proposal mechanisms</li>
+<li><strong>Hamiltonian Monte Carlo:</strong> Uses gradient information for better proposals</li>
+<li><strong>Parallel tempering:</strong> Runs multiple chains at different temperatures</li>
+<li><strong>Adaptive MCMC:</strong> Adjusts proposal distribution during sampling</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="variational-methods">📐 Variational Methods <a id="variational-methods"></a></h2>
+<p>Variational methods provide faster alternatives to MCMC by approximating the true model with a simpler one and performing exact computations on the approximation.</p>
+<p><strong>Core Principle:</strong></p>
+<p>Replace the true distribution with a simpler distribution Q that is:</p>
+<ul>
+<li><strong>Tractable:</strong> Easy to compute with</li>
+<li><strong>Close:</strong> Minimizes a distance measure to the true distribution</li>
+<li><strong>Structured:</strong> Has desirable independence properties</li>
+</ul>
+<p><strong>Mean-Field Variational Bayes:</strong></p>
+<p>The most common variational approach approximates the true distribution with one that minimizes the Kullback-Leibler (KL) divergence.</p>
+<p><strong>Optimization Problem:</strong></p>
+<div class="highlight"><pre><span></span><code>Q* = argmin_Q KL(Q || P)
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li>P is the true distribution from the graphical model</li>
+<li>Q is the approximating distribution (typically factorized)</li>
+<li>KL is the Kullback-Leibler divergence</li>
+</ul>
+<p><strong>Mean-Field Approximation:</strong></p>
+<p>Assume complete factorization:</p>
+<div class="highlight"><pre><span></span><code>Q(X_1, ..., X_p) = ∏_{i=1}^p Q_i(X_i)
+</code></pre></div>
+<p>This assumes all variables are independent under Q (hence "mean-field").</p>
+<p><strong>Algorithm:</strong></p>
+<ol>
+<li><strong>Initialize:</strong> Start with initial Q</li>
+<li><strong>Coordinate descent:</strong> Update each Q_i while fixing others</li>
+<li><strong>Fixed-point iteration:</strong> Repeat until convergence</li>
+<li><strong>Extract estimates:</strong> Use Q to approximate marginals and other quantities</li>
+</ol>
+<p><strong>Advantages of Variational Methods:</strong></p>
+<ul>
+<li><strong>Speed:</strong> Often much faster than MCMC</li>
+<li><strong>Deterministic:</strong> No random sampling, reproducible results</li>
+<li><strong>Scalability:</strong> Can handle very large models</li>
+<li><strong>Convergence:</strong> Clear convergence criteria</li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li><strong>Approximation quality:</strong> KL divergence may not capture all important features</li>
+<li><strong>Local optima:</strong> Coordinate descent may get stuck</li>
+<li><strong>Underestimates uncertainty:</strong> Typically produces overconfident estimates</li>
+<li><strong>Model mismatch:</strong> Strong independence assumptions may be poor fit</li>
+</ul>
+<p><strong>Comparison: MCMC vs. Variational:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>MCMC</th>
+<th>Variational</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Accuracy</strong></td>
+<td>Exact (given time)</td>
+<td>Approximate</td>
+</tr>
+<tr>
+<td><strong>Speed</strong></td>
+<td>Slow</td>
+<td>Fast</td>
+</tr>
+<tr>
+<td><strong>Convergence</strong></td>
+<td>Hard to diagnose</td>
+<td>Clear criteria</td>
+</tr>
+<tr>
+<td><strong>Scalability</strong></td>
+<td>Limited</td>
+<td>Excellent</td>
+</tr>
+<tr>
+<td><strong>Implementation</strong></td>
+<td>Simple</td>
+<td>Complex</td>
+</tr>
+<tr>
+<td><strong>Uncertainty</strong></td>
+<td>Accurate</td>
+<td>Underestimated</td>
+</tr>
+</tbody>
+</table>
+<p><strong>When to Use Variational Methods:</strong></p>
+<ul>
+<li>Large-scale problems where MCMC is too slow</li>
+<li>Applications requiring fast inference at test time</li>
+<li>Problems where approximate marginals are sufficient</li>
+<li>Situations with limited computational budget</li>
+</ul>
+<p><strong>Advanced Variational Techniques:</strong></p>
+<ul>
+<li><strong>Structured variational inference:</strong> Beyond mean-field</li>
+<li><strong>Variational EM:</strong> For models with latent variables</li>
+<li><strong>Black-box variational inference:</strong> Using stochastic optimization</li>
+<li><strong>Amortized inference:</strong> Learning inference networks (e.g., VAEs)</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="practical-implementation">💻 Practical Implementation <a id="implementation"></a></h2>
+<p><strong>Algorithm Selection Guide:</strong></p>
+<p><strong>For Tree-Structured Models:</strong></p>
+<ul>
+<li><strong>Use:</strong> Belief propagation (exact and efficient)</li>
+<li><strong>Complexity:</strong> O(nodes)</li>
+<li><strong>Accuracy:</strong> Exact marginals</li>
+</ul>
+<p><strong>For Models with Few Cycles:</strong></p>
+<ul>
+<li><strong>Use:</strong> Loopy belief propagation</li>
+<li><strong>Complexity:</strong> O(iterations × edges)</li>
+<li><strong>Accuracy:</strong> Often good approximation</li>
+<li><strong>Tuning:</strong> Adjust damping and convergence criteria</li>
+</ul>
+<p><strong>For General Models (Moderate Size):</strong></p>
+<ul>
+<li><strong>Use:</strong> MCMC (Gibbs sampling)</li>
+<li><strong>Complexity:</strong> O(samples × nodes)</li>
+<li><strong>Accuracy:</strong> Exact as samples → ∞</li>
+<li><strong>Tuning:</strong> Monitor convergence, run multiple chains</li>
+</ul>
+<p><strong>For Large-Scale Models:</strong></p>
+<ul>
+<li><strong>Use:</strong> Variational methods</li>
+<li><strong>Complexity:</strong> O(iterations × nodes)</li>
+<li><strong>Accuracy:</strong> Approximate but fast</li>
+<li><strong>Tuning:</strong> Choose approximation family carefully</li>
+</ul>
+<p><strong>Implementation Considerations:</strong></p>
+<p><strong>Numerical Stability:</strong></p>
+<ul>
+<li>Work in log-space to avoid underflow</li>
+<li>Normalize messages regularly</li>
+<li>Use stable versions of Bayes' rule</li>
+</ul>
+<p><strong>Convergence Monitoring:</strong></p>
+<ul>
+<li>Track message changes in belief propagation</li>
+<li>Use multiple chains for MCMC</li>
+<li>Monitor objective function in variational methods</li>
+</ul>
+<p><strong>Performance Optimization:</strong></p>
+<ul>
+<li>Cache repeated computations</li>
+<li>Parallelize independent operations</li>
+<li>Use sparse representations for large graphs</li>
+<li>Implement efficient message scheduling</li>
+</ul>
+<p><strong>Software Recommendations:</strong></p>
+<p><strong>Python Libraries:</strong></p>
+<ul>
+<li><strong>pgmpy:</strong> Probabilistic graphical models</li>
+<li><strong>PyMC:</strong> Bayesian inference with MCMC</li>
+<li><strong>Edward/TensorFlow Probability:</strong> Variational inference</li>
+<li><strong>NetworkX:</strong> Graph structure manipulation</li>
+</ul>
+<p><strong>Julia Packages:</strong></p>
+<ul>
+<li><strong>Turing.jl:</strong> Probabilistic programming</li>
+<li><strong>LightGraphs.jl:</strong> Graph algorithms</li>
+<li><strong>Gen.jl:</strong> Probabilistic programming with inference</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="references-further-reading">📚 References &amp; Further Reading <a id="references"></a></h2>
+<p><strong>Foundational Papers:</strong></p>
+<ol>
+<li><strong>Pearl, J. (1988).</strong> "Probabilistic Reasoning in Intelligent Systems" - Classic text on belief propagation and graphical models</li>
+<li><strong>Yedidia, Freeman, &amp; Weiss (2003).</strong> "Understanding Belief Propagation and Its Generalizations" - Comprehensive survey of message passing algorithms</li>
+<li><strong>Wainwright &amp; Jordan (2008).</strong> "Graphical Models, Exponential Families, and Variational Inference" - Detailed treatment of variational methods</li>
+</ol>
+<p><strong>Recent Advances:</strong></p>
+<ol>
+<li><strong>Kolmogorov &amp; Rother (2007).</strong> "Minimizing Nonsubmodular Functions with Graph Cuts" - Advanced inference techniques</li>
+<li><strong>Minka (2001).</strong> "Expectation Propagation for Approximate Bayesian Inference" - Alternative to belief propagation</li>
+<li><strong>Hoffman et al. (2013).</strong> "Stochastic Variational Inference" - Scalable variational inference</li>
+</ol>
+<p><strong>Textbooks:</strong></p>
+<ol>
+<li><strong>Koller &amp; Friedman (2009).</strong> "Probabilistic Graphical Models: Principles and Techniques" - Comprehensive reference</li>
+<li><strong>Murphy (2012).</strong> "Machine Learning: A Probabilistic Perspective" - Accessible introduction with practical focus</li>
+</ol>
+<p><strong>Online Resources:</strong></p>
+<ul>
+<li><strong>Stanford CS228:</strong> Probabilistic Graphical Models course materials</li>
+<li><strong>Probabilistic Programming &amp; Bayesian Methods for Hackers:</strong> Interactive tutorials</li>
+<li><strong>ArXiv cs.LG:</strong> Latest research papers on graphical model inference</li>
+</ul>
+<p><strong>Computational Tools:</strong></p>
+<ul>
+<li><strong>LibDAI:</strong> C++ library for discrete approximate inference</li>
+<li><strong>Infer.NET:</strong> Microsoft Research inference framework</li>
+<li><strong>Stan:</strong> Modern Bayesian inference platform</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<p><strong>Document Information:</strong></p>
+<ul>
+<li><strong>Topic:</strong> Inference in Graphical Models</li>
+<li><strong>Level:</strong> Advanced undergraduate / Graduate</li>
+<li><strong>Prerequisites:</strong> Probability theory, graph theory, basic algorithms</li>
+<li><strong>Applications:</strong> Machine learning, computer vision, computational biology, social network analysis</li>
+</ul>
+<p><strong>Related Topics:</strong></p>
+<ul>
+<li>Graphical model structure learning</li>
+<li>Hidden Markov models</li>
+<li>Conditional random fields</li>
+<li>Bayesian networks</li>
+<li>Factor graphs</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 10, 2025 03:21:14 UTC">October 10, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+<!-- Footer navigation (prev/next) - Material default -->
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../09-11-directed-graphical-models/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Directed Graphical Models" rel="prev">
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Previous
+            </span>
+            <div class="md-ellipsis">
+              Directed Graphical Models
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../09-13-hidden-markov-models/" class="md-footer__link md-footer__link--next" aria-label="Next: Hidden Markov Models (HMM)" rel="next">
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Next
+            </span>
+            <div class="md-ellipsis">
+              Hidden Markov Models (HMM)
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+
+  <!-- Custom footer content -->
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        <div style="text-align: center; padding: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 1rem;">
+          <p style="margin: 0.5rem 0;">
+            <strong>GenAI Atlas</strong> - Your Comprehensive Guide to AI & Machine Learning
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.9em; opacity: 0.8;">
+            © 2024 GenAI Atlas | Built with ❤️ for the AI Community
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.85em; opacity: 0.7;">
+            <em>Empowering developers, researchers, and practitioners worldwide</em>
+          </p>
+        </div>
+      </div>
+      <div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

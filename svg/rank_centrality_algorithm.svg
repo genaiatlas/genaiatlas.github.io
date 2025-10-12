@@ -1,0 +1,134 @@
+<svg viewBox="0 0 1000 750" xmlns="http://www.w3.org/2000/svg">
+  <!-- Title -->
+  <text x="500" y="35" font-size="24" font-weight="bold" text-anchor="middle" fill="#2C3E50">
+    Rank Centrality Algorithm
+  </text>
+  
+  <!-- Purpose box -->
+  <rect x="150" y="60" width="700" height="70" fill="#E8F4F8" stroke="#3498DB" stroke-width="2" rx="10"/>
+  <text x="500" y="90" font-size="15" font-weight="bold" text-anchor="middle" fill="#2C3E50">
+    Purpose: Convert Pairwise Probabilities → Global Ranking
+  </text>
+  <text x="500" y="115" font-size="12" text-anchor="middle" fill="#34495E">
+    Input: Winning probabilities for all item pairs | Output: Total ordering of items
+  </text>
+  
+  <!-- Example Data -->
+  <rect x="50" y="155" width="440" height="240" fill="#FEF5E7" stroke="#E67E22" stroke-width="2" rx="10"/>
+  <text x="270" y="185" font-size="16" font-weight="bold" text-anchor="middle" fill="#2C3E50">
+    Example: Three Movies
+  </text>
+  
+  <!-- Probability matrix -->
+  <g transform="translate(80, 205)">
+    <text x="180" y="20" font-size="13" font-weight="bold" fill="#2C3E50">Pairwise Winning Probabilities</text>
+    
+    <!-- Matrix table -->
+    <rect x="0" y="30" width="380" height="145" fill="white" stroke="#BDC3C7" stroke-width="1" rx="4"/>
+    
+    <!-- Header -->
+    <rect x="0" y="30" width="380" height="30" fill="#E67E22"/>
+    <text x="60" y="50" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Pair</text>
+    <text x="190" y="50" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Probability</text>
+    <text x="320" y="50" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Winner</text>
+    
+    <!-- Row 1 -->
+    <rect x="0" y="60" width="380" height="35" fill="#F8F9F9" stroke="#BDC3C7" stroke-width="1"/>
+    <text x="60" y="82" font-size="11" text-anchor="middle" fill="#2C3E50">A vs B</text>
+    <text x="190" y="82" font-size="11" text-anchor="middle" fill="#27AE60" font-weight="bold">P(A→B) = 0.70</text>
+    <text x="320" y="82" font-size="11" text-anchor="middle" fill="#2C3E50">A (70%)</text>
+    
+    <!-- Row 2 -->
+    <rect x="0" y="95" width="380" height="35" fill="white" stroke="#BDC3C7" stroke-width="1"/>
+    <text x="60" y="117" font-size="11" text-anchor="middle" fill="#2C3E50">B vs C</text>
+    <text x="190" y="117" font-size="11" text-anchor="middle" fill="#27AE60" font-weight="bold">P(B→C) = 0.60</text>
+    <text x="320" y="117" font-size="11" text-anchor="middle" fill="#2C3E50">B (60%)</text>
+    
+    <!-- Row 3 -->
+    <rect x="0" y="130" width="380" height="35" fill="#F8F9F9" stroke="#BDC3C7" stroke-width="1"/>
+    <text x="60" y="152" font-size="11" text-anchor="middle" fill="#2C3E50">A vs C</text>
+    <text x="190" y="152" font-size="11" text-anchor="middle" fill="#27AE60" font-weight="bold">P(A→C) = 0.80</text>
+    <text x="320" y="152" font-size="11" text-anchor="middle" fill="#2C3E50">A (80%)</text>
+  </g>
+  
+  <!-- Graph representation -->
+  <rect x="510" y="155" width="440" height="240" fill="#E8F8F5" stroke="#27AE60" stroke-width="2" rx="10"/>
+  <text x="730" y="185" font-size="16" font-weight="bold" text-anchor="middle" fill="#2C3E50">
+    Weighted Directed Graph
+  </text>
+  
+  <g transform="translate(600, 220)">
+    <!-- Node A -->
+    <circle cx="125" cy="40" r="30" fill="#3498DB" stroke="#2C3E50" stroke-width="2"/>
+    <text x="125" y="50" font-size="18" font-weight="bold" fill="white" text-anchor="middle">A</text>
+    
+    <!-- Node B -->
+    <circle cx="60" cy="130" r="30" fill="#E67E22" stroke="#2C3E50" stroke-width="2"/>
+    <text x="60" y="140" font-size="18" font-weight="bold" fill="white" text-anchor="middle">B</text>
+    
+    <!-- Node C -->
+    <circle cx="190" cy="130" r="30" fill="#9B59B6" stroke="#2C3E50" stroke-width="2"/>
+    <text x="190" y="140" font-size="18" font-weight="bold" fill="white" text-anchor="middle">C</text>
+    
+    <!-- Edges with weights -->
+    <!-- A to B -->
+    <defs>
+      <marker id="arrowblue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+        <polygon points="0 0, 10 3, 0 6" fill="#27AE60"/>
+      </marker>
+    </defs>
+    
+    <path d="M 105 60 L 75 110" stroke="#27AE60" stroke-width="3" fill="none" marker-end="url(#arrowblue)"/>
+    <rect x="70" y="75" width="35" height="20" fill="white" stroke="#27AE60" stroke-width="1" rx="3"/>
+    <text x="87" y="89" font-size="10" font-weight="bold" fill="#27AE60" text-anchor="middle">0.70</text>
+    
+    <!-- B to C -->
+    <path d="M 90 130 L 160 130" stroke="#27AE60" stroke-width="3" fill="none" marker-end="url(#arrowblue)"/>
+    <rect x="110" y="120" width="35" height="20" fill="white" stroke="#27AE60" stroke-width="1" rx="3"/>
+    <text x="127" y="134" font-size="10" font-weight="bold" fill="#27AE60" text-anchor="middle">0.60</text>
+    
+    <!-- A to C -->
+    <path d="M 145 60 L 175 110" stroke="#27AE60" stroke-width="3" fill="none" marker-end="url(#arrowblue)"/>
+    <rect x="145" y="75" width="35" height="20" fill="white" stroke="#27AE60" stroke-width="1" rx="3"/>
+    <text x="162" y="89" font-size="10" font-weight="bold" fill="#27AE60" text-anchor="middle">0.80</text>
+  </g>
+  
+  <!-- Algorithm Steps -->
+  <rect x="50" y="420" width="900" height="300" fill="#F8F9F9" stroke="#34495E" stroke-width="2" rx="10"/>
+  <text x="500" y="450" font-size="18" font-weight="bold" text-anchor="middle" fill="#2C3E50">
+    Rank Centrality Computation Steps
+  </text>
+  
+  <!-- Step 1 -->
+  <g transform="translate(80, 465)">
+    <rect x="0" y="0" width="840" height="70" fill="white" stroke="#3498DB" stroke-width="2" rx="5"/>
+    <circle cx="25" cy="35" r="15" fill="#3498DB"/>
+    <text x="25" y="41" font-size="14" font-weight="bold" fill="white" text-anchor="middle">1</text>
+    <text x="55" y="25" font-size="13" font-weight="bold" fill="#2C3E50">Build Probability Matrix P</text>
+    <text x="55" y="45" font-size="11" fill="#34495E">Create matrix where P(i,j) = probability item i beats item j</text>
+    <text x="55" y="62" font-size="11" fill="#7F8C8D">Example: P(A,B) = 0.70, P(A,C) = 0.80, P(B,C) = 0.60</text>
+  </g>
+  
+  <!-- Step 2 -->
+  <g transform="translate(80, 545)">
+    <rect x="0" y="0" width="840" height="70" fill="white" stroke="#27AE60" stroke-width="2" rx="5"/>
+    <circle cx="25" cy="35" r="15" fill="#27AE60"/>
+    <text x="25" y="41" font-size="14" font-weight="bold" fill="white" text-anchor="middle">2</text>
+    <text x="55" y="25" font-size="13" font-weight="bold" fill="#2C3E50">Normalize Rows (Optional)</text>
+    <text x="55" y="45" font-size="11" fill="#34495E">Ensure each row sums to 1 for proper probability distribution</text>
+    <text x="55" y="62" font-size="11" fill="#7F8C8D">Creates transition matrix for random walk on item graph</text>
+  </g>
+  
+  <!-- Step 3 -->
+  <g transform="translate(80, 625)">
+    <rect x="0" y="0" width="840" height="70" fill="white" stroke="#E67E22" stroke-width="2" rx="5"/>
+    <circle cx="25" cy="35" r="15" fill="#E67E22"/>
+    <text x="25" y="41" font-size="14" font-weight="bold" fill="white" text-anchor="middle">3</text>
+    <text x="55" y="25" font-size="13" font-weight="bold" fill="#2C3E50">Compute Stationary Distribution / Score Aggregation</text>
+    <text x="55" y="45" font-size="11" fill="#34495E">Sum winning probabilities: Score(i) = Σⱼ P(i,j)</text>
+    <text x="55" y="62" font-size="11" fill="#7F8C8D">Items that win more frequently get higher scores</text>
+  </g>
+  
+  <!-- Result -->
+  <rect x="250" y="715" width="500" height="0" fill="none"/>
+</svg>

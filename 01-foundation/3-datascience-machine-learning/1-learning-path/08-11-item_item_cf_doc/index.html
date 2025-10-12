@@ -1,0 +1,4691 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/1-learning-path/08-11-item_item_cf_doc/">
+      
+      
+        <link rel="prev" href="../08-10-user_user_collab_filtering/">
+      
+      
+        <link rel="next" href="../08-12-user-item-collaborative_filtering/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Item-Item Collaborative Filtering - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Item-Item Collaborative Filtering
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-fast-track/01-ft-python-basics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-probability_distributions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-fast-track/01-statistics-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Introduction of Data Science
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-data-science-lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Life Cycle
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-ai_applications_across_industries/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Application
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-07-principal-component-analysis/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Dimensionality Reduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../05-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../06-hypothesis-testing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../07-deep-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_9" id="__nav_2_4_2_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Systems
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_9">
+            <span class="md-nav__icon md-icon"></span>
+            Recommendation Systems
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-01-recsys-use-cases/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Use Cases
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-02-types-of-recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Types
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-03-objective-recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Object of Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-04-population_averages_doc/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Population Averages
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-05-clustering_recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering - Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-06-collab_filtering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Collaborative Filtering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-07-svd_recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Singular Value Decomposition (SVD)
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-08-pop-comp-ranking-algo/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Population Comparison Ranking Algorithm
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-09-markov_hmm_doc/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Markov Chains & Hidden Markov Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-10-user_user_collab_filtering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    User-User Collaborative Filtering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_9_12" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_9_12" id="__nav_2_4_2_9_12_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Item-Item Collaborative Filtering
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_2_9_12_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_9_12">
+            <span class="md-nav__icon md-icon"></span>
+            Item-Item Collaborative Filtering
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Item-Item Collaborative Filtering
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Item-Item Collaborative Filtering
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-sparsity-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Sparsity Problem
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rating-distribution-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rating Distribution Analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#item-item-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Item-Item Approach
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collision-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Collision Analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Considerations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Applications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical Applications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entertainment-media" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎬 Entertainment &amp; Media
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-commerce" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛒 E-Commerce
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#social-media-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      📱 Social Media &amp; Content
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#knowledge-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Knowledge &amp; Learning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎮 Gaming
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#travel-hospitality" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏨 Travel &amp; Hospitality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      💼 Business Applications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-academia" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Research &amp; Academia
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#music-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎵 Music &amp; Audio
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#news-content-aggregation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📰 News &amp; Content Aggregation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foundational-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Foundational Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#books" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Books
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Advanced Topics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Implementation Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-12-user-item-collaborative_filtering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    User-Item Collaborative Filtering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-13-comparison_data_personalization/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Comparison of Data Personalization Techniques
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-14-graphical_models_recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Graphical Models in Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-15-refining-recomendation-model/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Refining Recommendation Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-16-active_learning_recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Active Learning in Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../08-17-rec_sys_building/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Building Production-Ready Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../09-networking-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network and Graphical Model
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-datascience-ml-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-sparsity-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Sparsity Problem
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rating-distribution-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rating Distribution Analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#item-item-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      Item-Item Approach
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collision-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Collision Analysis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Considerations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Applications
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical Applications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entertainment-media" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎬 Entertainment &amp; Media
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-commerce" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛒 E-Commerce
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#social-media-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      📱 Social Media &amp; Content
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#knowledge-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Knowledge &amp; Learning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎮 Gaming
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#travel-hospitality" class="md-nav__link">
+    <span class="md-ellipsis">
+      🏨 Travel &amp; Hospitality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      💼 Business Applications
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-academia" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Research &amp; Academia
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#music-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎵 Music &amp; Audio
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#news-content-aggregation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📰 News &amp; Content Aggregation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foundational-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Foundational Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#books" class="md-nav__link">
+    <span class="md-ellipsis">
+      📖 Books
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-topics" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Advanced Topics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Implementation Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="item-item-collaborative-filtering">Item-Item Collaborative Filtering</h1>
+<p><a id="top"></a></p>
+<p><strong>Comprehensive Guide to Item-Based Recommendation Systems</strong></p>
+<hr />
+<h2 id="quick-navigation">Quick Navigation</h2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#sparsity-problem">The Sparsity Problem</a></li>
+<li><a href="#rating-distribution">Rating Distribution Analysis</a></li>
+<li><a href="#item-item-approach">Item-Item Approach</a></li>
+<li><a href="#collision-analysis">Collision Analysis</a></li>
+<li><a href="#implementation">Implementation Considerations</a></li>
+<li><a href="#applications">Practical Applications</a></li>
+<li><a href="#references">References &amp; Further Reading</a></li>
+</ul>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<p><a id="introduction"></a></p>
+<p>Item-Item Collaborative Filtering represents a paradigm shift in recommendation systems, moving from user-centric to item-centric similarity computation. This approach addresses fundamental limitations in traditional user-based collaborative filtering, particularly in scenarios with sparse user-item interaction matrices.</p>
+<p><img alt="Item-Item Collaborative Filtering Overview" src="../../../../svg/item_item_collaborative_filtering.svg" /></p>
+<p><strong>Core Concept:</strong></p>
+<p>Traditional collaborative filtering assumes that users with similar preferences will rate items similarly. Item-Item collaborative filtering inverts this logic: items rated similarly by users are likely similar items, and users who liked one item will likely enjoy similar items.</p>
+<p><strong>Key Advantages:</strong></p>
+<ul>
+<li><strong>Improved Accuracy:</strong> Better similarity measurements due to denser data in item space</li>
+<li><strong>Computational Efficiency:</strong> Item similarities can be precomputed and updated less frequently</li>
+<li><strong>Scalability:</strong> Number of items typically grows slower than number of users</li>
+<li><strong>Stability:</strong> Item relationships are more stable over time than user preferences</li>
+</ul>
+<p><strong>Fundamental Difference:</strong></p>
+<ul>
+<li><strong>User-Based CF:</strong> Groups users by similar preferences, recommends based on similar users</li>
+<li><strong>Item-Based CF:</strong> Groups items by similar rating patterns, recommends based on similar items</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="the-sparsity-problem">The Sparsity Problem</h2>
+<p><a id="sparsity-problem"></a></p>
+<p>The primary challenge in user-based collaborative filtering stems from the extreme sparsity of the user-item rating matrix. Understanding this problem is crucial to appreciating why item-based approaches perform better.</p>
+<p><img alt="User vs Item Matrix Comparison" src="../../../../svg/user_vs_item_matrix.svg" /></p>
+<p><strong>Matrix Sparsity Characteristics:</strong></p>
+<ul>
+<li><strong>High Dimensionality:</strong> Modern platforms have millions of users and items</li>
+<li><strong>Low Fill Rate:</strong> Typical user rates &lt;1-2% of available items</li>
+<li><strong>Sparse Interactions:</strong> Most matrix entries are missing (unrated)</li>
+<li><strong>Placeholder Ratings:</strong> Missing entries filled with artificial values (e.g., rating of 3)</li>
+</ul>
+<p><strong>Computational Challenge:</strong></p>
+<p>When computing similarity between two users using inner products:</p>
+<div class="highlight"><pre><span></span><code>similarity(user_i, user_j) = Σ(rating_i,k × rating_j,k)
+</code></pre></div>
+<p>Where:</p>
+<ul>
+<li>user_i, user_j = User rating vectors (rows in the matrix)</li>
+<li>rating_i,k = Rating by user i for item k</li>
+<li>k = Iterates over all items</li>
+<li>Most terms involve placeholder × placeholder or placeholder × actual rating</li>
+</ul>
+<p><strong>The Overlap Problem:</strong></p>
+<p>When aligning two user rating vectors:</p>
+<ul>
+<li><strong>Black entries</strong> = Actual ratings provided by user</li>
+<li><strong>Red entries</strong> = Missing ratings (placeholders)</li>
+<li><strong>Collision rate</strong> = Percentage where both users rated the same item</li>
+</ul>
+<p>In practice, the collision rate between random user pairs is extremely low (typically &lt;5%), resulting in unreliable similarity measurements.</p>
+<p><strong>Visual Representation:</strong></p>
+<div class="highlight"><pre><span></span><code>User Matrix (Reality):
+■ = Rated item (black)
+○ = Missing rating (red placeholder)
+
+User 1: ■ ○ ○ ○ ■ ○ ○ ○ ○ ○ ○ ■ ○ ○ ○ ...
+User 2: ○ ○ ■ ○ ○ ○ ■ ○ ○ ○ ○ ○ ○ ■ ○ ...
+Overlap:                                (minimal)
+</code></pre></div>
+<p><strong>Statistical Distribution:</strong></p>
+<p>The distribution of missing entries follows specific patterns that impact recommendation quality. Users exhibit heterogeneous rating behavior, with some power users rating thousands of items while most rate only a handful.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="rating-distribution-analysis">Rating Distribution Analysis</h2>
+<p><a id="rating-distribution"></a></p>
+<p>Understanding the distribution of ratings across users and items reveals why item-based approaches outperform user-based methods in typical recommendation scenarios.</p>
+<p><img alt="Rating Distribution Analysis" src="../../../../svg/rating_dist.svg" /></p>
+<p><strong>User Rating Distribution:</strong></p>
+<p>Empirical data from platforms like Netflix reveals a long-tail distribution:</p>
+<ul>
+<li><strong>Heavy users:</strong> Small fraction rating up to 40,000+ movies</li>
+<li><strong>Typical users:</strong> Majority rating &lt;100 movies</li>
+<li><strong>Median behavior:</strong> Most users rate 20-50 items</li>
+<li><strong>Statistical model:</strong> Approximately follows Poisson distribution with λ ≈ 1.2%</li>
+</ul>
+<p><strong>Mathematical Characterization:</strong></p>
+<div class="highlight"><pre><span></span><code>P(user rates k items) ≈ (λ^k × e^(-λ)) / k!
+</code></pre></div>
+<p>Where:</p>
+<ul>
+<li>λ = Average rating rate (≈1.2% of catalog)</li>
+<li>k = Number of items rated</li>
+<li>e = Euler's constant</li>
+<li>This models independent rating behavior across users</li>
+</ul>
+<p><strong>Movie Rating Distribution:</strong></p>
+<p>The item-side distribution shows even more pronounced concentration:</p>
+<ul>
+<li><strong>Popular items:</strong> Small fraction receiving 100,000+ ratings</li>
+<li><strong>Average items:</strong> Moderate number of ratings (1,000-10,000)</li>
+<li><strong>Long tail:</strong> Majority of items have very few ratings</li>
+<li><strong>Power law behavior:</strong> Few items dominate the rating volume</li>
+</ul>
+<p><strong>Key Insight:</strong></p>
+<p>The critical observation is that popular items have substantially more ratings than typical users. For example:</p>
+<ul>
+<li><strong>Miss Congeniality:</strong> ~250,000 ratings</li>
+<li><strong>Independence Day:</strong> ~250,000 ratings</li>
+<li><strong>Average user:</strong> ~600 ratings (for 500,000 total users with 1.2% rating rate)</li>
+</ul>
+<p>This asymmetry creates approximately 400× more data per popular item compared to an average user.</p>
+<p><strong>Implications for Similarity Computation:</strong></p>
+<div class="highlight"><pre><span></span><code>Rating Density:
+- Average user: 1.2% of items rated
+- Popular item: 50% of users rated (250,000/500,000)
+
+Collision Probability:
+- User-User: 1.2% × 1.2% ≈ 0.014% overlap
+- Item-Item: 50% × 50% = 25% overlap
+</code></pre></div>
+<p>This dramatic difference (1,785× more collisions for items) directly translates to more reliable similarity measurements.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="item-item-approach">Item-Item Approach</h2>
+<p><a id="item-item-approach"></a></p>
+<p>Item-Item Collaborative Filtering leverages the denser rating patterns of popular items to compute more accurate similarity measurements and generate better recommendations.</p>
+<p><strong>Core Algorithm:</strong></p>
+<p>Instead of finding similar users and recommending what they liked, we:</p>
+<ol>
+<li><strong>Compute Item Similarity:</strong> Find items similar to those the user has rated</li>
+<li><strong>Predict Missing Ratings:</strong> Estimate ratings based on similar items the user has rated</li>
+<li><strong>Generate Recommendations:</strong> Suggest items with highest predicted ratings</li>
+</ol>
+<p><strong>Item Similarity Computation:</strong></p>
+<p>For two items i and j, similarity is computed using their rating vectors (columns in the matrix):</p>
+<div class="highlight"><pre><span></span><code>similarity(item_i, item_j) = Σ(rating_u,i × rating_u,j) / normalization
+</code></pre></div>
+<p>Where:</p>
+<ul>
+<li>item_i, item_j = Item rating vectors (columns in the matrix)</li>
+<li>rating_u,i = Rating by user u for item i</li>
+<li>u = Iterates over all users who rated both items</li>
+<li>normalization = √(Σ rating_u,i²) × √(Σ rating_u,j²) for cosine similarity</li>
+</ul>
+<p><strong>Prediction Formula:</strong></p>
+<p>To predict user u's rating for item i:</p>
+<div class="highlight"><pre><span></span><code>predicted_rating_u,i = (Σ similarity(i,j) × rating_u,j) / (Σ |similarity(i,j)|)
+</code></pre></div>
+<p>Where:</p>
+<ul>
+<li>j = Items already rated by user u</li>
+<li>similarity(i,j) = Precomputed similarity between items i and j</li>
+<li>rating_u,j = User u's actual rating for item j</li>
+<li>Sum is over all rated items j similar to target item i</li>
+</ul>
+<p><strong>Example Scenario:</strong></p>
+<p>Consider predicting ratings for the movie "Ghost":</p>
+<ul>
+<li><strong>Similar movies:</strong> "Dirty Dancing", "Pretty Woman", "Sleepless in Seattle"</li>
+<li><strong>User's ratings:</strong> Dirty Dancing (5★), Pretty Woman (4★), Sleepless (4★)</li>
+<li><strong>Similarities:</strong> Ghost-Dirty Dancing (0.85), Ghost-Pretty Woman (0.78), Ghost-Sleepless (0.72)</li>
+</ul>
+<p><strong>Prediction calculation:</strong></p>
+<div class="highlight"><pre><span></span><code>predicted_rating(Ghost) = (0.85×5 + 0.78×4 + 0.72×4) / (0.85 + 0.78 + 0.72)
+                        = (4.25 + 3.12 + 2.88) / 2.35
+                        = 10.25 / 2.35
+                        = 4.36 stars
+</code></pre></div>
+<p><strong>Why This Works Better:</strong></p>
+<ul>
+<li><strong>Dense overlap:</strong> Popular items have ratings from 50%+ of users</li>
+<li><strong>Reliable similarity:</strong> Based on tens of thousands of co-ratings</li>
+<li><strong>Stable patterns:</strong> Item relationships are more stable than user preferences</li>
+<li><strong>Scalability:</strong> Item similarities can be precomputed offline</li>
+</ul>
+<p><strong>Algorithmic Advantages:</strong></p>
+<ul>
+<li><strong>Precomputation:</strong> Item-item similarity matrix computed once, updated periodically</li>
+<li><strong>Fast predictions:</strong> Real-time predictions use lookup + weighted average</li>
+<li><strong>Interpretability:</strong> Easy to explain recommendations ("because you liked X")</li>
+<li><strong>Cold start handling:</strong> New users immediately get recommendations based on few ratings</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="collision-analysis">Collision Analysis</h2>
+<p><a id="collision-analysis"></a></p>
+<p>The collision rate—the number of co-rated items when computing similarity—is the fundamental metric that determines the reliability of collaborative filtering algorithms.</p>
+<p><img alt="Collision Calculation Comparison" src="../../../../svg/collision_calc.svg" /></p>
+<p><strong>Mathematical Analysis:</strong></p>
+<p>For two popular movies (e.g., Independence Day and Miss Congeniality):</p>
+<div class="highlight"><pre><span></span><code>Given:
+- Total users: N = 500,000
+- Ratings for Independence Day: r₁ = 250,000
+- Ratings for Miss Congeniality: r₂ = 250,000
+
+Proportion rated:
+- p₁ = r₁/N = 250,000/500,000 = 0.5
+- p₂ = r₂/N = 250,000/500,000 = 0.5
+
+Expected collisions (assuming independence):
+- Collisions = N × p₁ × p₂
+- Collisions = 500,000 × 0.5 × 0.5
+- Collisions = 125,000 co-ratings
+</code></pre></div>
+<p><strong>Comparison with User-Based Approach:</strong></p>
+<p>For two typical users (each rating 1.2% of movies):</p>
+<div class="highlight"><pre><span></span><code>Given:
+- Total movies: M = 20,000
+- Ratings by user 1: r₁ = 240 (1.2% of 20,000)
+- Ratings by user 2: r₂ = 240
+
+Proportion rated:
+- p₁ = r₁/M = 240/20,000 = 0.012
+- p₂ = r₂/M = 240/20,000 = 0.012
+
+Expected collisions:
+- Collisions = M × p₁ × p₂
+- Collisions = 20,000 × 0.012 × 0.012
+- Collisions = 2.88 ≈ 3 co-ratings
+</code></pre></div>
+<p><strong>Collision Rate Comparison:</strong></p>
+<ul>
+<li><strong>Item-Item (popular movies):</strong> 125,000 collisions</li>
+<li><strong>User-User (typical users):</strong> 3 collisions</li>
+<li><strong>Improvement factor:</strong> 41,667× more data points</li>
+</ul>
+<p><strong>Statistical Reliability:</strong></p>
+<p>With more collisions, we get:</p>
+<ul>
+<li><strong>Lower variance:</strong> Standard error decreases as 1/√n</li>
+<li><strong>Better estimates:</strong> Similarity measurements approach true values</li>
+<li><strong>Reduced noise:</strong> Random fluctuations average out</li>
+<li><strong>Confidence intervals:</strong> Narrower confidence bands for predictions</li>
+</ul>
+<p><strong>Standard Error Analysis:</strong></p>
+<div class="highlight"><pre><span></span><code>Standard Error of Similarity:
+SE = σ/√n
+
+Where:
+- σ = Standard deviation of rating differences
+- n = Number of collisions
+- For items: SE = σ/√125,000 ≈ σ/354
+- For users: SE = σ/√3 ≈ σ/1.73
+- Reliability ratio: 354/1.73 ≈ 205× better
+</code></pre></div>
+<p><strong>Practical Implications:</strong></p>
+<ul>
+<li><strong>Item-based similarities</strong> are computed from massive datasets (10,000-100,000+ co-ratings)</li>
+<li><strong>User-based similarities</strong> often computed from &lt;10 co-ratings</li>
+<li><strong>Prediction accuracy</strong> directly correlates with collision rates</li>
+<li><strong>Algorithm performance</strong> dramatically better for item-based approaches</li>
+</ul>
+<p><strong>Real-World Impact:</strong></p>
+<p>In production systems:</p>
+<ul>
+<li><strong>Netflix:</strong> Item-based CF significantly outperformed user-based CF</li>
+<li><strong>Amazon:</strong> "Customers who bought this also bought" uses item-based approach</li>
+<li><strong>YouTube:</strong> Video-video similarity enables effective recommendations</li>
+<li><strong>Spotify:</strong> Track-track similarity powers playlist generation</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="implementation-considerations">Implementation Considerations</h2>
+<p><a id="implementation"></a></p>
+<p>Implementing Item-Item Collaborative Filtering in production systems requires careful attention to computational efficiency, scalability, and update strategies.</p>
+<p><strong>Architecture Overview:</strong></p>
+<p><strong>Offline Component:</strong></p>
+<ul>
+<li><strong>Similarity computation:</strong> Precompute item-item similarity matrix</li>
+<li><strong>Update frequency:</strong> Recompute daily, weekly, or on-demand</li>
+<li><strong>Storage:</strong> Sparse matrix format for efficiency</li>
+<li><strong>Pruning:</strong> Keep only top-k most similar items per item</li>
+</ul>
+<p><strong>Online Component:</strong></p>
+<ul>
+<li><strong>Prediction generation:</strong> Fast lookup and weighted average</li>
+<li><strong>Caching:</strong> Cache frequent predictions</li>
+<li><strong>Personalization:</strong> Real-time combination of item similarities with user history</li>
+<li><strong>Ranking:</strong> Sort predictions for recommendation display</li>
+</ul>
+<p><strong>Similarity Computation Methods:</strong></p>
+<p><strong>Cosine Similarity:</strong></p>
+<div class="highlight"><pre><span></span><code>cos_sim(i,j) = (Σ r_u,i × r_u,j) / (√(Σ r_u,i²) × √(Σ r_u,j²))
+</code></pre></div>
+<p>Advantages:</p>
+<ul>
+<li>Normalized to [-1, 1] range</li>
+<li>Handles different rating scales</li>
+<li>Geometric interpretation (angle between vectors)</li>
+</ul>
+<p><strong>Pearson Correlation:</strong></p>
+<div class="highlight"><pre><span></span><code>pearson(i,j) = Σ((r_u,i - r̄_i) × (r_u,j - r̄_j)) / (√(Σ(r_u,i - r̄_i)²) × √(Σ(r_u,j - r̄_j)²))
+</code></pre></div>
+<p>Advantages:</p>
+<ul>
+<li>Accounts for item rating bias</li>
+<li>Centers ratings around mean</li>
+<li>Better for items with different rating distributions</li>
+</ul>
+<p><strong>Adjusted Cosine Similarity:</strong></p>
+<div class="highlight"><pre><span></span><code>adj_cos(i,j) = Σ((r_u,i - r̄_u) × (r_u,j - r̄_u)) / (√(Σ(r_u,i - r̄_u)²) × √(Σ(r_u,j - r̄_u)²))
+</code></pre></div>
+<p>Advantages:</p>
+<ul>
+<li>Accounts for user rating bias (some users rate higher)</li>
+<li>Often performs best in practice</li>
+<li>Recommended for most applications</li>
+</ul>
+<p><strong>Scalability Strategies:</strong></p>
+<p><strong>Dimensionality Reduction:</strong></p>
+<ul>
+<li><strong>Top-k filtering:</strong> Keep only k most similar items per item (k=50-200)</li>
+<li><strong>Threshold filtering:</strong> Discard similarities below threshold (e.g., &lt;0.1)</li>
+<li><strong>Sparse matrix storage:</strong> Use compressed sparse row (CSR) format</li>
+<li><strong>Approximate methods:</strong> Locality-sensitive hashing (LSH) for large catalogs</li>
+</ul>
+<p><strong>Distributed Computing:</strong></p>
+<ul>
+<li><strong>MapReduce:</strong> Compute item pairs in parallel across cluster</li>
+<li><strong>Spark:</strong> Use RDD/DataFrame operations for similarity computation</li>
+<li><strong>Parameter server:</strong> Distributed storage of similarity matrix</li>
+<li><strong>GPU acceleration:</strong> Matrix operations on GPU for speed</li>
+</ul>
+<p><strong>Update Strategies:</strong></p>
+<p><strong>Incremental Updates:</strong></p>
+<ul>
+<li><strong>New ratings:</strong> Update only affected item similarities</li>
+<li><strong>Matrix factorization hybrid:</strong> Combine with latent factor models</li>
+<li><strong>Temporal decay:</strong> Weight recent ratings more heavily</li>
+<li><strong>Online learning:</strong> Continuously update as new data arrives</li>
+</ul>
+<p><strong>Cold Start Handling:</strong></p>
+<p><strong>New Items:</strong></p>
+<ul>
+<li><strong>Content-based fallback:</strong> Use item metadata (genre, director, actors)</li>
+<li><strong>Popularity baseline:</strong> Show generally popular items</li>
+<li><strong>Hybrid approach:</strong> Combine collaborative and content-based features</li>
+<li><strong>Active learning:</strong> Strategically ask for ratings on new items</li>
+</ul>
+<p><strong>New Users:</strong></p>
+<ul>
+<li><strong>Immediate recommendations:</strong> Based on first few ratings</li>
+<li><strong>Onboarding process:</strong> Ask for ratings on diverse popular items</li>
+<li><strong>Demographic defaults:</strong> Use age/location for initial recommendations</li>
+<li><strong>Social network:</strong> Leverage friend preferences if available</li>
+</ul>
+<p><strong>Quality Metrics:</strong></p>
+<p><strong>Offline Evaluation:</strong></p>
+<ul>
+<li><strong>RMSE:</strong> Root mean squared error on held-out test set</li>
+<li><strong>MAE:</strong> Mean absolute error for interpretability</li>
+<li><strong>Precision@k:</strong> Fraction of top-k recommendations that are relevant</li>
+<li><strong>Recall@k:</strong> Fraction of relevant items in top-k</li>
+<li><strong>NDCG:</strong> Normalized discounted cumulative gain for ranking quality</li>
+</ul>
+<p><strong>Online Evaluation:</strong></p>
+<ul>
+<li><strong>Click-through rate:</strong> Percentage of recommendations clicked</li>
+<li><strong>Conversion rate:</strong> Purchases/views from recommendations</li>
+<li><strong>Engagement:</strong> Time spent with recommended items</li>
+<li><strong>A/B testing:</strong> Compare algorithms in production</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="practical-applications">Practical Applications</h2>
+<p><a id="applications"></a></p>
+<p>Item-Item Collaborative Filtering powers recommendation systems across diverse industries and platforms, demonstrating its versatility and effectiveness.</p>
+<h3 id="entertainment-media">🎬 <strong>Entertainment &amp; Media</strong></h3>
+<p><strong>Netflix:</strong></p>
+<ul>
+<li><strong>Original application:</strong> One of the first large-scale deployments</li>
+<li><strong>Movie recommendations:</strong> Based on viewing and rating history</li>
+<li><strong>Row generation:</strong> "Because you watched X" powered by item similarity</li>
+<li><strong>Performance:</strong> Significantly improved over user-based methods</li>
+</ul>
+<p><strong>Spotify:</strong></p>
+<ul>
+<li><strong>Playlist generation:</strong> Similar songs based on listening patterns</li>
+<li><strong>Radio feature:</strong> Continuous play of similar tracks</li>
+<li><strong>Discover Weekly:</strong> Hybrid approach including item-based CF</li>
+<li><strong>Collaborative playlists:</strong> Aggregate similar tracks from multiple users</li>
+</ul>
+<p><strong>YouTube:</strong></p>
+<ul>
+<li><strong>Related videos:</strong> Item-based similarity drives sidebar recommendations</li>
+<li><strong>Autoplay:</strong> Continuous viewing based on video similarity</li>
+<li><strong>Homepage:</strong> Personalized video suggestions</li>
+<li><strong>Live recommendations:</strong> Real-time updates based on current viewing</li>
+</ul>
+<h3 id="e-commerce">🛒 <strong>E-Commerce</strong></h3>
+<p><strong>Amazon:</strong></p>
+<ul>
+<li><strong>"Customers who bought this also bought":</strong> Classic item-based CF</li>
+<li><strong>Frequently bought together:</strong> Bundle recommendations</li>
+<li><strong>Product recommendations:</strong> Personalized homepage</li>
+<li><strong>Email campaigns:</strong> Item-based suggestions in marketing</li>
+</ul>
+<p><strong>eBay:</strong></p>
+<ul>
+<li><strong>Similar listings:</strong> Show related products</li>
+<li><strong>Cross-sell opportunities:</strong> Suggest complementary items</li>
+<li><strong>Personalized search:</strong> Rank results by user preferences</li>
+<li><strong>Watch list suggestions:</strong> Recommend based on saved items</li>
+</ul>
+<h3 id="social-media-content">📱 <strong>Social Media &amp; Content</strong></h3>
+<p><strong>Pinterest:</strong></p>
+<ul>
+<li><strong>Related pins:</strong> Similar images and content</li>
+<li><strong>Board suggestions:</strong> Recommend collections</li>
+<li><strong>Search results:</strong> Personalize based on user behavior</li>
+<li><strong>Home feed:</strong> Mix of followed and similar content</li>
+</ul>
+<p><strong>Reddit:</strong></p>
+<ul>
+<li><strong>Subreddit recommendations:</strong> Similar communities</li>
+<li><strong>Post suggestions:</strong> Related discussions</li>
+<li><strong>User discovery:</strong> Find users with similar interests</li>
+<li><strong>Content moderation:</strong> Identify similar potentially problematic content</li>
+</ul>
+<h3 id="knowledge-learning">📚 <strong>Knowledge &amp; Learning</strong></h3>
+<p><strong>Coursera/edX:</strong></p>
+<ul>
+<li><strong>Course recommendations:</strong> Based on completed and enrolled courses</li>
+<li><strong>Learning paths:</strong> Suggest course sequences</li>
+<li><strong>Skill development:</strong> Recommend complementary courses</li>
+<li><strong>Career tracks:</strong> Guide professional development</li>
+</ul>
+<p><strong>Goodreads:</strong></p>
+<ul>
+<li><strong>Book recommendations:</strong> Similar books based on ratings</li>
+<li><strong>Reading lists:</strong> Curated suggestions</li>
+<li><strong>Author discovery:</strong> Find similar writers</li>
+<li><strong>Genre exploration:</strong> Navigate related categories</li>
+</ul>
+<h3 id="gaming">🎮 <strong>Gaming</strong></h3>
+<p><strong>Steam:</strong></p>
+<ul>
+<li><strong>Game recommendations:</strong> Based on library and playtime</li>
+<li><strong>Discovery queue:</strong> Personalized game browsing</li>
+<li><strong>Similar games:</strong> Find alternatives</li>
+<li><strong>Bundle suggestions:</strong> Package recommendations</li>
+</ul>
+<h3 id="travel-hospitality">🏨 <strong>Travel &amp; Hospitality</strong></h3>
+<p><strong>Airbnb:</strong></p>
+<ul>
+<li><strong>Property recommendations:</strong> Similar listings</li>
+<li><strong>Experience suggestions:</strong> Activities based on bookings</li>
+<li><strong>Destination exploration:</strong> Related locations</li>
+<li><strong>Price comparison:</strong> Similar properties at different price points</li>
+</ul>
+<p><strong>TripAdvisor:</strong></p>
+<ul>
+<li><strong>Hotel recommendations:</strong> Similar properties</li>
+<li><strong>Restaurant suggestions:</strong> Based on reviews</li>
+<li><strong>Attraction discovery:</strong> Related activities</li>
+<li><strong>Travel planning:</strong> Complete itinerary suggestions</li>
+</ul>
+<h3 id="business-applications">💼 <strong>Business Applications</strong></h3>
+<p><strong>LinkedIn:</strong></p>
+<ul>
+<li><strong>Job recommendations:</strong> Based on profile and applications</li>
+<li><strong>Connection suggestions:</strong> Professional network growth</li>
+<li><strong>Content feed:</strong> Articles and posts from similar professionals</li>
+<li><strong>Learning recommendations:</strong> Professional development courses</li>
+</ul>
+<p><strong>Salesforce:</strong></p>
+<ul>
+<li><strong>Lead scoring:</strong> Similar successful conversions</li>
+<li><strong>Product recommendations:</strong> Cross-sell opportunities</li>
+<li><strong>Content suggestions:</strong> Sales enablement materials</li>
+<li><strong>Customer segmentation:</strong> Group similar customers</li>
+</ul>
+<h3 id="research-academia">🔬 <strong>Research &amp; Academia</strong></h3>
+<p><strong>Research Paper Recommendations:</strong></p>
+<ul>
+<li><strong>ArXiv:</strong> Related papers based on reading history</li>
+<li><strong>Google Scholar:</strong> Citation-based similarity</li>
+<li><strong>Mendeley:</strong> Literature discovery</li>
+<li><strong>ResearchGate:</strong> Collaborative filtering for researchers</li>
+</ul>
+<h3 id="music-audio">🎵 <strong>Music &amp; Audio</strong></h3>
+<p><strong>Pandora:</strong></p>
+<ul>
+<li><strong>Music Genome Project:</strong> Hybrid content and collaborative</li>
+<li><strong>Station creation:</strong> Similar song discovery</li>
+<li><strong>Thumbs up/down:</strong> Refine recommendations</li>
+<li><strong>Artist radio:</strong> Explore similar musicians</li>
+</ul>
+<p><strong>SoundCloud:</strong></p>
+<ul>
+<li><strong>Related tracks:</strong> Audio similarity</li>
+<li><strong>Artist recommendations:</strong> Find new creators</li>
+<li><strong>Playlist continuation:</strong> Suggest next tracks</li>
+<li><strong>Genre exploration:</strong> Navigate music styles</li>
+</ul>
+<h3 id="news-content-aggregation">📰 <strong>News &amp; Content Aggregation</strong></h3>
+<p><strong>Flipboard:</strong></p>
+<ul>
+<li><strong>Article recommendations:</strong> Based on reading history</li>
+<li><strong>Topic exploration:</strong> Related content areas</li>
+<li><strong>Source discovery:</strong> Find similar publications</li>
+<li><strong>Personalized magazines:</strong> Curated content collections</li>
+</ul>
+<p><strong>Google News:</strong></p>
+<ul>
+<li><strong>Story recommendations:</strong> Similar articles</li>
+<li><strong>Topic tracking:</strong> Follow related stories</li>
+<li><strong>Source diversity:</strong> Multiple perspectives on similar topics</li>
+<li><strong>Breaking news:</strong> Context from related coverage</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="references-further-reading">References &amp; Further Reading</h2>
+<p><a id="references"></a></p>
+<h3 id="foundational-papers">📚 <strong>Foundational Papers</strong></h3>
+<ol>
+<li><strong>Sarwar, B., Karypis, G., Konstan, J., &amp; Riedl, J. (2001)</strong></li>
+<li><em>"Item-based collaborative filtering recommendation algorithms"</em></li>
+<li>Proceedings of WWW '01</li>
+<li><a href="https://doi.org/10.1145/371920.372071">https://doi.org/10.1145/371920.372071</a></li>
+<li>
+<p>The seminal paper introducing item-based collaborative filtering</p>
+</li>
+<li>
+<p><strong>Linden, G., Smith, B., &amp; York, J. (2003)</strong></p>
+</li>
+<li><em>"Amazon.com recommendations: Item-to-item collaborative filtering"</em></li>
+<li>IEEE Internet Computing, 7(1), 76-80</li>
+<li><a href="https://doi.org/10.1109/MIC.2003.1167344">https://doi.org/10.1109/MIC.2003.1167344</a></li>
+<li>
+<p>Amazon's production implementation and lessons learned</p>
+</li>
+<li>
+<p><strong>Deshpande, M., &amp; Karypis, G. (2004)</strong></p>
+</li>
+<li><em>"Item-based top-N recommendation algorithms"</em></li>
+<li>ACM Transactions on Information Systems, 22(1), 143-177</li>
+<li><a href="https://doi.org/10.1145/963770.963776">https://doi.org/10.1145/963770.963776</a></li>
+<li>Comprehensive analysis of top-N recommendation generation</li>
+</ol>
+<h3 id="books">📖 <strong>Books</strong></h3>
+<ol>
+<li><strong>Aggarwal, C. C. (2016)</strong></li>
+<li><em>"Recommender Systems: The Textbook"</em></li>
+<li>Springer</li>
+<li>
+<p>Comprehensive coverage of collaborative filtering techniques including detailed item-based methods</p>
+</li>
+<li>
+<p><strong>Ricci, F., Rokach, L., &amp; Shapira, B. (2015)</strong></p>
+</li>
+<li><em>"Recommender Systems Handbook"</em> (2nd Edition)</li>
+<li>Springer</li>
+<li>Industry standard reference with practical implementation guidance</li>
+</ol>
+<h3 id="advanced-topics">🔬 <strong>Advanced Topics</strong></h3>
+<ol>
+<li><strong>Koren, Y., Bell, R., &amp; Volinsky, C. (2009)</strong></li>
+<li><em>"Matrix factorization techniques for recommender systems"</em></li>
+<li>Computer, 42(8), 30-37</li>
+<li><a href="https://doi.org/10.1109/MC.2009.263">https://doi.org/10.1109/MC.2009.263</a></li>
+<li>
+<p>Evolution beyond item-item CF to latent factor models</p>
+</li>
+<li>
+<p><strong>He, X., Liao, L., Zhang, H., Nie, L., Hu, X., &amp; Chua, T. S. (2017)</strong></p>
+</li>
+<li><em>"Neural collaborative filtering"</em></li>
+<li>Proceedings of WWW '17</li>
+<li><a href="https://doi.org/10.1145/3038912.3052569">https://doi.org/10.1145/3038912.3052569</a></li>
+<li>
+<p>Deep learning approaches building on collaborative filtering foundations</p>
+</li>
+<li>
+<p><strong>Ning, X., &amp; Karypis, G. (2011)</strong></p>
+</li>
+<li><em>"SLIM: Sparse linear methods for top-N recommender systems"</em></li>
+<li>Proceedings of ICDM '11</li>
+<li><a href="https://doi.org/10.1109/ICDM.2011.134">https://doi.org/10.1109/ICDM.2011.134</a></li>
+<li>Modern sparse item-item models with improved accuracy</li>
+</ol>
+<h3 id="implementation-resources">🛠️ <strong>Implementation Resources</strong></h3>
+<p><strong>Python Libraries:</strong></p>
+<ul>
+<li><strong>Surprise:</strong> <a href="http://surpriselib.com/">http://surpriselib.com/</a> - Scikit for recommendation systems</li>
+<li><strong>Implicit:</strong> <a href="https://github.com/benfred/implicit">https://github.com/benfred/implicit</a> - Fast collaborative filtering</li>
+<li><strong>LightFM:</strong> <a href="https://github.com/lyst/lightfm">https://github.com/lyst/lightfm</a> - Hybrid recommendation algorithms</li>
+</ul>
+<p><strong>Tutorials &amp; Code:</strong></p>
+<ul>
+<li><strong>Google Colab Notebook:</strong> Item-Item CF Implementation</li>
+<li><a href="https://colab.research.google.com/"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></li>
+<li>
+<p>Complete walkthrough with MovieLens dataset</p>
+</li>
+<li>
+<p><strong>Kaggle Datasets:</strong></p>
+</li>
+<li>MovieLens: <a href="https://www.kaggle.com/grouplens/movielens-20m-dataset">https://www.kaggle.com/grouplens/movielens-20m-dataset</a></li>
+<li>Amazon Reviews: <a href="https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews">https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews</a></li>
+</ul>
+<p><strong>Documentation &amp; Courses:</strong></p>
+<ul>
+<li><strong>Stanford CS246:</strong> Mining Massive Datasets - Recommendation Systems Module</li>
+<li><strong>Coursera:</strong> Recommender Systems Specialization (University of Minnesota)</li>
+<li><strong>Fast.ai:</strong> Collaborative Filtering Deep Dive</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<p><strong>Document Information:</strong></p>
+<ul>
+<li><strong>Version:</strong> 1.0</li>
+<li><strong>Last Updated:</strong> October 2025</li>
+<li><strong>Target Audience:</strong> ML Engineers, Data Scientists, Researchers</li>
+<li><strong>Prerequisites:</strong> Linear algebra, basic statistics, Python programming</li>
+<li><strong>Estimated Reading Time:</strong> 25-30 minutes</li>
+</ul>
+<hr />
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 8, 2025 12:36:09 UTC">October 8, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+<!-- Footer navigation (prev/next) - Material default -->
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../08-10-user_user_collab_filtering/" class="md-footer__link md-footer__link--prev" aria-label="Previous: User-User Collaborative Filtering" rel="prev">
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Previous
+            </span>
+            <div class="md-ellipsis">
+              User-User Collaborative Filtering
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../08-12-user-item-collaborative_filtering/" class="md-footer__link md-footer__link--next" aria-label="Next: User-Item Collaborative Filtering with Singular Value Decomposition (SVD)" rel="next">
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Next
+            </span>
+            <div class="md-ellipsis">
+              User-Item Collaborative Filtering with Singular Value Decomposition (SVD)
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+
+  <!-- Custom footer content -->
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        <div style="text-align: center; padding: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 1rem;">
+          <p style="margin: 0.5rem 0;">
+            <strong>GenAI Atlas</strong> - Your Comprehensive Guide to AI & Machine Learning
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.9em; opacity: 0.8;">
+            © 2024 GenAI Atlas | Built with ❤️ for the AI Community
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.85em; opacity: 0.7;">
+            <em>Empowering developers, researchers, and practitioners worldwide</em>
+          </p>
+        </div>
+      </div>
+      <div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

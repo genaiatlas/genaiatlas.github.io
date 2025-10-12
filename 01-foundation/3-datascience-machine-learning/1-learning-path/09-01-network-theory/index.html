@@ -1,0 +1,5013 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/1-learning-path/09-01-network-theory/">
+      
+      
+        <link rel="prev" href="../09-networking-graphical-models/">
+      
+      
+        <link rel="next" href="../09-02-network-representations/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Introduction to Networks and Graph Theory - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Introduction to Networks and Graph Theory
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-fast-track/01-ft-python-basics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-probability_distributions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-fast-track/01-statistics-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2" id="__nav_2_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Introduction of Data Science
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../02-data-science-lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Life Cycle
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../03-ai_applications_across_industries/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Data Science Application
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-clustering/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../04-07-principal-component-analysis/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Dimensionality Reduction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../05-regression/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../06-hypothesis-testing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../07-deep-learning/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../08-recsys/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_10" id="__nav_2_4_2_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Network and Graphical Model
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_2_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_10">
+            <span class="md-nav__icon md-icon"></span>
+            Network and Graphical Model
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-networking-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fundamentals
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_2_10_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_2_10_2" id="__nav_2_4_2_10_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Network Theory
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_2_10_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_2_10_2">
+            <span class="md-nav__icon md-icon"></span>
+            Network Theory
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Introduction to Networks and Graph Theory
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction to Networks and Graph Theory
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is a Network?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-definitions-and-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Definitions and Terminology
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples-of-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples of Networks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples of Networks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#technological-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌐 Technological Networks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#social-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      👥 Social Networks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biological-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧬 Biological Networks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#information-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Information Networks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types-of-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Types of Networks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Types of Networks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#directed-vs-undirected-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Directed vs Undirected Networks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simple-networks-vs-multi-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple Networks vs Multi-graphs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acyclic-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Acyclic Networks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bipartite-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bipartite Networks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Properties
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#degree-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Degree Distribution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centrality-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Centrality Measures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clustering-and-communities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clustering and Communities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-length-and-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Path Length and Connectivity
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#processes-on-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Processes on Networks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Processes on Networks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#information-spreading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Information Spreading
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cascading-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cascading Effects
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-traffic-and-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Traffic and Flow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#influence-and-adoption" class="md-nav__link">
+    <span class="md-ellipsis">
+      Influence and Adoption
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applications-and-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications and Use Cases
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Applications and Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#social-media-marketing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Social Media Marketing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendation-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendation Systems
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#epidemic-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      Epidemic Control
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrastructure-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      Infrastructure Design
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#link-prediction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Link Prediction
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-questions-in-network-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Questions in Network Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Questions in Network Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#structural-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Structural Questions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#process-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Process Questions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prediction-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔮 Prediction Questions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Design Questions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#visualization-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Visualization Tools
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Code Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#related-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      🤖 Related Models
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      📄 Research Papers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foundational-texts" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Foundational Texts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-research-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Key Research Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#online-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌐 Online Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Datasets
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-02-network-representations/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Netwrok Representations
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-03-network-centrality-measure/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Centrality measures
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-04-spatial-centrality-measures/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Spatial Centrality measures
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-05-global-network-stats/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Global Network Statistics
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-06-network-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-07-stochastic-network/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Stochastic Network Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-08-influence-maximization-networks/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Influence Maximization in Networks
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-09-undirected-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Undirected Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-10-ising-gaussian-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Ising and Gaussian Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-11-directed-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Directed Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-12-inference-graphical-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Inference in Graphical Models
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-13-hidden-markov-models/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hidden Markov Models (HMMs)
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../09-14-kalman-filters/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Kalman Filters
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-datascience-ml-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is a Network?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-definitions-and-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Definitions and Terminology
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples-of-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples of Networks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples of Networks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#technological-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌐 Technological Networks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#social-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      👥 Social Networks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biological-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧬 Biological Networks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#information-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Information Networks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types-of-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Types of Networks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Types of Networks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#directed-vs-undirected-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Directed vs Undirected Networks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simple-networks-vs-multi-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Simple Networks vs Multi-graphs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acyclic-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Acyclic Networks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bipartite-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bipartite Networks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Properties
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#degree-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Degree Distribution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centrality-measures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Centrality Measures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clustering-and-communities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clustering and Communities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-length-and-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Path Length and Connectivity
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#processes-on-networks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Processes on Networks
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Processes on Networks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#information-spreading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Information Spreading
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cascading-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cascading Effects
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-traffic-and-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Traffic and Flow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#influence-and-adoption" class="md-nav__link">
+    <span class="md-ellipsis">
+      Influence and Adoption
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applications-and-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applications and Use Cases
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Applications and Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#social-media-marketing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Social Media Marketing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendation-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendation Systems
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#epidemic-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      Epidemic Control
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrastructure-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      Infrastructure Design
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#link-prediction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Link Prediction
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-questions-in-network-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Questions in Network Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Questions in Network Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#structural-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      🎯 Structural Questions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#process-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Process Questions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prediction-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔮 Prediction Questions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      🛠️ Design Questions
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interactive-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#visualization-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Visualization Tools
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      💻 Code Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#related-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      🤖 Related Models
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#research-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      📄 Research Papers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References &amp; Further Reading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foundational-texts" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Foundational Texts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-research-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔬 Key Research Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#online-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      🌐 Online Resources
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datasets" class="md-nav__link">
+    <span class="md-ellipsis">
+      📊 Datasets
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="introduction-to-networks-and-graph-theory">Introduction to Networks and Graph Theory <a id="top"></a></h1>
+<h2 id="quick-navigation">📚 Quick Navigation</h2>
+<ul>
+<li><a href="#what-is-a-network">What is a Network?</a></li>
+<li><a href="#network-definitions-and-terminology">Network Definitions and Terminology</a></li>
+<li><a href="#examples-of-networks">Examples of Networks</a></li>
+<li><a href="#types-of-networks">Types of Networks</a></li>
+<li><a href="#network-properties">Network Properties</a></li>
+<li><a href="#processes-on-networks">Processes on Networks</a></li>
+<li><a href="#applications-and-use-cases">Applications and Use Cases</a></li>
+<li><a href="#key-questions-in-network-analysis">Key Questions in Network Analysis</a></li>
+<li><a href="#interactive-resources">Interactive Resources</a></li>
+<li><a href="#references-further-reading">References &amp; Further Reading</a></li>
+</ul>
+<hr />
+<h2 id="what-is-a-network">What is a Network?</h2>
+<p>At a high level, a network is a collection of interacting agents or elements. Networks are found everywhere because the most interesting phenomena arise from interactions between basic entities.</p>
+<p><strong>Core Concept:</strong></p>
+<p>Networks represent relationships and connections between entities. The power of a network comes not from the individual components in isolation, but from how they interact and connect with each other.</p>
+<p><img alt="Network Fundamentals" src="../../../../svg/network_fundamentals.svg" /></p>
+<p><strong>Key Insight:</strong></p>
+<ul>
+<li>Individual elements in isolation have limited value</li>
+<li>The connections and interactions create emergent complexity</li>
+<li>Network structure fundamentally determines system behavior</li>
+</ul>
+<p><strong>Mathematical Definition:</strong></p>
+<p>Mathematically, a network is an object called a <strong>graph</strong>. A graph consists of:</p>
+<ul>
+<li><strong>Nodes (Vertices):</strong> The individual elements or entities</li>
+<li><strong>Edges (Links):</strong> The connections between nodes</li>
+<li><strong>Network Structure:</strong> The pattern of how nodes and edges are arranged</li>
+</ul>
+<p><strong>Formula Representation:</strong></p>
+<div class="highlight"><pre><span></span><code>G = (V, E)
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li>G = Graph (Network)</li>
+<li>V = Set of vertices (nodes)</li>
+<li>E = Set of edges (connections)</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="network-definitions-and-terminology">Network Definitions and Terminology</h2>
+<p>Understanding the precise terminology is essential for studying networks effectively.</p>
+<p><strong>Fundamental Terms:</strong></p>
+<ul>
+<li><strong>Node (Vertex):</strong> An individual entity in the network</li>
+<li><strong>Edge (Link):</strong> A connection between two nodes</li>
+<li><strong>Degree:</strong> The number of edges connected to a node</li>
+<li><strong>Path:</strong> A sequence of edges connecting nodes</li>
+<li><strong>Cycle:</strong> A path that starts and ends at the same node</li>
+</ul>
+<p><strong>Network Representation:</strong></p>
+<p>Networks can be represented using:</p>
+<ul>
+<li><strong>Adjacency Matrix:</strong> A matrix A where A[i,j] = 1 if nodes i and j are connected</li>
+<li><strong>Adjacency List:</strong> For each node, list all connected nodes</li>
+<li><strong>Edge List:</strong> List of all edges as pairs of nodes</li>
+</ul>
+<p><strong>Adjacency Matrix Example:</strong></p>
+<div class="highlight"><pre><span></span><code>     A  B  C  D
+A  [ 0  1  1  0 ]
+B  [ 1  0  1  1 ]
+C  [ 1  1  0  1 ]
+D  [ 0  1  1  0 ]
+</code></pre></div>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li>Rows and columns represent nodes</li>
+<li>1 indicates presence of edge</li>
+<li>0 indicates absence of edge</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="examples-of-networks">Examples of Networks</h2>
+<p>Networks appear across virtually every domain of study and everyday life.</p>
+<h3 id="technological-networks">🌐 Technological Networks</h3>
+<p><strong>World Wide Web:</strong></p>
+<ul>
+<li><strong>Nodes:</strong> Web pages</li>
+<li><strong>Edges:</strong> Hyperlinks between pages</li>
+<li><strong>Type:</strong> Directed network (links have direction)</li>
+</ul>
+<p><strong>Internet:</strong></p>
+<ul>
+<li><strong>Nodes:</strong> Computers and servers</li>
+<li><strong>Edges:</strong> Network protocol interactions</li>
+<li><strong>Type:</strong> Undirected network (communication is bidirectional)</li>
+</ul>
+<p><strong>Road Networks:</strong></p>
+<ul>
+<li><strong>Nodes:</strong> Intersections</li>
+<li><strong>Edges:</strong> Road segments</li>
+<li><strong>Process:</strong> Traffic flow through the network</li>
+</ul>
+<h3 id="social-networks">👥 Social Networks</h3>
+<p><strong>Facebook:</strong></p>
+<ul>
+<li><strong>Nodes:</strong> People (users)</li>
+<li><strong>Edges:</strong> Friendship relationships</li>
+<li><strong>Type:</strong> Undirected network (friendship is mutual)</li>
+</ul>
+<p><strong>Twitter:</strong></p>
+<ul>
+<li><strong>Nodes:</strong> User accounts</li>
+<li><strong>Edges:</strong> Following relationships</li>
+<li><strong>Type:</strong> Directed network (following is not necessarily mutual)</li>
+</ul>
+<p><strong>Professional Networks:</strong></p>
+<ul>
+<li><strong>Nodes:</strong> Professionals or organizations</li>
+<li><strong>Edges:</strong> Collaboration or business relationships</li>
+<li><strong>Analysis:</strong> Career influence and information flow</li>
+</ul>
+<h3 id="biological-networks">🧬 Biological Networks</h3>
+<p><strong>Neural Networks:</strong></p>
+<ul>
+<li><strong>Nodes:</strong> Neurons</li>
+<li><strong>Edges:</strong> Synapses (connections)</li>
+<li><strong>Process:</strong> Electrical signals and neural activity patterns</li>
+</ul>
+<p><strong>Gene Regulatory Networks:</strong></p>
+<ul>
+<li><strong>Nodes:</strong> Genes</li>
+<li><strong>Edges:</strong> Regulatory effects between genes</li>
+<li><strong>Purpose:</strong> Understanding gene expression control</li>
+</ul>
+<p><strong>Food Webs:</strong></p>
+<ul>
+<li><strong>Nodes:</strong> Species</li>
+<li><strong>Edges:</strong> Predator-prey relationships</li>
+<li><strong>Type:</strong> Directed network (direction shows who eats whom)</li>
+</ul>
+<h3 id="information-networks">📚 Information Networks</h3>
+<p><strong>Citation Networks:</strong></p>
+<ul>
+<li><strong>Nodes:</strong> Research articles</li>
+<li><strong>Edges:</strong> Citations between papers</li>
+<li><strong>Type:</strong> Directed acyclic graph (papers cite earlier papers)</li>
+</ul>
+<p><strong>Recommendation Systems:</strong></p>
+<ul>
+<li><strong>Nodes:</strong> Users and items (bipartite structure)</li>
+<li><strong>Edges:</strong> Ratings or interactions</li>
+<li><strong>Example:</strong> Netflix users and movies</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="types-of-networks">Types of Networks</h2>
+<p>Networks can be categorized based on their structural properties and characteristics.</p>
+<p><img alt="Directed and Undirected Networks" src="../../../../svg/directed_undirected.svg" /></p>
+<h3 id="directed-vs-undirected-networks">Directed vs Undirected Networks</h3>
+<p><strong>Directed Networks:</strong></p>
+<p>Edges have a specific direction, representing asymmetric relationships.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>World Wide Web:</strong> Website A can link to B without B linking back</li>
+<li><strong>Twitter:</strong> User A can follow B without B following A</li>
+<li><strong>Food Webs:</strong> Lion eats gazelle (not vice versa)</li>
+<li><strong>Citation Networks:</strong> Paper A cites paper B (temporal direction)</li>
+<li><strong>Gene Regulatory Networks:</strong> Gene A regulates gene B</li>
+</ul>
+<p><strong>Undirected Networks:</strong></p>
+<p>Edges have no direction, representing symmetric relationships.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Internet:</strong> Communication channels are bidirectional</li>
+<li><strong>Facebook:</strong> Friendship is mutual</li>
+<li><strong>Power Grids:</strong> Electricity flow is bidirectional</li>
+<li><strong>Neural Networks:</strong> Synaptic connections</li>
+<li><strong>Road Networks:</strong> Most roads allow traffic in both directions</li>
+</ul>
+<h3 id="simple-networks-vs-multi-graphs">Simple Networks vs Multi-graphs</h3>
+<p><strong>Simple Networks:</strong></p>
+<ul>
+<li>At most one edge between any two nodes</li>
+<li>No self-loops (edges connecting a node to itself)</li>
+<li>Common in power grids, transportation networks</li>
+</ul>
+<p><strong>Multi-graphs:</strong></p>
+<ul>
+<li>Multiple edges allowed between nodes</li>
+<li>Self-loops permitted</li>
+<li>Common in neural networks, communication networks</li>
+</ul>
+<h3 id="acyclic-networks">Acyclic Networks</h3>
+<p><strong>Trees:</strong></p>
+<p>Networks with no cycles in the underlying graph.</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>No closed loops</li>
+<li>Hierarchical structure</li>
+<li>Unique path between any two nodes</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Phylogenetic Trees:</strong> Evolutionary relationships</li>
+<li><strong>Organizational Charts:</strong> Corporate hierarchies</li>
+<li><strong>File Systems:</strong> Directory structures</li>
+</ul>
+<p><strong>Directed Acyclic Graphs (DAGs):</strong></p>
+<p>Directed networks with no directed cycles.</p>
+<p><strong>Important Property:</strong></p>
+<p>Can have undirected cycles, but no directed cycles (cannot return to starting node by following directed edges).</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Food Webs:</strong> Hierarchical predator-prey relationships</li>
+<li><strong>Citation Networks:</strong> Papers cite earlier papers only</li>
+<li><strong>Task Dependencies:</strong> Project management workflows</li>
+</ul>
+<h3 id="bipartite-networks">Bipartite Networks</h3>
+<p><img alt="Network Categories" src="../../../../svg/network_categories.svg" /></p>
+<p><strong>Definition:</strong></p>
+<p>Nodes can be partitioned into two distinct sets, with edges only between the sets (not within sets).</p>
+<p><strong>Structure:</strong></p>
+<div class="highlight"><pre><span></span><code>Set A          Set B
+User1 -------- Movie1
+User2 -------- Movie2
+User3 -------- Movie3
+User4 -------- Movie4
+</code></pre></div>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Recommendation Systems:</strong> Users and items (Netflix, Amazon)</li>
+<li><strong>Authorship Networks:</strong> Authors and papers</li>
+<li><strong>Employment Networks:</strong> Workers and companies</li>
+<li><strong>Dating Apps:</strong> Two groups of users seeking matches</li>
+</ul>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Collaborative filtering for recommendations</li>
+<li>Matching problems and optimization</li>
+<li>Resource allocation</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="network-properties">Network Properties</h2>
+<p>Understanding network properties helps characterize and compare different networks.</p>
+<h3 id="degree-distribution">Degree Distribution</h3>
+<p><strong>Node Degree:</strong></p>
+<p>The number of edges connected to a node.</p>
+<p><strong>For Directed Networks:</strong></p>
+<ul>
+<li><strong>In-degree:</strong> Number of incoming edges</li>
+<li><strong>Out-degree:</strong> Number of outgoing edges</li>
+</ul>
+<p><strong>Degree Distribution:</strong></p>
+<p>The probability distribution of degrees across the network.</p>
+<div class="highlight"><pre><span></span><code>P(k) = Probability that a randomly chosen node has degree k
+</code></pre></div>
+<p><strong>Common Patterns:</strong></p>
+<ul>
+<li><strong>Random Networks:</strong> Poisson distribution</li>
+<li><strong>Scale-free Networks:</strong> Power-law distribution</li>
+<li><strong>Regular Networks:</strong> All nodes have same degree</li>
+</ul>
+<h3 id="centrality-measures">Centrality Measures</h3>
+<p>Different ways to measure node importance or influence:</p>
+<p><strong>Degree Centrality:</strong></p>
+<ul>
+<li>Simply counts connections</li>
+<li>High degree = well-connected node</li>
+</ul>
+<p><strong>Betweenness Centrality:</strong></p>
+<ul>
+<li>Measures how often a node lies on shortest paths</li>
+<li>Important for information flow control</li>
+</ul>
+<p><strong>Closeness Centrality:</strong></p>
+<ul>
+<li>Average distance to all other nodes</li>
+<li>High closeness = can reach others quickly</li>
+</ul>
+<p><strong>Eigenvector Centrality:</strong></p>
+<ul>
+<li>Importance based on importance of neighbors</li>
+<li>Used in Google's PageRank algorithm</li>
+</ul>
+<h3 id="clustering-and-communities">Clustering and Communities</h3>
+<p><strong>Clustering Coefficient:</strong></p>
+<p>Measures how much nodes tend to cluster together.</p>
+<div class="highlight"><pre><span></span><code>C = (Number of closed triangles) / (Number of possible triangles)
+</code></pre></div>
+<p><strong>Community Structure:</strong></p>
+<ul>
+<li>Groups of nodes more densely connected internally</li>
+<li>Useful for identifying functional modules</li>
+<li>Applications in social groups, biological pathways</li>
+</ul>
+<h3 id="path-length-and-connectivity">Path Length and Connectivity</h3>
+<p><strong>Average Path Length:</strong></p>
+<p>Average number of steps along shortest paths between all node pairs.</p>
+<p><strong>Diameter:</strong></p>
+<p>Maximum distance between any two nodes.</p>
+<p><strong>Small-World Property:</strong></p>
+<ul>
+<li>Short average path lengths</li>
+<li>High clustering</li>
+<li>Common in social networks ("six degrees of separation")</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="processes-on-networks">Processes on Networks</h2>
+<p>While network structure is important, it's the processes occurring on networks that bring them to life.</p>
+<p><img alt="Network Processes" src="../../../../svg/network_processes.svg" /></p>
+<h3 id="information-spreading">Information Spreading</h3>
+<p><strong>Viral Propagation:</strong></p>
+<p>How information, ideas, or content spreads through a network.</p>
+<p><strong>Key Factors:</strong></p>
+<ul>
+<li><strong>Network Structure:</strong> Connectivity patterns affect spread</li>
+<li><strong>Influential Nodes:</strong> Some nodes are more effective spreaders</li>
+<li><strong>Threshold Effects:</strong> Minimum exposure needed for adoption</li>
+</ul>
+<p><strong>Mathematical Model (SIS Model):</strong></p>
+<div class="highlight"><pre><span></span><code>dI/dt = βSI - γI
+</code></pre></div>
+<p><strong>Where:</strong></p>
+<ul>
+<li>I = Number of infected/informed nodes</li>
+<li>S = Number of susceptible nodes</li>
+<li>β = Transmission rate</li>
+<li>γ = Recovery/forgetting rate</li>
+</ul>
+<h3 id="cascading-effects">Cascading Effects</h3>
+<p><strong>Definition:</strong></p>
+<p>When an action by one node triggers actions by connected nodes, creating a chain reaction.</p>
+<p><strong>Examples:</strong></p>
+<ul>
+<li><strong>Tweet Retweets:</strong> Content spreads through social network</li>
+<li><strong>Bank Runs:</strong> Financial panic spreads</li>
+<li><strong>Power Grid Failures:</strong> Cascade of blackouts</li>
+<li><strong>Fashion Trends:</strong> Adoption spreads through social influence</li>
+</ul>
+<h3 id="network-traffic-and-flow">Network Traffic and Flow</h3>
+<p><strong>Flow Optimization:</strong></p>
+<ul>
+<li>Routing information efficiently</li>
+<li>Managing congestion</li>
+<li>Balancing load across network</li>
+</ul>
+<p><strong>Applications:</strong></p>
+<ul>
+<li><strong>Transportation:</strong> Traffic routing</li>
+<li><strong>Internet:</strong> Packet routing</li>
+<li><strong>Supply Chain:</strong> Logistics optimization</li>
+</ul>
+<h3 id="influence-and-adoption">Influence and Adoption</h3>
+<p><strong>Influence Propagation:</strong></p>
+<p>How behaviors, opinions, or products spread through social influence.</p>
+<p><strong>Factors Affecting Influence:</strong></p>
+<ul>
+<li><strong>Network Position:</strong> Central nodes have more influence</li>
+<li><strong>Trust Relationships:</strong> Strong ties vs weak ties</li>
+<li><strong>Homophily:</strong> Similar nodes influence each other more</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="applications-and-use-cases">Applications and Use Cases</h2>
+<p>Networks provide powerful tools for solving real-world problems.</p>
+<h3 id="social-media-marketing">Social Media Marketing</h3>
+<p><strong>Problem:</strong></p>
+<p>Maximize reach of advertising campaign with limited budget.</p>
+<p><strong>Network Approach:</strong></p>
+<ul>
+<li>Identify influential users (high centrality)</li>
+<li>Consider not just direct connections but network effects</li>
+<li>Target users whose friends are themselves influential</li>
+</ul>
+<p><strong>Example: Concert Promotion</strong></p>
+<p>Instead of giving free tickets to person with most friends, give to someone whose friends are themselves well-connected, ensuring information spreads further.</p>
+<h3 id="recommendation-systems">Recommendation Systems</h3>
+<p><strong>Collaborative Filtering:</strong></p>
+<ul>
+<li>Use network of user-item interactions</li>
+<li>Recommend items liked by similar users</li>
+<li>Predict missing edges in bipartite network</li>
+</ul>
+<p><strong>Network-Based Approach:</strong></p>
+<ul>
+<li><strong>Netflix:</strong> Users and movies form bipartite network</li>
+<li><strong>Amazon:</strong> Products linked by co-purchase behavior</li>
+<li><strong>Spotify:</strong> Music recommendation based on listening patterns</li>
+</ul>
+<h3 id="epidemic-control">Epidemic Control</h3>
+<p><strong>Disease Spread Modeling:</strong></p>
+<ul>
+<li>Model population as network</li>
+<li>Predict spread patterns</li>
+<li>Identify critical vaccination targets</li>
+</ul>
+<p><strong>Network Interventions:</strong></p>
+<ul>
+<li>Vaccinate high-degree individuals (super-spreaders)</li>
+<li>Break key connections to slow spread</li>
+<li>Monitor network for early outbreak detection</li>
+</ul>
+<h3 id="infrastructure-design">Infrastructure Design</h3>
+<p><strong>Optimization Goals:</strong></p>
+<ul>
+<li>Minimize cost while ensuring connectivity</li>
+<li>Maximize robustness to failures</li>
+<li>Balance efficiency and redundancy</li>
+</ul>
+<p><strong>Applications:</strong></p>
+<ul>
+<li><strong>Power Grids:</strong> Reliable electricity distribution</li>
+<li><strong>Transportation:</strong> Efficient road/rail networks</li>
+<li><strong>Internet:</strong> Robust communication infrastructure</li>
+</ul>
+<h3 id="link-prediction">Link Prediction</h3>
+<p><strong>Problem:</strong></p>
+<p>Predict future or missing edges in a network.</p>
+<p><strong>Applications:</strong></p>
+<ul>
+<li><strong>Social Networks:</strong> Friend recommendations</li>
+<li><strong>Collaboration Networks:</strong> Suggest potential collaborators</li>
+<li><strong>Knowledge Graphs:</strong> Complete missing information</li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul>
+<li>Common neighbors approach</li>
+<li>Network proximity measures</li>
+<li>Machine learning on network features</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="key-questions-in-network-analysis">Key Questions in Network Analysis</h2>
+<p><img alt="Influence Propagation" src="../../../../svg/influence_propagation.svg" /></p>
+<h3 id="structural-questions">🎯 Structural Questions</h3>
+<p><strong>Network Characterization:</strong></p>
+<ul>
+<li>What are the distinctive features of this network?</li>
+<li>How does it compare to other network types?</li>
+<li>What properties make it unique?</li>
+</ul>
+<p><strong>Important Nodes and Edges:</strong></p>
+<ul>
+<li>Which nodes are most influential?</li>
+<li>Which edges are critical for connectivity?</li>
+<li>How do we define and measure importance?</li>
+</ul>
+<p><strong>Community Detection:</strong></p>
+<ul>
+<li>Are there distinct groups or clusters?</li>
+<li>How do communities interact?</li>
+<li>What defines community boundaries?</li>
+</ul>
+<h3 id="process-questions">📊 Process Questions</h3>
+<p><strong>Information Diffusion:</strong></p>
+<ul>
+<li>How does information spread through the network?</li>
+<li>Which nodes are most effective for spreading?</li>
+<li>What factors accelerate or inhibit spread?</li>
+</ul>
+<p><strong>Influence Mechanisms:</strong></p>
+<ul>
+<li>How do neighbors influence each other?</li>
+<li>What is the strength of influence effects?</li>
+<li>Can we measure peer pressure quantitatively?</li>
+</ul>
+<p><strong>Cascade Prediction:</strong></p>
+<ul>
+<li>Will a cascade occur?</li>
+<li>How far will it spread?</li>
+<li>Can we predict cascade magnitude?</li>
+</ul>
+<h3 id="prediction-questions">🔮 Prediction Questions</h3>
+<p><strong>Network Evolution:</strong></p>
+<ul>
+<li>How will the network change over time?</li>
+<li>Which new edges are likely to form?</li>
+<li>Can we predict network growth patterns?</li>
+</ul>
+<p><strong>Missing Data Inference:</strong></p>
+<ul>
+<li>Can we recover the complete network from partial data?</li>
+<li>How do we infer missing connections?</li>
+<li>What confidence do we have in predictions?</li>
+</ul>
+<p><strong>Future Outcomes:</strong></p>
+<ul>
+<li>Which nodes will be affected by a process?</li>
+<li>What is the probability of infection/adoption?</li>
+<li>How long until equilibrium is reached?</li>
+</ul>
+<h3 id="design-questions">🛠️ Design Questions</h3>
+<p><strong>Network Optimization:</strong></p>
+<ul>
+<li>How do we design efficient networks?</li>
+<li>What structure maximizes desired properties?</li>
+<li>How do we balance competing objectives?</li>
+</ul>
+<p><strong>Intervention Strategies:</strong></p>
+<ul>
+<li>Where should we intervene for maximum effect?</li>
+<li>Which nodes should we target?</li>
+<li>How do we optimize resource allocation?</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="interactive-resources">Interactive Resources</h2>
+<h3 id="visualization-tools">📊 Visualization Tools</h3>
+<p><strong>Network Analysis Platforms:</strong></p>
+<ul>
+<li><strong>Gephi:</strong> Open-source network visualization</li>
+<li><strong>Cytoscape:</strong> Biological network analysis</li>
+<li><strong>NetworkX:</strong> Python library for network analysis</li>
+</ul>
+<h3 id="code-examples">💻 Code Examples</h3>
+<p><strong>Google Colab Notebooks:</strong></p>
+<p><a href="https://colab.research.google.com/github/examples/network-analysis-basics"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p><strong>Basic Network Analysis:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Create a simple network</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)])</span>
+
+<span class="c1"># Calculate centrality measures</span>
+<span class="n">degree_cent</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">degree_centrality</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="n">between_cent</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">betweenness_centrality</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+
+<span class="c1"># Visualize</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;lightblue&#39;</span><span class="p">,</span> 
+        <span class="n">node_size</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="related-models">🤖 Related Models</h3>
+<p><strong>Hugging Face Models:</strong></p>
+<ul>
+<li><a href="https://huggingface.co/models?pipeline_tag=graph-ml">Graph Neural Networks</a></li>
+<li><a href="https://huggingface.co/models?search=social+network">Social Network Analysis Models</a></li>
+</ul>
+<h3 id="research-papers">📄 Research Papers</h3>
+<p><strong>ArXiv Papers:</strong></p>
+<ul>
+<li><a href="https://arxiv.org/abs/cond-mat/0405566">Network Science Fundamentals</a></li>
+<li><a href="https://arxiv.org/abs/0906.0612">Community Detection in Networks</a></li>
+<li><a href="https://arxiv.org/abs/1404.7446">Influence Maximization in Social Networks</a></li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="references-further-reading">References &amp; Further Reading</h2>
+<h3 id="foundational-texts">📚 Foundational Texts</h3>
+<p><strong>Books:</strong></p>
+<ul>
+<li><strong>Networks, Crowds, and Markets</strong> by Easley and Kleinberg (2010)</li>
+<li>Comprehensive introduction to network economics and social networks</li>
+<li>
+<p>Available free online from Cornell University</p>
+</li>
+<li>
+<p><strong>Network Science</strong> by Albert-László Barabási (2016)</p>
+</li>
+<li>Modern approach to network science</li>
+<li>
+<p>Interactive online version available</p>
+</li>
+<li>
+<p><strong>Networks: An Introduction</strong> by Mark Newman (2018)</p>
+</li>
+<li>Mathematical foundations of network analysis</li>
+<li>Comprehensive coverage of network theory</li>
+</ul>
+<h3 id="key-research-papers">🔬 Key Research Papers</h3>
+<p><strong>Seminal Papers:</strong></p>
+<ul>
+<li>
+<p>Watts, D.J., &amp; Strogatz, S.H. (1998). "Collective dynamics of 'small-world' networks." <em>Nature</em>, 393(6684), 440-442.</p>
+</li>
+<li>
+<p>Barabási, A.L., &amp; Albert, R. (1999). "Emergence of scaling in random networks." <em>Science</em>, 286(5439), 509-512.</p>
+</li>
+<li>
+<p>Newman, M.E.J. (2006). "Modularity and community structure in networks." <em>Proceedings of the National Academy of Sciences</em>, 103(23), 8577-8582.</p>
+</li>
+<li>
+<p>Granovetter, M. (1973). "The strength of weak ties." <em>American Journal of Sociology</em>, 78(6), 1360-1380.</p>
+</li>
+</ul>
+<h3 id="online-resources">🌐 Online Resources</h3>
+<p><strong>Educational Platforms:</strong></p>
+<ul>
+<li>
+<p><a href="http://networksciencebook.com/">Network Science by Albert-László Barabási</a> - Free online textbook</p>
+</li>
+<li>
+<p><a href="http://web.stanford.edu/class/cs224w/">Stanford CS224W: Machine Learning with Graphs</a> - Course materials and lectures</p>
+</li>
+<li>
+<p><a href="https://www.complexityexplorer.org/">Complexity Explorer</a> - Free online courses on network science</p>
+</li>
+</ul>
+<p><strong>Software and Tools:</strong></p>
+<ul>
+<li>
+<p><a href="https://networkx.org/">NetworkX Documentation</a> - Python library for network analysis</p>
+</li>
+<li>
+<p><a href="https://igraph.org/">igraph</a> - Network analysis library for R, Python, and C</p>
+</li>
+<li>
+<p><a href="http://snap.stanford.edu/">SNAP: Stanford Network Analysis Platform</a> - Large-scale network analysis</p>
+</li>
+</ul>
+<h3 id="datasets">📊 Datasets</h3>
+<p><strong>Network Data Repositories:</strong></p>
+<ul>
+<li><a href="http://snap.stanford.edu/data/">Stanford Large Network Dataset Collection (SNAP)</a></li>
+<li><a href="http://networkrepository.com/">Network Repository</a></li>
+<li><a href="https://networkdata.ics.uci.edu/">UCI Network Data Repository</a></li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="summary">Summary</h2>
+<p>Networks provide a powerful framework for understanding complex systems across diverse domains. By studying network structure, we can:</p>
+<ul>
+<li>Identify influential nodes and critical connections</li>
+<li>Predict how processes spread through networks</li>
+<li>Design efficient and robust systems</li>
+<li>Make informed decisions about interventions</li>
+</ul>
+<p>The key insight is that interactions between components often matter more than the components themselves. Whether analyzing social media, biological systems, or infrastructure, network thinking reveals patterns and principles that apply across domains.</p>
+<p><strong>Next Steps:</strong></p>
+<ul>
+<li>Explore specific network metrics and measures</li>
+<li>Study random network models and their properties</li>
+<li>Learn about advanced topics like community detection</li>
+<li>Apply network analysis to real-world datasets</li>
+</ul>
+<hr />
+<p><em>This documentation is designed for AI learners, engineers, and researchers. For questions or contributions, please refer to the project repository.</em></p>
+<p><a href="#top">↩ Back to Top</a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 10, 2025 03:21:14 UTC">October 10, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+<!-- Footer navigation (prev/next) - Material default -->
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../09-networking-graphical-models/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Networking and Graphical Models" rel="prev">
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Previous
+            </span>
+            <div class="md-ellipsis">
+              Networking and Graphical Models
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../09-02-network-representations/" class="md-footer__link md-footer__link--next" aria-label="Next: Network Representation" rel="next">
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Next
+            </span>
+            <div class="md-ellipsis">
+              Network Representation
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+
+  <!-- Custom footer content -->
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        <div style="text-align: center; padding: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 1rem;">
+          <p style="margin: 0.5rem 0;">
+            <strong>GenAI Atlas</strong> - Your Comprehensive Guide to AI & Machine Learning
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.9em; opacity: 0.8;">
+            © 2024 GenAI Atlas | Built with ❤️ for the AI Community
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.85em; opacity: 0.7;">
+            <em>Empowering developers, researchers, and practitioners worldwide</em>
+          </p>
+        </div>
+      </div>
+      <div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

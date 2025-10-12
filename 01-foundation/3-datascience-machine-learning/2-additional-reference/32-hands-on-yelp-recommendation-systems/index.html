@@ -1,0 +1,5393 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/01-foundation/3-datascience-machine-learning/2-additional-reference/32-hands-on-yelp-recommendation-systems/">
+      
+      
+        <link rel="prev" href="../31-hands-on-music-recommendation-systems/">
+      
+      
+        <link rel="next" href="../33-hands-on-book-recommendation-system/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Recommendation Systems Hands-On Tutorial: Yelp Restaurant Recommendation System - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Recommendation Systems Hands-On Tutorial: Yelp Restaurant Recommendation System
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../02-gen-ai-core/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Foundation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../1-python/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Python
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/1-learning-path/01-intro-python/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/2-additional-reference/01-hands-on-cardiogood-fitness/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../1-python/3-fast-track/01-ft-python-basics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../2-statistics/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Statistics
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Statistics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/1-learning-path/01-probability_distributions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/2-additional-reference/01-hands-on-mobile-usuage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../2-statistics/3-fast-track/01-statistics-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Data Science & ML
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            Data Science & ML
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../1-learning-path/01-intro_to_data_science/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3" id="__nav_2_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Additional Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../01-hands-on-PCA-clust-genom/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Clustering - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../10-hands-on-regression-advertisement/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Regression - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../17-hands-on-challenger-launch/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Hypothsis Testing - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../25-hands-on-employee-attrition/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deep Learning - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_5" id="__nav_2_4_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Systems - Hands on
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_4_3_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            Recommendation Systems - Hands on
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../31-hands-on-music-recommendation-systems/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Music Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4_3_5_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4_3_5_2" id="__nav_2_4_3_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Yelp Recommendation Systems
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_4_3_5_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4_3_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            Yelp Recommendation Systems
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Systems Hands-On Tutorial: Yelp Restaurant Recommendation System
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Recommendation Systems Hands-On Tutorial: Yelp Restaurant Recommendation System
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction &amp; Context
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-overview-exploration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dataset Overview &amp; Exploration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-1-rank-based-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model 1: Rank-Based Recommendation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-2-user-user-collaborative-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model 2: User-User Collaborative Filtering
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-3-item-item-collaborative-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model 3: Item-Item Collaborative Filtering
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-4-matrix-factorization-svd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model 4: Matrix Factorization (SVD)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-5-clustering-based-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model 5: Clustering-Based Recommendation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-evaluation-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Evaluation &amp; Comparison
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Walkthrough
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#library-installation-and-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Library Installation and Imports
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-libraries-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Libraries Import
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#surprise-library-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Surprise Library Installation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#surprise-library-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Surprise Library Imports
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-loading-and-preprocessing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Loading and Preprocessing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Loading and Preprocessing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dataset-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dataset Loading
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-structure-inspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Structure Inspection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-filtering-for-computational-efficiency" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Filtering for Computational Efficiency
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exploratory-data-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exploratory Data Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exploratory Data Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rating-distribution-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rating Distribution Visualization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-interaction-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Interaction Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-activity-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Activity Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rank-based-recommendation-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rank-Based Recommendation Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rank-Based Recommendation Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#average-rating-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Average Rating Calculation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-n-recommendation-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Top-N Recommendation Function
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-user-collaborative-filtering-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      User-User Collaborative Filtering Code
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User-User Collaborative Filtering Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-preparation-for-surprise-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Preparation for Surprise Library
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#baseline-user-user-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Baseline User-User Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hyperparameter-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hyperparameter Optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimized-model-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimized Model Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prediction-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prediction Examples
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#item-item-collaborative-filtering-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Item-Item Collaborative Filtering Code
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Item-Item Collaborative Filtering Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#item-based-similarity-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Item-Based Similarity Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#item-item-hyperparameter-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Item-Item Hyperparameter Optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimized-item-item-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimized Item-Item Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finding-similar-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finding Similar Items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#matrix-factorization-svd-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Matrix Factorization (SVD) Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Matrix Factorization (SVD) Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#baseline-svd-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Baseline SVD Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#svd-hyperparameter-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      SVD Hyperparameter Optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimized-svd-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimized SVD Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#svd-training-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      SVD Training Process
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clustering-based-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clustering-Based Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Clustering-Based Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#baseline-co-clustering-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Baseline Co-Clustering Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#co-clustering-hyperparameter-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Co-Clustering Hyperparameter Optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimized-co-clustering-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimized Co-Clustering Model
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-evaluation-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Evaluation Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Evaluation Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#precision-and-recall-at-k-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Precision and Recall at K Function
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-utility-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Utility Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Utility Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommendation-generation-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendation Generation Function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendation-ranking-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendation Ranking Function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-comparison-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Comparison Function
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-main-tutorial" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with Main Tutorial
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../33-hands-on-book-recommendation-system/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Book Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../40-hands-on-amazon-product-recommendation-system/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Amazon Product Recommendation Systems
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../34-hands-on-network-stock-portfolio-optimization/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Network and Graphical Models - Hands on
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../51.case-study-human-generated-text/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Clustering
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../53-case-study-regression_analysis-gender-wage-gap/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Regression
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../58-case-study-hip_brest-cancer-study/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Case Studies - Hypothesis Testing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../99-unsupervised_learning_resources/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    External Resources
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-datascience-ml-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../02-gen-ai-core/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction &amp; Context
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataset-overview-exploration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dataset Overview &amp; Exploration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-1-rank-based-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model 1: Rank-Based Recommendation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-2-user-user-collaborative-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model 2: User-User Collaborative Filtering
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-3-item-item-collaborative-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model 3: Item-Item Collaborative Filtering
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-4-matrix-factorization-svd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model 4: Matrix Factorization (SVD)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-5-clustering-based-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model 5: Clustering-Based Recommendation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-evaluation-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Evaluation &amp; Comparison
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Walkthrough
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#library-installation-and-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Library Installation and Imports
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-libraries-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Libraries Import
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#surprise-library-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Surprise Library Installation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#surprise-library-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Surprise Library Imports
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-loading-and-preprocessing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Loading and Preprocessing
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Loading and Preprocessing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dataset-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dataset Loading
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-structure-inspection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Structure Inspection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-filtering-for-computational-efficiency" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Filtering for Computational Efficiency
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exploratory-data-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exploratory Data Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exploratory Data Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rating-distribution-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rating Distribution Visualization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-interaction-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Business Interaction Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-activity-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      User Activity Analysis
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rank-based-recommendation-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rank-Based Recommendation Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rank-Based Recommendation Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#average-rating-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Average Rating Calculation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-n-recommendation-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Top-N Recommendation Function
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-user-collaborative-filtering-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      User-User Collaborative Filtering Code
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User-User Collaborative Filtering Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-preparation-for-surprise-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Preparation for Surprise Library
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#baseline-user-user-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Baseline User-User Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hyperparameter-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hyperparameter Optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimized-model-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimized Model Implementation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prediction-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prediction Examples
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#item-item-collaborative-filtering-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Item-Item Collaborative Filtering Code
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Item-Item Collaborative Filtering Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#item-based-similarity-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Item-Based Similarity Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#item-item-hyperparameter-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Item-Item Hyperparameter Optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimized-item-item-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimized Item-Item Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finding-similar-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finding Similar Items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#matrix-factorization-svd-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Matrix Factorization (SVD) Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Matrix Factorization (SVD) Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#baseline-svd-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Baseline SVD Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#svd-hyperparameter-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      SVD Hyperparameter Optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimized-svd-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimized SVD Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#svd-training-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      SVD Training Process
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clustering-based-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clustering-Based Implementation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Clustering-Based Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#baseline-co-clustering-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Baseline Co-Clustering Model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#co-clustering-hyperparameter-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Co-Clustering Hyperparameter Optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimized-co-clustering-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimized Co-Clustering Model
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-evaluation-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Evaluation Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Evaluation Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#precision-and-recall-at-k-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Precision and Recall at K Function
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-utility-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Utility Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Utility Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommendation-generation-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendation Generation Function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendation-ranking-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendation Ranking Function
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-comparison-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Comparison Function
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-main-tutorial" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with Main Tutorial
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="recommendation-systems-hands-on-tutorial-yelp-restaurant-recommendation-system">Recommendation Systems Hands-On Tutorial: Yelp Restaurant Recommendation System <a id="top"></a></h1>
+<p><a href="https://drive.google.com/file/d/1-BGvd7_MxTyoCnWjAKBD0BmpBjjXprAz/view?usp=drive_link"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a>
+<a href="https://drive.google.com/file/d/1rNTOOv20T0joutbrXWyRBOotTVG-rPYW/view?usp=drive_link"><img alt="Dataset" src="https://img.shields.io/badge/Dataset-Download-blue" /></a></p>
+<h2 id="quick-navigation">Quick Navigation</h2>
+<ul>
+<li>
+<p><a href="#introduction--context">Introduction &amp; Context</a></p>
+</li>
+<li>
+<p><a href="#dataset-overview--exploration">Dataset Overview &amp; Exploration</a></p>
+</li>
+<li>
+<p><a href="#model-1-rank-based-recommendation">Model 1: Rank-Based Recommendation</a></p>
+</li>
+<li>
+<p><a href="#model-2-user-user-collaborative-filtering">Model 2: User-User Collaborative Filtering</a></p>
+</li>
+<li>
+<p><a href="#model-3-item-item-collaborative-filtering">Model 3: Item-Item Collaborative Filtering</a></p>
+</li>
+<li>
+<p><a href="#model-4-matrix-factorization-svd">Model 4: Matrix Factorization (SVD)</a></p>
+</li>
+<li>
+<p><a href="#model-5-clustering-based-recommendation">Model 5: Clustering-Based Recommendation</a></p>
+</li>
+<li>
+<p><a href="#performance-evaluation--comparison">Performance Evaluation &amp; Comparison</a></p>
+</li>
+<li>
+<p><a href="#code-walkthrough">Code Walkthrough</a></p>
+</li>
+<li>
+<p><a href="#references">References</a></p>
+</li>
+</ul>
+<h2 id="introduction-context">Introduction &amp; Context</h2>
+<p>This tutorial demonstrates building five different types of recommendation systems using Yelp restaurant data. The case study covers both traditional collaborative filtering approaches and modern matrix factorization techniques, providing a comprehensive foundation for understanding recommendation system methodologies.</p>
+<p><strong>Business Context:</strong></p>
+<p>Yelp connects users with local businesses through crowd-sourced reviews and ratings. The platform processes massive amounts of user-business interaction data across multiple cities and countries, making it an ideal case study for recommendation systems that can help users discover new restaurants they're likely to enjoy.</p>
+<p><strong>Tutorial Objectives:</strong></p>
+<ul>
+<li>
+<p><strong>Knowledge/Rank-Based Systems:</strong> Build popularity-based recommendations for cold start scenarios</p>
+</li>
+<li>
+<p><strong>Similarity-Based Filtering:</strong> Implement both user-user and item-item collaborative filtering</p>
+</li>
+<li>
+<p><strong>Matrix Factorization:</strong> Apply SVD for latent feature discovery</p>
+</li>
+<li>
+<p><strong>Clustering Approaches:</strong> Use co-clustering for segmented recommendations</p>
+</li>
+<li>
+<p><strong>Performance Assessment:</strong> Evaluate systems using precision@k, recall@k, and F1-score metrics</p>
+</li>
+</ul>
+<p><strong>Methodological Foundation:</strong></p>
+<p>Each approach addresses different recommendation challenges. Rank-based systems handle new users with no history, collaborative filtering leverages user behavior patterns, matrix factorization discovers hidden preference structures, and clustering captures user segments with similar tastes.</p>
+<p>[See Code Walkthrough Section 1]</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="dataset-overview-exploration">Dataset Overview &amp; Exploration</h2>
+<p><strong>Data Structure:</strong></p>
+<p>The Yelp dataset contains user reviews, business metadata, and interaction patterns across 10 cities in 4 countries. For computational efficiency, this tutorial uses a subset focusing on four key attributes:</p>
+<ul>
+<li>
+<p><strong>business_id:</strong> Unique restaurant identifier</p>
+</li>
+<li>
+<p><strong>user_id:</strong> Unique user identifier  </p>
+</li>
+<li>
+<p><strong>stars:</strong> Rating scale (1-5)</p>
+</li>
+<li>
+<p><strong>business_name:</strong> Restaurant name (dropped for modeling)</p>
+</li>
+</ul>
+<p><strong>Key Dataset Characteristics:</strong></p>
+<ul>
+<li>
+<p><strong>Scale:</strong> 229,907 total interactions between 45,981 unique users and 11,537 unique restaurants</p>
+</li>
+<li>
+<p><strong>Sparsity:</strong> Only 0.04% of possible user-restaurant combinations have ratings, creating a classic sparse matrix problem</p>
+</li>
+<li>
+<p><strong>Rating Distribution:</strong> Heavily skewed toward ratings 4 and 5, indicating users tend to rate restaurants they enjoy rather than those they dislike</p>
+</li>
+</ul>
+<p><strong>Data Filtering Strategy:</strong></p>
+<p>The tutorial implements a practical filtering approach, retaining only users with at least 100 ratings. This decision balances computational efficiency with recommendation quality by ensuring sufficient user behavior data for meaningful pattern detection.</p>
+<p><strong>Critical Insights:</strong></p>
+<ul>
+<li>
+<p><strong>Most Active Restaurant:</strong> One restaurant received 844 ratings, yet 45,137 users haven't interacted with it, representing significant recommendation opportunity</p>
+</li>
+<li>
+<p><strong>Power Users:</strong> The most active user rated 588 restaurants, leaving 10,949 unrated restaurants for potential recommendations</p>
+</li>
+<li>
+<p><strong>Business Implications:</strong> The sparsity pattern reveals why recommendation systems are essential for platforms like Yelp</p>
+</li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>
+<p>Filtering reduces dataset size, potentially excluding valuable long-tail preferences</p>
+</li>
+<li>
+<p>Rating bias toward positive experiences may skew recommendation quality</p>
+</li>
+<li>
+<p>Geographic and temporal factors aren't considered in this simplified analysis</p>
+</li>
+</ul>
+<p>[See Code Walkthrough Section 2]</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="model-1-rank-based-recommendation">Model 1: Rank-Based Recommendation</h2>
+<p><strong>Methodology:</strong></p>
+<p>Rank-based systems provide recommendations using aggregate popularity metrics, making them ideal for cold start scenarios where user history is unavailable. This approach calculates average ratings per restaurant and ranks them by popularity.</p>
+<p><strong>Implementation Logic:</strong></p>
+<p>The system computes two key metrics:</p>
+<ul>
+<li>
+<p><strong>Average Rating:</strong> Mean star rating across all user reviews</p>
+</li>
+<li>
+<p><strong>Rating Count:</strong> Total number of user interactions</p>
+</li>
+</ul>
+<p>Restaurants are ranked by average rating, with a minimum interaction threshold to ensure statistical reliability.</p>
+<p><strong>Practical Applications:</strong></p>
+<ul>
+<li>
+<p><strong>New User Onboarding:</strong> Immediately provide recommendations without requiring user preference data</p>
+</li>
+<li>
+<p><strong>Geographic Expansion:</strong> Recommend popular venues in new cities</p>
+</li>
+<li>
+<p><strong>Baseline Performance:</strong> Establish minimum recommendation quality expectations</p>
+</li>
+</ul>
+<p><strong>Performance Characteristics:</strong></p>
+<p>Rank-based systems excel in simplicity and interpretability but lack personalization. They perform well for mainstream preferences but poorly for niche tastes or discovering hidden gems.</p>
+<p><strong>Business Value:</strong></p>
+<ul>
+<li>
+<p><strong>Immediate Deployment:</strong> No training period required</p>
+</li>
+<li>
+<p><strong>Universal Coverage:</strong> Works for any user regardless of history</p>
+</li>
+<li>
+<p><strong>Marketing Alignment:</strong> Naturally promotes high-performing businesses</p>
+</li>
+</ul>
+<p><strong>Key Limitations:</strong></p>
+<ul>
+<li>
+<p><strong>No Personalization:</strong> Same recommendations for all users</p>
+</li>
+<li>
+<p><strong>Popularity Bias:</strong> Reinforces existing popular choices, potentially missing niche preferences</p>
+</li>
+<li>
+<p><strong>Static Recommendations:</strong> Doesn't adapt to user feedback without manual recomputation</p>
+</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<p>Most effective as a fallback strategy for new users or as a baseline for measuring other recommendation approaches. Consider combining with personalized methods for hybrid systems.</p>
+<p>[See Code Walkthrough Section 3]</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="model-2-user-user-collaborative-filtering">Model 2: User-User Collaborative Filtering</h2>
+<p><strong>Methodology:</strong></p>
+<p>User-user collaborative filtering identifies users with similar rating patterns and recommends restaurants liked by similar users. This approach assumes users with similar past preferences will enjoy similar future experiences.</p>
+<p><strong>Core Algorithm:</strong></p>
+<p>The system uses K-Nearest Neighbors (KNN) with cosine similarity to find users with comparable rating patterns. For each target user, the algorithm:</p>
+<ul>
+<li>
+<p>Calculates similarity scores with all other users</p>
+</li>
+<li>
+<p>Identifies the k most similar users (neighbors)</p>
+</li>
+<li>
+<p>Predicts ratings based on neighbor preferences</p>
+</li>
+</ul>
+<p><strong>Similarity Calculation:</strong></p>
+<p>Cosine similarity measures the angle between user rating vectors, effectively capturing preference alignment regardless of rating scale differences between users.</p>
+<p><strong>Performance Results:</strong></p>
+<ul>
+<li>
+<p><strong>Baseline Model:</strong> F1-score of 0.542, indicating moderate recommendation quality</p>
+</li>
+<li>
+<p><strong>Optimized Model:</strong> Hyperparameter tuning with GridSearchCV maintained similar performance</p>
+</li>
+<li>
+<p><strong>RMSE:</strong> Measures prediction accuracy for numerical ratings</p>
+</li>
+</ul>
+<p><strong>Hyperparameter Optimization:</strong></p>
+<p>Key parameters tuned include:</p>
+<ul>
+<li>
+<p><strong>k (neighbors):</strong> Number of similar users to consider</p>
+</li>
+<li>
+<p><strong>min_k:</strong> Minimum neighbors required for prediction</p>
+</li>
+<li>
+<p><strong>similarity_metric:</strong> Cosine vs. Mean Squared Difference</p>
+</li>
+</ul>
+<p><strong>Practical Insights:</strong></p>
+<ul>
+<li>
+<p><strong>Precision (77.3%):</strong> Most recommended restaurants are relevant to users</p>
+</li>
+<li>
+<p><strong>Recall (42%):</strong> System captures less than half of truly relevant restaurants</p>
+</li>
+<li>
+<p><strong>Trade-offs:</strong> High precision but moderate recall suggests conservative recommendations</p>
+</li>
+</ul>
+<p><strong>Strengths:</strong></p>
+<ul>
+<li>
+<p><strong>Intuitive Logic:</strong> Recommendations based on "people like you" principle</p>
+</li>
+<li>
+<p><strong>Adaptability:</strong> Naturally incorporates new user feedback</p>
+</li>
+<li>
+<p><strong>Transparency:</strong> Can explain recommendations through similar user identification</p>
+</li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>
+<p><strong>Scalability Issues:</strong> Computation grows quadratically with user count</p>
+</li>
+<li>
+<p><strong>Sparsity Problems:</strong> Similarity calculation difficult with limited overlap</p>
+</li>
+<li>
+<p><strong>Cold Start:</strong> Cannot recommend for users without sufficient rating history</p>
+</li>
+</ul>
+<p><strong>Business Applications:</strong></p>
+<p>Most effective for platforms with dense user-item interactions and stable user bases. Works well for discovering restaurants within established preference patterns but may miss innovative or emerging trends.</p>
+<p>[See Code Walkthrough Section 4]</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="model-3-item-item-collaborative-filtering">Model 3: Item-Item Collaborative Filtering</h2>
+<p><strong>Methodology:</strong></p>
+<p>Item-item collaborative filtering identifies restaurants with similar rating patterns across users and recommends items liked by users who enjoyed similar restaurants. This approach often proves more stable than user-based filtering due to item relationships changing less frequently than user preferences.</p>
+<p><strong>Algorithmic Approach:</strong></p>
+<p>The system calculates restaurant similarity using the same KNN framework but focuses on item relationships rather than user similarities. For each restaurant, the algorithm identifies similar establishments based on user rating patterns.</p>
+<p><strong>Key Differences from User-User Filtering:</strong></p>
+<ul>
+<li>
+<p><strong>Stability:</strong> Restaurant similarities remain more consistent over time</p>
+</li>
+<li>
+<p><strong>Interpretability:</strong> "People who liked X also liked Y" explanations</p>
+</li>
+<li>
+<p><strong>Scalability:</strong> Often fewer items than users in most domains</p>
+</li>
+</ul>
+<p><strong>Performance Results:</strong></p>
+<ul>
+<li>
+<p><strong>Baseline F1-score:</strong> 0.450, slightly lower than user-user filtering</p>
+</li>
+<li>
+<p><strong>Optimized Performance:</strong> Significant improvement through hyperparameter tuning</p>
+</li>
+<li>
+<p><strong>Best Configuration:</strong> MSD similarity metric with k=30, min_k=9</p>
+</li>
+</ul>
+<p><strong>Optimization Outcomes:</strong></p>
+<p>The tuned model showed substantial improvement over baseline, demonstrating the importance of proper hyperparameter selection for item-based approaches.</p>
+<p><strong>Practical Advantages:</strong></p>
+<ul>
+<li>
+<p><strong>Stable Recommendations:</strong> Item relationships change less frequently than user preferences</p>
+</li>
+<li>
+<p><strong>Better Explanations:</strong> Natural to explain why restaurants are recommended</p>
+</li>
+<li>
+<p><strong>Efficient Updates:</strong> Pre-computed item similarities reduce real-time computation</p>
+</li>
+</ul>
+<p><strong>Business Value:</strong></p>
+<ul>
+<li>
+<p><strong>Menu Engineering:</strong> Understanding restaurant similarity helps with competitive analysis</p>
+</li>
+<li>
+<p><strong>Marketing Campaigns:</strong> Target users of similar restaurants</p>
+</li>
+<li>
+<p><strong>Inventory Management:</strong> Predict demand patterns based on similar establishment performance</p>
+</li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>
+<p><strong>Limited Diversity:</strong> May create filter bubbles by recommending very similar restaurants</p>
+</li>
+<li>
+<p><strong>Popularity Bias:</strong> Tends to recommend popular items with more interaction data</p>
+</li>
+<li>
+<p><strong>Cold Start for Items:</strong> New restaurants lack similarity data</p>
+</li>
+</ul>
+<p><strong>Performance Considerations:</strong></p>
+<p>Item-item filtering performed well in this case study, particularly after optimization. The approach balance interpretability with recommendation quality, making it suitable for business applications requiring explainable recommendations.</p>
+<p>[See Code Walkthrough Section 5]</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="model-4-matrix-factorization-svd">Model 4: Matrix Factorization (SVD)</h2>
+<p><strong>Methodology:</strong></p>
+<p>Singular Value Decomposition (SVD) represents the most sophisticated approach in this tutorial, discovering latent factors that explain user preferences and restaurant characteristics. This matrix factorization technique decomposes the user-item rating matrix into lower-dimensional representations.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>SVD approximates ratings using the formula:
+<div class="highlight"><pre><span></span><code>r̂ui = μ + bu + bi + qiᵀpu
+</code></pre></div></p>
+<p><strong>Variable Definitions:</strong></p>
+<ul>
+<li>
+<p>μ = global average rating</p>
+</li>
+<li>
+<p>bu = user bias term</p>
+</li>
+<li>
+<p>bi = item bias term  </p>
+</li>
+<li>
+<p>qi = item factors (restaurant characteristics)</p>
+</li>
+<li>
+<p>pu = user factors (user preferences)</p>
+</li>
+</ul>
+<p><strong>Learning Process:</strong></p>
+<p>The algorithm minimizes regularized squared error using stochastic gradient descent, iteratively updating user and item factors to better predict known ratings.</p>
+<p><strong>Performance Results:</strong></p>
+<ul>
+<li>
+<p><strong>Baseline F1-score:</strong> 0.51, competitive with collaborative filtering approaches</p>
+</li>
+<li>
+<p><strong>Optimized Model:</strong> Improved performance through hyperparameter tuning</p>
+</li>
+<li>
+<p><strong>Key Parameters:</strong> 20 epochs, learning rate 0.01, regularization 0.2</p>
+</li>
+</ul>
+<p><strong>Hyperparameter Impact:</strong></p>
+<ul>
+<li>
+<p><strong>n_epochs:</strong> Controls training iterations, balancing accuracy and overfitting</p>
+</li>
+<li>
+<p><strong>lr_all:</strong> Learning rate affects convergence speed and stability</p>
+</li>
+<li>
+<p><strong>reg_all:</strong> Regularization prevents overfitting to training data</p>
+</li>
+</ul>
+<p><strong>Practical Advantages:</strong></p>
+<ul>
+<li>
+<p><strong>Latent Factor Discovery:</strong> Identifies hidden preference patterns not apparent in explicit ratings</p>
+</li>
+<li>
+<p><strong>Scalability:</strong> Efficient computation for large datasets once factors are learned</p>
+</li>
+<li>
+<p><strong>Cold Start Handling:</strong> Can make predictions for users/items with limited data</p>
+</li>
+<li>
+<p><strong>Dimensionality Reduction:</strong> Captures essential patterns in compressed representation</p>
+</li>
+</ul>
+<p><strong>Business Insights:</strong></p>
+<p>Matrix factorization reveals underlying preference structures that aren't obvious from raw ratings. For restaurants, latent factors might represent cuisine types, price points, ambiance preferences, or service quality dimensions.</p>
+<p><strong>Model Interpretation:</strong></p>
+<p>While less interpretable than similarity-based methods, SVD provides more accurate predictions by capturing complex, non-linear preference patterns that similarity metrics might miss.</p>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>
+<p><strong>Black Box Nature:</strong> Difficult to explain specific recommendations to users</p>
+</li>
+<li>
+<p><strong>Parameter Sensitivity:</strong> Requires careful tuning for optimal performance</p>
+</li>
+<li>
+<p><strong>Training Complexity:</strong> More complex than similarity-based approaches</p>
+</li>
+<li>
+<p><strong>Computational Requirements:</strong> Initial training can be resource-intensive</p>
+</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<p>SVD works best for applications prioritizing prediction accuracy over interpretability, particularly with large datasets where latent patterns provide significant value over simple similarity measures.</p>
+<p>[See Code Walkthrough Section 6]</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="model-5-clustering-based-recommendation">Model 5: Clustering-Based Recommendation</h2>
+<p><strong>Methodology:</strong></p>
+<p>Co-clustering simultaneously groups users and restaurants into clusters, identifying user segments with shared preferences for specific restaurant categories. This approach differs from traditional clustering by clustering both dimensions simultaneously rather than sequentially.</p>
+<p><strong>Co-Clustering Concept:</strong></p>
+<p>The algorithm creates bidirectional clusters where:</p>
+<ul>
+<li>
+<p><strong>User Clusters:</strong> Groups of users with similar rating patterns</p>
+</li>
+<li>
+<p><strong>Item Clusters:</strong> Groups of restaurants with similar user appeal</p>
+</li>
+<li>
+<p><strong>Simultaneous Optimization:</strong> Both clusterings optimize together for maximum coherence</p>
+</li>
+</ul>
+<p><strong>Implementation Details:</strong></p>
+<p>The CoClustering algorithm partitions the user-restaurant matrix into coherent blocks where users within a cluster show similar preferences for restaurants within corresponding item clusters.</p>
+<p><strong>Performance Results:</strong></p>
+<ul>
+<li>
+<p><strong>Baseline F1-score:</strong> 0.528, competitive with other approaches</p>
+</li>
+<li>
+<p><strong>Optimization Impact:</strong> Hyperparameter tuning yielded minimal improvement</p>
+</li>
+<li>
+<p><strong>Stability:</strong> Performance remained consistent across different configurations</p>
+</li>
+</ul>
+<p><strong>Hyperparameter Analysis:</strong></p>
+<p>Key parameters include:</p>
+<ul>
+<li>
+<p><strong>n_cltr_u:</strong> Number of user clusters (tested 3-6)</p>
+</li>
+<li>
+<p><strong>n_cltr_i:</strong> Number of item clusters (tested 3-6)  </p>
+</li>
+<li>
+<p><strong>n_epochs:</strong> Optimization iterations (tested 30-50)</p>
+</li>
+</ul>
+<p><strong>Practical Applications:</strong></p>
+<ul>
+<li>
+<p><strong>Market Segmentation:</strong> Identify distinct user groups with specific restaurant preferences</p>
+</li>
+<li>
+<p><strong>Targeted Marketing:</strong> Develop campaigns for user clusters with shared characteristics</p>
+</li>
+<li>
+<p><strong>Restaurant Positioning:</strong> Understand competitive clusters and positioning opportunities</p>
+</li>
+</ul>
+<p><strong>Business Value:</strong></p>
+<ul>
+<li>
+<p><strong>Strategic Insights:</strong> Reveals market structure and user segmentation patterns</p>
+</li>
+<li>
+<p><strong>Scalable Recommendations:</strong> Pre-computed clusters enable efficient recommendation generation</p>
+</li>
+<li>
+<p><strong>Interpretable Segments:</strong> Clusters provide actionable business intelligence</p>
+</li>
+</ul>
+<p><strong>Clustering Interpretation:</strong></p>
+<p>User clusters might represent demographics (families, young professionals, food enthusiasts) while restaurant clusters could indicate categories (fast food, fine dining, ethnic cuisine).</p>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>
+<p><strong>Fixed Segmentation:</strong> Users and restaurants locked into specific clusters</p>
+</li>
+<li>
+<p><strong>Limited Personalization:</strong> Recommendations based on cluster membership rather than individual preferences</p>
+</li>
+<li>
+<p><strong>Cluster Quality:</strong> Performance depends heavily on meaningful cluster formation</p>
+</li>
+<li>
+<p><strong>Parameter Sensitivity:</strong> Choosing optimal cluster numbers requires domain knowledge</p>
+</li>
+</ul>
+<p><strong>Comparison with Other Methods:</strong></p>
+<p>Co-clustering provides unique insights into market structure but doesn't necessarily outperform other methods in recommendation accuracy. Its primary value lies in interpretability and business intelligence rather than pure prediction performance.</p>
+<p>[See Code Walkthrough Section 7]</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="performance-evaluation-comparison">Performance Evaluation &amp; Comparison</h2>
+<p><strong>Evaluation Framework:</strong></p>
+<p>The tutorial employs precision@k, recall@k, and F1-score@k metrics to assess recommendation quality, providing a comprehensive view of system performance beyond simple accuracy measures.</p>
+<p><strong>Metric Definitions:</strong></p>
+<ul>
+<li>
+<p><strong>Precision@k:</strong> Fraction of top-k recommendations that are relevant (rating ≥ 3.5)</p>
+</li>
+<li>
+<p><strong>Recall@k:</strong> Fraction of relevant items captured in top-k recommendations</p>
+</li>
+<li>
+<p><strong>F1-score@k:</strong> Harmonic mean balancing precision and recall</p>
+</li>
+</ul>
+<p><strong>Performance Summary:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>F1-Score</th>
+<th>Precision</th>
+<th>Recall</th>
+<th>Key Strength</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User-User CF</td>
+<td>0.542</td>
+<td>77.3%</td>
+<td>42%</td>
+<td>Intuitive explanations</td>
+</tr>
+<tr>
+<td>Item-Item CF</td>
+<td>~0.450</td>
+<td>-</td>
+<td>-</td>
+<td>Stable relationships</td>
+</tr>
+<tr>
+<td>Matrix Factorization</td>
+<td>0.51</td>
+<td>-</td>
+<td>-</td>
+<td>Latent pattern discovery</td>
+</tr>
+<tr>
+<td>Co-Clustering</td>
+<td>0.528</td>
+<td>-</td>
+<td>-</td>
+<td>Market segmentation</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Critical Performance Analysis:</strong></p>
+<p><strong>Strengths:</strong></p>
+<ul>
+<li>
+<p>All models achieve reasonable F1-scores (45-54%), indicating practical utility</p>
+</li>
+<li>
+<p>High precision across models suggests recommendations are generally relevant</p>
+</li>
+<li>
+<p>Different models excel in different scenarios and use cases</p>
+</li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>
+<p>Moderate recall values indicate systems miss many relevant restaurants</p>
+</li>
+<li>
+<p>Performance differences are relatively small, suggesting similar underlying data constraints</p>
+</li>
+<li>
+<p>No single model dominates across all metrics</p>
+</li>
+</ul>
+<p><strong>Business Implications:</strong></p>
+<ul>
+<li>
+<p><strong>Conservative Recommendations:</strong> High precision/moderate recall suggests systems err on the side of safety</p>
+</li>
+<li>
+<p><strong>Opportunity Cost:</strong> Low recall indicates significant untapped recommendation potential</p>
+</li>
+<li>
+<p><strong>Model Selection:</strong> Choose based on specific business requirements rather than pure performance</p>
+</li>
+</ul>
+<p><strong>Evaluation Considerations:</strong></p>
+<ul>
+<li>
+<p><strong>Threshold Sensitivity:</strong> 3.5 rating threshold may not reflect true user preferences</p>
+</li>
+<li>
+<p><strong>k-Value Impact:</strong> Evaluation limited to top-10 recommendations</p>
+</li>
+<li>
+<p><strong>Dataset Bias:</strong> Filtered dataset may not represent full user diversity</p>
+</li>
+</ul>
+<p><strong>Honest Assessment:</strong></p>
+<p>While all models show promise, none achieve exceptional performance levels. The moderate F1-scores reflect inherent challenges in recommendation systems including data sparsity, rating bias, and the complexity of human preferences.</p>
+<p><strong>Practical Recommendations:</strong></p>
+<ul>
+<li>
+<p><strong>Hybrid Approaches:</strong> Combine multiple models to leverage respective strengths</p>
+</li>
+<li>
+<p><strong>Dynamic Weighting:</strong> Adjust model weights based on user context and item characteristics</p>
+</li>
+<li>
+<p><strong>Continuous Learning:</strong> Implement feedback loops to improve recommendations over time</p>
+</li>
+</ul>
+<p>[See Code Walkthrough Section 8]</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="code-walkthrough">Code Walkthrough</h2>
+<p><em>This section will contain the complete technical implementation details, including all code blocks, mathematical foundations, and implementation rationale. Please refer to the separate Code Walkthrough document for comprehensive coverage of:</em></p>
+<h1 id="yelp-recommendation-system-complete-code-walkthrough">Yelp Recommendation System - Complete Code Walkthrough <a id="top"></a></h1>
+<h2 id="quick-navigation_1">Quick Navigation</h2>
+<ul>
+<li>
+<p><a href="#environment-setup">Environment Setup</a></p>
+</li>
+<li>
+<p><a href="#data-loading-and-preprocessing">Data Loading and Preprocessing</a></p>
+</li>
+<li>
+<p><a href="#exploratory-data-analysis">Exploratory Data Analysis</a></p>
+</li>
+<li>
+<p><a href="#rank-based-recommendation-implementation">Rank-Based Recommendation Implementation</a></p>
+</li>
+<li>
+<p><a href="#user-user-collaborative-filtering-code">User-User Collaborative Filtering Code</a></p>
+</li>
+<li>
+<p><a href="#item-item-collaborative-filtering-code">Item-Item Collaborative Filtering Code</a></p>
+</li>
+<li>
+<p><a href="#matrix-factorization-svd-implementation">Matrix Factorization (SVD) Implementation</a></p>
+</li>
+<li>
+<p><a href="#clustering-based-implementation">Clustering-Based Implementation</a></p>
+</li>
+<li>
+<p><a href="#performance-evaluation-functions">Performance Evaluation Functions</a></p>
+</li>
+<li>
+<p><a href="#custom-utility-functions">Custom Utility Functions</a></p>
+</li>
+</ul>
+<h2 id="environment-setup">Environment Setup</h2>
+<h3 id="library-installation-and-imports">Library Installation and Imports</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Handle numpy version compatibility for surprise library</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">uninstall</span> <span class="n">numpy</span> <span class="o">-</span><span class="n">y</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">numpy</span><span class="o">==</span><span class="mf">1.23.5</span>
+
+<span class="c1"># Note: Restart session after this step</span>
+
+<span class="c1"># Mount Google Drive for data access</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">google.colab</span><span class="w"> </span><span class="kn">import</span> <span class="n">drive</span>
+<span class="n">drive</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">&#39;/content/drive&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s2">&quot;/content/drive/MyDrive&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> The surprise library requires specific numpy versions for compatibility. This ensures proper installation without dependency conflicts.</p>
+<p><strong>Flow:</strong> Uninstall existing numpy → Install compatible version → Mount drive → Set working directory</p>
+<p><strong>Impact:</strong> Without proper numpy version, surprise library installation fails. Drive mounting enables access to dataset files.</p>
+<h3 id="core-libraries-import">Core Libraries Import</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Warning suppression for cleaner output</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="c1"># Core data manipulation and analysis</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Visualization libraries</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+<span class="c1"># Utility data structures</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+
+<span class="c1"># Performance metrics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_squared_error</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Establishes foundation for data analysis, visualization, and performance evaluation throughout the tutorial.</p>
+<p><strong>Flow:</strong> Import warnings control → Core data libraries → Visualization tools → Specialized utilities</p>
+<p><strong>Impact:</strong> These imports are dependencies for all subsequent analysis. Missing any library will cause downstream failures.</p>
+<h3 id="surprise-library-installation">Surprise Library Installation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install surprise library for recommendation systems</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">numpy</span><span class="o">==</span><span class="mf">1.26.4</span>
+<span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">surprise</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Surprise is specialized for building and evaluating recommendation systems, providing algorithms like KNN, SVD, and co-clustering.</p>
+<p><strong>Flow:</strong> Upgrade numpy to compatible version → Install surprise library</p>
+<p><strong>Impact:</strong> Surprise provides the core recommendation algorithms. Without it, collaborative filtering and matrix factorization implementations fail.</p>
+<h3 id="surprise-library-imports">Surprise Library Imports</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">surprise</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">surprise</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">surprise.reader</span><span class="w"> </span><span class="kn">import</span> <span class="n">Reader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">surprise.dataset</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">surprise.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridSearchCV</span><span class="p">,</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">KFold</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">surprise.prediction_algorithms.knns</span><span class="w"> </span><span class="kn">import</span> <span class="n">KNNBasic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">surprise.prediction_algorithms.matrix_factorization</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVD</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">surprise</span><span class="w"> </span><span class="kn">import</span> <span class="n">CoClustering</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Import specific classes and functions needed for recommendation system implementation and evaluation.</p>
+<p><strong>Flow:</strong> Main library → Accuracy metrics → Data handling → Model selection → Algorithms</p>
+<p><strong>Impact:</strong> Each import serves specific algorithms. Missing imports will cause failures in corresponding recommendation approaches.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="data-loading-and-preprocessing">Data Loading and Preprocessing</h2>
+<h3 id="dataset-loading">Dataset Loading</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Load Yelp reviews dataset with specific columns</span>
+<span class="n">yelp_review</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/content/drive/MyDrive/yelp_reviews.csv&#39;</span><span class="p">,</span> 
+                         <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="s1">&#39;business_id&#39;</span><span class="p">,</span> <span class="s1">&#39;business_name&#39;</span><span class="p">,</span> <span class="s1">&#39;stars&#39;</span><span class="p">])</span>
+
+<span class="c1"># Remove business_name column (not needed for modeling)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">yelp_review</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;business_name&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Load only essential columns for recommendation modeling, reducing memory usage and processing time.</p>
+<p><strong>Flow:</strong> Read CSV with column selection → Drop unnecessary columns → Create working dataset</p>
+<p><strong>Impact:</strong> Using usecols parameter significantly reduces memory footprint. Dropping business_name prevents data leakage in modeling.</p>
+<h3 id="data-structure-inspection">Data Structure Inspection</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Examine dataset structure and characteristics</span>
+<span class="n">data</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+
+<span class="c1"># Basic statistics</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total interactions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unique users: </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unique businesses: </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;business_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Understand dataset dimensions, data types, and basic characteristics before analysis.</p>
+<p><strong>Flow:</strong> Display data info → Show sample records → Calculate key statistics</p>
+<p><strong>Impact:</strong> Essential for understanding data scale and planning computational resources. Reveals sparsity issues early.</p>
+<h3 id="user-filtering-for-computational-efficiency">User Filtering for Computational Efficiency</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Count ratings per user</span>
+<span class="n">users</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">user_id</span>
+<span class="n">ratings_count</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">ratings_count</span><span class="p">:</span>
+        <span class="n">ratings_count</span><span class="p">[</span><span class="n">user</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ratings_count</span><span class="p">[</span><span class="n">user</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># Filter users with minimum 100 ratings</span>
+<span class="n">RATINGS_CUTOFF</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">remove_users</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">user</span><span class="p">,</span> <span class="n">num_ratings</span> <span class="ow">in</span> <span class="n">ratings_count</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">num_ratings</span> <span class="o">&lt;</span> <span class="n">RATINGS_CUTOFF</span><span class="p">:</span>
+        <span class="n">remove_users</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+<span class="c1"># Create filtered dataset</span>
+<span class="n">df_final</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">data</span><span class="o">.</span><span class="n">user_id</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">remove_users</span><span class="p">)]</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Reduce computational complexity by retaining only users with sufficient rating history for meaningful pattern detection.</p>
+<p><strong>Flow:</strong> Count ratings per user → Identify users below threshold → Create filtered dataset</p>
+<p><strong>Impact:</strong> Significantly reduces dataset size and improves algorithm performance. May lose some long-tail preferences but ensures computational feasibility.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="exploratory-data-analysis">Exploratory Data Analysis</h2>
+<h3 id="rating-distribution-visualization">Rating Distribution Visualization</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Visualize rating distribution</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">countplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;stars&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribution of Ratings&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Ratings&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Number of Ratings&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Understand rating distribution patterns to identify potential biases in the dataset.</p>
+<p><strong>Flow:</strong> Create figure → Generate count plot → Set formatting → Display visualization</p>
+<p><strong>Impact:</strong> Reveals rating skewness toward positive values, indicating potential bias in recommendation quality assessment.</p>
+<h3 id="business-interaction-analysis">Business Interaction Analysis</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Find most reviewed restaurant</span>
+<span class="n">most_reviewed</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;business_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Most reviewed business: </span><span class="si">{</span><span class="n">most_reviewed</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of reviews: </span><span class="si">{</span><span class="n">most_reviewed</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Analyze rating distribution for top restaurant</span>
+<span class="n">top_business_ratings</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;business_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">most_reviewed</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="s1">&#39;stars&#39;</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="n">top_business_ratings</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Rating&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Count&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Rating Distribution for Most Reviewed Restaurant&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Identify patterns in business popularity and understand whether high interaction counts correlate with quality.</p>
+<p><strong>Flow:</strong> Calculate business review counts → Identify top business → Analyze its rating distribution</p>
+<p><strong>Impact:</strong> Reveals that high interaction doesn't necessarily mean high quality, informing recommendation strategy design.</p>
+<h3 id="user-activity-analysis">User Activity Analysis</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Find most active user</span>
+<span class="n">most_active_user</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Most active user: </span><span class="si">{</span><span class="n">most_active_user</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of ratings: </span><span class="si">{</span><span class="n">most_active_user</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Understand user engagement patterns and identify power users who might disproportionately influence recommendations.</p>
+<p><strong>Flow:</strong> Count ratings per user → Identify most active user → Display statistics</p>
+<p><strong>Impact:</strong> Helps understand user distribution and potential bias from power users in collaborative filtering algorithms.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="rank-based-recommendation-implementation">Rank-Based Recommendation Implementation</h2>
+<h3 id="average-rating-calculation">Average Rating Calculation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Calculate average ratings and rating counts per business</span>
+<span class="n">average_rating</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;business_id&#39;</span><span class="p">)[</span><span class="s1">&#39;stars&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">count_rating</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;business_id&#39;</span><span class="p">)[</span><span class="s1">&#39;stars&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+
+<span class="c1"># Create comprehensive rating dataframe</span>
+<span class="n">final_rating</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;avg_rating&#39;</span><span class="p">:</span> <span class="n">average_rating</span><span class="p">,</span> 
+    <span class="s1">&#39;rating_count&#39;</span><span class="p">:</span> <span class="n">count_rating</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final rating dataframe structure:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">final_rating</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Create aggregate metrics for rank-based recommendations using both average quality and popularity measures.</p>
+<p><strong>Flow:</strong> Group by business → Calculate mean and count → Combine into dataframe</p>
+<p><strong>Impact:</strong> Provides foundation for popularity-based recommendations. Both metrics are essential for balanced ranking.</p>
+<h3 id="top-n-recommendation-function">Top-N Recommendation Function</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">top_n_restaurant</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">min_interaction</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate top-n restaurant recommendations based on average ratings.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    data (DataFrame): Rating data with &#39;avg_rating&#39; and &#39;rating_count&#39; columns</span>
+<span class="sd">    n (int): Number of recommendations to return</span>
+<span class="sd">    min_interaction (int): Minimum number of interactions required</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    Index: Business IDs of top-n recommended restaurants</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Filter restaurants with minimum interactions</span>
+    <span class="n">recommendations</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;rating_count&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">min_interaction</span><span class="p">]</span>
+
+    <span class="c1"># Sort by average rating (descending)</span>
+    <span class="n">recommendations</span> <span class="o">=</span> <span class="n">recommendations</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;avg_rating&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">recommendations</span><span class="o">.</span><span class="n">index</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">top_5_restaurants</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">top_n_restaurant</span><span class="p">(</span><span class="n">final_rating</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Top 5 restaurants with minimum 50 interactions:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">top_5_restaurants</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Implement flexible rank-based recommendation system with configurable parameters for different use cases.</p>
+<p><strong>Flow:</strong> Filter by minimum interactions → Sort by average rating → Return top-n results</p>
+<p><strong>Impact:</strong> Provides baseline recommendations for cold start scenarios. Parameter flexibility enables different business requirements.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>Rank-based systems use simple aggregation:
+<div class="highlight"><pre><span></span><code>Restaurant_Score = (Σ ratings) / (number_of_ratings)
+</code></pre></div></p>
+<p>The minimum interaction threshold ensures statistical reliability by requiring sufficient sample size for meaningful averages.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="user-user-collaborative-filtering-code">User-User Collaborative Filtering Code</h2>
+<h3 id="data-preparation-for-surprise-library">Data Preparation for Surprise Library</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create Reader object with rating scale</span>
+<span class="n">reader</span> <span class="o">=</span> <span class="n">Reader</span><span class="p">(</span><span class="n">rating_scale</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># Load dataset in Surprise format</span>
+<span class="n">data_surprise</span> <span class="o">=</span> <span class="n">Dataset</span><span class="o">.</span><span class="n">load_from_df</span><span class="p">(</span><span class="n">df_final</span><span class="p">[[</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> <span class="s1">&#39;business_id&#39;</span><span class="p">,</span> <span class="s1">&#39;stars&#39;</span><span class="p">]],</span> <span class="n">reader</span><span class="p">)</span>
+
+<span class="c1"># Split into training and testing sets</span>
+<span class="n">trainset</span><span class="p">,</span> <span class="n">testset</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">data_surprise</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Convert pandas dataframe into Surprise library format for recommendation algorithm implementation.</p>
+<p><strong>Flow:</strong> Define rating scale → Load data → Create train/test split</p>
+<p><strong>Impact:</strong> Essential transformation for using Surprise algorithms. Test split enables proper performance evaluation.</p>
+<h3 id="baseline-user-user-model">Baseline User-User Model</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Configure similarity options for user-based collaborative filtering</span>
+<span class="n">sim_options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;cosine&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;user_based&#39;</span><span class="p">:</span> <span class="kc">True</span>
+<span class="p">}</span>
+
+<span class="c1"># Initialize KNN algorithm</span>
+<span class="n">sim_user_user</span> <span class="o">=</span> <span class="n">KNNBasic</span><span class="p">(</span><span class="n">sim_options</span><span class="o">=</span><span class="n">sim_options</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Train the model</span>
+<span class="n">sim_user_user</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainset</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Implement baseline user-user collaborative filtering using cosine similarity to find similar users.</p>
+<p><strong>Flow:</strong> Configure similarity options → Initialize algorithm → Train on training data</p>
+<p><strong>Impact:</strong> Creates baseline model for user-based recommendations. Cosine similarity captures user preference alignment effectively.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>Cosine similarity between users u and v:
+<div class="highlight"><pre><span></span><code>similarity(u,v) = (Σ(r_ui * r_vi)) / (√Σ(r_ui²) * √Σ(r_vi²))
+</code></pre></div></p>
+<p>Where r_ui is the rating of user u for item i.</p>
+<h3 id="hyperparameter-optimization">Hyperparameter Optimization</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Define parameter grid for optimization</span>
+<span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;k&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span>
+    <span class="s1">&#39;min_k&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
+    <span class="s1">&#39;sim_options&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;msd&#39;</span><span class="p">,</span> <span class="s1">&#39;cosine&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;user_based&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Perform grid search with cross-validation</span>
+<span class="n">gs</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">KNNBasic</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">,</span> <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;rmse&#39;</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">gs</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_surprise</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best RMSE score: </span><span class="si">{</span><span class="n">gs</span><span class="o">.</span><span class="n">best_score</span><span class="p">[</span><span class="s1">&#39;rmse&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best parameters: </span><span class="si">{</span><span class="n">gs</span><span class="o">.</span><span class="n">best_params</span><span class="p">[</span><span class="s1">&#39;rmse&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Systematically find optimal hyperparameters to maximize recommendation quality using cross-validation.</p>
+<p><strong>Flow:</strong> Define parameter space → Initialize grid search → Fit with cross-validation → Extract best parameters</p>
+<p><strong>Impact:</strong> Improves model performance through systematic optimization. Cross-validation ensures robust parameter selection.</p>
+<h3 id="optimized-model-implementation">Optimized Model Implementation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Implement optimized user-user collaborative filtering</span>
+<span class="n">sim_options_optimized</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;cosine&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;user_based&#39;</span><span class="p">:</span> <span class="kc">True</span>
+<span class="p">}</span>
+
+<span class="n">sim_user_user_optimized</span> <span class="o">=</span> <span class="n">KNNBasic</span><span class="p">(</span>
+    <span class="n">sim_options</span><span class="o">=</span><span class="n">sim_options_optimized</span><span class="p">,</span>
+    <span class="n">k</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+    <span class="n">min_k</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="c1"># Train optimized model</span>
+<span class="n">sim_user_user_optimized</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainset</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Implement final user-user model with optimized hyperparameters for best performance.</p>
+<p><strong>Flow:</strong> Configure optimized parameters → Initialize model → Train on dataset</p>
+<p><strong>Impact:</strong> Provides best-performing user-user collaborative filtering model for comparison and deployment.</p>
+<h3 id="prediction-examples">Prediction Examples</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Predict rating for known user-item pair</span>
+<span class="n">prediction_known</span> <span class="o">=</span> <span class="n">sim_user_user_optimized</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="s2">&quot;rLtl8ZkDX5vH5nAx9C3q5Q&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;9yKzy9PApeiPPOUJEtnvkg&quot;</span><span class="p">,</span> 
+    <span class="n">r_ui</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Predict rating for unknown user-item pair</span>
+<span class="n">prediction_unknown</span> <span class="o">=</span> <span class="n">sim_user_user_optimized</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
+    <span class="s2">&quot;rLtl8ZkDX5vH5nAx9C3q5Q&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;zp713qNhx8d9KCJJnrw1xA&quot;</span><span class="p">,</span> 
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Demonstrate model usage for both validation against known ratings and generating new recommendations.</p>
+<p><strong>Flow:</strong> Make prediction with known rating → Make prediction for new item → Display results</p>
+<p><strong>Impact:</strong> Shows practical model application for both evaluation and recommendation generation.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="item-item-collaborative-filtering-code">Item-Item Collaborative Filtering Code</h2>
+<h3 id="item-based-similarity-configuration">Item-Based Similarity Configuration</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Configure similarity options for item-based collaborative filtering</span>
+<span class="n">sim_options_item</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;cosine&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;user_based&#39;</span><span class="p">:</span> <span class="kc">False</span>  <span class="c1"># Key difference: item-based instead of user-based</span>
+<span class="p">}</span>
+
+<span class="c1"># Initialize item-item collaborative filtering</span>
+<span class="n">sim_item_item</span> <span class="o">=</span> <span class="n">KNNBasic</span><span class="p">(</span><span class="n">sim_options</span><span class="o">=</span><span class="n">sim_options_item</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Train the model</span>
+<span class="n">sim_item_item</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainset</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Implement item-item collaborative filtering by changing user_based parameter to False, focusing on item similarities.</p>
+<p><strong>Flow:</strong> Configure item-based options → Initialize algorithm → Train model</p>
+<p><strong>Impact:</strong> Creates alternative collaborative filtering approach that often provides more stable recommendations than user-based methods.</p>
+<h3 id="item-item-hyperparameter-optimization">Item-Item Hyperparameter Optimization</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Parameter grid for item-item optimization</span>
+<span class="n">param_grid_item</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;k&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
+    <span class="s1">&#39;min_k&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
+    <span class="s1">&#39;sim_options&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;msd&#39;</span><span class="p">,</span> <span class="s1">&#39;cosine&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;user_based&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># Grid search for item-item model</span>
+<span class="n">gs_item</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">KNNBasic</span><span class="p">,</span> <span class="n">param_grid_item</span><span class="p">,</span> <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;rmse&#39;</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">gs_item</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_surprise</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best RMSE score for item-item: </span><span class="si">{</span><span class="n">gs_item</span><span class="o">.</span><span class="n">best_score</span><span class="p">[</span><span class="s1">&#39;rmse&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best parameters for item-item: </span><span class="si">{</span><span class="n">gs_item</span><span class="o">.</span><span class="n">best_params</span><span class="p">[</span><span class="s1">&#39;rmse&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Optimize item-item collaborative filtering parameters to achieve best possible performance.</p>
+<p><strong>Flow:</strong> Define item-specific parameter grid → Run grid search → Extract optimal parameters</p>
+<p><strong>Impact:</strong> Ensures item-item model achieves optimal performance for fair comparison with other approaches.</p>
+<h3 id="optimized-item-item-model">Optimized Item-Item Model</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Implement optimized item-item collaborative filtering</span>
+<span class="n">sim_options_item_optimized</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;msd&#39;</span><span class="p">,</span>  <span class="c1"># Mean Squared Difference often works well for items</span>
+    <span class="s1">&#39;user_based&#39;</span><span class="p">:</span> <span class="kc">False</span>
+<span class="p">}</span>
+
+<span class="n">sim_item_item_optimized</span> <span class="o">=</span> <span class="n">KNNBasic</span><span class="p">(</span>
+    <span class="n">sim_options</span><span class="o">=</span><span class="n">sim_options_item_optimized</span><span class="p">,</span>
+    <span class="n">k</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+    <span class="n">min_k</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="c1"># Train optimized item-item model</span>
+<span class="n">sim_item_item_optimized</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainset</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Create final item-item model using optimal hyperparameters discovered through grid search.</p>
+<p><strong>Flow:</strong> Configure optimized parameters → Initialize model → Train on data</p>
+<p><strong>Impact:</strong> Provides best-performing item-item model for evaluation and potential deployment.</p>
+<h3 id="finding-similar-items">Finding Similar Items</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Find similar items to item with internal ID 0</span>
+<span class="n">similar_items</span> <span class="o">=</span> <span class="n">sim_item_item_optimized</span><span class="o">.</span><span class="n">get_neighbors</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Items similar to item 0: </span><span class="si">{</span><span class="n">similar_items</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Demonstrate how to find similar items, useful for understanding item relationships and explaining recommendations.</p>
+<p><strong>Flow:</strong> Call get_neighbors method → Specify target item and number of neighbors</p>
+<p><strong>Impact:</strong> Enables item similarity analysis and provides foundation for explainable recommendations.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="matrix-factorization-svd-implementation">Matrix Factorization (SVD) Implementation</h2>
+<h3 id="baseline-svd-model">Baseline SVD Model</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Initialize SVD matrix factorization algorithm</span>
+<span class="n">svd</span> <span class="o">=</span> <span class="n">SVD</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Train SVD model on training data</span>
+<span class="n">svd</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainset</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Implement baseline Singular Value Decomposition for matrix factorization-based collaborative filtering.</p>
+<p><strong>Flow:</strong> Initialize SVD with default parameters → Train on training set</p>
+<p><strong>Impact:</strong> Creates foundation for latent factor-based recommendations, capturing hidden patterns in user-item interactions.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>SVD decomposes the user-item rating matrix R into three matrices:
+<div class="highlight"><pre><span></span><code>R ≈ U × Σ × V^T
+</code></pre></div></p>
+<p>The prediction formula in Surprise's SVD:
+<div class="highlight"><pre><span></span><code>r̂_ui = μ + b_u + b_i + q_i^T × p_u
+</code></pre></div></p>
+<p>Where:</p>
+<ul>
+<li>
+<p>μ = global mean rating</p>
+</li>
+<li>
+<p>b_u = user bias</p>
+</li>
+<li>
+<p>b_i = item bias</p>
+</li>
+<li>
+<p>q_i = item factor vector</p>
+</li>
+<li>
+<p>p_u = user factor vector</p>
+</li>
+</ul>
+<h3 id="svd-hyperparameter-optimization">SVD Hyperparameter Optimization</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Parameter grid for SVD optimization</span>
+<span class="n">param_grid_svd</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;n_epochs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>    <span class="c1"># Number of training iterations</span>
+    <span class="s1">&#39;lr_all&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>  <span class="c1"># Learning rate for all parameters</span>
+    <span class="s1">&#39;reg_all&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">]</span>   <span class="c1"># Regularization for all parameters</span>
+<span class="p">}</span>
+
+<span class="c1"># Grid search for SVD</span>
+<span class="n">gs_svd</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">SVD</span><span class="p">,</span> <span class="n">param_grid_svd</span><span class="p">,</span> <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;rmse&#39;</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">gs_svd</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_surprise</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best RMSE score for SVD: </span><span class="si">{</span><span class="n">gs_svd</span><span class="o">.</span><span class="n">best_score</span><span class="p">[</span><span class="s1">&#39;rmse&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best parameters for SVD: </span><span class="si">{</span><span class="n">gs_svd</span><span class="o">.</span><span class="n">best_params</span><span class="p">[</span><span class="s1">&#39;rmse&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Optimize SVD hyperparameters to balance model complexity, training time, and prediction accuracy.</p>
+<p><strong>Flow:</strong> Define parameter grid → Run cross-validated grid search → Extract best configuration</p>
+<p><strong>Impact:</strong> Ensures SVD model achieves optimal performance through proper regularization and learning rate selection.</p>
+<h3 id="optimized-svd-model">Optimized SVD Model</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Implement optimized SVD model</span>
+<span class="n">svd_optimized</span> <span class="o">=</span> <span class="n">SVD</span><span class="p">(</span>
+    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>     <span class="c1"># Optimal number of training epochs</span>
+    <span class="n">lr_all</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>     <span class="c1"># Optimal learning rate</span>
+    <span class="n">reg_all</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>     <span class="c1"># Optimal regularization</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<span class="c1"># Train optimized SVD model</span>
+<span class="n">svd_optimized</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainset</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Create final SVD model with optimal hyperparameters for best prediction performance.</p>
+<p><strong>Flow:</strong> Configure optimal parameters → Initialize SVD → Train model</p>
+<p><strong>Impact:</strong> Provides production-ready matrix factorization model with balanced performance and generalization.</p>
+<h3 id="svd-training-process">SVD Training Process</h3>
+<p>The SVD algorithm uses stochastic gradient descent to minimize the regularized squared error:</p>
+<div class="highlight"><pre><span></span><code>min Σ(r_ui - r̂_ui)² + λ(||p_u||² + ||q_i||² + b_u² + b_i²)
+</code></pre></div>
+<p>Update rules:
+<div class="highlight"><pre><span></span><code>b_u ← b_u + γ(e_ui - λb_u)
+b_i ← b_i + γ(e_ui - λb_i)
+p_u ← p_u + γ(e_ui × q_i - λp_u)
+q_i ← q_i + γ(e_ui × p_u - λq_i)
+</code></pre></div></p>
+<p>Where e_ui = r_ui - r̂_ui is the prediction error.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="clustering-based-implementation">Clustering-Based Implementation</h2>
+<h3 id="baseline-co-clustering-model">Baseline Co-Clustering Model</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Initialize co-clustering algorithm</span>
+<span class="n">clust_baseline</span> <span class="o">=</span> <span class="n">CoClustering</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Train co-clustering model</span>
+<span class="n">clust_baseline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainset</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Implement co-clustering algorithm that simultaneously clusters users and items to identify coherent user-item groups.</p>
+<p><strong>Flow:</strong> Initialize with default parameters → Train on training data</p>
+<p><strong>Impact:</strong> Creates segmented recommendation approach that can reveal market structure and user preferences patterns.</p>
+<h3 id="co-clustering-hyperparameter-optimization">Co-Clustering Hyperparameter Optimization</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Parameter grid for co-clustering optimization</span>
+<span class="n">param_grid_cluster</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;n_cltr_u&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>    <span class="c1"># Number of user clusters</span>
+    <span class="s1">&#39;n_cltr_i&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>    <span class="c1"># Number of item clusters</span>
+    <span class="s1">&#39;n_epochs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">]</span>     <span class="c1"># Training epochs</span>
+<span class="p">}</span>
+
+<span class="c1"># Grid search for co-clustering</span>
+<span class="n">gs_cluster</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">CoClustering</span><span class="p">,</span> <span class="n">param_grid_cluster</span><span class="p">,</span> <span class="n">measures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;rmse&#39;</span><span class="p">],</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">gs_cluster</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_surprise</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best RMSE score for clustering: </span><span class="si">{</span><span class="n">gs_cluster</span><span class="o">.</span><span class="n">best_score</span><span class="p">[</span><span class="s1">&#39;rmse&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best parameters for clustering: </span><span class="si">{</span><span class="n">gs_cluster</span><span class="o">.</span><span class="n">best_params</span><span class="p">[</span><span class="s1">&#39;rmse&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Find optimal number of user and item clusters to maximize recommendation quality while maintaining interpretability.</p>
+<p><strong>Flow:</strong> Define cluster parameter grid → Run grid search → Extract optimal cluster configuration</p>
+<p><strong>Impact:</strong> Balances model complexity with interpretability, ensuring clusters are meaningful and performant.</p>
+<h3 id="optimized-co-clustering-model">Optimized Co-Clustering Model</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Implement optimized co-clustering model</span>
+<span class="n">clust_tuned</span> <span class="o">=</span> <span class="n">CoClustering</span><span class="p">(</span>
+    <span class="n">n_cltr_u</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>      <span class="c1"># Optimal number of user clusters</span>
+    <span class="n">n_cltr_i</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>      <span class="c1"># Optimal number of item clusters</span>
+    <span class="n">n_epochs</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>     <span class="c1"># Optimal training epochs</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<span class="c1"># Train optimized clustering model</span>
+<span class="n">clust_tuned</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainset</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Create final co-clustering model with optimal parameters for balanced performance and interpretability.</p>
+<p><strong>Flow:</strong> Configure optimal parameters → Initialize clustering algorithm → Train model</p>
+<p><strong>Impact:</strong> Provides segmentation-based recommendations that can inform business strategy and marketing decisions.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>Co-clustering partitions the user-item matrix into blocks where:
+<div class="highlight"><pre><span></span><code>R ≈ Σ(g,h) μ_gh × I_g × J_h^T
+</code></pre></div></p>
+<p>Where:</p>
+<ul>
+<li>
+<p>μ_gh = mean rating for user cluster g and item cluster h</p>
+</li>
+<li>
+<p>I_g = indicator vector for user cluster g</p>
+</li>
+<li>
+<p>J_h = indicator vector for item cluster h</p>
+</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="performance-evaluation-functions">Performance Evaluation Functions</h2>
+<h3 id="precision-and-recall-at-k-function">Precision and Recall at K Function</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">precision_recall_at_k</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">3.5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate precision@k and recall@k for recommendation model.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    model: Trained recommendation model</span>
+<span class="sd">    k (int): Number of top recommendations to consider</span>
+<span class="sd">    threshold (float): Rating threshold for relevance (default 3.5)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    Prints precision, recall, and F1-score metrics</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Dictionary to store predictions per user</span>
+    <span class="n">user_est_true</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="c1"># Generate predictions on test set</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">testset</span><span class="p">)</span>
+
+    <span class="c1"># Group predictions by user</span>
+    <span class="k">for</span> <span class="n">uid</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">true_r</span><span class="p">,</span> <span class="n">est</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">predictions</span><span class="p">:</span>
+        <span class="n">user_est_true</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">est</span><span class="p">,</span> <span class="n">true_r</span><span class="p">))</span>
+
+    <span class="c1"># Calculate metrics for each user</span>
+    <span class="n">precisions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">recalls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">uid</span><span class="p">,</span> <span class="n">user_ratings</span> <span class="ow">in</span> <span class="n">user_est_true</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Sort by estimated rating (descending)</span>
+        <span class="n">user_ratings</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Count relevant items (actual rating &gt;= threshold)</span>
+        <span class="n">n_rel</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">true_r</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">true_r</span><span class="p">)</span> <span class="ow">in</span> <span class="n">user_ratings</span><span class="p">)</span>
+
+        <span class="c1"># Count recommended items in top k (estimated rating &gt;= threshold)</span>
+        <span class="n">n_rec_k</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">est</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">user_ratings</span><span class="p">[:</span><span class="n">k</span><span class="p">])</span>
+
+        <span class="c1"># Count relevant AND recommended items in top k</span>
+        <span class="n">n_rel_and_rec_k</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(((</span><span class="n">true_r</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">est</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">))</span>
+                              <span class="k">for</span> <span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">true_r</span><span class="p">)</span> <span class="ow">in</span> <span class="n">user_ratings</span><span class="p">[:</span><span class="n">k</span><span class="p">])</span>
+
+        <span class="c1"># Calculate precision@k (avoid division by zero)</span>
+        <span class="n">precisions</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_rel_and_rec_k</span> <span class="o">/</span> <span class="n">n_rec_k</span> <span class="k">if</span> <span class="n">n_rec_k</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+
+        <span class="c1"># Calculate recall@k (avoid division by zero)</span>
+        <span class="n">recalls</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_rel_and_rec_k</span> <span class="o">/</span> <span class="n">n_rel</span> <span class="k">if</span> <span class="n">n_rel</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="c1"># Calculate overall metrics</span>
+    <span class="n">precision</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">prec</span> <span class="k">for</span> <span class="n">prec</span> <span class="ow">in</span> <span class="n">precisions</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">precisions</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">recall</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">rec</span> <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">recalls</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">recalls</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">f1_score</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">precision</span> <span class="o">*</span> <span class="n">recall</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">precision</span> <span class="o">+</span> <span class="n">recall</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">precision</span> <span class="o">+</span> <span class="n">recall</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="c1"># Calculate and display RMSE</span>
+    <span class="n">accuracy</span><span class="o">.</span><span class="n">rmse</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+
+    <span class="c1"># Display results</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Precision@</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">precision</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Recall@</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">recall</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;F1-score@</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">f1_score</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">f1_score</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Comprehensive evaluation function that calculates key recommendation system metrics with proper edge case handling.</p>
+<p><strong>Flow:</strong> Group predictions by user → Sort by estimated rating → Count relevant/recommended items → Calculate metrics → Display results</p>
+<p><strong>Impact:</strong> Provides standardized evaluation across all models, enabling fair comparison and performance assessment.</p>
+<p><strong>Mathematical Definitions:</strong></p>
+<ul>
+<li>
+<p><strong>Precision@k:</strong> P@k = |{relevant items} ∩ {recommended items}| / |{recommended items}|</p>
+</li>
+<li>
+<p><strong>Recall@k:</strong> R@k = |{relevant items} ∩ {recommended items}| / |{relevant items}|</p>
+</li>
+<li>
+<p><strong>F1-score@k:</strong> F1@k = 2 × (P@k × R@k) / (P@k + R@k)</p>
+</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="custom-utility-functions">Custom Utility Functions</h2>
+<h3 id="recommendation-generation-function">Recommendation Generation Function</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_recommendations</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">top_n</span><span class="p">,</span> <span class="n">algo</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate top-n recommendations for a specific user.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    data (DataFrame): User-item interaction data</span>
+<span class="sd">    user_id (str): Target user ID</span>
+<span class="sd">    top_n (int): Number of recommendations to generate</span>
+<span class="sd">    algo: Trained recommendation algorithm</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    list: Top-n recommendations as (item_id, predicted_rating) tuples</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create user-item interaction matrix</span>
+    <span class="n">user_item_interactions_matrix</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+        <span class="n">index</span><span class="o">=</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span> 
+        <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;business_id&#39;</span><span class="p">,</span> 
+        <span class="n">values</span><span class="o">=</span><span class="s1">&#39;stars&#39;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Find items not yet interacted with by the user</span>
+    <span class="n">non_interacted_products</span> <span class="o">=</span> <span class="n">user_item_interactions_matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">user_id</span><span class="p">][</span>
+        <span class="n">user_item_interactions_matrix</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">user_id</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+    <span class="c1"># Generate predictions for non-interacted items</span>
+    <span class="n">recommendations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">item_id</span> <span class="ow">in</span> <span class="n">non_interacted_products</span><span class="p">:</span>
+        <span class="c1"># Predict rating for this user-item pair</span>
+        <span class="n">est</span> <span class="o">=</span> <span class="n">algo</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">item_id</span><span class="p">)</span><span class="o">.</span><span class="n">est</span>
+        <span class="n">recommendations</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">item_id</span><span class="p">,</span> <span class="n">est</span><span class="p">))</span>
+
+    <span class="c1"># Sort by predicted rating (descending) and return top-n</span>
+    <span class="n">recommendations</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">recommendations</span><span class="p">[:</span><span class="n">top_n</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Generate personalized recommendations by predicting ratings for unrated items and selecting top candidates.</p>
+<p><strong>Flow:</strong> Create interaction matrix → Identify unrated items → Generate predictions → Sort and select top-n</p>
+<p><strong>Impact:</strong> Core function for practical recommendation generation, enabling personalized suggestions for any user.</p>
+<h3 id="recommendation-ranking-function">Recommendation Ranking Function</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ranking_products</span><span class="p">(</span><span class="n">recommendations</span><span class="p">,</span> <span class="n">final_rating</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rank recommended products using corrected ratings that account for rating count.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    recommendations (list): List of (business_id, predicted_rating) tuples</span>
+<span class="sd">    final_rating (DataFrame): Business ratings with avg_rating and rating_count</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    DataFrame: Ranked recommendations with corrected ratings</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Extract business IDs from recommendations</span>
+    <span class="n">business_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">items</span> <span class="ow">in</span> <span class="n">recommendations</span><span class="p">]</span>
+
+    <span class="c1"># Get rating information for recommended businesses</span>
+    <span class="n">ranked_products</span> <span class="o">=</span> <span class="n">final_rating</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">business_ids</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+        <span class="s1">&#39;rating_count&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)[[</span><span class="s1">&#39;rating_count&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="c1"># Merge with predicted ratings</span>
+    <span class="n">ranked_products</span> <span class="o">=</span> <span class="n">ranked_products</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">recommendations</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;business_id&#39;</span><span class="p">,</span> <span class="s1">&#39;predicted_ratings&#39;</span><span class="p">]),</span>
+        <span class="n">on</span><span class="o">=</span><span class="s1">&#39;business_id&#39;</span><span class="p">,</span>
+        <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Calculate corrected ratings (penalize businesses with few ratings)</span>
+    <span class="n">ranked_products</span><span class="p">[</span><span class="s1">&#39;corrected_ratings&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">ranked_products</span><span class="p">[</span><span class="s1">&#39;predicted_ratings&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ranked_products</span><span class="p">[</span><span class="s1">&#39;rating_count&#39;</span><span class="p">])</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Sort by corrected ratings</span>
+    <span class="n">ranked_products</span> <span class="o">=</span> <span class="n">ranked_products</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;corrected_ratings&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ranked_products</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Improve recommendation quality by adjusting predicted ratings based on rating count reliability.</p>
+<p><strong>Flow:</strong> Extract business IDs → Get rating statistics → Merge with predictions → Calculate corrections → Sort results</p>
+<p><strong>Impact:</strong> Balances prediction confidence with rating reliability, reducing bias toward businesses with few ratings.</p>
+<p><strong>Mathematical Foundation:</strong></p>
+<p>Corrected rating formula:
+<div class="highlight"><pre><span></span><code>corrected_rating = predicted_rating - 1/√(rating_count)
+</code></pre></div></p>
+<p>This penalty term reduces confidence in predictions for businesses with fewer ratings, implementing a form of confidence interval adjustment.</p>
+<h3 id="model-comparison-function">Model Comparison Function</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compare_models</span><span class="p">(</span><span class="n">models_dict</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compare recommendations from multiple models for a specific user.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    models_dict (dict): Dictionary of model_name: model pairs</span>
+<span class="sd">    data (DataFrame): User-item interaction data</span>
+<span class="sd">    user_id (str): Target user ID</span>
+<span class="sd">    top_n (int): Number of recommendations per model</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    dict: Recommendations from each model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">comparison_results</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">recommendations</span> <span class="o">=</span> <span class="n">get_recommendations</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">top_n</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+            <span class="n">comparison_results</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">recommendations</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2"> Recommendations:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">business_id</span><span class="p">,</span> <span class="n">rating</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">recommendations</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">. Business ID: </span><span class="si">{</span><span class="n">business_id</span><span class="si">}</span><span class="s2">, Predicted Rating: </span><span class="si">{</span><span class="n">rating</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error with </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">comparison_results</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">return</span> <span class="n">comparison_results</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Enable side-by-side comparison of different recommendation algorithms for the same user.</p>
+<p><strong>Flow:</strong> Iterate through models → Generate recommendations → Display results → Handle errors gracefully</p>
+<p><strong>Impact:</strong> Facilitates model selection and ensemble method development by comparing algorithm outputs directly.</p>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="integration-with-main-tutorial">Integration with Main Tutorial</h2>
+<p>This code walkthrough provides complete implementation details for all recommendation systems covered in the main tutorial. Each section corresponds to the methodology discussed in the primary document:</p>
+<p><strong>Integration Points:</strong></p>
+<ul>
+<li>
+<p><strong>Section 1:</strong> Environment Setup → Tutorial Introduction</p>
+</li>
+<li>
+<p><strong>Section 2:</strong> Data Loading → Dataset Overview  </p>
+</li>
+<li>
+<p><strong>Section 3:</strong> EDA Code → Exploration Analysis</p>
+</li>
+<li>
+<p><strong>Section 4:</strong> Rank-Based Code → Model 1 Implementation</p>
+</li>
+<li>
+<p><strong>Section 5:</strong> User-User CF → Model 2 Implementation</p>
+</li>
+<li>
+<p><strong>Section 6:</strong> Item-Item CF → Model 3 Implementation</p>
+</li>
+<li>
+<p><strong>Section 7:</strong> SVD Code → Model 4 Implementation</p>
+</li>
+<li>
+<p><strong>Section 8:</strong> Clustering Code → Model 5 Implementation</p>
+</li>
+<li>
+<p><strong>Section 9:</strong> Evaluation → Performance Assessment</p>
+</li>
+</ul>
+<p><strong>Standalone Usage:</strong></p>
+<p>This document can serve as a complete technical reference for implementing Yelp recommendation systems, providing all necessary code and mathematical foundations for reproduction and extension.</p>
+<p><strong>Next Steps for Implementation:</strong></p>
+<ol>
+<li>
+<p>Execute environment setup and library installation</p>
+</li>
+<li>
+<p>Load and preprocess the Yelp dataset</p>
+</li>
+<li>
+<p>Implement each recommendation algorithm sequentially</p>
+</li>
+<li>
+<p>Evaluate performance using provided metrics</p>
+</li>
+<li>
+<p>Compare results and select optimal approach for your use case</p>
+</li>
+<li>
+<p>Extend with ensemble methods or additional features as needed</p>
+</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+<ul>
+<li>
+<p><em>Environment setup and library imports</em></p>
+</li>
+<li>
+<p><em>Complete data loading and preprocessing steps</em></p>
+</li>
+<li>
+<p><em>Detailed implementation of all five recommendation algorithms</em></p>
+</li>
+<li>
+<p><em>Hyperparameter optimization procedures</em></p>
+</li>
+<li>
+<p><em>Performance evaluation implementation</em></p>
+</li>
+<li>
+<p><em>Custom function development and mathematical foundations</em></p>
+</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<h2 id="references">References</h2>
+<ol>
+<li>
+<p>Koren, Y., Bell, R., &amp; Volinsky, C. (2009). Matrix factorization techniques for recommender systems. <em>Computer</em>, 42(8), 30-37.</p>
+</li>
+<li>
+<p>Sarwar, B., Karypis, G., Konstan, J., &amp; Riedl, J. (2001). Item-based collaborative filtering recommendation algorithms. <em>Proceedings of the 10th international conference on World Wide Web</em>, 285-295.</p>
+</li>
+<li>
+<p>Su, X., &amp; Khoshgoftaar, T. M. (2009). A survey of collaborative filtering techniques. <em>Advances in artificial intelligence</em>, 2009.</p>
+</li>
+<li>
+<p>Herlocker, J. L., Konstan, J. A., Terveen, L. G., &amp; Riedl, J. T. (2004). Evaluating collaborative filtering recommender systems. <em>ACM Transactions on Information Systems</em>, 22(1), 5-53.</p>
+</li>
+<li>
+<p>Ekstrand, M. D., Riedl, J. T., &amp; Konstan, J. A. (2011). Collaborative filtering recommender systems. <em>Foundations and Trends in Human-Computer Interaction</em>, 4(2), 81-173.</p>
+</li>
+<li>
+<p>Dhyani, M., Kumar, R., &amp; Jain, S. (2018). A comprehensive survey of recommendation system techniques. <em>International Journal of Computer Applications</em>, 180(17), 975-8887.</p>
+</li>
+<li>
+<p>Zhang, S., Yao, L., Sun, A., &amp; Tay, Y. (2019). Deep learning based recommender system: A survey and new perspectives. <em>ACM Computing Surveys</em>, 52(1), 1-38.</p>
+</li>
+<li>
+<p>Ricci, F., Rokach, L., &amp; Shapira, B. (2015). Recommender systems handbook. Springer.</p>
+</li>
+<li>
+<p>Aggarwal, C. C. (2016). Recommender systems: The textbook. Springer.</p>
+</li>
+<li>
+<p>Surprise Documentation. (2020). <em>Python scikit for building and analyzing recommender systems</em>. Retrieved from http://surpriselib.com/</p>
+</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 10, 2025 03:21:14 UTC">October 10, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+<!-- Footer navigation (prev/next) - Material default -->
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../31-hands-on-music-recommendation-systems/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Music Recommendation Systems Hands-On Tutorial: Building Scalable Music Discovery Solutions" rel="prev">
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Previous
+            </span>
+            <div class="md-ellipsis">
+              Music Recommendation Systems Hands-On Tutorial: Building Scalable Music Discovery Solutions
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../33-hands-on-book-recommendation-system/" class="md-footer__link md-footer__link--next" aria-label="Next: Book Recommendation Systems Hands-On Tutorial: Building AI-Powered Book Discovery for E-commerce" rel="next">
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Next
+            </span>
+            <div class="md-ellipsis">
+              Book Recommendation Systems Hands-On Tutorial: Building AI-Powered Book Discovery for E-commerce
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+
+  <!-- Custom footer content -->
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        <div style="text-align: center; padding: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 1rem;">
+          <p style="margin: 0.5rem 0;">
+            <strong>GenAI Atlas</strong> - Your Comprehensive Guide to AI & Machine Learning
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.9em; opacity: 0.8;">
+            © 2024 GenAI Atlas | Built with ❤️ for the AI Community
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.85em; opacity: 0.7;">
+            <em>Empowering developers, researchers, and practitioners worldwide</em>
+          </p>
+        </div>
+      </div>
+      <div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,91 @@
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- Title -->
+  <text x="600" y="40" font-size="28" font-weight="bold" text-anchor="middle" fill="#1a1a1a">Kalman Filter: Predict-Update Cycle</text>
+  
+  <!-- Timeline -->
+  <line x1="100" y1="100" x2="1100" y2="100" stroke="#999" stroke-width="2"/>
+  <text x="200" y="130" font-size="14" text-anchor="middle" fill="#666">t-1</text>
+  <text x="500" y="130" font-size="14" text-anchor="middle" fill="#666">t</text>
+  <text x="900" y="130" font-size="14" text-anchor="middle" fill="#666">t+1</text>
+  
+  <!-- Predict Step Box -->
+  <rect x="250" y="180" width="500" height="280" rx="15" fill="#e3f2fd" stroke="#2c5aa0" stroke-width="3"/>
+  <text x="500" y="215" font-size="22" font-weight="bold" text-anchor="middle" fill="#2c5aa0">PREDICT STEP (Time Update)</text>
+  
+  <!-- Prediction equations -->
+  <text x="280" y="260" font-size="18" font-weight="bold" fill="#1a1a1a">State Prediction:</text>
+  <rect x="280" y="275" width="440" height="35" rx="5" fill="white" stroke="#2c5aa0" stroke-width="1"/>
+  <text x="500" y="300" font-size="16" text-anchor="middle" fill="#1a1a1a">μₜ|ₜ₋₁ = A · μₜ₋₁|ₜ₋₁</text>
+  
+  <text x="280" y="340" font-size="18" font-weight="bold" fill="#1a1a1a">Covariance Prediction:</text>
+  <rect x="280" y="355" width="440" height="35" rx="5" fill="white" stroke="#2c5aa0" stroke-width="1"/>
+  <text x="500" y="380" font-size="16" text-anchor="middle" fill="#1a1a1a">Σₜ|ₜ₋₁ = A · Σₜ₋₁|ₜ₋₁ · Aᵀ + Q</text>
+  
+  <text x="280" y="420" font-size="14" fill="#1a1a1a" font-weight="bold">Intuition:</text>
+  <text x="290" y="440" font-size="13" fill="#333">• Project current estimate forward in time</text>
+  <text x="290" y="458" font-size="13" fill="#333">• Use system dynamics (matrix A)</text>
+  
+  <!-- Arrow from Predict to Update -->
+  <defs>
+    <marker id="arrowgreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#00695c"/>
+    </marker>
+  </defs>
+  
+  <line x1="500" y1="470" x2="500" y2="510" stroke="#00695c" stroke-width="3" marker-end="url(#arrowgreen)"/>
+  <text x="520" y="495" font-size="14" font-weight="bold" fill="#00695c">New observation Yₜ arrives</text>
+  
+  <!-- Update Step Box -->
+  <rect x="200" y="520" width="600" height="340" rx="15" fill="#fff3e0" stroke="#e65100" stroke-width="3"/>
+  <text x="500" y="555" font-size="22" font-weight="bold" text-anchor="middle" fill="#e65100">UPDATE STEP (Measurement Update)</text>
+  
+  <!-- Update equations -->
+  <text x="230" y="595" font-size="18" font-weight="bold" fill="#1a1a1a">1. Kalman Gain:</text>
+  <rect x="230" y="608" width="540" height="40" rx="5" fill="white" stroke="#e65100" stroke-width="1"/>
+  <text x="500" y="635" font-size="15" text-anchor="middle" fill="#1a1a1a">Kₜ = Σₜ|ₜ₋₁ · Bᵀ · (B · Σₜ|ₜ₋₁ · Bᵀ + R)⁻¹</text>
+  
+  <text x="230" y="675" font-size="18" font-weight="bold" fill="#1a1a1a">2. State Update:</text>
+  <rect x="230" y="688" width="540" height="40" rx="5" fill="white" stroke="#e65100" stroke-width="1"/>
+  <text x="500" y="715" font-size="15" text-anchor="middle" fill="#1a1a1a">μₜ|ₜ = μₜ|ₜ₋₁ + Kₜ · (Yₜ - B · μₜ|ₜ₋₁)</text>
+  
+  <text x="230" y="755" font-size="18" font-weight="bold" fill="#1a1a1a">3. Covariance Update:</text>
+  <rect x="230" y="768" width="540" height="40" rx="5" fill="white" stroke="#e65100" stroke-width="1"/>
+  <text x="500" y="795" font-size="15" text-anchor="middle" fill="#1a1a1a">Σₜ|ₜ = (I - Kₜ · B) · Σₜ|ₜ₋₁</text>
+  
+  <text x="230" y="833" font-size="14" fill="#1a1a1a" font-weight="bold">Intuition:</text>
+  <text x="240" y="850" font-size="13" fill="#333">• Compute optimal weighting (Kalman gain)</text>
+  <text x="240" y="868" font-size="13" fill="#333">• Combine prediction with new measurement</text>
+  
+  <!-- Innovation box -->
+  <rect x="850" y="620" width="320" height="140" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="1010" y="650" font-size="16" font-weight="bold" text-anchor="middle" fill="#2e7d32">Innovation (Residual)</text>
+  <text x="1010" y="680" font-size="14" text-anchor="middle" fill="#1a1a1a">νₜ = Yₜ - B · μₜ|ₜ₋₁</text>
+  <text x="870" y="710" font-size="12" fill="#333">Difference between:</text>
+  <text x="880" y="728" font-size="12" fill="#333">• Actual measurement Yₜ</text>
+  <text x="880" y="744" font-size="12" fill="#333">• Predicted measurement</text>
+  
+  <!-- Cycle indicator -->
+  <path d="M 850 320 Q 1050 320 1050 500 Q 1050 680 900 750" stroke="#9c27b0" stroke-width="3" fill="none" marker-end="url(#arrowpurple)"/>
+  <defs>
+    <marker id="arrowpurple" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#9c27b0"/>
+    </marker>
+  </defs>
+  <text x="1070" y="510" font-size="14" font-weight="bold" fill="#9c27b0">Repeat</text>
+  <text x="1070" y="528" font-size="14" font-weight="bold" fill="#9c27b0">for next</text>
+  <text x="1070" y="546" font-size="14" font-weight="bold" fill="#9c27b0">time step</text>
+  
+  <!-- Variable legend -->
+  <rect x="50" y="620" width="120" height="220" rx="8" fill="#f5f5f5" stroke="#666" stroke-width="2"/>
+  <text x="110" y="645" font-size="14" font-weight="bold" text-anchor="middle" fill="#1a1a1a">Variables</text>
+  <text x="60" y="670" font-size="11" fill="#333">μₜ|ₜ: State mean</text>
+  <text x="60" y="688" font-size="11" fill="#333">Σₜ|ₜ: Covariance</text>
+  <text x="60" y="706" font-size="11" fill="#333">A: Transition</text>
+  <text x="60" y="724" font-size="11" fill="#333">B: Observation</text>
+  <text x="60" y="742" font-size="11" fill="#333">Q: Process noise</text>
+  <text x="60" y="760" font-size="11" fill="#333">R: Meas. noise</text>
+  <text x="60" y="778" font-size="11" fill="#333">Kₜ: Kalman gain</text>
+  <text x="60" y="796" font-size="11" fill="#333">Yₜ: Observation</text>
+  <text x="60" y="814" font-size="11" fill="#333">I: Identity matrix</text>
+  <text x="60" y="832" font-size="11" fill="#333">νₜ: Innovation</text>
+</svg>
