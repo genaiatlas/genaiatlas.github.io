@@ -1,0 +1,3326 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/02-gen-ai-core/5-1-rag/1-learning-path/05-02-query-construction/">
+      
+      
+        <link rel="prev" href="../05-01-rag-overview/">
+      
+      
+        <link rel="next" href="../05-03-query-translation/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Query Construction: Deep Dive - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Query Construction: Deep Dive
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../01-foundation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../01-foundation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Gen AI Core
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../4-transformers-generative-ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Transformers & Gen AI
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Transformers & Gen AI
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../4-transformers-generative-ai/1-learning-path/01-intro/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../4-transformers-generative-ai/2-additional-reference/01-additional-reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../4-transformers-generative-ai/3-fast-track/01-transformers-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    RAG
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            RAG
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3_2" id="__nav_3_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-01-rag-overview/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    RAG Overview
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_2_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3_2_2" id="__nav_3_3_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Query Construction
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_3_2_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Query Construction
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Query Construction: Deep Dive
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Query Construction: Deep Dive
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-construction-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Query Construction Pipeline
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#text-to-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      Text-to-SQL
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#text-to-cypher" class="md-nav__link">
+    <span class="md-ellipsis">
+      Text-to-Cypher
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vector-database-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vector Database Queries
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-query-retriever" class="md-nav__link">
+    <span class="md-ellipsis">
+      Self-Query Retriever
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Challenges
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Examples
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Resources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-03-query-translation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Query Translation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-04-routing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Routing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-05-retrieval/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Retrieval
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-06-indexing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Indexing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-07-generation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Generation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-additional-reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-rag-langchain-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../5-2-langchain/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    LangChain
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            LangChain
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../5-2-langchain/1-learning-path/01-fundamentals/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../5-2-langchain/2-additional-reference/01-additional-reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../5-2-langchain/3-fast-track/01-rag-langchain-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-construction-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Query Construction Pipeline
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#text-to-sql" class="md-nav__link">
+    <span class="md-ellipsis">
+      Text-to-SQL
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#text-to-cypher" class="md-nav__link">
+    <span class="md-ellipsis">
+      Text-to-Cypher
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vector-database-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vector Database Queries
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-query-retriever" class="md-nav__link">
+    <span class="md-ellipsis">
+      Self-Query Retriever
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Challenges
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Examples
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Resources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="query-construction-deep-dive">Query Construction: Deep Dive</h1>
+<p><a id="top"></a></p>
+<p><strong>Converting Natural Language to Structured Database Queries</strong></p>
+<hr />
+<h2 id="quick-navigation">📚 Quick Navigation</h2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#query-construction-pipeline">Query Construction Pipeline</a></li>
+<li><a href="#text-to-sql">Text-to-SQL</a></li>
+<li><a href="#text-to-cypher">Text-to-Cypher</a></li>
+<li><a href="#vector-database-queries">Vector Database Queries</a></li>
+<li><a href="#self-query-retriever">Self-Query Retriever</a></li>
+<li><a href="#common-challenges">Common Challenges</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#implementation-examples">Implementation Examples</a></li>
+<li><a href="#model-resources">Model Resources</a></li>
+<li><a href="#references-further-reading">References &amp; Further Reading</a></li>
+</ul>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<p>Query Construction is the foundational step in RAG systems that bridges the gap between natural language and structured data access. This process converts user questions into executable database queries, enabling RAG systems to retrieve precise information from structured data sources.</p>
+<p><strong>Why Query Construction Matters:</strong></p>
+<ul>
+<li><strong>Precision:</strong> Direct database access provides exact, structured information</li>
+<li><strong>Efficiency:</strong> Structured queries are faster than semantic search for factual data</li>
+<li><strong>Scalability:</strong> Works with existing enterprise databases and data warehouses</li>
+<li><strong>Flexibility:</strong> Supports multiple database types and query languages</li>
+<li><strong>Integration:</strong> Seamlessly connects LLMs with traditional data infrastructure</li>
+</ul>
+<p><strong>Core Challenge:</strong></p>
+<p>The fundamental challenge is translating ambiguous natural language into precise, executable queries while maintaining semantic accuracy and handling edge cases.</p>
+<p><strong>Query Construction vs Semantic Search:</strong></p>
+<ul>
+<li><strong>Query Construction:</strong> Best for structured data, exact matches, aggregations, and complex joins</li>
+<li><strong>Semantic Search:</strong> Best for unstructured text, conceptual queries, and fuzzy matching</li>
+<li><strong>Hybrid Approach:</strong> Combine both for comprehensive coverage</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="query-construction-pipeline">Query Construction Pipeline</h2>
+<p>The query construction process follows a systematic pipeline that transforms natural language into executable queries.</p>
+<p><img alt="Query Construction Pipeline" src="../../../../svg/query_construction_pipeline.svg" /></p>
+<p><strong>Pipeline Stages:</strong></p>
+<p><strong>Stage 1: Query Understanding</strong></p>
+<ul>
+<li><strong>Natural Language Processing:</strong> Parse the user's question</li>
+<li><strong>Intent Classification:</strong> Determine what the user wants to know</li>
+<li><strong>Entity Extraction:</strong> Identify key entities (customers, products, dates)</li>
+<li><strong>Relationship Mapping:</strong> Understand how entities relate to each other</li>
+</ul>
+<p><strong>Stage 2: Schema Analysis</strong></p>
+<ul>
+<li><strong>Schema Retrieval:</strong> Load relevant database schema information</li>
+<li><strong>Table Identification:</strong> Determine which tables contain needed information</li>
+<li><strong>Column Mapping:</strong> Map natural language terms to database columns</li>
+<li><strong>Relationship Discovery:</strong> Identify foreign keys and join conditions</li>
+</ul>
+<p><strong>Stage 3: Query Generation</strong></p>
+<ul>
+<li><strong>Query Template Selection:</strong> Choose appropriate query structure</li>
+<li><strong>Clause Construction:</strong> Build WHERE, JOIN, GROUP BY, ORDER BY clauses</li>
+<li><strong>Aggregation Handling:</strong> Add SUM, COUNT, AVG functions as needed</li>
+<li><strong>Filter Application:</strong> Apply constraints and conditions</li>
+</ul>
+<p><strong>Stage 4: Query Validation</strong></p>
+<ul>
+<li><strong>Syntax Checking:</strong> Verify query is syntactically correct</li>
+<li><strong>Semantic Validation:</strong> Ensure query matches user intent</li>
+<li><strong>Permission Verification:</strong> Check user has access to requested data</li>
+<li><strong>Safety Checks:</strong> Prevent harmful queries (deletions, modifications)</li>
+</ul>
+<p><strong>Stage 5: Execution &amp; Error Handling</strong></p>
+<ul>
+<li><strong>Query Execution:</strong> Run the query against the database</li>
+<li><strong>Error Recovery:</strong> Handle errors gracefully with fallback strategies</li>
+<li><strong>Result Formatting:</strong> Structure results for LLM consumption</li>
+<li><strong>Performance Monitoring:</strong> Track query execution time and resource usage</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="text-to-sql">Text-to-SQL</h2>
+<p>Text-to-SQL converts natural language questions into SQL queries for relational databases.</p>
+<p><img alt="Text-to-SQL Workflow" src="../../../../svg/text_to_sql_workflow.svg" /></p>
+<p><strong>Text-to-SQL Process:</strong></p>
+<p><strong>Step 1: Question Analysis</strong></p>
+<ul>
+<li><strong>Parse User Question:</strong> "What are the top 10 customers by total revenue in 2024?"</li>
+<li><strong>Extract Key Elements:</strong> customers, revenue, top 10, year 2024</li>
+<li><strong>Identify Operations:</strong> ranking, aggregation, filtering</li>
+</ul>
+<p><strong>Step 2: Schema Mapping</strong></p>
+<ul>
+<li><strong>Load Schema:</strong> Get tables, columns, relationships</li>
+<li><strong>Map Entities:</strong> "customers" → customers table</li>
+<li><strong>Map Attributes:</strong> "revenue" → order_amount column</li>
+<li><strong>Identify Joins:</strong> customers ↔ orders relationship</li>
+</ul>
+<p><strong>Step 3: SQL Generation</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span>
+<span class="w">    </span><span class="k">c</span><span class="p">.</span><span class="n">customer_name</span><span class="p">,</span>
+<span class="w">    </span><span class="k">c</span><span class="p">.</span><span class="n">customer_id</span><span class="p">,</span>
+<span class="w">    </span><span class="k">SUM</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">order_amount</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">total_revenue</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">customers</span><span class="w"> </span><span class="k">c</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">customer_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">customer_id</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="k">YEAR</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">order_date</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2024</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">customer_id</span><span class="p">,</span><span class="w"> </span><span class="k">c</span><span class="p">.</span><span class="n">customer_name</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">total_revenue</span><span class="w"> </span><span class="k">DESC</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Step 4: Query Refinement</strong></p>
+<ul>
+<li><strong>Optimize Performance:</strong> Add indexes, limit result sets</li>
+<li><strong>Handle Edge Cases:</strong> NULL values, date formatting</li>
+<li><strong>Add Context:</strong> Include relevant columns for context</li>
+</ul>
+<p><strong>Common Text-to-SQL Patterns:</strong></p>
+<p><strong>Aggregation Queries:</strong></p>
+<ul>
+<li>"What is the average order value?" → SELECT AVG(order_amount)</li>
+<li>"How many customers do we have?" → SELECT COUNT(DISTINCT customer_id)</li>
+<li>"What's the total revenue?" → SELECT SUM(revenue)</li>
+</ul>
+<p><strong>Filtering Queries:</strong></p>
+<ul>
+<li>"Show orders from last month" → WHERE order_date &gt;= DATE_SUB(NOW(), INTERVAL 1 MONTH)</li>
+<li>"Find customers in California" → WHERE state = 'CA'</li>
+<li>"List products above $100" → WHERE price &gt; 100</li>
+</ul>
+<p><strong>Ranking Queries:</strong></p>
+<ul>
+<li>"Top 5 products by sales" → ORDER BY sales DESC LIMIT 5</li>
+<li>"Bottom 10 performers" → ORDER BY performance ASC LIMIT 10</li>
+<li>"Rank by revenue" → ORDER BY revenue DESC</li>
+</ul>
+<p><strong>Temporal Queries:</strong></p>
+<ul>
+<li>"Sales this quarter" → WHERE quarter = QUARTER(NOW())</li>
+<li>"Year-over-year comparison" → Complex query with date logic</li>
+<li>"Monthly trends" → GROUP BY MONTH(date)</li>
+</ul>
+<p><strong>Challenges in Text-to-SQL:</strong></p>
+<ul>
+<li><strong>Ambiguous References:</strong> "customers" could mean count, names, or IDs</li>
+<li><strong>Complex Joins:</strong> Multi-table queries with multiple join conditions</li>
+<li><strong>Nested Queries:</strong> Subqueries and CTEs for complex logic</li>
+<li><strong>Schema Complexity:</strong> Large schemas with hundreds of tables</li>
+<li><strong>Ambiguous Aggregations:</strong> "revenue" could mean sum, average, or median</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="text-to-cypher">Text-to-Cypher</h2>
+<p>Text-to-Cypher generates graph database queries for Neo4j and other graph databases.</p>
+<p><img alt="Text-to-Cypher Workflow" src="../../../../svg/text-to-cypher-workflow.svg" /></p>
+<p><strong>Text-to-Cypher Process:</strong></p>
+<p><strong>Step 1: Graph Understanding</strong></p>
+<ul>
+<li><strong>Node Identification:</strong> Identify entities (Person, Company, Product)</li>
+<li><strong>Relationship Recognition:</strong> Understand connections (WORKS_FOR, PURCHASED)</li>
+<li><strong>Pattern Recognition:</strong> Detect graph patterns in the question</li>
+<li><strong>Path Analysis:</strong> Identify traversal requirements</li>
+</ul>
+<p><strong>Step 2: Cypher Generation</strong></p>
+<p>Example Query: "Who are the customers that purchased products from Company X?"</p>
+<div class="highlight"><pre><span></span><code><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="p">:</span><span class="n">Customer</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">PURCHASED</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">p</span><span class="p">:</span><span class="n">Product</span><span class="p">)</span><span class="o">&lt;-[</span><span class="p">:</span><span class="n">MANUFACTURES</span><span class="o">]-</span><span class="p">(</span><span class="n">company</span><span class="p">:</span><span class="n">Company</span><span class="p">)</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">company</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;Company X&#39;</span>
+<span class="k">RETURN</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">customer_name</span><span class="p">,</span><span class="w"> </span>
+<span class="w">       </span><span class="k">collect</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">purchased_products</span><span class="p">,</span>
+<span class="w">       </span><span class="n">count</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">product_count</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">product_count</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Common Cypher Patterns:</strong></p>
+<p><strong>Path Queries:</strong></p>
+<ul>
+<li>"How is Person A connected to Person B?" → MATCH path = shortestPath(...)</li>
+<li>"Find all connections" → MATCH (a)-[*]-(b)</li>
+<li>"2-hop relationships" → MATCH (a)-[]-&gt;()-[]-&gt;(b)</li>
+</ul>
+<p><strong>Relationship Queries:</strong></p>
+<ul>
+<li>"Who works for Company X?" → MATCH (p:Person)-[:WORKS_FOR]-&gt;(c:Company)</li>
+<li>"What did Customer Y buy?" → MATCH (c:Customer)-[:PURCHASED]-&gt;(p:Product)</li>
+<li>"Find influencers" → MATCH (p)-[:FOLLOWS]-&gt;(i) WITH i, count(p) AS followers</li>
+</ul>
+<p><strong>Pattern Matching:</strong></p>
+<ul>
+<li>"Find triangles" → MATCH (a)-[:KNOWS]-&gt;(b)-[:KNOWS]-&gt;(c)-[:KNOWS]-&gt;(a)</li>
+<li>"Detect communities" → MATCH (n)-[:MEMBER_OF]-&gt;(g:Group)</li>
+<li>"Identify hubs" → MATCH (n)-[r]-() WITH n, count(r) AS degree</li>
+</ul>
+<p><strong>Aggregation in Graphs:</strong></p>
+<ul>
+<li>"Count relationships" → MATCH ()-[r:FOLLOWS]-&gt;() RETURN count(r)</li>
+<li>"Average connections" → MATCH (n)-[r]-&gt;() RETURN avg(count(r))</li>
+<li>"Most connected" → MATCH (n)-[r]-&gt;() RETURN n, count(r) AS connections ORDER BY connections DESC</li>
+</ul>
+<p><strong>Text-to-Cypher Challenges:</strong></p>
+<ul>
+<li><strong>Complex Path Queries:</strong> Variable-length paths with conditions</li>
+<li><strong>Pattern Ambiguity:</strong> Multiple valid graph patterns for same question</li>
+<li><strong>Performance Issues:</strong> Expensive traversals on large graphs</li>
+<li><strong>Schema Variability:</strong> Different graph schemas require different patterns</li>
+<li><strong>Relationship Direction:</strong> Ambiguous relationship directions in natural language</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul>
+<li><strong>Social Networks:</strong> Friend recommendations, influence analysis</li>
+<li><strong>Knowledge Graphs:</strong> Fact verification, relationship discovery</li>
+<li><strong>Fraud Detection:</strong> Pattern analysis, anomaly detection</li>
+<li><strong>Recommendation Systems:</strong> Collaborative filtering, graph-based recommendations</li>
+<li><strong>Network Analysis:</strong> Infrastructure mapping, dependency tracking</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="vector-database-queries">Vector Database Queries</h2>
+<p>Vector database queries combine semantic search with metadata filtering for precise retrieval.</p>
+<p><img alt="Vector DB Metadata Filters" src="../../../../svg/vector_db_metadata_filters.svg" /></p>
+<p><strong>Vector Database Query Construction:</strong></p>
+<p><strong>Step 1: Semantic Component</strong></p>
+<ul>
+<li><strong>Query Embedding:</strong> Convert natural language to vector</li>
+<li><strong>Similarity Search:</strong> Find semantically similar documents</li>
+<li><strong>Top-K Selection:</strong> Retrieve most relevant candidates</li>
+</ul>
+<p><strong>Step 2: Metadata Filtering</strong></p>
+<ul>
+<li><strong>Extract Filters:</strong> Parse metadata constraints from query</li>
+<li><strong>Build Filter Query:</strong> Construct structured filter conditions</li>
+<li><strong>Combine Search:</strong> Apply filters to semantic search results</li>
+</ul>
+<p><strong>Auto-Generated Metadata Filters:</strong></p>
+<p>Example Query: "Find recent technical documentation about machine learning in Python"</p>
+<p><strong>Parsed Metadata:</strong></p>
+<ul>
+<li><strong>Recency:</strong> date &gt; 2023-01-01</li>
+<li><strong>Document Type:</strong> category = "technical_documentation"</li>
+<li><strong>Topic:</strong> tags CONTAINS "machine_learning"</li>
+<li><strong>Language:</strong> programming_language = "python"</li>
+</ul>
+<p><strong>Filter Construction:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;filter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;must&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span><span class="nt">&quot;term&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;technical_documentation&quot;</span><span class="p">}},</span>
+<span class="w">      </span><span class="p">{</span><span class="nt">&quot;term&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;programming_language&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="p">}},</span>
+<span class="w">      </span><span class="p">{</span><span class="nt">&quot;terms&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;machine_learning&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ml&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ai&quot;</span><span class="p">]}}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;filter&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span><span class="nt">&quot;range&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;date&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;gte&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">}}}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;knn&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;embedding&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2</span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;k&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Metadata Types:</strong></p>
+<p><strong>Temporal Metadata:</strong></p>
+<ul>
+<li><strong>Created Date:</strong> Document creation timestamp</li>
+<li><strong>Modified Date:</strong> Last update timestamp</li>
+<li><strong>Expiration Date:</strong> Content validity period</li>
+<li><strong>Version:</strong> Document version number</li>
+</ul>
+<p><strong>Categorical Metadata:</strong></p>
+<ul>
+<li><strong>Document Type:</strong> Article, report, tutorial, API doc</li>
+<li><strong>Category:</strong> Technical, business, legal, marketing</li>
+<li><strong>Tags:</strong> Topic labels and keywords</li>
+<li><strong>Language:</strong> Natural language (English, Spanish, etc.)</li>
+</ul>
+<p><strong>Hierarchical Metadata:</strong></p>
+<ul>
+<li><strong>Organization:</strong> Company, department, team</li>
+<li><strong>Location:</strong> Country, region, city</li>
+<li><strong>Project:</strong> Project name, phase, status</li>
+<li><strong>Author:</strong> Creator, contributor, reviewer</li>
+</ul>
+<p><strong>Numeric Metadata:</strong></p>
+<ul>
+<li><strong>Page Count:</strong> Document length</li>
+<li><strong>View Count:</strong> Popularity metric</li>
+<li><strong>Rating:</strong> Quality score</li>
+<li><strong>Priority:</strong> Importance level</li>
+</ul>
+<p><strong>Common Filter Patterns:</strong></p>
+<p><strong>Exact Match:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="s2">&quot;term&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;technical&quot;</span><span class="p">}}</span>
+</code></pre></div>
+<p><strong>Range Filters:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="s2">&quot;range&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;gte&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;lte&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-12-31&quot;</span><span class="p">}}}</span>
+</code></pre></div>
+<p><strong>Multiple Values:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="s2">&quot;terms&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="s2">&quot;java&quot;</span><span class="p">,</span> <span class="s2">&quot;javascript&quot;</span><span class="p">]}}</span>
+</code></pre></div>
+<p><strong>Boolean Logic:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="s2">&quot;bool&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;must&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;term&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;published&quot;</span><span class="p">}}],</span>
+    <span class="s2">&quot;should&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;term&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;priority&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">}}],</span>
+    <span class="s2">&quot;must_not&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;term&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;archived&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">}}]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Nested Filters:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="s2">&quot;nested&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;authors&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;term&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;authors.name&quot;</span><span class="p">:</span> <span class="s2">&quot;John Doe&quot;</span><span class="p">}}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="self-query-retriever">Self-Query Retriever</h2>
+<p>Self-query retrieval automatically separates semantic content from metadata filters.</p>
+<p><img alt="Self-Query Retriever" src="../../../../svg/self_query_retriever.svg" /></p>
+<p><strong>Self-Query Architecture:</strong></p>
+<p><strong>Component 1: Query Decomposition</strong></p>
+<ul>
+<li><strong>Input:</strong> Natural language query</li>
+<li><strong>Processing:</strong> LLM separates content from metadata</li>
+<li><strong>Output:</strong> Semantic query + structured filters</li>
+</ul>
+<p><strong>Component 2: Filter Generation</strong></p>
+<ul>
+<li><strong>Metadata Extraction:</strong> Identify filterable attributes</li>
+<li><strong>Filter Construction:</strong> Build database-specific filters</li>
+<li><strong>Validation:</strong> Ensure filters match schema</li>
+</ul>
+<p><strong>Component 3: Retrieval Execution</strong></p>
+<ul>
+<li><strong>Semantic Search:</strong> Use content query for vector search</li>
+<li><strong>Filter Application:</strong> Apply metadata constraints</li>
+<li><strong>Result Ranking:</strong> Combine scores from both approaches</li>
+</ul>
+<p><strong>Example Self-Query Workflow:</strong></p>
+<p><strong>User Query:</strong></p>
+<p>"Show me recent Python tutorials about machine learning published after 2023"</p>
+<p><strong>Self-Query Decomposition:</strong></p>
+<p><strong>Semantic Component:</strong></p>
+<div class="highlight"><pre><span></span><code>&quot;Python tutorials about machine learning&quot;
+</code></pre></div>
+<p><strong>Metadata Filters:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;filters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;document_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;$eq&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tutorial&quot;</span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;programming_language&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;$eq&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python&quot;</span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;topic&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;$contains&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;machine_learning&quot;</span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;publish_date&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;$gt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Self-Query vs Manual Filtering:</strong></p>
+<p><strong>Manual Filtering:</strong></p>
+<ul>
+<li><strong>User specifies filters explicitly</strong></li>
+<li><strong>Requires knowledge of metadata schema</strong></li>
+<li><strong>More control but less user-friendly</strong></li>
+<li><strong>Prone to syntax errors</strong></li>
+</ul>
+<p><strong>Self-Query:</strong></p>
+<ul>
+<li><strong>Automatic filter extraction from natural language</strong></li>
+<li><strong>No schema knowledge required</strong></li>
+<li><strong>User-friendly but less precise</strong></li>
+<li><strong>May miss implicit filters</strong></li>
+</ul>
+<p><strong>Benefits of Self-Query:</strong></p>
+<ul>
+<li><strong>Improved Precision:</strong> Metadata filters eliminate irrelevant results</li>
+<li><strong>Better Performance:</strong> Reduce vector search space with filters</li>
+<li><strong>Enhanced User Experience:</strong> No need to learn filter syntax</li>
+<li><strong>Semantic + Structured:</strong> Combine best of both approaches</li>
+<li><strong>Scalability:</strong> Efficient on large datasets</li>
+</ul>
+<p><strong>Implementation Considerations:</strong></p>
+<ul>
+<li><strong>Schema Knowledge:</strong> LLM must understand metadata schema</li>
+<li><strong>Filter Accuracy:</strong> Validate generated filters before execution</li>
+<li><strong>Fallback Strategy:</strong> Handle cases where filter extraction fails</li>
+<li><strong>User Feedback:</strong> Allow users to refine auto-generated filters</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="common-challenges">Common Challenges</h2>
+<p>Query construction faces several technical and linguistic challenges.</p>
+<p><img alt="Query Construction Challenges" src="../../../../svg/query_construction_challenges.svg" /></p>
+<p><strong>Challenge Categories:</strong></p>
+<p><strong>1. Ambiguity Resolution</strong></p>
+<p><strong>Lexical Ambiguity:</strong></p>
+<ul>
+<li><strong>Problem:</strong> "bank" could mean financial institution or river bank</li>
+<li><strong>Solution:</strong> Use context and schema to disambiguate</li>
+<li><strong>Example:</strong> In financial schema, "bank" → financial_institution table</li>
+</ul>
+<p><strong>Structural Ambiguity:</strong></p>
+<ul>
+<li><strong>Problem:</strong> "Find customers who bought products in 2024 or 2025"</li>
+<li><strong>Interpretation 1:</strong> (customers who bought products in 2024) OR (in 2025)</li>
+<li><strong>Interpretation 2:</strong> customers who bought (products in 2024 or 2025)</li>
+<li><strong>Solution:</strong> Use parentheses and operator precedence rules</li>
+</ul>
+<p><strong>Referential Ambiguity:</strong></p>
+<ul>
+<li><strong>Problem:</strong> "Show me their orders" - who is "their"?</li>
+<li><strong>Solution:</strong> Maintain conversation context and resolve pronouns</li>
+<li><strong>Example:</strong> Track previous query about customers</li>
+</ul>
+<p><strong>2. Schema Complexity</strong></p>
+<p><strong>Large Schemas:</strong></p>
+<ul>
+<li><strong>Problem:</strong> Hundreds of tables, thousands of columns</li>
+<li><strong>Solution:</strong> Use schema indexing, relevance ranking</li>
+<li><strong>Approach:</strong> Pre-filter to most relevant tables based on query</li>
+</ul>
+<p><strong>Inconsistent Naming:</strong></p>
+<ul>
+<li><strong>Problem:</strong> customer_id vs customerId vs cust_id</li>
+<li><strong>Solution:</strong> Maintain naming convention mapping</li>
+<li><strong>Approach:</strong> Use synonyms and aliases</li>
+</ul>
+<p><strong>Hidden Relationships:</strong></p>
+<ul>
+<li><strong>Problem:</strong> Implicit joins not defined as foreign keys</li>
+<li><strong>Solution:</strong> Schema documentation, relationship discovery</li>
+<li><strong>Approach:</strong> Learn relationships from query history</li>
+</ul>
+<p><strong>3. Complex Logic</strong></p>
+<p><strong>Multi-Hop Reasoning:</strong></p>
+<ul>
+<li><strong>Problem:</strong> "Find customers who bought products from suppliers in California"</li>
+<li><strong>Required Joins:</strong> customers → orders → products → suppliers → locations</li>
+<li><strong>Solution:</strong> Break down into sub-queries or CTEs</li>
+</ul>
+<p><strong>Temporal Reasoning:</strong></p>
+<ul>
+<li><strong>Problem:</strong> "Compare this quarter to same quarter last year"</li>
+<li><strong>Required Logic:</strong> Complex date arithmetic, self-joins</li>
+<li><strong>Solution:</strong> Use templates for common temporal patterns</li>
+</ul>
+<p><strong>Conditional Logic:</strong></p>
+<ul>
+<li><strong>Problem:</strong> "Show revenue by region, but only for regions with &gt;$1M revenue"</li>
+<li><strong>Required Feature:</strong> HAVING clause with aggregation</li>
+<li><strong>Solution:</strong> Understand aggregation vs filtering differences</li>
+</ul>
+<p><strong>4. Performance Issues</strong></p>
+<p><strong>Expensive Queries:</strong></p>
+<ul>
+<li><strong>Problem:</strong> Full table scans, missing indexes</li>
+<li><strong>Solution:</strong> Query optimization, EXPLAIN analysis</li>
+<li><strong>Approach:</strong> Suggest indexes, rewrite queries</li>
+</ul>
+<p><strong>Large Result Sets:</strong></p>
+<ul>
+<li><strong>Problem:</strong> Millions of rows returned</li>
+<li><strong>Solution:</strong> Implement LIMIT, pagination</li>
+<li><strong>Approach:</strong> Warn users, ask for refinement</li>
+</ul>
+<p><strong>Resource Limits:</strong></p>
+<ul>
+<li><strong>Problem:</strong> Query timeout, memory limits</li>
+<li><strong>Solution:</strong> Set execution timeouts, result size limits</li>
+<li><strong>Approach:</strong> Graceful degradation</li>
+</ul>
+<p><strong>5. Safety &amp; Security</strong></p>
+<p><strong>SQL Injection:</strong></p>
+<ul>
+<li><strong>Problem:</strong> Malicious SQL in user input</li>
+<li><strong>Solution:</strong> Parameterized queries, input validation</li>
+<li><strong>Approach:</strong> Never concatenate user input into SQL</li>
+</ul>
+<p><strong>Unauthorized Access:</strong></p>
+<ul>
+<li><strong>Problem:</strong> Query requests restricted data</li>
+<li><strong>Solution:</strong> Row-level security, permission checks</li>
+<li><strong>Approach:</strong> Validate user permissions before execution</li>
+</ul>
+<p><strong>Destructive Operations:</strong></p>
+<ul>
+<li><strong>Problem:</strong> DELETE, UPDATE, DROP in generated queries</li>
+<li><strong>Solution:</strong> Restrict to read-only operations</li>
+<li><strong>Approach:</strong> Whitelist allowed operations</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="best-practices">Best Practices</h2>
+<p>Follow these best practices for robust query construction systems.</p>
+<p><img alt="Query Construction Best Practices" src="../../../../svg/query_construction_best_practices.svg" /></p>
+<p><strong>Design Principles:</strong></p>
+<p><strong>1. Schema-Aware Design</strong></p>
+<ul>
+<li><strong>Maintain Schema Documentation:</strong> Keep up-to-date schema descriptions</li>
+<li><strong>Use Semantic Layer:</strong> Abstract complex schemas with business terms</li>
+<li><strong>Version Control:</strong> Track schema changes and query template updates</li>
+<li><strong>Schema Validation:</strong> Regularly test query generation against schema changes</li>
+</ul>
+<p><strong>2. Error Handling</strong></p>
+<ul>
+<li><strong>Graceful Degradation:</strong> Fall back to simpler queries when complex ones fail</li>
+<li><strong>Clear Error Messages:</strong> Explain what went wrong and how to fix it</li>
+<li><strong>Retry Logic:</strong> Automatically retry with query modifications</li>
+<li><strong>User Feedback:</strong> Ask users to rephrase ambiguous questions</li>
+</ul>
+<p><strong>3. Query Optimization</strong></p>
+<ul>
+<li><strong>Limit Result Sets:</strong> Always use LIMIT unless user specifies otherwise</li>
+<li><strong>Index Recommendations:</strong> Suggest indexes for frequently queried columns</li>
+<li><strong>Explain Plans:</strong> Analyze query performance before execution</li>
+<li><strong>Caching:</strong> Cache frequently executed queries</li>
+</ul>
+<p><strong>4. Testing &amp; Validation</strong></p>
+<ul>
+<li><strong>Unit Tests:</strong> Test individual query components</li>
+<li><strong>Integration Tests:</strong> Test end-to-end query generation</li>
+<li><strong>Benchmark Queries:</strong> Maintain suite of test queries</li>
+<li><strong>Query Validation:</strong> Verify generated queries before execution</li>
+</ul>
+<p><strong>5. Monitoring &amp; Analytics</strong></p>
+<ul>
+<li><strong>Log All Queries:</strong> Track generated and executed queries</li>
+<li><strong>Performance Metrics:</strong> Monitor query execution time</li>
+<li><strong>Success Rates:</strong> Measure query success vs failure</li>
+<li><strong>User Feedback:</strong> Collect ratings on query quality</li>
+</ul>
+<p><strong>Implementation Checklist:</strong></p>
+<p><strong>Pre-Generation:</strong></p>
+<ul>
+<li>[ ] Load and validate database schema</li>
+<li>[ ] Check user permissions</li>
+<li>[ ] Parse and understand user query</li>
+<li>[ ] Identify required tables and columns</li>
+</ul>
+<p><strong>Generation:</strong></p>
+<ul>
+<li>[ ] Generate syntactically correct query</li>
+<li>[ ] Apply security constraints</li>
+<li>[ ] Add performance optimizations</li>
+<li>[ ] Validate query semantics</li>
+</ul>
+<p><strong>Post-Generation:</strong></p>
+<ul>
+<li>[ ] Test query on small dataset</li>
+<li>[ ] Estimate execution time</li>
+<li>[ ] Log query for monitoring</li>
+<li>[ ] Execute with timeout</li>
+</ul>
+<p><strong>Post-Execution:</strong></p>
+<ul>
+<li>[ ] Format results for LLM</li>
+<li>[ ] Log execution metrics</li>
+<li>[ ] Handle errors gracefully</li>
+<li>[ ] Collect user feedback</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="implementation-examples">Implementation Examples</h2>
+<p>Practical code examples for implementing query construction.</p>
+<p><strong>Example 1: Text-to-SQL with LangChain</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.chains</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_sql_query_chain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">SQLDatabase</span>
+
+<span class="c1"># Initialize database connection</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">SQLDatabase</span><span class="o">.</span><span class="n">from_uri</span><span class="p">(</span><span class="s2">&quot;postgresql://user:pass@localhost/mydb&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create LLM</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Create SQL query chain</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="n">create_sql_query_chain</span><span class="p">(</span><span class="n">llm</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+
+<span class="c1"># Generate SQL from natural language</span>
+<span class="n">question</span> <span class="o">=</span> <span class="s2">&quot;What are the top 5 customers by revenue?&quot;</span>
+<span class="n">sql_query</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated SQL: </span><span class="si">{</span><span class="n">sql_query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Execute query</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sql_query</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Example 2: Self-Query Retriever</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.retrievers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SelfQueryRetriever</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.chains.query_constructor.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">AttributeInfo</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIEmbeddings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.vectorstores</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pinecone</span>
+
+<span class="c1"># Define metadata fields</span>
+<span class="n">metadata_field_info</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">AttributeInfo</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The category of the document&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">AttributeInfo</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;year&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The year the document was published&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">AttributeInfo</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;language&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Programming language discussed in the document&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;string&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+
+<span class="c1"># Create vector store</span>
+<span class="n">vectorstore</span> <span class="o">=</span> <span class="n">Pinecone</span><span class="o">.</span><span class="n">from_existing_index</span><span class="p">(</span>
+    <span class="s2">&quot;my-index&quot;</span><span class="p">,</span>
+    <span class="n">OpenAIEmbeddings</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="c1"># Create self-query retriever</span>
+<span class="n">retriever</span> <span class="o">=</span> <span class="n">SelfQueryRetriever</span><span class="o">.</span><span class="n">from_llm</span><span class="p">(</span>
+    <span class="n">llm</span><span class="o">=</span><span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+    <span class="n">vectorstore</span><span class="o">=</span><span class="n">vectorstore</span><span class="p">,</span>
+    <span class="n">document_contents</span><span class="o">=</span><span class="s2">&quot;Technical documentation and tutorials&quot;</span><span class="p">,</span>
+    <span class="n">metadata_field_info</span><span class="o">=</span><span class="n">metadata_field_info</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Query with automatic filter extraction</span>
+<span class="n">docs</span> <span class="o">=</span> <span class="n">retriever</span><span class="o">.</span><span class="n">get_relevant_documents</span><span class="p">(</span>
+    <span class="s2">&quot;Show me Python tutorials from 2024&quot;</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Title: </span><span class="si">{</span><span class="n">doc</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Category: </span><span class="si">{</span><span class="n">doc</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Year: </span><span class="si">{</span><span class="n">doc</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Example 3: Text-to-Cypher</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.chains</span><span class="w"> </span><span class="kn">import</span> <span class="n">GraphCypherQAChain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.graphs</span><span class="w"> </span><span class="kn">import</span> <span class="n">Neo4jGraph</span>
+
+<span class="c1"># Initialize Neo4j connection</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">Neo4jGraph</span><span class="p">(</span>
+    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;bolt://localhost:7687&quot;</span><span class="p">,</span>
+    <span class="n">username</span><span class="o">=</span><span class="s2">&quot;neo4j&quot;</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="s2">&quot;password&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Create Cypher chain</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="n">GraphCypherQAChain</span><span class="o">.</span><span class="n">from_llm</span><span class="p">(</span>
+    <span class="n">llm</span><span class="o">=</span><span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+    <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Generate and execute Cypher</span>
+<span class="n">question</span> <span class="o">=</span> <span class="s2">&quot;Who are the top 5 most connected people?&quot;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated Cypher: </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;cypher&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Answer: </span><span class="si">{</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Example 4: Custom Query Validator</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sqlparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">QueryValidator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate generated SQL queries for safety and correctness.&quot;&quot;&quot;</span>
+
+    <span class="n">ALLOWED_OPERATIONS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;SELECT&#39;</span><span class="p">,</span> <span class="s1">&#39;WITH&#39;</span><span class="p">}</span>
+    <span class="n">FORBIDDEN_KEYWORDS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;DROP&#39;</span><span class="p">,</span> <span class="s1">&#39;DELETE&#39;</span><span class="p">,</span> <span class="s1">&#39;UPDATE&#39;</span><span class="p">,</span> <span class="s1">&#39;INSERT&#39;</span><span class="p">,</span> <span class="s1">&#39;ALTER&#39;</span><span class="p">,</span> <span class="s1">&#39;TRUNCATE&#39;</span><span class="p">}</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_query</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate SQL query for safety.</span>
+<span class="sd">        Returns (is_valid, error_messages)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Parse SQL</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="n">sqlparse</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Parse error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">parsed</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;Empty query&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Check for forbidden keywords</span>
+        <span class="n">query_upper</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">QueryValidator</span><span class="o">.</span><span class="n">FORBIDDEN_KEYWORDS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">query_upper</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Forbidden operation: </span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Validate operation type</span>
+        <span class="n">first_token</span> <span class="o">=</span> <span class="n">parsed</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">token_first</span><span class="p">(</span><span class="n">skip_ws</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skip_cm</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">first_token</span><span class="o">.</span><span class="n">ttype</span> <span class="ow">is</span> <span class="n">sqlparse</span><span class="o">.</span><span class="n">tokens</span><span class="o">.</span><span class="n">Keyword</span><span class="o">.</span><span class="n">DML</span><span class="p">:</span>
+            <span class="n">operation</span> <span class="o">=</span> <span class="n">first_token</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">operation</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">QueryValidator</span><span class="o">.</span><span class="n">ALLOWED_OPERATIONS</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Operation not allowed: </span><span class="si">{</span><span class="n">operation</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check for result limiting</span>
+        <span class="k">if</span> <span class="s1">&#39;LIMIT&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">query_upper</span> <span class="ow">and</span> <span class="s1">&#39;TOP&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">query_upper</span><span class="p">:</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Query should include LIMIT clause&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">errors</span>
+
+<span class="c1"># Usage</span>
+<span class="n">validator</span> <span class="o">=</span> <span class="n">QueryValidator</span><span class="p">()</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM customers ORDER BY revenue DESC LIMIT 10&quot;</span>
+<span class="n">is_valid</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">validate_query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">is_valid</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Query is valid&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Query validation errors:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="model-resources">Model Resources</h2>
+<p><strong>🤗 Hugging Face Models:</strong></p>
+<p><strong>Text-to-SQL Models:</strong></p>
+<ol>
+<li><strong>NumbersStation/nsql-llama-2-7B</strong></li>
+<li>Specialized for text-to-SQL generation</li>
+<li>
+<p>Link: https://huggingface.co/NumbersStation/nsql-llama-2-7B</p>
+</li>
+<li>
+<p><strong>defog/sqlcoder-7b-2</strong></p>
+</li>
+<li>High-accuracy SQL generation</li>
+<li>
+<p>Link: https://huggingface.co/defog/sqlcoder-7b-2</p>
+</li>
+<li>
+<p><strong>meta-llama/CodeLlama-7b-Instruct-hf</strong></p>
+</li>
+<li>General code generation, good for SQL</li>
+<li>Link: https://huggingface.co/meta-llama/CodeLlama-7b-Instruct-hf</li>
+</ol>
+<p><strong>Graph Query Models:</strong></p>
+<ol>
+<li><strong>Neo4j Cypher Models</strong></li>
+<li>Specialized graph query generation</li>
+<li>Available through Neo4j ecosystem</li>
+</ol>
+<p><strong>🔬 Research Papers:</strong></p>
+<ol>
+<li><strong>"RESDSQL: Decoupling Schema Linking and Skeleton Parsing"</strong> - Li et al., 2023</li>
+<li>
+<p>ArXiv: https://arxiv.org/abs/2302.05965</p>
+</li>
+<li>
+<p><strong>"DIN-SQL: Decomposed In-Context Learning of Text-to-SQL"</strong> - Pourreza et al., 2023</p>
+</li>
+<li>ArXiv: https://arxiv.org/abs/2304.11015</li>
+</ol>
+<p><strong>📊 Datasets:</strong></p>
+<ol>
+<li><strong>Spider:</strong> Large-scale text-to-SQL dataset</li>
+<li>
+<p>Website: https://yale-lily.github.io/spider</p>
+</li>
+<li>
+<p><strong>WikiSQL:</strong> Simpler text-to-SQL benchmark</p>
+</li>
+<li>Website: https://github.com/salesforce/WikiSQL</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="references-further-reading">References &amp; Further Reading</h2>
+<p><strong>📚 Foundational Papers:</strong></p>
+<ol>
+<li><strong>"Seq2SQL: Generating Structured Queries from Natural Language"</strong> - Zhong et al., 2017</li>
+<li>Original text-to-SQL approach</li>
+<li>
+<p>ArXiv: https://arxiv.org/abs/1709.00103</p>
+</li>
+<li>
+<p><strong>"Spider: A Large-Scale Human-Labeled Dataset for Text-to-SQL"</strong> - Yu et al., 2018</p>
+</li>
+<li>Benchmark dataset for text-to-SQL</li>
+<li>
+<p>ArXiv: https://arxiv.org/abs/1809.08887</p>
+</li>
+<li>
+<p><strong>"Graph Query Synthesis from Natural Language"</strong> - Saha et al., 2016</p>
+</li>
+<li>Text-to-Cypher foundations</li>
+<li>
+<p>Paper: ACM SIGMOD</p>
+</li>
+<li>
+<p><strong>"Self-Querying Retrieval Systems"</strong> - LangChain Documentation, 2023</p>
+</li>
+<li>Self-query retriever patterns</li>
+<li>Link: https://python.langchain.com/docs/modules/data_connection/retrievers/self_query/</li>
+</ol>
+<p><strong>🔧 Implementation Guides:</strong></p>
+<ol>
+<li><strong>LangChain SQL Database Documentation</strong></li>
+<li>Comprehensive SQL integration guide</li>
+<li>
+<p>Link: https://python.langchain.com/docs/integrations/toolkits/sql_database</p>
+</li>
+<li>
+<p><strong>Neo4j Natural Language to Cypher</strong></p>
+</li>
+<li>Graph query generation guide</li>
+<li>
+<p>Link: https://neo4j.com/developer/cypher/</p>
+</li>
+<li>
+<p><strong>Vector Database Documentation:</strong></p>
+</li>
+<li><strong>Pinecone Metadata Filtering:</strong> https://docs.pinecone.io/docs/metadata-filtering</li>
+<li><strong>Weaviate Filtering:</strong> https://weaviate.io/developers/weaviate/search/filters</li>
+<li><strong>Qdrant Filtering:</strong> https://qdrant.tech/documentation/concepts/filtering/</li>
+</ol>
+<p><strong>📖 Advanced Topics:</strong></p>
+<ol>
+<li><strong>"Few-Shot Text-to-SQL with Pre-Trained Language Models"</strong> - Rajkumar et al., 2022</li>
+<li>Improving accuracy with few-shot learning</li>
+<li>
+<p>ArXiv: https://arxiv.org/abs/2204.00498</p>
+</li>
+<li>
+<p><strong>"Schema-Aware Text-to-SQL Generation"</strong> - Scholak et al., 2021</p>
+</li>
+<li>Incorporating schema information</li>
+<li>
+<p>ArXiv: https://arxiv.org/abs/2105.11527</p>
+</li>
+<li>
+<p><strong>"Query Construction for Conversational Search"</strong> - Zamani et al., 2020</p>
+<ul>
+<li>Multi-turn query construction</li>
+<li>ArXiv: https://arxiv.org/abs/2005.00437</li>
+</ul>
+</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<p><strong>Related Documentation:</strong></p>
+<ul>
+<li><a href="../05-01-rag-overview/">← Back to RAG Overview</a></li>
+<li><a href="../05-03-query-translation/">Query Translation Deep Dive →</a></li>
+<li><a href="../05-04-routing/">Routing Strategies Deep Dive</a></li>
+<li><a href="../05-05-retrieval/">Retrieval Methods Deep Dive</a></li>
+<li><a href="../05-06-indexing/">Indexing Techniques Deep Dive</a></li>
+<li><a href="../05-07-generation/">Generation Process Deep Dive</a></li>
+</ul>
+<hr />
+<p><em>Last Updated: October 2025 | Part of RAG Documentation Series</em></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 14, 2025 00:55:02 UTC">October 14, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+<!-- Footer navigation (prev/next) - Material default -->
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../05-01-rag-overview/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Retrieval-Augmented Generation (RAG) - Complete Architecture Overview" rel="prev">
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Previous
+            </span>
+            <div class="md-ellipsis">
+              Retrieval-Augmented Generation (RAG) - Complete Architecture Overview
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../05-03-query-translation/" class="md-footer__link md-footer__link--next" aria-label="Next: Query Translation: Deep Dive" rel="next">
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Next
+            </span>
+            <div class="md-ellipsis">
+              Query Translation: Deep Dive
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+
+  <!-- Custom footer content -->
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        <div style="text-align: center; padding: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 1rem;">
+          <p style="margin: 0.5rem 0;">
+            <strong>GenAI Atlas</strong> - Your Comprehensive Guide to AI & Machine Learning
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.9em; opacity: 0.8;">
+            © 2024 GenAI Atlas | Built with ❤️ for the AI Community
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.85em; opacity: 0.7;">
+            <em>Empowering developers, researchers, and practitioners worldwide</em>
+          </p>
+        </div>
+      </div>
+      <div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

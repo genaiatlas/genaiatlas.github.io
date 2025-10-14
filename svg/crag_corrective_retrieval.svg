@@ -1,0 +1,110 @@
+<svg viewBox="0 0 900 750" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="750" fill="#f8f9fa"/>
+  <text x="450" y="30" font-size="24" font-weight="bold" text-anchor="middle" fill="#1a1a1a">
+    Corrective RAG (CRAG) Workflow
+  </text>
+  
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#666"/>
+    </marker>
+  </defs>
+  
+  <!-- Query -->
+  <rect x="350" y="60" width="200" height="50" rx="8" fill="#4a90e2" stroke="#2e5c8a" stroke-width="2"/>
+  <text x="450" y="90" font-size="13" font-weight="bold" text-anchor="middle" fill="white">User Query</text>
+  
+  <!-- Initial Retrieval -->
+  <line x1="450" y1="110" x2="450" y2="140" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="300" y="140" width="300" height="60" rx="8" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+  <text x="450" y="165" font-size="14" font-weight="bold" text-anchor="middle" fill="white">Initial Retrieval</text>
+  <text x="450" y="185" font-size="10" text-anchor="middle" fill="white">Retrieve top-k documents</text>
+  
+  <!-- Relevance Evaluator -->
+  <line x1="450" y1="200" x2="450" y2="240" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="275" y="240" width="350" height="70" rx="8" fill="#f39c12" stroke="#c87f0a" stroke-width="2"/>
+  <text x="450" y="265" font-size="15" font-weight="bold" text-anchor="middle" fill="white">Relevance Evaluator</text>
+  <text x="450" y="285" font-size="10" text-anchor="middle" fill="white">Lightweight classifier scores each document</text>
+  <text x="450" y="300" font-size="9" text-anchor="middle" fill="white">Model: cross-encoder/ms-marco-TinyBERT</text>
+  
+  <!-- Decision Branch -->
+  <line x1="220" y1="310" x2="150" y2="360" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="450" y1="310" x2="450" y2="360" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="680" y1="310" x2="750" y2="360" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <text x="150" y="340" font-size="10" fill="#27ae60" font-weight="bold">Score ≥ 0.7</text>
+  <text x="400" y="340" font-size="10" fill="#f39c12" font-weight="bold">0.4 ≤ Score &lt; 0.7</text>
+  <text x="730" y="340" font-size="10" fill="#e74c3c" font-weight="bold">Score &lt; 0.4</text>
+  
+  <!-- Path 1: Relevant -->
+  <rect x="30" y="360" width="240" height="120" rx="8" fill="#27ae60" stroke="#1e8449" stroke-width="2"/>
+  <text x="150" y="385" font-size="13" font-weight="bold" text-anchor="middle" fill="white">✓ RELEVANT</text>
+  <text x="150" y="410" font-size="10" text-anchor="middle" fill="white">Documents are good</text>
+  
+  <rect x="40" y="425" width="220" height="45" rx="4" fill="white" fill-opacity="0.3"/>
+  <text x="150" y="443" font-size="9" font-weight="bold" text-anchor="middle" fill="white">Action:</text>
+  <text x="150" y="458" font-size="9" text-anchor="middle" fill="white">Use documents as-is</text>
+  
+  <line x1="150" y1="480" x2="150" y2="620" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Path 2: Ambiguous -->
+  <rect x="330" y="360" width="240" height="120" rx="8" fill="#f39c12" stroke="#c87f0a" stroke-width="2"/>
+  <text x="450" y="385" font-size="13" font-weight="bold" text-anchor="middle" fill="white">⚠ AMBIGUOUS</text>
+  <text x="450" y="410" font-size="10" text-anchor="middle" fill="white">Quality uncertain</text>
+  
+  <rect x="340" y="425" width="220" height="45" rx="4" fill="white" fill-opacity="0.3"/>
+  <text x="450" y="443" font-size="9" font-weight="bold" text-anchor="middle" fill="white">Action:</text>
+  <text x="450" y="458" font-size="9" text-anchor="middle" fill="white">Query decomposition + retry</text>
+  
+  <line x1="450" y1="480" x2="450" y2="540" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="340" y="540" width="220" height="50" rx="6" fill="#9b59b6" stroke="#7d3c98" stroke-width="2"/>
+  <text x="450" y="560" font-size="10" font-weight="bold" text-anchor="middle" fill="white">Decompose Query</text>
+  <text x="450" y="577" font-size="9" text-anchor="middle" fill="white">Split into subqueries</text>
+  
+  <line x1="450" y1="590" x2="450" y2="620" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Path 3: Irrelevant -->
+  <rect x="630" y="360" width="240" height="120" rx="8" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+  <text x="750" y="385" font-size="13" font-weight="bold" text-anchor="middle" fill="white">✗ IRRELEVANT</text>
+  <text x="750" y="410" font-size="10" text-anchor="middle" fill="white">Documents not useful</text>
+  
+  <rect x="640" y="425" width="220" height="45" rx="4" fill="white" fill-opacity="0.3"/>
+  <text x="750" y="443" font-size="9" font-weight="bold" text-anchor="middle" fill="white">Action:</text>
+  <text x="750" y="458" font-size="9" text-anchor="middle" fill="white">Web search fallback</text>
+  
+  <line x1="750" y1="480" x2="750" y2="540" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="640" y="540" width="220" height="50" rx="6" fill="#3498db" stroke="#2874a6" stroke-width="2"/>
+  <text x="750" y="560" font-size="10" font-weight="bold" text-anchor="middle" fill="white">External Search</text>
+  <text x="750" y="577" font-size="9" text-anchor="middle" fill="white">Query web / alt sources</text>
+  
+  <line x1="750" y1="590" x2="750" y2="620" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Knowledge Refinement -->
+  <line x1="150" y1="620" x2="350" y2="620" stroke="#666" stroke-width="2"/>
+  <line x1="450" y1="620" x2="450" y2="620" stroke="#666" stroke-width="2"/>
+  <line x1="550" y1="620" x2="750" y2="620" stroke="#666" stroke-width="2"/>
+  <line x1="350" y1="620" x2="400" y2="650" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="550" y1="620" x2="500" y2="650" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <rect x="250" y="650" width="400" height="70" rx="8" fill="#9b59b6" stroke="#7d3c98" stroke-width="2"/>
+  <text x="450" y="675" font-size="14" font-weight="bold" text-anchor="middle" fill="white">Knowledge Refinement</text>
+  <text x="450" y="695" font-size="10" text-anchor="middle" fill="white">Extract &amp; refine relevant passages from documents</text>
+  <text x="450" y="710" font-size="9" text-anchor="middle" fill="white">Remove noise, keep only pertinent information</text>
+  
+  <!-- Generation -->
+  <line x1="450" y1="720" x2="450" y2="750" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Benefits sidebar -->
+  <rect x="10" y="200" width="240" height="140" rx="6" fill="white" stroke="#27ae60" stroke-width="2"/>
+  <text x="130" y="225" font-size="12" font-weight="bold" text-anchor="middle" fill="#27ae60">Key Benefits</text>
+  <g transform="translate(20, 240)">
+    <text x="0" y="0" font-size="9" fill="#555">✓ Self-correcting system</text>
+    <text x="0" y="15" font-size="9" fill="#555">✓ Reduces hallucination risk</text>
+    <text x="0" y="30" font-size="9" fill="#555">✓ Improves precision</text>
+    <text x="0" y="45" font-size="9" fill="#555">✓ Graceful degradation</text>
+    <text x="0" y="60" font-size="9" fill="#555">✓ Handles poor retrieval</text>
+    <text x="0" y="75" font-size="9" fill="#555">✓ Automatic fallback</text>
+    <text x="0" y="95" font-size="8" fill="#666" font-style="italic">Cost: +1 classifier call</text>
+    <text x="0" y="108" font-size="8" fill="#666" font-style="italic">per document batch</text>
+  </g>
+</svg>

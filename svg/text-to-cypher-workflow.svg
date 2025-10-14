@@ -1,0 +1,286 @@
+<svg viewBox="0 0 1400 950" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1400" height="950" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="700" y="40" font-family="Arial, sans-serif" font-size="28" font-weight="bold" text-anchor="middle" fill="#1a1a1a">
+    Text-to-Cypher Workflow for RAG
+  </text>
+  
+  <!-- Step 1 -->
+  <g id="step1">
+    <rect x="50" y="80" width="600" height="180" rx="10" fill="#fff3bf" stroke="#f59f00" stroke-width="3"/>
+    <text x="350" y="110" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#1a1a1a">
+      Step 1: Question Analysis
+    </text>
+    
+    <rect x="80" y="130" width="540" height="115" rx="5" fill="#fff" stroke="#f59f00" stroke-width="2"/>
+    <text x="350" y="155" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#495057">
+      Natural Language Question
+    </text>
+    <text x="350" y="177" font-family="Arial, sans-serif" font-size="13" text-anchor="middle" fill="#868e96" font-style="italic">
+      "Which employees work in the same department as John Smith?"
+    </text>
+    <text x="95" y="205" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#495057">
+      Extracted Elements:
+    </text>
+    <text x="95" y="222" font-family="Arial, sans-serif" font-size="10" fill="#495057">
+      • Entities: Employee, Department
+    </text>
+    <text x="95" y="237" font-family="Arial, sans-serif" font-size="10" fill="#495057">
+      • Relationship: WORKS_IN
+    </text>
+    
+    <text x="350" y="222" font-family="Arial, sans-serif" font-size="10" fill="#495057">
+      • Filter: name = "John Smith"
+    </text>
+    <text x="350" y="237" font-family="Arial, sans-serif" font-size="10" fill="#495057">
+      • Pattern: co-worker traversal
+    </text>
+    
+    <text x="520" y="222" font-family="Arial, sans-serif" font-size="10" fill="#495057">
+      • Return: Employee nodes
+    </text>
+  </g>
+  
+  <!-- Arrow -->
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#495057"/>
+    </marker>
+  </defs>
+  <line x1="350" y1="260" x2="350" y2="295" stroke="#495057" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- Step 2 -->
+  <g id="step2">
+    <rect x="50" y="305" width="600" height="200" rx="10" fill="#d3f9d8" stroke="#37b24d" stroke-width="3"/>
+    <text x="350" y="335" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#1a1a1a">
+      Step 2: Graph Schema Mapping
+    </text>
+    
+    <rect x="80" y="355" width="260" height="135" rx="5" fill="#fff" stroke="#37b24d" stroke-width="2"/>
+    <text x="210" y="377" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#495057">
+      Graph Schema
+    </text>
+    <text x="95" y="397" font-family="Courier New, monospace" font-size="10" fill="#495057">
+      Node: Employee
+    </text>
+    <text x="95" y="413" font-family="Courier New, monospace" font-size="9" fill="#868e96">
+        - employeeId
+    </text>
+    <text x="95" y="427" font-family="Courier New, monospace" font-size="9" fill="#868e96">
+        - name
+    </text>
+    <text x="95" y="441" font-family="Courier New, monospace" font-size="9" fill="#868e96">
+        - email
+    </text>
+    
+    <text x="95" y="460" font-family="Courier New, monospace" font-size="10" fill="#495057">
+      Node: Department
+    </text>
+    <text x="95" y="476" font-family="Courier New, monospace" font-size="9" fill="#868e96">
+        - deptId, deptName
+    </text>
+    
+    <rect x="360" y="355" width="260" height="135" rx="5" fill="#fff" stroke="#37b24d" stroke-width="2"/>
+    <text x="490" y="377" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#495057">
+      Entity Mapping
+    </text>
+    <text x="375" y="397" font-family="Arial, sans-serif" font-size="10" fill="#495057">
+      "employees" → Employee node
+    </text>
+    <text x="375" y="413" font-family="Arial, sans-serif" font-size="10" fill="#495057">
+      "department" → Department node
+    </text>
+    <text x="375" y="429" font-family="Arial, sans-serif" font-size="10" fill="#495057">
+      "work in" → WORKS_IN relationship
+    </text>
+    <text x="375" y="445" font-family="Arial, sans-serif" font-size="10" fill="#495057">
+      "John Smith" → name property
+    </text>
+    <text x="375" y="465" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#37b24d">
+      Graph Pattern:
+    </text>
+    <text x="375" y="481" font-family="Arial, sans-serif" font-size="9" fill="#495057">
+      (e1:Employee)-[:WORKS_IN]-&gt;
+    </text>
+    <text x="375" y="495" font-family="Arial, sans-serif" font-size="9" fill="#495057">
+      (d:Department)&lt;-[:WORKS_IN]-(e2)
+    </text>
+  </g>
+  
+  <line x1="350" y1="505" x2="350" y2="540" stroke="#495057" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- Step 3 -->
+  <g id="step3">
+    <rect x="50" y="550" width="600" height="360" rx="10" fill="#e7f5ff" stroke="#1971c2" stroke-width="3"/>
+    <text x="350" y="580" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#1a1a1a">
+      Step 3: Cypher Query Generation
+    </text>
+    
+    <rect x="80" y="600" width="540" height="295" rx="5" fill="#fff" stroke="#1971c2" stroke-width="2"/>
+    <text x="350" y="620" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#495057">
+      Generated Cypher Query
+    </text>
+    
+    <text x="95" y="645" font-family="Courier New, monospace" font-size="11" fill="#495057">
+      MATCH
+    </text>
+    <text x="120" y="665" font-family="Courier New, monospace" font-size="11" fill="#7950f2">
+      (target:Employee)
+    </text>
+    <text x="120" y="685" font-family="Courier New, monospace" font-size="11" fill="#7950f2">
+        {name: "John Smith"}
+    </text>
+    
+    <text x="95" y="710" font-family="Courier New, monospace" font-size="11" fill="#495057">
+      MATCH
+    </text>
+    <text x="120" y="730" font-family="Courier New, monospace" font-size="11" fill="#37b24d">
+      (target)-[:WORKS_IN]-&gt;
+    </text>
+    <text x="120" y="750" font-family="Courier New, monospace" font-size="11" fill="#37b24d">
+        (d:Department)
+    </text>
+    
+    <text x="95" y="775" font-family="Courier New, monospace" font-size="11" fill="#495057">
+      MATCH
+    </text>
+    <text x="120" y="795" font-family="Courier New, monospace" font-size="11" fill="#37b24d">
+      (coworker:Employee)-[:WORKS_IN]-&gt;(d)
+    </text>
+    
+    <text x="95" y="820" font-family="Courier New, monospace" font-size="11" fill="#495057">
+      WHERE
+    </text>
+    <text x="120" y="840" font-family="Courier New, monospace" font-size="11" fill="#fd7e14">
+      coworker &lt;&gt; target
+    </text>
+    
+    <text x="95" y="865" font-family="Courier New, monospace" font-size="11" fill="#495057">
+      RETURN
+    </text>
+    <text x="120" y="885" font-family="Courier New, monospace" font-size="11" fill="#e64980">
+      coworker.name AS colleague,
+    </text>
+    <text x="120" y="905" font-family="Courier New, monospace" font-size="11" fill="#e64980">
+      d.deptName AS department
+    </text>
+  </g>
+  
+  <line x1="650" y1="320" x2="750" y2="320" stroke="#495057" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- Right Side: Results and Refinement -->
+  <g id="results">
+    <rect x="760" y="80" width="590" height="830" rx="10" fill="#fff9db" stroke="#fab005" stroke-width="3"/>
+    <text x="1055" y="110" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#1a1a1a">
+      Step 4: Query Refinement
+    </text>
+    
+    <!-- Optimization -->
+    <rect x="790" y="130" width="530" height="140" rx="5" fill="#fff" stroke="#fab005" stroke-width="2"/>
+    <text x="1055" y="155" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#495057">
+      Performance Optimization
+    </text>
+    <text x="805" y="180" font-family="Arial, sans-serif" font-size="11" fill="#495057">
+      ✓ Create index on Employee.name for faster lookup
+    </text>
+    <text x="805" y="197" font-family="Arial, sans-serif" font-size="11" fill="#495057">
+      ✓ Index WORKS_IN relationship for traversal
+    </text>
+    <text x="805" y="214" font-family="Arial, sans-serif" font-size="11" fill="#495057">
+      ✓ Use PROFILE to analyze query execution
+    </text>
+    <text x="805" y="231" font-family="Arial, sans-serif" font-size="11" fill="#495057">
+      ✓ Consider LIMIT clause for large result sets
+    </text>
+    <text x="805" y="248" font-family="Arial, sans-serif" font-size="11" fill="#495057">
+      ✓ Estimated execution time: 5-15ms
+    </text>
+    
+    <!-- Edge Cases -->
+    <rect x="790" y="290" width="530" height="140" rx="5" fill="#fff" stroke="#fab005" stroke-width="2"/>
+    <text x="1055" y="315" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#495057">
+      Handle Edge Cases
+    </text>
+    <text x="805" y="340" font-family="Arial, sans-serif" font-size="11" fill="#495057">
+      ✓ Employee not found: return empty result gracefully
+    </text>
+    <text x="805" y="357" font-family="Arial, sans-serif" font-size="11" fill="#495057">
+      ✓ Multiple employees with same name: disambiguate
+    </text>
+    <text x="805" y="374" font-family="Arial, sans-serif" font-size="11" fill="#495057">
+      ✓ Employee with no department: handle NULL
+    </text>
+    <text x="805" y="391" font-family="Arial, sans-serif" font-size="11" fill="#495057">
+      ✓ Case-insensitive name matching: toLower()
+    </text>
+    <text x="805" y="408" font-family="Arial, sans-serif" font-size="11" fill="#495057">
+      ✓ Filter out the target employee from results
+    </text>
+    
+    <!-- Sample Results -->
+    <rect x="790" y="450" width="530" height="230" rx="5" fill="#fff" stroke="#fab005" stroke-width="2"/>
+    <text x="1055" y="475" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#495057">
+      Sample Query Results
+    </text>
+    <rect x="810" y="490" width="490" height="175" rx="3" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+    
+    <text x="820" y="510" font-family="Courier New, monospace" font-size="10" font-weight="bold" fill="#495057">
+      colleague            | department
+    </text>
+    <line x1="815" y1="515" x2="1285" y2="515" stroke="#dee2e6" stroke-width="1"/>
+    
+    <text x="820" y="535" font-family="Courier New, monospace" font-size="9" fill="#495057">
+      Sarah Johnson        | Engineering
+    </text>
+    <text x="820" y="552" font-family="Courier New, monospace" font-size="9" fill="#495057">
+      Michael Chen         | Engineering
+    </text>
+    <text x="820" y="569" font-family="Courier New, monospace" font-size="9" fill="#495057">
+      Emily Rodriguez      | Engineering
+    </text>
+    <text x="820" y="586" font-family="Courier New, monospace" font-size="9" fill="#495057">
+      David Kim            | Engineering
+    </text>
+    <text x="820" y="603" font-family="Courier New, monospace" font-size="9" fill="#495057">
+      Lisa Patel           | Engineering
+    </text>
+    <text x="820" y="620" font-family="Courier New, monospace" font-size="9" fill="#495057">
+      James Williams       | Engineering
+    </text>
+    <text x="820" y="637" font-family="Courier New, monospace" font-size="9" fill="#495057">
+      ...
+    </text>
+    <text x="820" y="654" font-family="Courier New, monospace" font-size="9" fill="#495057">
+      (12 rows returned in 8ms)
+    </text>
+    
+    <!-- Context Addition -->
+    <rect x="790" y="700" width="530" height="190" rx="5" fill="#d3f9d8" stroke="#37b24d" stroke-width="2"/>
+    <text x="1055" y="725" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#495057">
+      Add Context for RAG Response
+    </text>
+    <text x="805" y="750" font-family="Arial, sans-serif" font-size="11" fill="#495057">
+      Include graph context to enrich LLM responses:
+    </text>
+    <text x="805" y="772" font-family="Arial, sans-serif" font-size="10" fill="#495057">
+      • Department size: 13 employees total
+    </text>
+    <text x="805" y="789" font-family="Arial, sans-serif" font-size="10" fill="#495057">
+      • John Smith role: Senior Software Engineer
+    </text>
+    <text x="805" y="806" font-family="Arial, sans-serif" font-size="10" fill="#495057">
+      • Department manager: Alex Thompson
+    </text>
+    <text x="805" y="823" font-family="Arial, sans-serif" font-size="10" fill="#495057">
+      • Related teams: Product, DevOps
+    </text>
+    <text x="805" y="840" font-family="Arial, sans-serif" font-size="10" fill="#495057">
+      • Graph statistics: 247 employees, 18 departments
+    </text>
+    <text x="805" y="862" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#37b24d">
+      → Rich context enables comprehensive answers
+    </text>
+  </g>
+</svg>

@@ -1,0 +1,3811 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/02-gen-ai-core/5-1-rag/1-learning-path/05-05-retrieval/">
+      
+      
+        <link rel="prev" href="../05-04-routing/">
+      
+      
+        <link rel="next" href="../05-06-indexing/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Retrieval Methods: Deep Dive - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Retrieval Methods: Deep Dive
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../01-foundation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../01-foundation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Gen AI Core
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../4-transformers-generative-ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Transformers & Gen AI
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Transformers & Gen AI
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../4-transformers-generative-ai/1-learning-path/01-intro/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../4-transformers-generative-ai/2-additional-reference/01-additional-reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../4-transformers-generative-ai/3-fast-track/01-transformers-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    RAG
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            RAG
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3_2" id="__nav_3_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-01-rag-overview/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    RAG Overview
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-02-query-construction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Query Construction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-03-query-translation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Query Translation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-04-routing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Routing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_2_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3_2_5" id="__nav_3_3_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Retrieval
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_3_2_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            Retrieval
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Retrieval Methods: Deep Dive
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Retrieval Methods: Deep Dive
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-retrieval-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Retrieval Matters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retrieval-pipeline-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retrieval Pipeline Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Retrieval Pipeline Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stage-1-initial-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 1: Initial Retrieval
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-2-ranking" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 2: Ranking
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-3-re-ranking" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 3: Re-ranking
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ranking-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ranking Algorithms
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ranking Algorithms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bm25-best-match-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      BM25 (Best Match 25)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-encoder-re-ranking" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cross-Encoder Re-Ranking
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#re-ranking-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      Re-Ranking Techniques
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Re-Ranking Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#types-of-re-rankers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Types of Re-Rankers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rankgpt-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      RankGPT Implementation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rag-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      RAG-Fusion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RAG-Fusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-rag-fusion-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How RAG-Fusion Works
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#corrective-rag-crag" class="md-nav__link">
+    <span class="md-ellipsis">
+      Corrective RAG (CRAG)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Corrective RAG (CRAG)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crag-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      CRAG Process
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluation-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluation Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimization-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimization Strategies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optimization Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-hybrid-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Hybrid Search
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-query-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Query Expansion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-contextual-compression" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Contextual Compression
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-multi-stage-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Multi-Stage Retrieval
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#complete-retrieval-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Retrieval Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      DO ✅
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      DON'T ❌
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Challenges
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Challenges">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#challenge-1-vocabulary-mismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Challenge 1: Vocabulary Mismatch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#challenge-2-multi-intent-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Challenge 2: Multi-Intent Queries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#challenge-3-low-recall" class="md-nav__link">
+    <span class="md-ellipsis">
+      Challenge 3: Low Recall
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#challenge-4-high-latency" class="md-nav__link">
+    <span class="md-ellipsis">
+      Challenge 4: High Latency
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#challenge-5-poor-ranking-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Challenge 5: Poor Ranking Quality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools-and-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools and Libraries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tools and Libraries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vector-stores" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vector Stores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieval-frameworks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retrieval Frameworks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#re-ranking-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Re-Ranking Models
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation Tools
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Additional Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#research-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Research Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-06-indexing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Indexing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-07-generation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Generation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-additional-reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-rag-langchain-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../5-2-langchain/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    LangChain
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            LangChain
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../5-2-langchain/1-learning-path/01-fundamentals/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../5-2-langchain/2-additional-reference/01-additional-reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../5-2-langchain/3-fast-track/01-rag-langchain-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introduction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-retrieval-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Retrieval Matters
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retrieval-pipeline-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retrieval Pipeline Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Retrieval Pipeline Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stage-1-initial-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 1: Initial Retrieval
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-2-ranking" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 2: Ranking
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-3-re-ranking" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 3: Re-ranking
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ranking-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ranking Algorithms
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ranking Algorithms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bm25-best-match-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      BM25 (Best Match 25)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-encoder-re-ranking" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cross-Encoder Re-Ranking
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#re-ranking-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      Re-Ranking Techniques
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Re-Ranking Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#types-of-re-rankers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Types of Re-Rankers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rankgpt-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      RankGPT Implementation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rag-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      RAG-Fusion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RAG-Fusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-rag-fusion-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How RAG-Fusion Works
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#corrective-rag-crag" class="md-nav__link">
+    <span class="md-ellipsis">
+      Corrective RAG (CRAG)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Corrective RAG (CRAG)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crag-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      CRAG Process
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluation-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluation Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Metrics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimization-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimization Strategies
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optimization Strategies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-hybrid-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Hybrid Search
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-query-expansion" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Query Expansion
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-contextual-compression" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Contextual Compression
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-multi-stage-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Multi-Stage Retrieval
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#complete-retrieval-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Retrieval Pipeline
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      DO ✅
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      DON'T ❌
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Challenges
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Challenges">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#challenge-1-vocabulary-mismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Challenge 1: Vocabulary Mismatch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#challenge-2-multi-intent-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Challenge 2: Multi-Intent Queries
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#challenge-3-low-recall" class="md-nav__link">
+    <span class="md-ellipsis">
+      Challenge 3: Low Recall
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#challenge-4-high-latency" class="md-nav__link">
+    <span class="md-ellipsis">
+      Challenge 4: High Latency
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#challenge-5-poor-ranking-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Challenge 5: Poor Ranking Quality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools-and-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools and Libraries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tools and Libraries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vector-stores" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vector Stores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieval-frameworks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retrieval Frameworks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#re-ranking-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Re-Ranking Models
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluation-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluation Tools
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Additional Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#research-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Research Papers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="retrieval-methods-deep-dive">Retrieval Methods: Deep Dive</h1>
+<p><a id="top"></a></p>
+<p><strong>Advanced Techniques for Finding Relevant Information</strong></p>
+<hr />
+<h2 id="quick-navigation">📚 Quick Navigation</h2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#retrieval-pipeline-overview">Retrieval Pipeline Overview</a></li>
+<li><a href="#ranking-algorithms">Ranking Algorithms</a></li>
+<li><a href="#re-ranking-techniques">Re-Ranking Techniques</a></li>
+<li><a href="#rag-fusion">RAG-Fusion</a></li>
+<li><a href="#corrective-rag-crag">Corrective RAG (CRAG)</a></li>
+<li><a href="#evaluation-metrics">Evaluation Metrics</a></li>
+<li><a href="#optimization-strategies">Optimization Strategies</a></li>
+<li><a href="#implementation-examples">Implementation Examples</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#common-challenges">Common Challenges</a></li>
+<li><a href="#tools-and-libraries">Tools and Libraries</a></li>
+</ul>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<p>Retrieval is the core process of finding and ranking relevant documents from a knowledge base in response to a query. The quality of retrieval directly impacts the final response quality in RAG systems.</p>
+<p><img alt="Retrieval Pipeline Overview" src="../../../../svg/retrieval_pipeline_overview.svg" /></p>
+<h3 id="why-retrieval-matters">Why Retrieval Matters</h3>
+<p>Effective retrieval ensures:
+- <strong>Relevance</strong>: Retrieved documents are actually related to the query
+- <strong>Coverage</strong>: All important information is captured
+- <strong>Diversity</strong>: Multiple perspectives are considered
+- <strong>Efficiency</strong>: Fast retrieval with minimal computational cost
+- <strong>Accuracy</strong>: High precision and recall in document selection</p>
+<hr />
+<h2 id="retrieval-pipeline-overview">Retrieval Pipeline Overview</h2>
+<p>A typical retrieval pipeline consists of multiple stages:</p>
+<h3 id="stage-1-initial-retrieval">Stage 1: Initial Retrieval</h3>
+<p>The first stage casts a wide net to capture potentially relevant documents using fast, approximate methods.</p>
+<p><strong>Common approaches:</strong>
+- Vector similarity search (cosine similarity, dot product)
+- BM25 lexical search
+- Hybrid retrieval (combining multiple methods)</p>
+<h3 id="stage-2-ranking">Stage 2: Ranking</h3>
+<p>Retrieved documents are scored and ordered by relevance using more sophisticated algorithms.</p>
+<p><img alt="Ranking Algorithms" src="../../../../svg/ranking_algorithms.svg" /></p>
+<p><strong>Ranking methods:</strong>
+- <strong>TF-IDF</strong>: Term frequency-inverse document frequency
+- <strong>BM25</strong>: Best Match 25 algorithm
+- <strong>Cross-encoders</strong>: Neural models that score query-document pairs
+- <strong>Learning-to-rank</strong>: Machine learning models trained on relevance data</p>
+<h3 id="stage-3-re-ranking">Stage 3: Re-ranking</h3>
+<p>A more computationally expensive but accurate re-ranking of top candidates.</p>
+<p><img alt="Re-Ranking Workflow" src="../../../../svg/rerank_workflow.svg" /></p>
+<hr />
+<h2 id="ranking-algorithms">Ranking Algorithms</h2>
+<h3 id="bm25-best-match-25">BM25 (Best Match 25)</h3>
+<p>BM25 is a probabilistic ranking function based on the bag-of-words model. It considers term frequency and document length normalization.</p>
+<p><strong>Formula:</strong>
+<div class="highlight"><pre><span></span><code>BM25(D, Q) = Σ IDF(qi) × (f(qi, D) × (k1 + 1)) / (f(qi, D) + k1 × (1 - b + b × |D| / avgdl))
+</code></pre></div></p>
+<p>Where:
+- <code>f(qi, D)</code>: Frequency of term qi in document D
+- <code>|D|</code>: Length of document D
+- <code>avgdl</code>: Average document length
+- <code>k1</code>: Term frequency saturation parameter (typically 1.2-2.0)
+- <code>b</code>: Length normalization parameter (typically 0.75)</p>
+<p><strong>Strengths:</strong>
+- Fast and efficient
+- No training required
+- Effective for keyword-based queries
+- Well-understood mathematical foundation</p>
+<p><strong>Limitations:</strong>
+- Doesn't capture semantic meaning
+- Relies on exact term matching
+- Sensitive to vocabulary mismatch</p>
+<h3 id="cross-encoder-re-ranking">Cross-Encoder Re-Ranking</h3>
+<p>Cross-encoders jointly encode the query and document to produce a relevance score.</p>
+<p><strong>Architecture:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">Input</span><span class="p">:</span> <span class="p">[</span><span class="n">CLS</span><span class="p">]</span> <span class="n">query</span> <span class="p">[</span><span class="n">SEP</span><span class="p">]</span> <span class="n">document</span> <span class="p">[</span><span class="n">SEP</span><span class="p">]</span>
+       <span class="err">↓</span>
+<span class="n">BERT</span><span class="o">/</span><span class="n">RoBERTa</span> <span class="n">Encoder</span>
+       <span class="err">↓</span>
+<span class="n">Classification</span> <span class="n">Head</span>
+       <span class="err">↓</span>
+<span class="n">Relevance</span> <span class="n">Score</span> <span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></p>
+<p><strong>Popular models:</strong>
+- <code>cross-encoder/ms-marco-MiniLM-L-12-v2</code>
+- <code>cross-encoder/ms-marco-electra-base</code>
+- <code>cross-encoder/qnli-distilroberta-base</code></p>
+<p><strong>Implementation:</strong>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sentence_transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">CrossEncoder</span>
+
+<span class="c1"># Initialize cross-encoder</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">CrossEncoder</span><span class="p">(</span><span class="s1">&#39;cross-encoder/ms-marco-MiniLM-L-12-v2&#39;</span><span class="p">)</span>
+
+<span class="c1"># Score query-document pairs</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;What is machine learning?&quot;</span><span class="p">,</span> <span class="n">doc1</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;What is machine learning?&quot;</span><span class="p">,</span> <span class="n">doc2</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;What is machine learning?&quot;</span><span class="p">,</span> <span class="n">doc3</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="c1"># Re-rank by score</span>
+<span class="n">ranked_docs</span> <span class="o">=</span> <span class="p">[</span><span class="n">doc</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">docs</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
+</code></pre></div></p>
+<hr />
+<h2 id="re-ranking-techniques">Re-Ranking Techniques</h2>
+<p>Re-ranking refines initial retrieval results using more sophisticated models.</p>
+<h3 id="types-of-re-rankers">Types of Re-Rankers</h3>
+<ol>
+<li><strong>Cross-Encoder Re-Rankers</strong></li>
+<li>Most accurate but slowest</li>
+<li>Joint encoding of query and document</li>
+<li>
+<p>Best for top-k refinement (k=10-100)</p>
+</li>
+<li>
+<p><strong>ColBERT (Contextualized Late Interaction)</strong></p>
+</li>
+<li>Balance between speed and accuracy</li>
+<li>Late interaction between query and document embeddings</li>
+<li>
+<p>Faster than cross-encoders</p>
+</li>
+<li>
+<p><strong>RankGPT</strong></p>
+</li>
+<li>Uses LLMs (GPT-4, Claude) for re-ranking</li>
+<li>Provides explanations for ranking decisions</li>
+<li>High quality but expensive</li>
+</ol>
+<h3 id="rankgpt-implementation">RankGPT Implementation</h3>
+<p>RankGPT uses LLMs to re-rank retrieved documents by analyzing their relevance.</p>
+<p><strong>Process:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rankgpt_rerank</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">documents</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Re-rank documents using GPT-4&quot;&quot;&quot;</span>
+
+    <span class="c1"># Create ranking prompt</span>
+    <span class="n">docs_text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+        <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">doc</span><span class="p">[:</span><span class="mi">200</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span> 
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+    <span class="p">])</span>
+
+    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Given the query: &quot;</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="s2">Rank the following documents by relevance (most relevant first).</span>
+<span class="s2">Return only the document numbers in order.</span>
+
+<span class="si">{</span><span class="n">docs_text</span><span class="si">}</span>
+
+<span class="s2">Ranking (comma-separated numbers):&quot;&quot;&quot;</span>
+
+    <span class="c1"># Get LLM ranking</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">openai</span><span class="o">.</span><span class="n">ChatCompletion</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+        <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}],</span>
+        <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Parse ranking</span>
+    <span class="n">ranking</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span><span class="o">-</span><span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">documents</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ranking</span><span class="p">]</span>
+</code></pre></div></p>
+<hr />
+<h2 id="rag-fusion">RAG-Fusion</h2>
+<p>RAG-Fusion generates multiple query variations and combines their retrieval results for better coverage.</p>
+<p><img alt="RAG-Fusion Workflow" src="../../../../svg/rag_fusion_retrieval.svg" /></p>
+<h3 id="how-rag-fusion-works">How RAG-Fusion Works</h3>
+<p><strong>Step 1: Query Generation</strong>
+Generate multiple variations of the original query:
+<div class="highlight"><pre><span></span><code><span class="n">original_query</span> <span class="o">=</span> <span class="s2">&quot;How to optimize neural networks?&quot;</span>
+
+<span class="n">generated_queries</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;What are neural network optimization techniques?&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Best practices for training neural networks&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Methods to improve neural network performance&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Neural network hyperparameter tuning strategies&quot;</span>
+<span class="p">]</span>
+</code></pre></div></p>
+<p><strong>Step 2: Parallel Retrieval</strong>
+Retrieve documents for each query variant independently.</p>
+<p><strong>Step 3: Reciprocal Rank Fusion</strong>
+Combine results using reciprocal rank fusion (RRF):</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reciprocal_rank_fusion</span><span class="p">(</span><span class="n">results_list</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Combine multiple ranked lists using RRF</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        results_list: List of ranked document lists</span>
+<span class="sd">        k: Constant for RRF formula</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Combined ranked list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fused_scores</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">results</span> <span class="ow">in</span> <span class="n">results_list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">rank</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+            <span class="n">doc_id</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">doc_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fused_scores</span><span class="p">:</span>
+                <span class="n">fused_scores</span><span class="p">[</span><span class="n">doc_id</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># RRF formula</span>
+            <span class="n">fused_scores</span><span class="p">[</span><span class="n">doc_id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="n">rank</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Sort by fused score</span>
+    <span class="n">ranked</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">fused_scores</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ranked</span>
+</code></pre></div>
+<p><strong>Benefits:</strong>
+- Better coverage of relevant documents
+- Handles query ambiguity
+- Reduces impact of poor query formulation
+- Improves recall</p>
+<p><strong>Trade-offs:</strong>
+- Increased latency (multiple retrievals)
+- Higher computational cost
+- More complex pipeline</p>
+<hr />
+<h2 id="corrective-rag-crag">Corrective RAG (CRAG)</h2>
+<p>CRAG adds a self-correction mechanism to verify and improve retrieval quality.</p>
+<p><img alt="CRAG Corrective Retrieval" src="../../../../svg/crag_corrective_retrieval.svg" /></p>
+<h3 id="crag-process">CRAG Process</h3>
+<p><strong>Step 1: Initial Retrieval</strong>
+Retrieve documents using standard methods.</p>
+<p><strong>Step 2: Relevance Evaluation</strong>
+Use a lightweight classifier to assess document relevance:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">evaluate_relevance</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.7</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate if document is relevant to query&quot;&quot;&quot;</span>
+
+    <span class="c1"># Use a small classifier model</span>
+    <span class="n">relevance_model</span> <span class="o">=</span> <span class="n">CrossEncoder</span><span class="p">(</span><span class="s1">&#39;cross-encoder/ms-marco-TinyBERT-L-2-v2&#39;</span><span class="p">)</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="n">relevance_model</span><span class="o">.</span><span class="n">predict</span><span class="p">([(</span><span class="n">query</span><span class="p">,</span> <span class="n">document</span><span class="p">)])</span>
+
+    <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;RELEVANT&quot;</span>
+    <span class="k">elif</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="mf">0.4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;AMBIGUOUS&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;IRRELEVANT&quot;</span>
+</code></pre></div>
+<p><strong>Step 3: Corrective Actions</strong></p>
+<p>Based on evaluation:
+- <strong>RELEVANT</strong>: Use documents as-is
+- <strong>AMBIGUOUS</strong>: Decompose query and retrieve again
+- <strong>IRRELEVANT</strong>: Trigger web search or fallback strategy</p>
+<p><strong>Step 4: Knowledge Refinement</strong>
+Extract and refine relevant knowledge from documents:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">refine_knowledge</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract relevant parts from documents&quot;&quot;&quot;</span>
+
+    <span class="n">refined_chunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">:</span>
+        <span class="c1"># Extract relevant sentences</span>
+        <span class="n">sentences</span> <span class="o">=</span> <span class="n">sent_tokenize</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+        <span class="n">relevant_sentences</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sentences</span> 
+            <span class="k">if</span> <span class="n">is_relevant</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">refined_chunks</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">relevant_sentences</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">refined_chunks</span>
+</code></pre></div>
+<p><strong>Benefits:</strong>
+- Self-correcting mechanism
+- Reduces hallucination
+- Improves precision
+- Handles poor retrieval gracefully</p>
+<hr />
+<h2 id="evaluation-metrics">Evaluation Metrics</h2>
+<p><img alt="Retrieval Evaluation Metrics" src="../../../../svg/retrieval_evaluation_metrics.svg" /></p>
+<h3 id="core-metrics">Core Metrics</h3>
+<p><strong>1. Precision@K</strong>
+Proportion of relevant documents in top K results:
+<div class="highlight"><pre><span></span><code>Precision@K = (# relevant docs in top K) / K
+</code></pre></div></p>
+<p><strong>2. Recall@K</strong>
+Proportion of all relevant documents found in top K:
+<div class="highlight"><pre><span></span><code>Recall@K = (# relevant docs in top K) / (total # relevant docs)
+</code></pre></div></p>
+<p><strong>3. Mean Reciprocal Rank (MRR)</strong>
+Average of reciprocal ranks of first relevant document:
+<div class="highlight"><pre><span></span><code>MRR = (1/N) × Σ(1 / rank_i)
+</code></pre></div></p>
+<p><strong>4. Normalized Discounted Cumulative Gain (NDCG)</strong>
+Measures ranking quality considering position:
+<div class="highlight"><pre><span></span><code>NDCG@K = DCG@K / IDCG@K
+DCG@K = Σ(rel_i / log2(i+1))
+</code></pre></div></p>
+<h3 id="implementation">Implementation</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">evaluate_retrieval</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">retrieved_docs</span><span class="p">,</span> <span class="n">relevant_docs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive retrieval evaluation&quot;&quot;&quot;</span>
+
+    <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;precision@5&#39;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s1">&#39;recall@10&#39;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s1">&#39;mrr&#39;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s1">&#39;ndcg@10&#39;</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">retrieved</span><span class="p">,</span> <span class="n">relevant</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">retrieved_docs</span><span class="p">,</span> <span class="n">relevant_docs</span><span class="p">):</span>
+        <span class="c1"># Precision@5</span>
+        <span class="n">relevant_in_top5</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">retrieved</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="k">if</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">relevant</span><span class="p">)</span>
+        <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;precision@5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">relevant_in_top5</span> <span class="o">/</span> <span class="mi">5</span><span class="p">)</span>
+
+        <span class="c1"># Recall@10</span>
+        <span class="n">relevant_in_top10</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">retrieved</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span> <span class="k">if</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">relevant</span><span class="p">)</span>
+        <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;recall@10&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">relevant_in_top10</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">relevant</span><span class="p">))</span>
+
+        <span class="c1"># MRR</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">retrieved</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">relevant</span><span class="p">:</span>
+                <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;mrr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;mrr&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># NDCG@10</span>
+        <span class="n">dcg</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+            <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">retrieved</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">relevant</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">retrieved</span><span class="p">)))</span>
+        <span class="p">)</span>
+        <span class="n">idcg</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">relevant</span><span class="p">))))</span>
+        <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;ndcg@10&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dcg</span> <span class="o">/</span> <span class="n">idcg</span> <span class="k">if</span> <span class="n">idcg</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># Average metrics</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+</code></pre></div>
+<hr />
+<h2 id="optimization-strategies">Optimization Strategies</h2>
+<p><img alt="Retrieval Optimization Strategies" src="../../../../svg/retrieval_optimization_strategies.svg" /></p>
+<h3 id="1-hybrid-search">1. Hybrid Search</h3>
+<p>Combine lexical (BM25) and semantic (vector) search:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hybrid_search</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">bm25_weight</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">vector_weight</span><span class="o">=</span><span class="mf">0.7</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Combine BM25 and vector search&quot;&quot;&quot;</span>
+
+    <span class="c1"># BM25 retrieval</span>
+    <span class="n">bm25_results</span> <span class="o">=</span> <span class="n">bm25_index</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+    <span class="c1"># Vector retrieval</span>
+    <span class="n">query_embedding</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">vector_results</span> <span class="o">=</span> <span class="n">vector_index</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query_embedding</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+    <span class="c1"># Combine scores</span>
+    <span class="n">combined_scores</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">doc_id</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">bm25_results</span><span class="p">:</span>
+        <span class="n">combined_scores</span><span class="p">[</span><span class="n">doc_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">bm25_weight</span> <span class="o">*</span> <span class="n">score</span>
+
+    <span class="k">for</span> <span class="n">doc_id</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">vector_results</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">doc_id</span> <span class="ow">in</span> <span class="n">combined_scores</span><span class="p">:</span>
+            <span class="n">combined_scores</span><span class="p">[</span><span class="n">doc_id</span><span class="p">]</span> <span class="o">+=</span> <span class="n">vector_weight</span> <span class="o">*</span> <span class="n">score</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">combined_scores</span><span class="p">[</span><span class="n">doc_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">vector_weight</span> <span class="o">*</span> <span class="n">score</span>
+
+    <span class="c1"># Return sorted results</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">combined_scores</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="2-query-expansion">2. Query Expansion</h3>
+<p>Expand queries with synonyms and related terms:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">expand_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;word2vec&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand query with related terms&quot;&quot;&quot;</span>
+
+    <span class="n">expanded_terms</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+        <span class="c1"># Get similar terms</span>
+        <span class="n">similar</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">topn</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">expanded_terms</span><span class="o">.</span><span class="n">update</span><span class="p">([</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">similar</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">expanded_terms</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="3-contextual-compression">3. Contextual Compression</h3>
+<p>Extract only relevant parts of retrieved documents:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.retrievers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContextualCompressionRetriever</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.retrievers.document_compressors</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMChainExtractor</span>
+
+<span class="c1"># Create compressor</span>
+<span class="n">compressor</span> <span class="o">=</span> <span class="n">LLMChainExtractor</span><span class="o">.</span><span class="n">from_llm</span><span class="p">(</span><span class="n">llm</span><span class="p">)</span>
+
+<span class="c1"># Wrap base retriever</span>
+<span class="n">compression_retriever</span> <span class="o">=</span> <span class="n">ContextualCompressionRetriever</span><span class="p">(</span>
+    <span class="n">base_compressor</span><span class="o">=</span><span class="n">compressor</span><span class="p">,</span>
+    <span class="n">base_retriever</span><span class="o">=</span><span class="n">base_retriever</span>
+<span class="p">)</span>
+
+<span class="c1"># Retrieve with compression</span>
+<span class="n">compressed_docs</span> <span class="o">=</span> <span class="n">compression_retriever</span><span class="o">.</span><span class="n">get_relevant_documents</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="4-multi-stage-retrieval">4. Multi-Stage Retrieval</h3>
+<p>Use fast initial retrieval followed by expensive re-ranking:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">multistage_retrieval</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">stages</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multi-stage retrieval pipeline&quot;&quot;&quot;</span>
+
+    <span class="c1"># Stage 1: Fast vector search (top 1000)</span>
+    <span class="n">candidates</span> <span class="o">=</span> <span class="n">vector_index</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+    <span class="c1"># Stage 2: BM25 re-ranking (top 100)</span>
+    <span class="n">reranked</span> <span class="o">=</span> <span class="n">bm25_rerank</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+    <span class="c1"># Stage 3: Cross-encoder (top 10)</span>
+    <span class="n">final</span> <span class="o">=</span> <span class="n">cross_encoder_rerank</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">reranked</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">final</span>
+</code></pre></div>
+<hr />
+<h2 id="implementation-examples">Implementation Examples</h2>
+<h3 id="complete-retrieval-pipeline">Complete Retrieval Pipeline</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sentence_transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SentenceTransformer</span><span class="p">,</span> <span class="n">CrossEncoder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rank_bm25</span><span class="w"> </span><span class="kn">import</span> <span class="n">BM25Okapi</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AdvancedRetriever</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="s1">&#39;all-MiniLM-L6-v2&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reranker</span> <span class="o">=</span> <span class="n">CrossEncoder</span><span class="p">(</span><span class="s1">&#39;cross-encoder/ms-marco-MiniLM-L-6-v2&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">documents</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doc_embeddings</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bm25</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">index_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Index documents for retrieval&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">documents</span> <span class="o">=</span> <span class="n">documents</span>
+
+        <span class="c1"># Create vector index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doc_embeddings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+
+        <span class="c1"># Create BM25 index</span>
+        <span class="n">tokenized_docs</span> <span class="o">=</span> <span class="p">[</span><span class="n">doc</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bm25</span> <span class="o">=</span> <span class="n">BM25Okapi</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Multi-stage retrieval with hybrid search and re-ranking</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Stage 1: Hybrid retrieval (top 100)</span>
+        <span class="n">candidates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hybrid_search</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+        <span class="c1"># Stage 2: Cross-encoder re-ranking (top k)</span>
+        <span class="n">final_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rerank</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">candidates</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="n">top_k</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">final_results</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_hybrid_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Combine vector and BM25 search&quot;&quot;&quot;</span>
+        <span class="c1"># Vector search</span>
+        <span class="n">query_embedding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="o">.</span><span class="n">encode</span><span class="p">([</span><span class="n">query</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vector_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">doc_embeddings</span><span class="p">,</span> <span class="n">query_embedding</span><span class="p">)</span>
+
+        <span class="c1"># BM25 search</span>
+        <span class="n">bm25_scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bm25</span><span class="o">.</span><span class="n">get_scores</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+        <span class="c1"># Normalize and combine</span>
+        <span class="n">vector_scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">vector_scores</span> <span class="o">-</span> <span class="n">vector_scores</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">vector_scores</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">vector_scores</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+        <span class="n">bm25_scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">bm25_scores</span> <span class="o">-</span> <span class="n">bm25_scores</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">bm25_scores</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">bm25_scores</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+
+        <span class="n">combined_scores</span> <span class="o">=</span> <span class="mf">0.7</span> <span class="o">*</span> <span class="n">vector_scores</span> <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">bm25_scores</span>
+
+        <span class="c1"># Get top-k indices</span>
+        <span class="n">top_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">combined_scores</span><span class="p">)[</span><span class="o">-</span><span class="n">top_k</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">documents</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">top_indices</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_rerank</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Re-rank using cross-encoder&quot;&quot;&quot;</span>
+        <span class="c1"># Score all query-document pairs</span>
+        <span class="n">pairs</span> <span class="o">=</span> <span class="p">[[</span><span class="n">query</span><span class="p">,</span> <span class="n">doc</span><span class="p">]</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">]</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reranker</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span>
+
+        <span class="c1"># Sort by score</span>
+        <span class="n">doc_scores</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">scores</span><span class="p">))</span>
+        <span class="n">doc_scores</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Return top-k with metadata</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s1">&#39;document&#39;</span><span class="p">:</span> <span class="n">doc</span><span class="p">,</span>
+                <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">score</span><span class="p">),</span>
+                <span class="s1">&#39;rank&#39;</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="p">}</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">doc_scores</span><span class="p">[:</span><span class="n">top_k</span><span class="p">])</span>
+        <span class="p">]</span>
+
+<span class="c1"># Usage</span>
+<span class="n">retriever</span> <span class="o">=</span> <span class="n">AdvancedRetriever</span><span class="p">()</span>
+<span class="n">retriever</span><span class="o">.</span><span class="n">index_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">retriever</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;How do neural networks learn?&quot;</span><span class="p">,</span>
+    <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rank </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;rank&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;document&#39;</span><span class="p">][:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="do">DO ✅</h3>
+<ol>
+<li><strong>Use Hybrid Search</strong>: Combine lexical and semantic methods</li>
+<li><strong>Implement Re-Ranking</strong>: Add a cross-encoder stage for top results</li>
+<li><strong>Monitor Latency</strong>: Balance accuracy with speed requirements</li>
+<li><strong>Evaluate Regularly</strong>: Track precision, recall, and NDCG</li>
+<li><strong>Handle Edge Cases</strong>: Plan for no results or low confidence</li>
+<li><strong>Use Query Expansion</strong>: Add related terms for better recall</li>
+<li><strong>Chunk Appropriately</strong>: Optimize document chunk size</li>
+<li><strong>Cache Results</strong>: Cache frequent queries</li>
+<li><strong>A/B Test</strong>: Compare retrieval strategies</li>
+<li><strong>Log Everything</strong>: Track queries, results, and user feedback</li>
+</ol>
+<h3 id="dont">DON'T ❌</h3>
+<ol>
+<li><strong>Don't Rely Only on Embeddings</strong>: Semantic search misses exact matches</li>
+<li><strong>Don't Skip Evaluation</strong>: Test on real queries</li>
+<li><strong>Don't Ignore Speed</strong>: Users need fast responses</li>
+<li><strong>Don't Over-Retrieve</strong>: More results ≠ better quality</li>
+<li><strong>Don't Forget Context</strong>: Use conversation history</li>
+<li><strong>Don't Ignore Metadata</strong>: Filters improve relevance</li>
+<li><strong>Don't Use Single Method</strong>: Hybrid approaches work better</li>
+<li><strong>Don't Skip Re-Ranking</strong>: Initial retrieval is often noisy</li>
+<li><strong>Don't Ignore Diversity</strong>: Avoid redundant results</li>
+<li><strong>Don't Forget Updates</strong>: Keep indexes fresh</li>
+</ol>
+<hr />
+<h2 id="common-challenges">Common Challenges</h2>
+<h3 id="challenge-1-vocabulary-mismatch">Challenge 1: Vocabulary Mismatch</h3>
+<p><strong>Problem</strong>: User queries use different terms than documents</p>
+<p><strong>Solutions:</strong>
+- Query expansion with synonyms
+- Use semantic embeddings
+- Implement query reformulation
+- Add domain-specific vocabulary</p>
+<h3 id="challenge-2-multi-intent-queries">Challenge 2: Multi-Intent Queries</h3>
+<p><strong>Problem</strong>: Query contains multiple intents</p>
+<p><strong>Solutions:</strong>
+- Query decomposition
+- RAG-Fusion approach
+- Multi-vector representation
+- Intent classification</p>
+<h3 id="challenge-3-low-recall">Challenge 3: Low Recall</h3>
+<p><strong>Problem</strong>: Missing relevant documents</p>
+<p><strong>Solutions:</strong>
+- Increase initial retrieval size
+- Use multiple retrieval methods
+- Implement query expansion
+- Reduce embedding dimensionality</p>
+<h3 id="challenge-4-high-latency">Challenge 4: High Latency</h3>
+<p><strong>Problem</strong>: Retrieval takes too long</p>
+<p><strong>Solutions:</strong>
+- Use approximate nearest neighbor (ANN)
+- Implement caching
+- Optimize index structure
+- Reduce re-ranking candidates</p>
+<h3 id="challenge-5-poor-ranking-quality">Challenge 5: Poor Ranking Quality</h3>
+<p><strong>Problem</strong>: Irrelevant documents ranked highly</p>
+<p><strong>Solutions:</strong>
+- Add cross-encoder re-ranking
+- Fine-tune ranking models
+- Use learning-to-rank
+- Implement CRAG corrections</p>
+<hr />
+<h2 id="tools-and-libraries">Tools and Libraries</h2>
+<h3 id="vector-stores">Vector Stores</h3>
+<ul>
+<li><strong>Pinecone</strong>: Managed vector database</li>
+<li><strong>Weaviate</strong>: Open-source vector search engine</li>
+<li><strong>Milvus</strong>: Scalable vector database</li>
+<li><strong>Qdrant</strong>: Vector similarity search engine</li>
+<li><strong>Chroma</strong>: Lightweight embedding database</li>
+<li><strong>FAISS</strong>: Facebook AI similarity search</li>
+</ul>
+<h3 id="retrieval-frameworks">Retrieval Frameworks</h3>
+<ul>
+<li><strong>LangChain</strong>: Complete RAG framework</li>
+<li><strong>LlamaIndex</strong>: Data framework for LLMs</li>
+<li><strong>Haystack</strong>: NLP framework with retrieval</li>
+<li><strong>txtai</strong>: Semantic search and workflows</li>
+</ul>
+<h3 id="re-ranking-models">Re-Ranking Models</h3>
+<ul>
+<li><strong>Cross-Encoder</strong>: Sentence-transformers cross-encoders</li>
+<li><strong>ColBERT</strong>: Late interaction retrieval</li>
+<li><strong>MonoT5</strong>: T5-based re-ranker</li>
+<li><strong>RankGPT</strong>: LLM-based re-ranking</li>
+</ul>
+<h3 id="evaluation-tools">Evaluation Tools</h3>
+<ul>
+<li><strong>BEIR</strong>: Benchmark for information retrieval</li>
+<li><strong>TREC</strong>: Text REtrieval Conference datasets</li>
+<li><strong>MS MARCO</strong>: Microsoft machine reading comprehension</li>
+<li><strong>Natural Questions</strong>: Google's QA dataset</li>
+</ul>
+<hr />
+<h2 id="additional-resources">Additional Resources</h2>
+<h3 id="research-papers">Research Papers</h3>
+<ul>
+<li>"Dense Passage Retrieval" (Karpukhin et al., 2020)</li>
+<li>"Retrieve-Rerank-Generate" (Glass et al., 2022)</li>
+<li>"ColBERT: Efficient and Effective Passage Search" (Khattab &amp; Zaharia, 2020)</li>
+<li>"Corrective Retrieval Augmented Generation" (Yan et al., 2024)</li>
+</ul>
+<h3 id="documentation">Documentation</h3>
+<ul>
+<li><a href="https://docs.pinecone.io/docs/retrieval">Pinecone Retrieval Guide</a></li>
+<li><a href="https://weaviate.io/developers/weaviate/search">Weaviate Vector Search</a></li>
+<li><a href="https://python.langchain.com/docs/modules/data_connection/retrievers/">LangChain Retrievers</a></li>
+<li><a href="https://www.sbert.net/">Sentence-Transformers</a></li>
+</ul>
+<hr />
+<p><a href="#top">Back to Top</a> | <a href="../05-01-rag-overview/">RAG Overview</a> | <a href="../05-06-indexing/">Indexing</a></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 14, 2025 00:42:04 UTC">October 14, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+<!-- Footer navigation (prev/next) - Material default -->
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../05-04-routing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Routing Strategies: Deep Dive" rel="prev">
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Previous
+            </span>
+            <div class="md-ellipsis">
+              Routing Strategies: Deep Dive
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../05-06-indexing/" class="md-footer__link md-footer__link--next" aria-label="Next: Indexing Techniques for RAG" rel="next">
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Next
+            </span>
+            <div class="md-ellipsis">
+              Indexing Techniques for RAG
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+
+  <!-- Custom footer content -->
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        <div style="text-align: center; padding: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 1rem;">
+          <p style="margin: 0.5rem 0;">
+            <strong>GenAI Atlas</strong> - Your Comprehensive Guide to AI & Machine Learning
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.9em; opacity: 0.8;">
+            © 2024 GenAI Atlas | Built with ❤️ for the AI Community
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.85em; opacity: 0.7;">
+            <em>Empowering developers, researchers, and practitioners worldwide</em>
+          </p>
+        </div>
+      </div>
+      <div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

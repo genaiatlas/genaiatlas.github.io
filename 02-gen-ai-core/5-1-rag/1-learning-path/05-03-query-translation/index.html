@@ -1,0 +1,3411 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/02-gen-ai-core/5-1-rag/1-learning-path/05-03-query-translation/">
+      
+      
+        <link rel="prev" href="../05-02-query-construction/">
+      
+      
+        <link rel="next" href="../05-04-routing/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Query Translation: Deep Dive - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Query Translation: Deep Dive
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../01-foundation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../01-foundation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Gen AI Core
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../4-transformers-generative-ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Transformers & Gen AI
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Transformers & Gen AI
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../4-transformers-generative-ai/1-learning-path/01-intro/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../4-transformers-generative-ai/2-additional-reference/01-additional-reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../4-transformers-generative-ai/3-fast-track/01-transformers-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    RAG
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            RAG
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3_2" id="__nav_3_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-01-rag-overview/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    RAG Overview
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-02-query-construction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Query Construction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_2_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3_2_3" id="__nav_3_3_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Query Translation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_3_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Query Translation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Query Translation: Deep Dive
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Query Translation: Deep Dive
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-translation-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Query Translation Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-query-technique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Query Technique
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-back-prompting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step-Back Prompting
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rag-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      RAG-Fusion
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Query Decomposition
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hyde-hypothetical-document-embeddings" class="md-nav__link">
+    <span class="md-ellipsis">
+      HyDE (Hypothetical Document Embeddings)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-selection-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparison &amp; Selection Guide
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Examples
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Resources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-04-routing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Routing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-05-retrieval/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Retrieval
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-06-indexing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Indexing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-07-generation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Generation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-additional-reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-rag-langchain-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../5-2-langchain/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    LangChain
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            LangChain
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../5-2-langchain/1-learning-path/01-fundamentals/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../5-2-langchain/2-additional-reference/01-additional-reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../5-2-langchain/3-fast-track/01-rag-langchain-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-translation-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Query Translation Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-query-technique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-Query Technique
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-back-prompting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step-Back Prompting
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rag-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      RAG-Fusion
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Query Decomposition
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hyde-hypothetical-document-embeddings" class="md-nav__link">
+    <span class="md-ellipsis">
+      HyDE (Hypothetical Document Embeddings)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-selection-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparison &amp; Selection Guide
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Examples
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Model Resources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="query-translation-deep-dive">Query Translation: Deep Dive</h1>
+<p><a id="top"></a></p>
+<p><strong>Optimizing Queries for Better Retrieval Performance</strong></p>
+<hr />
+<h2 id="quick-navigation">📚 Quick Navigation</h2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#query-translation-overview">Query Translation Overview</a></li>
+<li><a href="#multi-query-technique">Multi-Query Technique</a></li>
+<li><a href="#step-back-prompting">Step-Back Prompting</a></li>
+<li><a href="#rag-fusion">RAG-Fusion</a></li>
+<li><a href="#query-decomposition">Query Decomposition</a></li>
+<li><a href="#hyde-hypothetical-document-embeddings">HyDE (Hypothetical Document Embeddings)</a></li>
+<li><a href="#comparison-selection-guide">Comparison &amp; Selection Guide</a></li>
+<li><a href="#implementation-examples">Implementation Examples</a></li>
+<li><a href="#model-resources">Model Resources</a></li>
+<li><a href="#references-further-reading">References &amp; Further Reading</a></li>
+</ul>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<p>Query Translation is a critical technique in RAG systems that transforms the original user query into optimized versions designed to improve retrieval quality and coverage. Rather than using the raw user question directly, query translation creates variants that capture different perspectives, extract foundational context, or break complex questions into manageable parts.</p>
+<p><strong>Why Query Translation Matters:</strong></p>
+<ul>
+<li><strong>Improved Recall:</strong> Multiple query variants capture documents the original might miss</li>
+<li><strong>Better Context:</strong> Retrieves foundational information needed for complex questions</li>
+<li><strong>Disambiguation:</strong> Different phrasings reduce ambiguity in search</li>
+<li><strong>Multi-Hop Support:</strong> Breaks complex questions into answerable sub-questions</li>
+<li><strong>Semantic Matching:</strong> Overcomes query-document vocabulary mismatch</li>
+</ul>
+<p><strong>Core Problem:</strong></p>
+<p>User queries are often too specific, too broad, or don't match the vocabulary used in relevant documents. Query translation addresses this by generating strategically optimized query variations.</p>
+<p><strong>When to Use Query Translation:</strong></p>
+<ul>
+<li>Ambiguous or vague queries</li>
+<li>Complex multi-step questions</li>
+<li>Queries requiring background knowledge</li>
+<li>When single query retrieval is insufficient</li>
+<li>Research and comprehensive coverage scenarios</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="query-translation-overview">Query Translation Overview</h2>
+<p>Query translation encompasses multiple techniques that transform queries in different ways to improve retrieval.</p>
+<p><img alt="Query Translation Overview" src="../../../../svg/query_translation_overview_diagram.svg" /></p>
+<p><strong>Translation Techniques:</strong></p>
+<p><strong>1. Multi-Query</strong></p>
+<ul>
+<li><strong>Approach:</strong> Generate multiple paraphrased versions of the query</li>
+<li><strong>Goal:</strong> Increase coverage by capturing different perspectives</li>
+<li><strong>Use Case:</strong> Ambiguous queries, comprehensive search</li>
+</ul>
+<p><strong>2. Step-Back Prompting</strong></p>
+<ul>
+<li><strong>Approach:</strong> Generate higher-level, more general questions</li>
+<li><strong>Goal:</strong> Retrieve foundational knowledge and context</li>
+<li><strong>Use Case:</strong> Complex questions needing background information</li>
+</ul>
+<p><strong>3. RAG-Fusion</strong></p>
+<ul>
+<li><strong>Approach:</strong> Generate multiple queries and merge results intelligently</li>
+<li><strong>Goal:</strong> Comprehensive coverage with result fusion</li>
+<li><strong>Use Case:</strong> Research, thorough information gathering</li>
+</ul>
+<p><strong>4. Query Decomposition</strong></p>
+<ul>
+<li><strong>Approach:</strong> Break complex questions into simpler sub-questions</li>
+<li><strong>Goal:</strong> Handle multi-hop reasoning step-by-step</li>
+<li><strong>Use Case:</strong> Complex analytical questions</li>
+</ul>
+<p><strong>5. HyDE (Hypothetical Document Embeddings)</strong></p>
+<ul>
+<li><strong>Approach:</strong> Generate hypothetical answer, search for similar documents</li>
+<li><strong>Goal:</strong> Overcome query-document vocabulary mismatch</li>
+<li><strong>Use Case:</strong> Abstract or conceptual queries</li>
+</ul>
+<p><strong>Common Workflow:</strong></p>
+<div class="highlight"><pre><span></span><code>Original Query
+    ↓
+Query Translation (apply technique)
+    ↓
+Multiple Query Variants
+    ↓
+Parallel Retrieval
+    ↓
+Result Aggregation
+    ↓
+Ranked Documents for Generation
+</code></pre></div>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="multi-query-technique">Multi-Query Technique</h2>
+<p>Multi-Query generates multiple variations of the original question to improve retrieval coverage.</p>
+<p><img alt="Multi-Query Approach" src="../../../../svg/multi_query_approach.svg" /></p>
+<p><strong>How Multi-Query Works:</strong></p>
+<p><strong>Step 1: Query Variation Generation</strong></p>
+<p>Use an LLM to generate 3-5 different ways to ask the same question:</p>
+<p><strong>Original Query:</strong></p>
+<p>"What are the health benefits of intermittent fasting?"</p>
+<p><strong>Generated Variations:</strong></p>
+<ul>
+<li>"How does intermittent fasting improve health?"</li>
+<li>"What positive effects does periodic fasting have on the body?"</li>
+<li>"What are the medical advantages of time-restricted eating?"</li>
+<li>"Benefits of fasting intermittently for wellness?"</li>
+</ul>
+<p><strong>Step 2: Parallel Retrieval</strong></p>
+<p>Execute each query variant independently against the vector store, retrieving top-K documents for each.</p>
+<p><strong>Step 3: Result Aggregation</strong></p>
+<p>Combine and deduplicate results from all queries, using ranking strategies like:</p>
+<ul>
+<li><strong>Union:</strong> Combine all unique documents from all queries</li>
+<li><strong>Intersection:</strong> Only documents that appear in multiple query results</li>
+<li><strong>Weighted Scoring:</strong> Rank by number of queries that retrieved each document</li>
+<li><strong>Reciprocal Rank Fusion:</strong> Advanced merging algorithm</li>
+</ul>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li><strong>Increased Recall:</strong> Captures documents missed by single query</li>
+<li><strong>Perspective Diversity:</strong> Different phrasings match different documents</li>
+<li><strong>Robustness:</strong> Less sensitive to specific query wording</li>
+<li><strong>Simple Implementation:</strong> Easy to add to existing RAG systems</li>
+</ul>
+<p><strong>Challenges:</strong></p>
+<ul>
+<li><strong>Increased Latency:</strong> Multiple retrieval operations take longer</li>
+<li><strong>Cost:</strong> More LLM calls and vector searches</li>
+<li><strong>Noise:</strong> May retrieve less relevant documents</li>
+<li><strong>Result Management:</strong> Need effective deduplication and ranking</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Ambiguous or underspecified queries</li>
+<li>When comprehensive coverage is important</li>
+<li>Research or exploratory search scenarios</li>
+<li>When single-query retrieval produces poor results</li>
+</ul>
+<p><strong>Implementation Considerations:</strong></p>
+<ul>
+<li><strong>Number of Variations:</strong> 3-5 queries typically optimal</li>
+<li><strong>Diversity vs Similarity:</strong> Balance between variety and staying on-topic</li>
+<li><strong>Deduplication Strategy:</strong> Use document IDs or similarity thresholds</li>
+<li><strong>Ranking Algorithm:</strong> Choose appropriate result merging method</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="step-back-prompting">Step-Back Prompting</h2>
+<p>Step-Back Prompting generates higher-level, more abstract questions to retrieve foundational context before answering the specific query.</p>
+<p><img alt="Step-Back Prompting" src="../../../../svg/step_back_prompting.svg" /></p>
+<p><strong>How Step-Back Works:</strong></p>
+<p><strong>Step 1: Generate Step-Back Question</strong></p>
+<p>Transform the specific question into a more general, foundational question:</p>
+<p><strong>Original Query:</strong></p>
+<p>"How does the oxidative phosphorylation pathway produce ATP in mitochondria?"</p>
+<p><strong>Step-Back Question:</strong></p>
+<p>"What is cellular respiration and what are its major pathways?"</p>
+<p><strong>Step 2: Retrieve Foundational Context</strong></p>
+<p>Search for documents answering the step-back question to get background knowledge:</p>
+<ul>
+<li>Retrieved: Overview of cellular respiration</li>
+<li>Retrieved: Explanation of mitochondrial function</li>
+<li>Retrieved: Basic biochemistry of energy production</li>
+</ul>
+<p><strong>Step 3: Retrieve Specific Information</strong></p>
+<p>Use original query to get detailed, specific information:</p>
+<ul>
+<li>Retrieved: Detailed oxidative phosphorylation mechanism</li>
+<li>Retrieved: ATP synthase function</li>
+<li>Retrieved: Electron transport chain specifics</li>
+</ul>
+<p><strong>Step 4: Combine Context</strong></p>
+<p>Provide both foundational and specific information to the LLM for generation, enabling better comprehension and more complete answers.</p>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li><strong>Better Understanding:</strong> LLM has necessary background context</li>
+<li><strong>More Complete Answers:</strong> Can explain concepts from first principles</li>
+<li><strong>Improved Accuracy:</strong> Reduces hallucination by providing foundation</li>
+<li><strong>Educational Value:</strong> Answers are more accessible to learners</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<p><strong>Complex Scientific Questions:</strong></p>
+<ul>
+<li>Original: "How does CRISPR-Cas9 achieve homology-directed repair?"</li>
+<li>Step-Back: "What is CRISPR-Cas9 and how does gene editing work?"</li>
+</ul>
+<p><strong>Technical Queries:</strong></p>
+<ul>
+<li>Original: "Why does React's useEffect cleanup function prevent memory leaks?"</li>
+<li>Step-Back: "What are React hooks and what is the useEffect lifecycle?"</li>
+</ul>
+<p><strong>Historical Questions:</strong></p>
+<ul>
+<li>Original: "What was the impact of the Treaty of Versailles Article 231?"</li>
+<li>Step-Back: "What was the Treaty of Versailles and why was it created?"</li>
+</ul>
+<p><strong>Domain-Specific Questions:</strong></p>
+<ul>
+<li>Original: "How does quantitative easing affect long-term bond yields?"</li>
+<li>Step-Back: "What is quantitative easing and how does monetary policy work?"</li>
+</ul>
+<p><strong>Implementation Strategy:</strong></p>
+<p><strong>Prompt for Step-Back Generation:</strong></p>
+<div class="highlight"><pre><span></span><code>Given the following question, generate a more general, foundational question 
+that would help provide necessary background context.
+
+Original Question: {original_query}
+
+Step-Back Question:
+</code></pre></div>
+<p><strong>Retrieval Strategy:</strong></p>
+<ul>
+<li>Retrieve 3-5 documents for step-back question</li>
+<li>Retrieve 5-7 documents for original question</li>
+<li>Combine contexts with step-back first, then specific</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="rag-fusion">RAG-Fusion</h2>
+<p>RAG-Fusion combines multiple query generation techniques with intelligent result merging using Reciprocal Rank Fusion (RRF).</p>
+<p><img alt="RAG-Fusion Workflow" src="../../../../svg/rag_fusion_workflow.svg" /></p>
+<p><strong>RAG-Fusion Process:</strong></p>
+<p><strong>Step 1: Multi-Query Generation</strong></p>
+<p>Generate multiple diverse query variations (typically 3-5 queries).</p>
+<p><strong>Step 2: Parallel Retrieval</strong></p>
+<p>Execute all queries independently and get ranked results from each.</p>
+<p><strong>Step 3: Reciprocal Rank Fusion (RRF)</strong></p>
+<p>Merge results using RRF algorithm:</p>
+<div class="highlight"><pre><span></span><code>RRF_score(doc) = Σ(1 / (k + rank_i(doc)))
+</code></pre></div>
+<p>Where:</p>
+<ul>
+<li><code>k</code> = constant (typically 60)</li>
+<li><code>rank_i(doc)</code> = rank of document in query i's results</li>
+<li>Sum over all queries where document appears</li>
+</ul>
+<p><strong>Step 4: Re-Ranking</strong></p>
+<p>Sort documents by RRF score to get final ranked list.</p>
+<p><strong>RRF Algorithm Advantages:</strong></p>
+<ul>
+<li><strong>No Score Normalization:</strong> Works without calibrating different scoring systems</li>
+<li><strong>Robust:</strong> Handles varying result list lengths</li>
+<li><strong>Rewards Consensus:</strong> Documents appearing in multiple queries rank higher</li>
+<li><strong>Penalizes Outliers:</strong> Single-query results rank lower</li>
+<li><strong>Parameter-Free:</strong> Only needs k constant (typically 60)</li>
+</ul>
+<p><strong>Example RRF Calculation:</strong></p>
+<p><strong>Query 1 Results:</strong></p>
+<ul>
+<li>Doc A (rank 1)</li>
+<li>Doc B (rank 2)</li>
+<li>Doc C (rank 3)</li>
+</ul>
+<p><strong>Query 2 Results:</strong></p>
+<ul>
+<li>Doc B (rank 1)</li>
+<li>Doc D (rank 2)</li>
+<li>Doc A (rank 3)</li>
+</ul>
+<p><strong>Query 3 Results:</strong></p>
+<ul>
+<li>Doc A (rank 1)</li>
+<li>Doc C (rank 2)</li>
+<li>Doc E (rank 3)</li>
+</ul>
+<p><strong>RRF Scores (k=60):</strong></p>
+<ul>
+<li>Doc A: 1/(60+1) + 1/(60+3) + 1/(60+1) = 0.0164 + 0.0159 + 0.0164 = 0.0487</li>
+<li>Doc B: 1/(60+2) + 1/(60+1) = 0.0161 + 0.0164 = 0.0325</li>
+<li>Doc C: 1/(60+3) + 1/(60+2) = 0.0159 + 0.0161 = 0.0320</li>
+<li>Doc D: 1/(60+2) = 0.0161</li>
+<li>Doc E: 1/(60+3) = 0.0159</li>
+</ul>
+<p><strong>Final Ranking:</strong> A, B, C, D, E</p>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li><strong>Comprehensive Coverage:</strong> Captures diverse relevant documents</li>
+<li><strong>Balanced Ranking:</strong> Weighs consensus and individual relevance</li>
+<li><strong>Reduces Noise:</strong> Outliers from single queries rank lower</li>
+<li><strong>No Training Required:</strong> Parameter-free algorithm</li>
+<li><strong>Language Agnostic:</strong> Works across different retrieval systems</li>
+</ul>
+<p><strong>Implementation Tips:</strong></p>
+<ul>
+<li>Use 3-5 query variations for optimal balance</li>
+<li>Set k=60 as default, adjust if needed</li>
+<li>Consider computational cost vs benefit</li>
+<li>Cache query variations for similar future queries</li>
+<li>Monitor result diversity and relevance</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="query-decomposition">Query Decomposition</h2>
+<p>Query Decomposition breaks complex, multi-part questions into simpler sub-questions that can be answered independently.</p>
+<p><img alt="Query Decomposition Process" src="../../../../svg/query_decomposition_process.svg" /></p>
+<p><strong>How Query Decomposition Works:</strong></p>
+<p><strong>Step 1: Identify Question Complexity</strong></p>
+<p>Analyze if the query requires multiple pieces of information or reasoning steps.</p>
+<p><strong>Original Complex Query:</strong></p>
+<p>"Compare the GDP growth rates of China and India over the past decade and explain the key economic factors that contributed to any differences."</p>
+<p><strong>Step 2: Decompose into Sub-Questions</strong></p>
+<p>Break down into sequential, answerable questions:</p>
+<p><strong>Sub-Question 1:</strong> "What was China's GDP growth rate over the past decade?"</p>
+<p><strong>Sub-Question 2:</strong> "What was India's GDP growth rate over the past decade?"</p>
+<p><strong>Sub-Question 3:</strong> "What were the key economic factors affecting China's GDP growth?"</p>
+<p><strong>Sub-Question 4:</strong> "What were the key economic factors affecting India's GDP growth?"</p>
+<p><strong>Sub-Question 5:</strong> "What are the main differences in economic policies between China and India?"</p>
+<p><strong>Step 3: Sequential Retrieval &amp; Answering</strong></p>
+<p>Answer each sub-question in order, using previous answers as context for subsequent questions.</p>
+<p><strong>Step 4: Synthesis</strong></p>
+<p>Combine all sub-answers into a comprehensive final answer.</p>
+<p><strong>Decomposition Patterns:</strong></p>
+<p><strong>Comparison Questions:</strong></p>
+<ul>
+<li>Pattern: "Compare A and B regarding X"</li>
+<li>Decompose: "What is A's X?", "What is B's X?", "Compare results"</li>
+</ul>
+<p><strong>Causal Questions:</strong></p>
+<ul>
+<li>Pattern: "Why did X lead to Y?"</li>
+<li>Decompose: "What is X?", "What is Y?", "What is the relationship between X and Y?"</li>
+</ul>
+<p><strong>Multi-Step Reasoning:</strong></p>
+<ul>
+<li>Pattern: "If A, then B, what about C?"</li>
+<li>Decompose: "Is A true?", "If A true, what is B?", "Given A and B, what is C?"</li>
+</ul>
+<p><strong>Temporal Questions:</strong></p>
+<ul>
+<li>Pattern: "How has X changed from Y to Z?"</li>
+<li>Decompose: "What was X at time Y?", "What is X at time Z?", "Calculate change"</li>
+</ul>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li><strong>Handles Complexity:</strong> Makes impossible questions answerable</li>
+<li><strong>Improved Accuracy:</strong> Simpler questions have better retrieval</li>
+<li><strong>Explicit Reasoning:</strong> Clear reasoning chain for transparency</li>
+<li><strong>Modular:</strong> Can optimize each sub-question independently</li>
+<li><strong>Debuggable:</strong> Easy to identify which step failed</li>
+</ul>
+<p><strong>Challenges:</strong></p>
+<ul>
+<li><strong>Question Ordering:</strong> Dependencies between sub-questions</li>
+<li><strong>Context Management:</strong> Passing information between steps</li>
+<li><strong>Increased Latency:</strong> Multiple sequential operations</li>
+<li><strong>Decomposition Quality:</strong> Poor decomposition leads to wrong answers</li>
+<li><strong>Cost:</strong> Multiple LLM calls and retrievals</li>
+</ul>
+<p><strong>Implementation Strategies:</strong></p>
+<p><strong>Prompt for Decomposition:</strong></p>
+<div class="highlight"><pre><span></span><code>Break down the following complex question into a series of simpler, 
+sequential sub-questions that can be answered independently.
+
+Complex Question: {original_query}
+
+Sub-Questions:
+1.
+2.
+3.
+</code></pre></div>
+<p><strong>Execution Approaches:</strong></p>
+<p><strong>Sequential (Chain-of-Thought):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">sub_q</span> <span class="ow">in</span> <span class="n">sub_questions</span><span class="p">:</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">retrieve</span><span class="p">(</span><span class="n">sub_q</span><span class="p">)</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">context</span> <span class="o">+</span> <span class="n">previous_answers</span><span class="p">)</span>
+    <span class="n">previous_answers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
+<span class="n">final_answer</span> <span class="o">=</span> <span class="n">synthesize</span><span class="p">(</span><span class="n">previous_answers</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Parallel (Independent Sub-Questions):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">answers</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">sub_q</span> <span class="ow">in</span> <span class="n">sub_questions</span><span class="p">:</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">retrieve</span><span class="p">(</span><span class="n">sub_q</span><span class="p">)</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+    <span class="n">answers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
+<span class="n">final_answer</span> <span class="o">=</span> <span class="n">synthesize</span><span class="p">(</span><span class="n">answers</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Hybrid (Parallel with Dependencies):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Group independent questions</span>
+<span class="n">groups</span> <span class="o">=</span> <span class="n">identify_dependencies</span><span class="p">(</span><span class="n">sub_questions</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+    <span class="c1"># Parallel within group</span>
+    <span class="n">answers_group</span> <span class="o">=</span> <span class="n">parallel_process</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+    <span class="c1"># Sequential between groups</span>
+    <span class="n">previous_context</span> <span class="o">+=</span> <span class="n">answers_group</span>
+</code></pre></div>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="hyde-hypothetical-document-embeddings">HyDE (Hypothetical Document Embeddings)</h2>
+<p>HyDE generates a hypothetical answer to the question, then searches for documents similar to that answer rather than the question itself.</p>
+<p><img alt="HyDE Technique" src="../../../../svg/hyde_technique.svg" /></p>
+<p><strong>How HyDE Works:</strong></p>
+<p><strong>Step 1: Generate Hypothetical Answer</strong></p>
+<p>Use an LLM to generate a plausible answer to the query (even if it's not factually correct):</p>
+<p><strong>Original Query:</strong></p>
+<p>"What are the causes of ocean acidification?"</p>
+<p><strong>Generated Hypothetical Answer:</strong></p>
+<p>"Ocean acidification is primarily caused by the absorption of carbon dioxide (CO2) from the atmosphere into ocean water. When CO2 dissolves in seawater, it forms carbonic acid, which lowers the pH of the ocean. The main sources of atmospheric CO2 include burning fossil fuels, deforestation, and industrial processes. This process has accelerated since the Industrial Revolution due to increased human activities. Ocean acidification affects marine ecosystems, particularly organisms with calcium carbonate shells or skeletons, such as corals, shellfish, and some plankton species."</p>
+<p><strong>Step 2: Embed Hypothetical Answer</strong></p>
+<p>Convert the hypothetical answer into an embedding vector.</p>
+<p><strong>Step 3: Similarity Search</strong></p>
+<p>Search the vector database for documents most similar to the hypothetical answer embedding (not the query embedding).</p>
+<p><strong>Step 4: Retrieve &amp; Generate</strong></p>
+<p>Use retrieved documents to generate the actual, factual answer.</p>
+<p><strong>Why HyDE Works:</strong></p>
+<p><strong>Query-Document Mismatch Problem:</strong></p>
+<ul>
+<li>Queries are often short questions: "What causes ocean acidification?"</li>
+<li>Documents are longer, declarative statements: "Ocean acidification occurs when..."</li>
+<li>Embedding similarity between questions and statements can be poor</li>
+</ul>
+<p><strong>HyDE Solution:</strong></p>
+<ul>
+<li>Hypothetical answer is in document style (declarative, detailed)</li>
+<li>Better semantic matching with actual documents</li>
+<li>Captures vocabulary and structure of target documents</li>
+</ul>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li><strong>Better Semantic Matching:</strong> Overcomes query-document style differences</li>
+<li><strong>Vocabulary Alignment:</strong> Uses domain-specific terminology</li>
+<li><strong>Improved Relevance:</strong> Finds documents that actually answer the question</li>
+<li><strong>No Training Required:</strong> Works with existing embeddings</li>
+<li><strong>Language Agnostic:</strong> Effective across different languages</li>
+</ul>
+<p><strong>Challenges:</strong></p>
+<ul>
+<li><strong>Hallucination Risk:</strong> Hypothetical answer may include false information</li>
+<li><strong>Bias:</strong> Generated answer might bias retrieval toward specific perspectives</li>
+<li><strong>Cost:</strong> Additional LLM call for hypothesis generation</li>
+<li><strong>Quality Dependency:</strong> Effectiveness depends on hypothesis quality</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<p><strong>Abstract or Conceptual Queries:</strong></p>
+<ul>
+<li>"What is the meaning of justice?"</li>
+<li>"How does consciousness arise?"</li>
+</ul>
+<p><strong>Technical Questions:</strong></p>
+<ul>
+<li>"What causes memory leaks in JavaScript?"</li>
+<li>"Why does gradient descent sometimes fail?"</li>
+</ul>
+<p><strong>Domain-Specific Queries:</strong></p>
+<ul>
+<li>"What are the symptoms of iron deficiency?"</li>
+<li>"How do neural networks learn features?"</li>
+</ul>
+<p><strong>When Query Style Differs from Document Style:</strong></p>
+<ul>
+<li>Query: "How to fix authentication error?"</li>
+<li>Documents: "Authentication errors occur when..."</li>
+</ul>
+<p><strong>Implementation:</strong></p>
+<p><strong>Prompt for Hypothetical Answer:</strong></p>
+<div class="highlight"><pre><span></span><code>Generate a detailed, factual answer to the following question. 
+Write in a style similar to an encyclopedia entry or technical document.
+
+Question: {query}
+
+Answer:
+</code></pre></div>
+<p><strong>Retrieval Strategy:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate hypothesis</span>
+<span class="n">hypothesis</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">hypothesis_prompt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">))</span>
+
+<span class="c1"># Embed hypothesis (not query)</span>
+<span class="n">hypothesis_embedding</span> <span class="o">=</span> <span class="n">embedding_model</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">hypothesis</span><span class="p">)</span>
+
+<span class="c1"># Search with hypothesis embedding</span>
+<span class="n">documents</span> <span class="o">=</span> <span class="n">vector_store</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">hypothesis_embedding</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Generate actual answer with retrieved docs</span>
+<span class="n">final_answer</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">documents</span> <span class="o">+</span> <span class="n">query</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Variations:</strong></p>
+<p><strong>Multi-Shot HyDE:</strong></p>
+<ul>
+<li>Generate multiple hypothetical answers</li>
+<li>Use all for retrieval and merge results</li>
+<li>Reduces bias from single hypothesis</li>
+</ul>
+<p><strong>Hybrid Approach:</strong></p>
+<ul>
+<li>Use both query embedding and hypothesis embedding</li>
+<li>Merge results from both searches</li>
+<li>Balance between approaches</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="comparison-selection-guide">Comparison &amp; Selection Guide</h2>
+<p>Different query translation techniques excel in different scenarios. Use this guide to select the appropriate method.</p>
+<p><img alt="Query Translation Comparison" src="../../../../svg/query_translation_comparison.svg" /></p>
+<p><strong>Technique Comparison:</strong></p>
+<p><strong>Multi-Query</strong></p>
+<ul>
+<li><strong>Best For:</strong> Ambiguous queries, exploratory search</li>
+<li><strong>Pros:</strong> Simple, comprehensive coverage, robust</li>
+<li><strong>Cons:</strong> Higher latency, more cost, potential noise</li>
+<li><strong>Complexity:</strong> Low</li>
+<li><strong>Cost:</strong> Medium (3-5x retrievals)</li>
+</ul>
+<p><strong>Step-Back Prompting</strong></p>
+<ul>
+<li><strong>Best For:</strong> Complex questions needing background</li>
+<li><strong>Pros:</strong> Better context, educational, reduces hallucination</li>
+<li><strong>Cons:</strong> May retrieve irrelevant foundational info</li>
+<li><strong>Complexity:</strong> Low</li>
+<li><strong>Cost:</strong> Low (2x retrievals)</li>
+</ul>
+<p><strong>RAG-Fusion</strong></p>
+<ul>
+<li><strong>Best For:</strong> Research, comprehensive information needs</li>
+<li><strong>Pros:</strong> Balanced ranking, comprehensive, proven algorithm</li>
+<li><strong>Cons:</strong> Higher complexity, more computational cost</li>
+<li><strong>Complexity:</strong> Medium</li>
+<li><strong>Cost:</strong> High (3-5x retrievals + RRF computation)</li>
+</ul>
+<p><strong>Query Decomposition</strong></p>
+<ul>
+<li><strong>Best For:</strong> Multi-hop reasoning, complex analysis</li>
+<li><strong>Pros:</strong> Handles complexity, explicit reasoning, modular</li>
+<li><strong>Cons:</strong> Ordering challenges, high latency, expensive</li>
+<li><strong>Complexity:</strong> High</li>
+<li><strong>Cost:</strong> Very High (N x retrievals + LLM calls)</li>
+</ul>
+<p><strong>HyDE</strong></p>
+<ul>
+<li><strong>Best For:</strong> Query-document mismatch, abstract queries</li>
+<li><strong>Pros:</strong> Better semantic matching, no training needed</li>
+<li><strong>Cons:</strong> Hallucination risk, bias, extra LLM call</li>
+<li><strong>Complexity:</strong> Low</li>
+<li><strong>Cost:</strong> Medium (1x retrieval + 1x generation)</li>
+</ul>
+<p><strong>Decision Tree:</strong></p>
+<p><strong>Question 1: Is the query ambiguous or underspecified?</strong></p>
+<ul>
+<li>Yes → Multi-Query or RAG-Fusion</li>
+<li>No → Continue</li>
+</ul>
+<p><strong>Question 2: Does the query need background knowledge?</strong></p>
+<ul>
+<li>Yes → Step-Back Prompting</li>
+<li>No → Continue</li>
+</ul>
+<p><strong>Question 3: Is the query complex with multiple parts?</strong></p>
+<ul>
+<li>Yes → Query Decomposition</li>
+<li>No → Continue</li>
+</ul>
+<p><strong>Question 4: Do queries and documents use different vocabulary?</strong></p>
+<ul>
+<li>Yes → HyDE</li>
+<li>No → No translation needed</li>
+</ul>
+<p><strong>Question 5: Do you need comprehensive coverage?</strong></p>
+<ul>
+<li>Yes → RAG-Fusion</li>
+<li>No → Multi-Query or Step-Back</li>
+</ul>
+<p><strong>Combination Strategies:</strong></p>
+<p><strong>Step-Back + Multi-Query:</strong></p>
+<ul>
+<li>Generate step-back question</li>
+<li>Generate multiple versions of both original and step-back</li>
+<li>Retrieve for all queries</li>
+</ul>
+<p><strong>Decomposition + Multi-Query:</strong></p>
+<ul>
+<li>Decompose complex question</li>
+<li>Generate multiple versions of each sub-question</li>
+<li>Parallel retrieval and synthesis</li>
+</ul>
+<p><strong>HyDE + RAG-Fusion:</strong></p>
+<ul>
+<li>Generate hypothetical answer</li>
+<li>Create query variations from hypothesis</li>
+<li>Use RRF to merge results</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="implementation-examples">Implementation Examples</h2>
+<p>Practical code examples for implementing query translation techniques.</p>
+<p><strong>Example 1: Multi-Query with LangChain</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.retrievers</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiQueryRetriever</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span><span class="p">,</span> <span class="n">OpenAIEmbeddings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.vectorstores</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pinecone</span>
+
+<span class="c1"># Initialize components</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">vectorstore</span> <span class="o">=</span> <span class="n">Pinecone</span><span class="o">.</span><span class="n">from_existing_index</span><span class="p">(</span><span class="s2">&quot;my-index&quot;</span><span class="p">,</span> <span class="n">OpenAIEmbeddings</span><span class="p">())</span>
+
+<span class="c1"># Create multi-query retriever</span>
+<span class="n">retriever</span> <span class="o">=</span> <span class="n">MultiQueryRetriever</span><span class="o">.</span><span class="n">from_llm</span><span class="p">(</span>
+    <span class="n">retriever</span><span class="o">=</span><span class="n">vectorstore</span><span class="o">.</span><span class="n">as_retriever</span><span class="p">(),</span>
+    <span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span>
+    <span class="n">include_original</span><span class="o">=</span><span class="kc">True</span>  <span class="c1"># Include original query too</span>
+<span class="p">)</span>
+
+<span class="c1"># Use retriever</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;What are the health benefits of intermittent fasting?&quot;</span>
+<span class="n">docs</span> <span class="o">=</span> <span class="n">retriever</span><span class="o">.</span><span class="n">get_relevant_documents</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+<span class="c1"># The retriever automatically generates query variations and retrieves</span>
+<span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Content: </span><span class="si">{</span><span class="n">doc</span><span class="o">.</span><span class="n">page_content</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Example 2: Step-Back Prompting</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.vectorstores</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chroma</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">vectorstore</span> <span class="o">=</span> <span class="n">Chroma</span><span class="p">(</span><span class="n">embedding_function</span><span class="o">=</span><span class="n">OpenAIEmbeddings</span><span class="p">())</span>
+
+<span class="c1"># Prompt for generating step-back question</span>
+<span class="n">step_back_prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;You are an expert at generating broader, more general questions </span>
+<span class="sd">    that provide helpful context.</span>
+
+<span class="sd">    Original question: {question}</span>
+
+<span class="sd">    Generate a more general, foundational question:&quot;&quot;&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Generate step-back question</span>
+<span class="n">original_query</span> <span class="o">=</span> <span class="s2">&quot;How does CRISPR-Cas9 achieve homology-directed repair?&quot;</span>
+<span class="n">step_back_chain</span> <span class="o">=</span> <span class="n">step_back_prompt</span> <span class="o">|</span> <span class="n">llm</span>
+<span class="n">step_back_question</span> <span class="o">=</span> <span class="n">step_back_chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="n">original_query</span><span class="p">})</span><span class="o">.</span><span class="n">content</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original: </span><span class="si">{</span><span class="n">original_query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Step-Back: </span><span class="si">{</span><span class="n">step_back_question</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Retrieve for both</span>
+<span class="n">step_back_docs</span> <span class="o">=</span> <span class="n">vectorstore</span><span class="o">.</span><span class="n">similarity_search</span><span class="p">(</span><span class="n">step_back_question</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">specific_docs</span> <span class="o">=</span> <span class="n">vectorstore</span><span class="o">.</span><span class="n">similarity_search</span><span class="p">(</span><span class="n">original_query</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Combine contexts (step-back first for foundational knowledge)</span>
+<span class="n">all_docs</span> <span class="o">=</span> <span class="n">step_back_docs</span> <span class="o">+</span> <span class="n">specific_docs</span>
+
+<span class="c1"># Generate answer with combined context</span>
+<span class="n">context</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">doc</span><span class="o">.</span><span class="n">page_content</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">all_docs</span><span class="p">])</span>
+<span class="n">answer</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Context: </span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Question: </span><span class="si">{</span><span class="n">original_query</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Answer:&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Example 3: RAG-Fusion with RRF</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">reciprocal_rank_fusion</span><span class="p">(</span>
+    <span class="n">results_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Merge multiple ranked result lists using Reciprocal Rank Fusion.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        results_list: List of ranked document ID lists from different queries</span>
+<span class="sd">        k: RRF constant (default 60)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Merged and reranked list of document IDs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Calculate RRF scores</span>
+    <span class="n">rrf_scores</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">results</span> <span class="ow">in</span> <span class="n">results_list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">rank</span><span class="p">,</span> <span class="n">doc_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">doc_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rrf_scores</span><span class="p">:</span>
+                <span class="n">rrf_scores</span><span class="p">[</span><span class="n">doc_id</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">rrf_scores</span><span class="p">[</span><span class="n">doc_id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="n">rank</span><span class="p">)</span>
+
+    <span class="c1"># Sort by RRF score</span>
+    <span class="n">ranked_docs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+        <span class="n">rrf_scores</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+        <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">doc_id</span> <span class="k">for</span> <span class="n">doc_id</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">ranked_docs</span><span class="p">]</span>
+
+<span class="c1"># Example usage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.vectorstores</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pinecone</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">vectorstore</span> <span class="o">=</span> <span class="n">Pinecone</span><span class="o">.</span><span class="n">from_existing_index</span><span class="p">(</span><span class="s2">&quot;my-index&quot;</span><span class="p">,</span> <span class="n">OpenAIEmbeddings</span><span class="p">())</span>
+
+<span class="c1"># Generate query variations</span>
+<span class="n">original_query</span> <span class="o">=</span> <span class="s2">&quot;What causes climate change?&quot;</span>
+<span class="n">query_variations</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Generate 4 different ways to ask: &#39;</span><span class="si">{</span><span class="n">original_query</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+<span class="p">)</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># Retrieve for each query</span>
+<span class="n">all_results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">query</span> <span class="ow">in</span> <span class="n">query_variations</span><span class="p">:</span>
+    <span class="n">docs</span> <span class="o">=</span> <span class="n">vectorstore</span><span class="o">.</span><span class="n">similarity_search</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">doc_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">doc</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">]</span>
+    <span class="n">all_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)</span>
+
+<span class="c1"># Apply RRF</span>
+<span class="n">merged_doc_ids</span> <span class="o">=</span> <span class="n">reciprocal_rank_fusion</span><span class="p">(</span><span class="n">all_results</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="c1"># Retrieve final documents</span>
+<span class="n">final_docs</span> <span class="o">=</span> <span class="p">[</span><span class="n">vectorstore</span><span class="o">.</span><span class="n">get_by_id</span><span class="p">(</span><span class="n">doc_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc_id</span> <span class="ow">in</span> <span class="n">merged_doc_ids</span><span class="p">[:</span><span class="mi">10</span><span class="p">]]</span>
+</code></pre></div>
+<p><strong>Example 4: Query Decomposition</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.chains</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMChain</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Decomposition prompt</span>
+<span class="n">decompose_prompt</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="p">(</span>
+    <span class="n">input_variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">],</span>
+    <span class="n">template</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Break down the following complex question into simpler sub-questions.</span>
+<span class="s2">    Each sub-question should be independently answerable.</span>
+
+<span class="s2">    Complex Question: </span><span class="si">{question}</span>
+
+<span class="s2">    Sub-Questions (numbered list):&quot;&quot;&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Decompose query</span>
+<span class="n">complex_query</span> <span class="o">=</span> <span class="s2">&quot;Compare the GDP growth of China and India over the past decade&quot;</span>
+<span class="n">decompose_chain</span> <span class="o">=</span> <span class="n">LLMChain</span><span class="p">(</span><span class="n">llm</span><span class="o">=</span><span class="n">llm</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="n">decompose_prompt</span><span class="p">)</span>
+<span class="n">sub_questions</span> <span class="o">=</span> <span class="n">decompose_chain</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">complex_query</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sub-Questions:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">sq</span> <span class="ow">in</span> <span class="n">sub_questions</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sq</span><span class="p">)</span>
+
+<span class="c1"># Answer each sub-question</span>
+<span class="n">sub_answers</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">sub_q</span> <span class="ow">in</span> <span class="n">sub_questions</span><span class="p">:</span>
+    <span class="c1"># Retrieve context for this sub-question</span>
+    <span class="n">docs</span> <span class="o">=</span> <span class="n">vectorstore</span><span class="o">.</span><span class="n">similarity_search</span><span class="p">(</span><span class="n">sub_q</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">doc</span><span class="o">.</span><span class="n">page_content</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">])</span>
+
+    <span class="c1"># Generate answer</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Context: </span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Question: </span><span class="si">{</span><span class="n">sub_q</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Answer:&quot;</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">content</span>
+    <span class="n">sub_answers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">answer</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">sub_q</span><span class="si">}</span><span class="se">\n</span><span class="s2">Answer: </span><span class="si">{</span><span class="n">answer</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Synthesize final answer</span>
+<span class="n">synthesis_prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Given the following sub-questions and their answers, </span>
+<span class="s2">synthesize a comprehensive answer to the original question.</span>
+
+<span class="s2">Original Question: </span><span class="si">{</span><span class="n">complex_query</span><span class="si">}</span>
+
+<span class="s2">Sub-Q&amp;A:</span>
+<span class="si">{</span><span class="nb">chr</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;Q: </span><span class="si">{</span><span class="n">sq</span><span class="si">}</span><span class="se">\n</span><span class="s2">A: </span><span class="si">{</span><span class="n">sa</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">sq</span><span class="p">,</span><span class="w"> </span><span class="n">sa</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nb">zip</span><span class="p">(</span><span class="n">sub_questions</span><span class="p">,</span><span class="w"> </span><span class="n">sub_answers</span><span class="p">)])</span><span class="si">}</span>
+
+<span class="s2">Comprehensive Answer:&quot;&quot;&quot;</span>
+
+<span class="n">final_answer</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">synthesis_prompt</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Final Answer: </span><span class="si">{</span><span class="n">final_answer</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Example 5: HyDE Implementation</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span><span class="p">,</span> <span class="n">OpenAIEmbeddings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptTemplate</span>
+
+<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">OpenAIEmbeddings</span><span class="p">()</span>
+
+<span class="c1"># Generate hypothetical document</span>
+<span class="n">hyde_prompt</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="p">(</span>
+    <span class="n">input_variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">],</span>
+    <span class="n">template</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Write a detailed paragraph that would answer this question.</span>
+<span class="s2">    Write in the style of an informative document or encyclopedia entry.</span>
+
+<span class="s2">    Question: </span><span class="si">{question}</span>
+
+<span class="s2">    Detailed Answer:&quot;&quot;&quot;</span>
+<span class="p">)</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;What are the causes of ocean acidification?&quot;</span>
+
+<span class="c1"># Generate hypothesis</span>
+<span class="n">hypothesis</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">hyde_prompt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">question</span><span class="o">=</span><span class="n">query</span><span class="p">))</span><span class="o">.</span><span class="n">content</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hypothesis:</span><span class="se">\n</span><span class="si">{</span><span class="n">hypothesis</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Embed hypothesis (not the query!)</span>
+<span class="n">hypothesis_embedding</span> <span class="o">=</span> <span class="n">embeddings</span><span class="o">.</span><span class="n">embed_query</span><span class="p">(</span><span class="n">hypothesis</span><span class="p">)</span>
+
+<span class="c1"># Search with hypothesis embedding</span>
+<span class="n">docs</span> <span class="o">=</span> <span class="n">vectorstore</span><span class="o">.</span><span class="n">similarity_search_by_vector</span><span class="p">(</span>
+    <span class="n">hypothesis_embedding</span><span class="p">,</span>
+    <span class="n">k</span><span class="o">=</span><span class="mi">10</span>
+<span class="p">)</span>
+
+<span class="c1"># Generate final answer with retrieved docs</span>
+<span class="n">context</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">doc</span><span class="o">.</span><span class="n">page_content</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">])</span>
+<span class="n">final_answer</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Context: </span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Question: </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Provide a factual answer:&quot;</span>
+<span class="p">)</span><span class="o">.</span><span class="n">content</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final Answer: </span><span class="si">{</span><span class="n">final_answer</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="model-resources">Model Resources</h2>
+<p><strong>🤗 Hugging Face Models:</strong></p>
+<p><strong>Query Generation Models:</strong></p>
+<ol>
+<li><strong>meta-llama/Meta-Llama-3-8B-Instruct</strong></li>
+<li>Excellent for query generation tasks</li>
+<li>
+<p>Link: https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct</p>
+</li>
+<li>
+<p><strong>mistralai/Mistral-7B-Instruct-v0.3</strong></p>
+</li>
+<li>Strong performance on query reformulation</li>
+<li>
+<p>Link: https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3</p>
+</li>
+<li>
+<p><strong>google/flan-t5-large</strong></p>
+</li>
+<li>Good for query expansion and paraphrasing</li>
+<li>Link: https://huggingface.co/google/flan-t5-large</li>
+</ol>
+<p><strong>🔬 Research Papers:</strong></p>
+<ol>
+<li><strong>"Query Rewriting for Retrieval-Augmented Large Language Models"</strong> - Ma et al., 2023</li>
+<li>Comprehensive overview of query rewriting techniques</li>
+<li>
+<p>ArXiv: https://arxiv.org/abs/2305.14283</p>
+</li>
+<li>
+<p><strong>"Take a Step Back: Evoking Reasoning via Abstraction"</strong> - Zheng et al., 2023</p>
+</li>
+<li>Original step-back prompting paper</li>
+<li>
+<p>ArXiv: https://arxiv.org/abs/2310.06117</p>
+</li>
+<li>
+<p><strong>"Precise Zero-Shot Dense Retrieval without Relevance Labels"</strong> - Gao et al., 2022</p>
+</li>
+<li>HyDE (Hypothetical Document Embeddings) original paper</li>
+<li>ArXiv: https://arxiv.org/abs/2212.10496</li>
+</ol>
+<p><strong>📊 Tools &amp; Libraries:</strong></p>
+<ol>
+<li><strong>LangChain Multi-Query Retriever</strong></li>
+<li>Built-in implementation</li>
+<li>
+<p>Docs: https://python.langchain.com/docs/modules/data_connection/retrievers/MultiQueryRetriever</p>
+</li>
+<li>
+<p><strong>LlamaIndex Query Transformations</strong></p>
+</li>
+<li>Various query transformation tools</li>
+<li>Docs: https://docs.llamaindex.ai/en/stable/optimizing/advanced_retrieval/query_transformations/</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="references-further-reading">References &amp; Further Reading</h2>
+<p><strong>📚 Foundational Papers:</strong></p>
+<ol>
+<li><strong>"Query Expansion Techniques for Information Retrieval"</strong> - Carpineto &amp; Romano, 2012</li>
+<li>Classic query expansion survey</li>
+<li>
+<p>ACM Computing Surveys</p>
+</li>
+<li>
+<p><strong>"Fusion in Information Retrieval"</strong> - Croft, 2000</p>
+</li>
+<li>Foundations of result fusion techniques</li>
+<li>
+<p>SIGIR Tutorial</p>
+</li>
+<li>
+<p><strong>"Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods"</strong> - Cormack et al., 2009</p>
+</li>
+<li>RRF algorithm analysis</li>
+<li>
+<p>SIGIR Paper</p>
+</li>
+<li>
+<p><strong>"HyDE: Precise Zero-Shot Dense Retrieval without Relevance Labels"</strong> - Gao et al., 2022</p>
+</li>
+<li>Hypothetical Document Embeddings</li>
+<li>ArXiv: https://arxiv.org/abs/2212.10496</li>
+</ol>
+<p><strong>🔧 Implementation Guides:</strong></p>
+<ol>
+<li><strong>"Multi-Query Retrieval for RAG"</strong> - LangChain Documentation</li>
+<li>Practical implementation guide</li>
+<li>
+<p>Link: https://python.langchain.com/docs/modules/data_connection/retrievers/MultiQueryRetriever</p>
+</li>
+<li>
+<p><strong>"Advanced Retrieval Strategies"</strong> - LlamaIndex Documentation</p>
+</li>
+<li>Query transformations and optimizations</li>
+<li>
+<p>Link: https://docs.llamaindex.ai/en/stable/optimizing/advanced_retrieval/</p>
+</li>
+<li>
+<p><strong>"Query Understanding for Search"</strong> - Google Research Blog</p>
+</li>
+<li>Industrial perspective on query processing</li>
+<li>Link: https://research.google/blog/</li>
+</ol>
+<p><strong>📖 Advanced Topics:</strong></p>
+<ol>
+<li><strong>"Take a Step Back: Evoking Reasoning via Abstraction in Large Language Models"</strong> - Zheng et al., 2023</li>
+<li>Step-back prompting technique</li>
+<li>
+<p>ArXiv: https://arxiv.org/abs/2310.06117</p>
+</li>
+<li>
+<p><strong>"Self-RAG: Learning to Retrieve, Generate, and Critique"</strong> - Asai et al., 2023</p>
+</li>
+<li>Combining retrieval with self-critique</li>
+<li>
+<p>ArXiv: https://arxiv.org/abs/2310.11511</p>
+</li>
+<li>
+<p><strong>"Query Rewriting via Cycle-Consistent Translation"</strong> - Zhang et al., 2022</p>
+<ul>
+<li>Neural query rewriting approaches</li>
+<li>ArXiv: https://arxiv.org/abs/2210.12958</li>
+</ul>
+</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<p><strong>Related Documentation:</strong></p>
+<ul>
+<li><a href="../05-01-rag-overview/">← Back to RAG Overview</a></li>
+<li><a href="../05-02-query-construction/">← Query Construction Deep Dive</a></li>
+<li><a href="../05-04-routing/">Routing Strategies Deep Dive →</a></li>
+<li><a href="../05-05-retrieval/">Retrieval Methods Deep Dive</a></li>
+<li><a href="../05-06-indexing/">Indexing Techniques Deep Dive</a></li>
+<li><a href="../05-07-generation/">Generation Process Deep Dive</a></li>
+</ul>
+<hr />
+<p><em>Last Updated: October 2025 | Part of RAG Documentation Series</em></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 14, 2025 00:42:04 UTC">October 14, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+<!-- Footer navigation (prev/next) - Material default -->
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../05-02-query-construction/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Query Construction: Deep Dive" rel="prev">
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Previous
+            </span>
+            <div class="md-ellipsis">
+              Query Construction: Deep Dive
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../05-04-routing/" class="md-footer__link md-footer__link--next" aria-label="Next: Routing Strategies: Deep Dive" rel="next">
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Next
+            </span>
+            <div class="md-ellipsis">
+              Routing Strategies: Deep Dive
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+
+  <!-- Custom footer content -->
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        <div style="text-align: center; padding: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 1rem;">
+          <p style="margin: 0.5rem 0;">
+            <strong>GenAI Atlas</strong> - Your Comprehensive Guide to AI & Machine Learning
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.9em; opacity: 0.8;">
+            © 2024 GenAI Atlas | Built with ❤️ for the AI Community
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.85em; opacity: 0.7;">
+            <em>Empowering developers, researchers, and practitioners worldwide</em>
+          </p>
+        </div>
+      </div>
+      <div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>

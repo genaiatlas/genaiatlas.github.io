@@ -1,0 +1,3140 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://genaiatlas.github.io/02-gen-ai-core/5-1-rag/1-learning-path/05-01-rag-overview/">
+      
+      
+        <link rel="prev" href="../../">
+      
+      
+        <link rel="next" href="../05-02-query-construction/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Retrieval-Augmented Generation (RAG) - Complete Architecture Overview - Gen AI Atlas</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CFira+Code:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Fira Code"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../styles/logo-title.css">
+    
+      <link rel="stylesheet" href="../../../../styles/wide-page.css">
+    
+      <link rel="stylesheet" href="../../../../styles/mobile-header.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-navigation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header" style="align-items: center;">
+    
+    <!-- Mobile drawer toggle -->
+    <label class="md-header__button md-icon" for="__drawer" style="margin-right: 0.5rem;">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Logo -->
+    <a href="../../../.." 
+       title="Gen AI Atlas" 
+       class="md-header__button md-logo" 
+       aria-label="Gen AI Atlas" 
+       data-md-component="logo"
+       style="margin-right: 0.8rem;">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+
+    <!-- Title -->
+    <div class="md-header__title" data-md-component="header-title" style="margin-right: 1.5rem;">
+      <div class="md-header__topic">
+        <span class="md-ellipsis" style="font-size: 1.25rem; font-weight: 700;">
+          Gen AI Atlas
+        </span>
+      </div>
+      <div class="md-header__topic" data-md-component="header-topic">
+        <span class="md-ellipsis">
+          Retrieval-Augmented Generation (RAG) - Complete Architecture Overview
+        </span>
+      </div>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1 1 auto;"></div>
+
+    <!-- Search -->
+    
+      
+      
+        <div style="display: flex; align-items: center;">
+          <label class="md-header__button md-icon" for="__search" style="margin-right: 0.2rem;">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          </label>
+          <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        </div>
+      
+    
+
+    <!-- Theme toggle -->
+    
+      <div style="margin-left: 1.2rem;">
+        
+          <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="deep-purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="lime"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+        
+      </div>
+    
+
+    <!-- Repo link -->
+    
+    
+    <!-- User Profile Area -->
+    <div id="user-profile-area" style="margin-left: 1.2rem;"></div>
+  </nav>
+
+  
+    
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../01-foundation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Foundation
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Gen AI Core
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../03-deploy-ops/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Deployment & Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../04-applied-research/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Applied Research
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../05-community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../admin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Admin
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Gen AI Atlas" class="md-nav__button md-logo" aria-label="Gen AI Atlas" data-md-component="logo">
+      
+  <img src="../../../../images/adhana.png" alt="logo">
+
+    </a>
+    Gen AI Atlas
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../01-foundation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Foundation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Gen AI Core
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Gen AI Core
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../4-transformers-generative-ai/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Transformers & Gen AI
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Transformers & Gen AI
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../4-transformers-generative-ai/1-learning-path/01-intro/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../4-transformers-generative-ai/2-additional-reference/01-additional-reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../4-transformers-generative-ai/3-fast-track/01-transformers-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    RAG
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            RAG
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3_2" id="__nav_3_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Learning Path
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_2_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3_2_1" id="__nav_3_3_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    RAG Overview
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_3_2_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            RAG Overview
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Retrieval-Augmented Generation (RAG) - Complete Architecture Overview
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Retrieval-Augmented Generation (RAG) - Complete Architecture Overview
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is RAG?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Architecture Diagram
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rag-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      RAG Workflow
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-components-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Components Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-construction-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Query Construction Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-translation-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Query Translation Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retrieval-indexing-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retrieval &amp; Indexing Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#routing-generation-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Routing &amp; Generation Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-rag-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why RAG Matters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Cases
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Started
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-02-query-construction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Query Construction
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-03-query-translation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Query Translation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-04-routing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Routing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-05-retrieval/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Retrieval
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-06-indexing/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Indexing
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../05-07-generation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Generation
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../2-additional-reference/01-additional-reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../3-fast-track/01-rag-langchain-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../5-2-langchain/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    LangChain
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            LangChain
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../5-2-langchain/1-learning-path/01-fundamentals/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Learning Path
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../5-2-langchain/2-additional-reference/01-additional-reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Additional Reference
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../5-2-langchain/3-fast-track/01-rag-langchain-fast-track/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Fast Track
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../03-deploy-ops/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Deployment & Ops
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../04-applied-research/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Applied Research
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../05-community/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Community
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../../admin/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    Admin
+    
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      📚 Quick Navigation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is RAG?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-architecture-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Architecture Diagram
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rag-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      RAG Workflow
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-components-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Components Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-construction-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Query Construction Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-translation-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Query Translation Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retrieval-indexing-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retrieval &amp; Indexing Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#routing-generation-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Routing &amp; Generation Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-rag-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why RAG Matters
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Cases
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Started
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references-further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      References &amp; Further Reading
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="retrieval-augmented-generation-rag-complete-architecture-overview">Retrieval-Augmented Generation (RAG) - Complete Architecture Overview</h1>
+<p><a id="top"></a></p>
+<p><strong>A Comprehensive Guide to RAG Architecture and Components</strong></p>
+<hr />
+<h2 id="quick-navigation">📚 Quick Navigation</h2>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#what-is-rag">What is RAG?</a></li>
+<li><a href="#complete-architecture-diagram">Complete Architecture Diagram</a></li>
+<li><a href="#rag-workflow">RAG Workflow</a></li>
+<li><a href="#core-components-overview">Core Components Overview</a></li>
+<li><a href="#query-construction-overview">Query Construction Overview</a></li>
+<li><a href="#query-translation-overview">Query Translation Overview</a></li>
+<li><a href="#retrieval-indexing-overview">Retrieval &amp; Indexing Overview</a></li>
+<li><a href="#routing-generation-overview">Routing &amp; Generation Overview</a></li>
+<li><a href="#why-rag-matters">Why RAG Matters</a></li>
+<li><a href="#use-cases">Use Cases</a></li>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#references-further-reading">References &amp; Further Reading</a></li>
+</ul>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<p>Retrieval-Augmented Generation (RAG) represents a paradigm shift in how we build intelligent systems that combine the power of large language models with external knowledge retrieval. This comprehensive guide provides a complete overview of RAG architecture, covering all major components and their interactions.</p>
+<p><strong>What You'll Learn:</strong></p>
+<ul>
+<li>Complete RAG architecture and workflow</li>
+<li>Overview of all seven major components</li>
+<li>How components interact in a RAG system</li>
+<li>When to use different RAG approaches</li>
+<li>Real-world applications and use cases</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="what-is-rag">What is RAG?</h2>
+<p>Retrieval-Augmented Generation is an AI framework that enhances large language models by retrieving relevant information from external knowledge sources before generating responses.</p>
+<p><strong>Key Concepts:</strong></p>
+<ul>
+<li><strong>Retrieval:</strong> Finding relevant documents or information from a knowledge base</li>
+<li><strong>Augmentation:</strong> Enhancing the LLM's context with retrieved information</li>
+<li><strong>Generation:</strong> Producing responses based on both the query and retrieved context</li>
+<li><strong>Knowledge Base:</strong> External data sources (databases, documents, APIs)</li>
+<li><strong>Embedding Models:</strong> Neural networks that convert text into vector representations</li>
+<li><strong>Vector Stores:</strong> Specialized databases for efficient similarity search</li>
+</ul>
+<p><strong>RAG vs Traditional LLMs:</strong></p>
+<ul>
+<li><strong>Traditional LLMs:</strong> Limited to training data, prone to hallucination</li>
+<li><strong>RAG Systems:</strong> Access to up-to-date information, grounded in factual sources</li>
+<li><strong>Hybrid Approach:</strong> Combines parametric knowledge with non-parametric retrieval</li>
+</ul>
+<p><strong>Benefits of RAG:</strong></p>
+<ul>
+<li><strong>Reduced Hallucinations:</strong> Responses grounded in retrieved documents</li>
+<li><strong>Up-to-date Information:</strong> Access to current data beyond training cutoff</li>
+<li><strong>Source Attribution:</strong> Can cite specific documents and sources</li>
+<li><strong>Cost-Effective:</strong> No need to retrain models for new information</li>
+<li><strong>Domain Specialization:</strong> Easy to adapt to specific knowledge domains</li>
+<li><strong>Scalability:</strong> Knowledge base can grow without model retraining</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="complete-architecture-diagram">Complete Architecture Diagram</h2>
+<p>The RAG architecture consists of seven interconnected components that work together to process queries and generate accurate responses.</p>
+<p><img alt="RAG Complete Architecture" src="../../../../svg/rag_complete_arch.svg" /></p>
+<p><strong>Architecture Components:</strong></p>
+<ul>
+<li><strong>Query Construction:</strong> Converting natural language to structured queries</li>
+<li><strong>Query Translation:</strong> Transforming queries for better retrieval</li>
+<li><strong>Routing:</strong> Directing queries to appropriate data sources</li>
+<li><strong>Retrieval:</strong> Finding relevant information from knowledge bases</li>
+<li><strong>Indexing:</strong> Organizing and storing documents efficiently</li>
+<li><strong>Generation:</strong> Creating responses using LLMs and retrieved context</li>
+<li><strong>Feedback Loop:</strong> Continuous improvement through active retrieval</li>
+</ul>
+<p><strong>Data Flow:</strong></p>
+<ol>
+<li>User submits natural language query</li>
+<li>Query construction converts to structured format</li>
+<li>Query translation optimizes for retrieval</li>
+<li>Routing selects appropriate data sources</li>
+<li>Retrieval fetches relevant documents</li>
+<li>Generation creates response with context</li>
+<li>Response returned to user</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="rag-workflow">RAG Workflow</h2>
+<p>Understanding the complete workflow is essential for implementing effective RAG systems.</p>
+<p><img alt="RAG Workflow Diagram" src="../../../../svg/rag_workflow_diagram.svg" /></p>
+<p><strong>Workflow Stages:</strong></p>
+<p><strong>1. Query Processing:</strong></p>
+<ul>
+<li><strong>Input:</strong> Natural language question from user</li>
+<li><strong>Processing:</strong> Parse and understand user intent</li>
+<li><strong>Output:</strong> Structured query representation</li>
+<li><strong>Techniques:</strong> NLP parsing, intent classification, entity extraction</li>
+</ul>
+<p><strong>2. Query Optimization:</strong></p>
+<ul>
+<li><strong>Input:</strong> Structured query</li>
+<li><strong>Processing:</strong> Decompose, rephrase, or expand query</li>
+<li><strong>Output:</strong> Optimized query variants</li>
+<li><strong>Techniques:</strong> Multi-query, step-back, RAG-Fusion</li>
+</ul>
+<p><strong>3. Source Selection:</strong></p>
+<ul>
+<li><strong>Input:</strong> Optimized queries</li>
+<li><strong>Processing:</strong> Determine best data sources</li>
+<li><strong>Output:</strong> Routing decisions</li>
+<li><strong>Techniques:</strong> Logical routing, semantic routing, hybrid routing</li>
+</ul>
+<p><strong>4. Information Retrieval:</strong></p>
+<ul>
+<li><strong>Input:</strong> Routing decisions and queries</li>
+<li><strong>Processing:</strong> Search across selected sources</li>
+<li><strong>Output:</strong> Ranked relevant documents</li>
+<li><strong>Techniques:</strong> Vector search, keyword search, hybrid search</li>
+</ul>
+<p><strong>5. Context Preparation:</strong></p>
+<ul>
+<li><strong>Input:</strong> Retrieved documents</li>
+<li><strong>Processing:</strong> Rank, filter, and organize context</li>
+<li><strong>Output:</strong> Curated context for generation</li>
+<li><strong>Techniques:</strong> Re-ranking, compression, summarization</li>
+</ul>
+<p><strong>6. Response Generation:</strong></p>
+<ul>
+<li><strong>Input:</strong> Original query + curated context</li>
+<li><strong>Processing:</strong> LLM generates response</li>
+<li><strong>Output:</strong> Final answer with citations</li>
+<li><strong>Techniques:</strong> Prompt engineering, self-RAG, active retrieval</li>
+</ul>
+<p><strong>7. Quality Assurance:</strong></p>
+<ul>
+<li><strong>Input:</strong> Generated response</li>
+<li><strong>Processing:</strong> Validate accuracy and relevance</li>
+<li><strong>Output:</strong> Verified response or retrieval retry</li>
+<li><strong>Techniques:</strong> Self-verification, confidence scoring</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="core-components-overview">Core Components Overview</h2>
+<p>Each component plays a critical role in the RAG pipeline. Here's a high-level overview of all seven components.</p>
+<p><img alt="RAG Components Overview" src="../../../../svg/rag_components_overview.svg" /></p>
+<p><strong>Component Summary:</strong></p>
+<p><strong>1. Query Construction:</strong></p>
+<ul>
+<li>Converts natural language to database queries</li>
+<li>Supports SQL, Cypher, and vector queries</li>
+<li>Enables structured data access</li>
+<li>Handles multiple database types</li>
+</ul>
+<p><strong>2. Query Translation:</strong></p>
+<ul>
+<li>Optimizes queries for better retrieval</li>
+<li>Creates multiple query variants</li>
+<li>Handles complex multi-hop questions</li>
+<li>Improves recall through decomposition</li>
+</ul>
+<p><strong>3. Routing:</strong></p>
+<ul>
+<li>Directs queries to appropriate sources</li>
+<li>Logical and semantic routing strategies</li>
+<li>Handles multi-source scenarios</li>
+<li>Optimizes for speed and accuracy</li>
+</ul>
+<p><strong>4. Retrieval:</strong></p>
+<ul>
+<li>Fetches relevant documents</li>
+<li>Implements ranking algorithms</li>
+<li>Performs document refinement</li>
+<li>Supports multiple retrieval strategies</li>
+</ul>
+<p><strong>5. Indexing:</strong></p>
+<ul>
+<li>Organizes documents for efficient search</li>
+<li>Chunk optimization techniques</li>
+<li>Multi-representation indexing</li>
+<li>Hierarchical document structures</li>
+</ul>
+<p><strong>6. Generation:</strong></p>
+<ul>
+<li>Creates final responses</li>
+<li>Incorporates retrieved context</li>
+<li>Self-verification mechanisms</li>
+<li>Adaptive retrieval strategies</li>
+</ul>
+<p><strong>7. Feedback &amp; Iteration:</strong></p>
+<ul>
+<li>Continuous improvement loop</li>
+<li>Active retrieval when needed</li>
+<li>Quality monitoring</li>
+<li>Performance optimization</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="query-construction-overview">Query Construction Overview</h2>
+<p>Query Construction is the first step in translating user intent into actionable database queries.</p>
+<p><img alt="Query Construction Overview" src="../../../../svg/query_construction_overview.svg" /></p>
+<p><strong>Query Construction Types:</strong></p>
+<p><strong>Relational Database Queries:</strong></p>
+<ul>
+<li><strong>Text-to-SQL:</strong> Convert natural language to SQL queries</li>
+<li><strong>Use Cases:</strong> Structured data, business intelligence, analytics</li>
+<li><strong>Challenges:</strong> Complex joins, aggregations, nested queries</li>
+<li><strong>Tools:</strong> LangChain SQL chains, semantic parsing models</li>
+</ul>
+<p><strong>Graph Database Queries:</strong></p>
+<ul>
+<li><strong>Text-to-Cypher:</strong> Generate graph queries from text</li>
+<li><strong>Use Cases:</strong> Knowledge graphs, relationship mapping, network analysis</li>
+<li><strong>Challenges:</strong> Complex path queries, pattern matching</li>
+<li><strong>Tools:</strong> Neo4j, graph query generators</li>
+</ul>
+<p><strong>Vector Database Queries:</strong></p>
+<ul>
+<li><strong>Auto-generate Metadata Filters:</strong> Create filters from natural language</li>
+<li><strong>Use Cases:</strong> Semantic search, similarity matching</li>
+<li><strong>Challenges:</strong> Metadata extraction, filter construction</li>
+<li><strong>Tools:</strong> Pinecone, Weaviate, Qdrant filters</li>
+</ul>
+<p><strong>Self-Query Retrieval:</strong></p>
+<ul>
+<li><strong>Combined Approach:</strong> Semantic search + metadata filtering</li>
+<li><strong>Benefits:</strong> More precise results, better context understanding</li>
+<li><strong>Implementation:</strong> Separate content and metadata queries</li>
+</ul>
+<p><strong>For detailed information, see:</strong> <a href="../05-02-query-construction/">Query Construction Deep Dive</a></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="query-translation-overview">Query Translation Overview</h2>
+<p>Query Translation optimizes the original query to improve retrieval quality and coverage.</p>
+<p><img alt="Query Translation Overview" src="../../../../svg/query_translation_overview.svg" /></p>
+<p><strong>Query Translation Techniques:</strong></p>
+<p><strong>Multi-Query:</strong></p>
+<ul>
+<li><strong>Approach:</strong> Generate multiple variations of the original question</li>
+<li><strong>Benefits:</strong> Captures different perspectives and phrasings</li>
+<li><strong>Use Cases:</strong> Ambiguous queries, comprehensive search</li>
+<li><strong>Example:</strong> "What is climate change?" → Multiple focused sub-queries</li>
+</ul>
+<p><strong>Step-Back Prompting:</strong></p>
+<ul>
+<li><strong>Approach:</strong> Create higher-level, more general questions</li>
+<li><strong>Benefits:</strong> Retrieves broader context and foundational information</li>
+<li><strong>Use Cases:</strong> Complex questions needing background knowledge</li>
+<li><strong>Example:</strong> "How does protein X affect cell Y?" → "What are proteins and cells?"</li>
+</ul>
+<p><strong>RAG-Fusion:</strong></p>
+<ul>
+<li><strong>Approach:</strong> Combine multiple query strategies and merge results</li>
+<li><strong>Benefits:</strong> Comprehensive coverage, reduced missing information</li>
+<li><strong>Use Cases:</strong> Research, complex information needs</li>
+<li><strong>Implementation:</strong> Reciprocal Rank Fusion (RRF) for result merging</li>
+</ul>
+<p><strong>Query Decomposition:</strong></p>
+<ul>
+<li><strong>Approach:</strong> Break complex questions into simpler sub-questions</li>
+<li><strong>Benefits:</strong> Handles multi-hop reasoning, easier retrieval</li>
+<li><strong>Use Cases:</strong> Complex analytical questions, multi-step reasoning</li>
+<li><strong>Example:</strong> "Compare A and B" → "What is A?" + "What is B?" + "Compare results"</li>
+</ul>
+<p><strong>Hypothetical Document Embeddings (HyDE):</strong></p>
+<ul>
+<li><strong>Approach:</strong> Generate hypothetical answer, then search for similar documents</li>
+<li><strong>Benefits:</strong> Better semantic matching, overcomes query-document mismatch</li>
+<li><strong>Use Cases:</strong> When queries differ in style from documents</li>
+</ul>
+<p><strong>For detailed information, see:</strong> <a href="../05-03-query-translation/">Query Translation Deep Dive</a></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="retrieval-indexing-overview">Retrieval &amp; Indexing Overview</h2>
+<p>Retrieval and Indexing work together to efficiently store and retrieve relevant information.</p>
+<p><img alt="Retrieval &amp; Indexing Overview" src="../../../../svg/retrieval_indexing_overview.svg" /></p>
+<p><strong>Retrieval Methods:</strong></p>
+<p><strong>Ranking Strategies:</strong></p>
+<ul>
+<li><strong>Re-Rank:</strong> Reorder initial results using more sophisticated models</li>
+<li><strong>RankGPT:</strong> Use LLMs for intelligent ranking</li>
+<li><strong>RAG-Fusion:</strong> Merge results from multiple queries</li>
+<li><strong>CRAG:</strong> Corrective RAG with active retrieval</li>
+</ul>
+<p><strong>Refinement Techniques:</strong></p>
+<ul>
+<li><strong>Document Filtering:</strong> Remove irrelevant or low-quality documents</li>
+<li><strong>Context Compression:</strong> Reduce token count while preserving information</li>
+<li><strong>Relevance Scoring:</strong> Quantify document relevance</li>
+<li><strong>Diversity Optimization:</strong> Ensure varied perspectives</li>
+</ul>
+<p><strong>Indexing Techniques:</strong></p>
+<p><strong>Chunk Optimization:</strong></p>
+<ul>
+<li><strong>Semantic Splitter:</strong> Split based on meaning, not just length</li>
+<li><strong>Conversion Matters:</strong> Preserve document structure and formatting</li>
+<li><strong>Fixed vs Dynamic:</strong> Balance between consistency and flexibility</li>
+<li><strong>Overlap Strategies:</strong> Handle context boundaries</li>
+</ul>
+<p><strong>Multi-Representation Indexing:</strong></p>
+<ul>
+<li><strong>Parent Document:</strong> Index summaries, retrieve full documents</li>
+<li><strong>Dual Representation:</strong> Separate indexing and retrieval representations</li>
+<li><strong>Dense X Retrieval:</strong> Multiple dense representations per document</li>
+</ul>
+<p><strong>Specialized Embeddings:</strong></p>
+<ul>
+<li><strong>Fine-Tuned Models:</strong> Domain-specific embedding models</li>
+<li><strong>ColBERT:</strong> Token-level similarity matching</li>
+<li><strong>Multi-Modal:</strong> Handle text, images, tables</li>
+</ul>
+<p><strong>Hierarchical Indexing:</strong></p>
+<ul>
+<li><strong>RAPTOR:</strong> Tree of document summarizations</li>
+<li><strong>Hierarchical Structure:</strong> Multiple levels of abstraction</li>
+<li><strong>Progressive Retrieval:</strong> Coarse-to-fine search</li>
+</ul>
+<p><strong>For detailed information, see:</strong> <a href="../05-05-retrieval/">Retrieval Deep Dive</a> | <a href="../05-06-indexing/">Indexing Deep Dive</a></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="routing-generation-overview">Routing &amp; Generation Overview</h2>
+<p>Routing and Generation complete the RAG pipeline by selecting sources and creating responses.</p>
+<p><img alt="Generation &amp; Routing Overview" src="../../../../svg/routing_overview_architecture.svg" /></p>
+<p><strong>Routing Strategies:</strong></p>
+<p><strong>Logical Routing:</strong></p>
+<ul>
+<li><strong>Approach:</strong> Use rules and logic to select data sources</li>
+<li><strong>Benefits:</strong> Predictable, explainable, fast</li>
+<li><strong>Use Cases:</strong> Well-defined domains, structured decision trees</li>
+<li><strong>Example:</strong> Route financial queries to financial database</li>
+</ul>
+<p><strong>Semantic Routing:</strong></p>
+<ul>
+<li><strong>Approach:</strong> Use embedding similarity to route queries</li>
+<li><strong>Benefits:</strong> Handles ambiguous cases, learns from data</li>
+<li><strong>Use Cases:</strong> Multi-domain systems, fuzzy boundaries</li>
+<li><strong>Implementation:</strong> Prompt #1 vs Prompt #2 similarity comparison</li>
+</ul>
+<p><strong>Generation Process:</strong></p>
+<p><strong>Active Retrieval:</strong></p>
+<ul>
+<li><strong>Approach:</strong> Retrieve additional context during generation if needed</li>
+<li><strong>Benefits:</strong> Dynamic information gathering, better accuracy</li>
+<li><strong>Use Cases:</strong> Complex questions, insufficient initial context</li>
+<li><strong>Techniques:</strong> Self-ask, retrieval-aware generation</li>
+</ul>
+<p><strong>Self-RAG:</strong></p>
+<ul>
+<li><strong>Approach:</strong> LLM decides when to retrieve and generates self-critiques</li>
+<li><strong>Benefits:</strong> Quality control, reduced hallucinations</li>
+<li><strong>Use Cases:</strong> High-stakes applications, accuracy-critical systems</li>
+<li><strong>Components:</strong> Retrieval decisions, relevance checks, support verification</li>
+</ul>
+<p><strong>Hypothetical Response Reasoning (HRR):</strong></p>
+<ul>
+<li><strong>Approach:</strong> Generate hypothetical answers to guide retrieval</li>
+<li><strong>Benefits:</strong> Better query-document matching</li>
+<li><strong>Use Cases:</strong> Abstract or conceptual queries</li>
+</ul>
+<p><strong>For detailed information, see:</strong> <a href="../05-04-routing/">Routing Deep Dive</a> | <a href="../05-07-generation/">Generation Deep Dive</a></p>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="why-rag-matters">Why RAG Matters</h2>
+<p>RAG systems address critical limitations of standalone LLMs and traditional search systems.</p>
+<p><strong>Key Advantages:</strong></p>
+<p><strong>1. Accuracy &amp; Factuality:</strong></p>
+<ul>
+<li><strong>Problem:</strong> LLMs can hallucinate or provide outdated information</li>
+<li><strong>RAG Solution:</strong> Ground responses in retrieved factual documents</li>
+<li><strong>Impact:</strong> Significantly reduced hallucinations, verifiable answers</li>
+</ul>
+<p><strong>2. Up-to-Date Information:</strong></p>
+<ul>
+<li><strong>Problem:</strong> LLM training data has cutoff dates</li>
+<li><strong>RAG Solution:</strong> Access current information from live data sources</li>
+<li><strong>Impact:</strong> Always current responses, real-time data integration</li>
+</ul>
+<p><strong>3. Domain Specialization:</strong></p>
+<ul>
+<li><strong>Problem:</strong> General-purpose LLMs lack deep domain expertise</li>
+<li><strong>RAG Solution:</strong> Connect to domain-specific knowledge bases</li>
+<li><strong>Impact:</strong> Expert-level responses without model retraining</li>
+</ul>
+<p><strong>4. Source Attribution:</strong></p>
+<ul>
+<li><strong>Problem:</strong> Black-box LLM responses lack transparency</li>
+<li><strong>RAG Solution:</strong> Cite specific documents and sources</li>
+<li><strong>Impact:</strong> Verifiable, trustworthy, auditable responses</li>
+</ul>
+<p><strong>5. Cost Efficiency:</strong></p>
+<ul>
+<li><strong>Problem:</strong> Retraining LLMs is expensive and time-consuming</li>
+<li><strong>RAG Solution:</strong> Update knowledge base without model changes</li>
+<li><strong>Impact:</strong> Lower operational costs, faster iteration</li>
+</ul>
+<p><strong>6. Privacy &amp; Control:</strong></p>
+<ul>
+<li><strong>Problem:</strong> Sensitive data cannot be included in model training</li>
+<li><strong>RAG Solution:</strong> Keep proprietary data in secure, private databases</li>
+<li><strong>Impact:</strong> Enterprise-ready, compliant systems</li>
+</ul>
+<p><strong>7. Scalability:</strong></p>
+<ul>
+<li><strong>Problem:</strong> LLMs have fixed knowledge capacity</li>
+<li><strong>RAG Solution:</strong> Unlimited knowledge base growth</li>
+<li><strong>Impact:</strong> Scales with business needs</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="use-cases">Use Cases</h2>
+<p>RAG systems power a wide range of applications across industries.</p>
+<p><strong>Enterprise Applications:</strong></p>
+<p><strong>Customer Support:</strong></p>
+<ul>
+<li><strong>Use Case:</strong> Intelligent chatbots with access to documentation</li>
+<li><strong>Components:</strong> Document retrieval, answer generation, ticket routing</li>
+<li><strong>Benefits:</strong> 24/7 support, consistent answers, reduced costs</li>
+<li><strong>Example:</strong> Technical support bot with product manuals</li>
+</ul>
+<p><strong>Internal Knowledge Management:</strong></p>
+<ul>
+<li><strong>Use Case:</strong> Employee assistance with company policies and procedures</li>
+<li><strong>Components:</strong> Document indexing, semantic search, summarization</li>
+<li><strong>Benefits:</strong> Faster onboarding, reduced information silos</li>
+<li><strong>Example:</strong> HR assistant for benefits and policy questions</li>
+</ul>
+<p><strong>Research &amp; Development:</strong></p>
+<p><strong>Scientific Research:</strong></p>
+<ul>
+<li><strong>Use Case:</strong> Literature review and hypothesis generation</li>
+<li><strong>Components:</strong> Paper retrieval, citation extraction, synthesis</li>
+<li><strong>Benefits:</strong> Accelerated research, comprehensive coverage</li>
+<li><strong>Example:</strong> Biomedical research assistant with PubMed integration</li>
+</ul>
+<p><strong>Legal Research:</strong></p>
+<ul>
+<li><strong>Use Case:</strong> Case law analysis and legal document preparation</li>
+<li><strong>Components:</strong> Legal document retrieval, precedent analysis</li>
+<li><strong>Benefits:</strong> Faster research, comprehensive case coverage</li>
+<li><strong>Example:</strong> Legal research assistant with case databases</li>
+</ul>
+<p><strong>Content &amp; Media:</strong></p>
+<p><strong>News &amp; Journalism:</strong></p>
+<ul>
+<li><strong>Use Case:</strong> Fact-checking and background research</li>
+<li><strong>Components:</strong> News archive retrieval, source verification</li>
+<li><strong>Benefits:</strong> Accurate reporting, efficient research</li>
+<li><strong>Example:</strong> Journalist assistant with news archives</li>
+</ul>
+<p><strong>Content Creation:</strong></p>
+<ul>
+<li><strong>Use Case:</strong> Research-backed content generation</li>
+<li><strong>Components:</strong> Source retrieval, fact verification, citation</li>
+<li><strong>Benefits:</strong> Authoritative content, proper attribution</li>
+<li><strong>Example:</strong> Blog writing assistant with research capabilities</li>
+</ul>
+<p><strong>E-Commerce &amp; Retail:</strong></p>
+<p><strong>Product Recommendations:</strong></p>
+<ul>
+<li><strong>Use Case:</strong> Personalized product suggestions based on inventory</li>
+<li><strong>Components:</strong> Product database, user preference matching</li>
+<li><strong>Benefits:</strong> Better conversions, improved customer satisfaction</li>
+<li><strong>Example:</strong> Shopping assistant with real-time inventory</li>
+</ul>
+<p><strong>Education &amp; Training:</strong></p>
+<p><strong>Intelligent Tutoring:</strong></p>
+<ul>
+<li><strong>Use Case:</strong> Personalized learning with educational content</li>
+<li><strong>Components:</strong> Curriculum retrieval, adaptive questioning</li>
+<li><strong>Benefits:</strong> Personalized learning paths, comprehensive coverage</li>
+<li><strong>Example:</strong> Math tutor with textbook integration</li>
+</ul>
+<p><strong>Healthcare:</strong></p>
+<p><strong>Clinical Decision Support:</strong></p>
+<ul>
+<li><strong>Use Case:</strong> Evidence-based medical recommendations</li>
+<li><strong>Components:</strong> Medical literature retrieval, guideline matching</li>
+<li><strong>Benefits:</strong> Evidence-based care, reduced errors</li>
+<li><strong>Example:</strong> Clinical assistant with medical guidelines</li>
+</ul>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="getting-started">Getting Started</h2>
+<p><strong>Prerequisites:</strong></p>
+<ul>
+<li>Basic understanding of LLMs and embeddings</li>
+<li>Python programming knowledge</li>
+<li>Familiarity with vector databases</li>
+<li>Understanding of API integration</li>
+</ul>
+<p><strong>Essential Tools &amp; Libraries:</strong></p>
+<p><strong>Framework Options:</strong></p>
+<ul>
+<li><strong>LangChain:</strong> Comprehensive RAG framework with extensive integrations</li>
+<li><strong>LlamaIndex:</strong> Specialized for data ingestion and indexing</li>
+<li><strong>Haystack:</strong> Production-ready RAG pipelines</li>
+<li><strong>AutoGen:</strong> Multi-agent RAG systems</li>
+</ul>
+<p><strong>Vector Database Options:</strong></p>
+<ul>
+<li><strong>Pinecone:</strong> Managed vector database, easy to use</li>
+<li><strong>Weaviate:</strong> Open-source with advanced features</li>
+<li><strong>Qdrant:</strong> High-performance vector search</li>
+<li><strong>Chroma:</strong> Lightweight, embedded option</li>
+<li><strong>FAISS:</strong> Facebook's similarity search library</li>
+</ul>
+<p><strong>Embedding Models:</strong></p>
+<ul>
+<li><strong>OpenAI Embeddings:</strong> High-quality, easy to use</li>
+<li><strong>Sentence-Transformers:</strong> Open-source, customizable</li>
+<li><strong>Cohere Embeddings:</strong> Multilingual support</li>
+<li><strong>Instructor Embeddings:</strong> Task-specific embeddings</li>
+</ul>
+<p><strong>LLM Options:</strong></p>
+<ul>
+<li><strong>GPT-4/GPT-3.5:</strong> OpenAI models via API</li>
+<li><strong>Claude:</strong> Anthropic's models with long context</li>
+<li><strong>Llama 2:</strong> Open-source Meta model</li>
+<li><strong>Mistral:</strong> Open-source, high-performance</li>
+</ul>
+<p><strong>Basic Implementation Steps:</strong></p>
+<p><strong>Step 1: Document Preparation</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Load and preprocess documents</span>
+<span class="n">documents</span> <span class="o">=</span> <span class="n">load_documents</span><span class="p">(</span><span class="s2">&quot;path/to/docs&quot;</span><span class="p">)</span>
+<span class="n">chunks</span> <span class="o">=</span> <span class="n">split_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">chunk_size</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">overlap</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Step 2: Create Embeddings</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate embeddings for chunks</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">embedding_model</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Step 3: Store in Vector Database</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Index embeddings in vector store</span>
+<span class="n">vector_store</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">embeddings</span><span class="p">,</span> <span class="n">chunks</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Step 4: Implement Retrieval</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Query the vector store</span>
+<span class="n">query_embedding</span> <span class="o">=</span> <span class="n">embedding_model</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">user_query</span><span class="p">)</span>
+<span class="n">relevant_docs</span> <span class="o">=</span> <span class="n">vector_store</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query_embedding</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Step 5: Generate Response</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create context and generate answer</span>
+<span class="n">context</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">doc</span><span class="o">.</span><span class="n">content</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">relevant_docs</span><span class="p">])</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Context: </span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Question: </span><span class="si">{</span><span class="n">user_query</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Answer:&quot;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Next Steps:</strong></p>
+<ol>
+<li><strong>Deep Dive:</strong> Explore individual component documentation</li>
+<li><strong>Query Construction:</strong> Learn to build structured queries → <a href="../05-02-query-construction/">Read More</a></li>
+<li><strong>Query Translation:</strong> Master query optimization techniques → <a href="../05-03-query-translation/">Read More</a></li>
+<li><strong>Routing:</strong> Implement intelligent source selection → <a href="../05-04-routing/">Read More</a></li>
+<li><strong>Retrieval:</strong> Advanced retrieval strategies → <a href="../05-05-retrieval/">Read More</a></li>
+<li><strong>Indexing:</strong> Optimize document organization → <a href="../05-06-indexing/">Read More</a></li>
+<li><strong>Generation:</strong> Enhance response quality → <a href="../05-07-generation/">Read More</a></li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<h2 id="references-further-reading">References &amp; Further Reading</h2>
+<p><strong>📚 Foundational Papers:</strong></p>
+<ol>
+<li><strong>"Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks"</strong> - Lewis et al., 2020</li>
+<li>Original RAG paper from Facebook AI</li>
+<li>
+<p>ArXiv: https://arxiv.org/abs/2005.11401</p>
+</li>
+<li>
+<p><strong>"REALM: Retrieval-Augmented Language Model Pre-Training"</strong> - Guu et al., 2020</p>
+</li>
+<li>Pre-training with retrieval mechanism</li>
+<li>
+<p>ArXiv: https://arxiv.org/abs/2002.08909</p>
+</li>
+<li>
+<p><strong>"Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection"</strong> - Asai et al., 2023</p>
+</li>
+<li>Self-reflective RAG approach</li>
+<li>
+<p>ArXiv: https://arxiv.org/abs/2310.11511</p>
+</li>
+<li>
+<p><strong>"Corrective Retrieval Augmented Generation (CRAG)"</strong> - Yan et al., 2024</p>
+</li>
+<li>Adaptive retrieval with correction</li>
+<li>ArXiv: https://arxiv.org/abs/2401.15884</li>
+</ol>
+<p><strong>🔧 Implementation Guides:</strong></p>
+<ol>
+<li><strong>LangChain Documentation</strong> - Comprehensive RAG tutorials</li>
+<li>
+<p>Website: https://python.langchain.com/docs/use_cases/question_answering/</p>
+</li>
+<li>
+<p><strong>LlamaIndex Documentation</strong> - Data framework for LLMs</p>
+</li>
+<li>
+<p>Website: https://docs.llamaindex.ai/</p>
+</li>
+<li>
+<p><strong>Pinecone Learning Center</strong> - Vector database tutorials</p>
+</li>
+<li>
+<p>Website: https://www.pinecone.io/learn/</p>
+</li>
+<li>
+<p><strong>Hugging Face RAG Models</strong> - Pre-trained RAG implementations</p>
+</li>
+<li>Website: https://huggingface.co/models?search=rag</li>
+</ol>
+<p><strong>📖 Advanced Topics:</strong></p>
+<ol>
+<li><strong>"Query Rewriting for Retrieval-Augmented Large Language Models"</strong> - Ma et al., 2023</li>
+<li>Query optimization techniques</li>
+<li>
+<p>ArXiv: https://arxiv.org/abs/2305.14283</p>
+</li>
+<li>
+<p><strong>"RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval"</strong> - Sarthi et al., 2024</p>
+<ul>
+<li>Hierarchical indexing approach</li>
+<li>ArXiv: https://arxiv.org/abs/2401.18059</li>
+</ul>
+</li>
+</ol>
+<p><a href="#top">↩ Back to Top</a></p>
+<hr />
+<p><strong>Related Documentation:</strong></p>
+<ul>
+<li><a href="../05-02-query-construction/">Query Construction Deep Dive</a></li>
+<li><a href="../05-03-query-translation/">Query Translation Deep Dive</a></li>
+<li><a href="../05-04-routing/">Routing Strategies Deep Dive</a></li>
+<li><a href="../05-05-retrieval/">Retrieval Methods Deep Dive</a></li>
+<li><a href="../05-06-indexing/">Indexing Techniques Deep Dive</a></li>
+<li><a href="../05-07-generation/">Generation Process Deep Dive</a></li>
+</ul>
+<hr />
+<p><em>Last Updated: October 2025 | Created for AI Engineers, Researchers, and Practitioners</em></p>
+
+
+
+
+
+
+
+  
+    
+  
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 14, 2025 00:55:02 UTC">October 14, 2025</span>
+  </span>
+
+    
+    
+    
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+<!-- Footer navigation (prev/next) - Material default -->
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview" rel="prev">
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Previous
+            </span>
+            <div class="md-ellipsis">
+              Overview
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../05-02-query-construction/" class="md-footer__link md-footer__link--next" aria-label="Next: Query Construction: Deep Dive" rel="next">
+          <div class="md-footer__title">
+            <span class="md-footer__direction">
+              Next
+            </span>
+            <div class="md-ellipsis">
+              Query Construction: Deep Dive
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+
+  <!-- Custom footer content -->
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        <div style="text-align: center; padding: 1rem 0; border-top: 1px solid rgba(0,0,0,0.1); margin-top: 1rem;">
+          <p style="margin: 0.5rem 0;">
+            <strong>GenAI Atlas</strong> - Your Comprehensive Guide to AI & Machine Learning
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.9em; opacity: 0.8;">
+            © 2024 GenAI Atlas | Built with ❤️ for the AI Community
+          </p>
+          <p style="margin: 0.5rem 0; font-size: 0.85em; opacity: 0.7;">
+            <em>Empowering developers, researchers, and practitioners worldwide</em>
+          </p>
+        </div>
+      </div>
+      <div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.prune", "navigation.top", "navigation.indexes", "navigation.instant", "navigation.tracking", "navigation.footer", "content.footer", "search.suggest", "search.highlight", "content.code.annotate", "content.tabs.link", "content.action.edit", "content.width"], "search": "../../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="../../../../js/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+      
+        <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics-compat.js"></script>
+      
+        <script src="../../../../js/firebase-auth.js?v=2"></script>
+      
+    
+  </body>
+</html>
